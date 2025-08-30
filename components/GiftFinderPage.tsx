@@ -4,7 +4,7 @@ import { Gift, InitialGiftFinderData, ShowToast, GiftProfile } from '../types';
 import { findGifts } from '../services/geminiService';
 import Button from './Button';
 import GiftResultCard from './GiftResultCard';
-import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents';
+import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon, KeyIcon } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 
 const occasions = ["Verjaardag", "Kerstmis", "Valentijnsdag", "Jubileum", "Zomaar"];
@@ -31,6 +31,7 @@ interface GiftFinderPageProps {
 }
 
 const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast }) => {
+  const [apiKey, setApiKey] = useState<string>('');
   const [recipient, setRecipient] = useState<string>(recipients[0]);
   const [budget, setBudget] = useState<number>(50);
   const [occasion, setOccasion] = useState<string>(occasions[0]);
@@ -44,6 +45,15 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const auth = useContext(AuthContext);
 
   useEffect(() => {
+    try {
+        const savedKey = localStorage.getItem('gifteezApiKey');
+        if (savedKey) {
+            setApiKey(savedKey);
+        }
+    } catch (e) {
+        console.error("Could not read API key from localStorage", e);
+    }
+
     if (initialData?.recipient) {
       setRecipient(initialData.recipient);
     }
@@ -55,14 +65,24 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     }
   }, [initialData]);
 
+  const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const key = e.target.value;
+    setApiKey(key);
+    try {
+        localStorage.setItem('gifteezApiKey', key);
+    } catch (e) {
+        console.error("Could not save API key to localStorage", e);
+        showToast("Could not save API key. It will be forgotten on refresh.");
+    }
+  };
+
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     const profileId = e.target.value;
     if (profileId) {
         const selectedProfile = auth?.currentUser?.profiles.find(p => p.id === profileId);
         if (selectedProfile) {
-            // Check if the relationship from the profile is a valid recipient option
             const validRecipient = recipients.find(r => r.toLowerCase() === selectedProfile.relationship.toLowerCase());
-            setRecipient(validRecipient || recipients[0]); // Fallback to first recipient if not found
+            setRecipient(validRecipient || recipients[0]);
             setInterests(selectedProfile.interests);
             showToast(`Profiel '${selectedProfile.name}' geladen!`);
         }
@@ -71,20 +91,25 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!apiKey) {
+      setError("Please provide a Google Gemini API Key to use the GiftFinder.");
+      return;
+    }
+    
     setIsLoading(true);
     setError(null);
     setGifts([]);
     setSearchPerformed(true);
 
     try {
-      const results = await findGifts(recipient, budget, occasion, interests);
+      const results = await findGifts(apiKey, recipient, budget, occasion, interests);
       setGifts(results);
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred.');
     } finally {
       setIsLoading(false);
     }
-  }, [recipient, budget, occasion, interests]);
+  }, [apiKey, recipient, budget, occasion, interests]);
   
   const handleInterestClick = (interest: string) => {
     const currentInterests = interests.split(',').map(i => i.trim()).filter(Boolean);
@@ -103,6 +128,28 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
 
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-8">
           
+          <div className="p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+              <label htmlFor="api-key" className="flex items-center gap-2 font-display text-xl font-bold text-yellow-800 mb-2">
+                  <KeyIcon className="w-6 h-6" />
+                  Jouw Google Gemini API-sleutel
+              </label>
+              <input
+                  id="api-key"
+                  type="password"
+                  value={apiKey}
+                  onChange={handleApiKeyChange}
+                  placeholder="Voer hier je API-sleutel in"
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                  aria-label="Google Gemini API Key"
+              />
+              <p className="text-xs text-yellow-700 mt-2">
+                  Je sleutel wordt alleen in je browser opgeslagen. Wij kunnen deze niet zien.
+                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="font-bold underline hover:text-yellow-900 ml-1">
+                      Vraag hier je gratis sleutel aan.
+                  </a>
+              </p>
+          </div>
+
           {auth?.currentUser && auth.currentUser.profiles.length > 0 && (
             <div className="p-4 bg-secondary rounded-lg">
                 <label htmlFor="profile-select" className="flex items-center gap-2 font-display text-xl font-bold text-primary mb-2">
@@ -124,7 +171,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             </div>
           )}
 
-          {/* Step 1: Recipient */}
           <div>
             <label htmlFor="recipient" className="block font-display text-xl font-bold text-primary mb-2">Voor wie zoek je een cadeau?</label>
             <select
@@ -137,7 +183,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             </select>
           </div>
           
-          {/* Step 2: Budget */}
           <div>
             <label htmlFor="budget" className="block font-display text-xl font-bold text-primary mb-2">
               Budget: <span className="text-accent font-bold">€{budget}</span>
@@ -154,7 +199,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             />
           </div>
 
-          {/* Step 3: Occasion */}
           <div>
             <h3 className="font-display text-xl font-bold text-primary mb-4">Gelegenheid</h3>
             <div className="flex flex-wrap gap-2">
@@ -175,7 +219,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             </div>
           </div>
           
-          {/* Step 4 (Optional): Interests */}
           <div>
             <label htmlFor="interests" className="block font-display text-xl font-bold text-primary mb-2">Hobby's of interesses? (optioneel)</label>
             <input
@@ -215,7 +258,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
           </div>
         </form>
 
-        {/* Results Section */}
         <div className="mt-16">
           {isLoading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

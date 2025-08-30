@@ -1,11 +1,6 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { Gift } from '../types';
-
-if (!process.env.API_KEY) {
-    console.error("API_KEY environment variable not set.");
-}
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 const giftSchema = {
   type: Type.ARRAY,
@@ -45,7 +40,13 @@ const giftSchema = {
   },
 };
 
-export const findGifts = async (recipient: string, budget: number, occasion: string, interests?: string): Promise<Gift[]> => {
+export const findGifts = async (apiKey: string, recipient: string, budget: number, occasion: string, interests?: string): Promise<Gift[]> => {
+  if (!apiKey) {
+    throw new Error("API Key is required to find gifts. Please enter your key above.");
+  }
+  
+  const ai = new GoogleGenAI({ apiKey });
+
   const interestsPrompt = interests ? `- Hobbies/Interests: ${interests}` : '';
 
   const prompt = `
@@ -75,11 +76,25 @@ export const findGifts = async (recipient: string, budget: number, occasion: str
     });
 
     const jsonText = response.text.trim();
-    const gifts: Gift[] = JSON.parse(jsonText);
-    return gifts;
+    if (!jsonText) {
+        console.error("Gemini API returned an empty response.");
+        throw new Error("Received an empty response from the AI. Please try again.");
+    }
+
+    try {
+        const gifts: Gift[] = JSON.parse(jsonText);
+        return gifts;
+    } catch (jsonError) {
+        console.error("Error parsing JSON from Gemini API:", jsonError);
+        console.error("Raw response text:", jsonText);
+        throw new Error("The AI returned an unexpected format. Please try again.");
+    }
 
   } catch (error) {
     console.error("Error calling Gemini API:", error);
+    if (error instanceof Error && (error.message.includes('API key not valid') || error.message.includes('API_KEY_INVALID'))) {
+         throw new Error("Your API Key is not valid. Please check it and try again.");
+    }
     throw new Error("Sorry, we couldn't find gifts at the moment. Please try again later.");
   }
 };
