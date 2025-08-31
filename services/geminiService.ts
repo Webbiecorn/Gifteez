@@ -40,9 +40,10 @@ const giftSchema = {
   },
 };
 
-export const findGifts = async (apiKey: string, recipient: string, budget: number, occasion: string, interests?: string): Promise<Gift[]> => {
+export const findGifts = async (recipient: string, budget: number, occasion: string, interests?: string): Promise<Gift[]> => {
+  const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    throw new Error("API Key is required to find gifts. Please enter your key above.");
+    throw new Error("API_KEY environment variable not set.");
   }
   
   const ai = new GoogleGenAI({ apiKey });
@@ -90,10 +91,11 @@ export const findGifts = async (apiKey: string, recipient: string, budget: numbe
         throw new Error("The AI returned an unexpected format. Please try again.");
     }
 
-  } catch (error) {
+  } catch (error)
+ {
     console.error("Error calling Gemini API:", error);
     if (error instanceof Error && (error.message.includes('API key not valid') || error.message.includes('API_KEY_INVALID'))) {
-         throw new Error("Your API Key is not valid. Please check it and try again.");
+         throw new Error("The configured API Key is not valid. Please check the server configuration.");
     }
     throw new Error("Sorry, we couldn't find gifts at the moment. Please try again later.");
   }
