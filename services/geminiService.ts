@@ -60,13 +60,34 @@ export const findGifts = async (
   occasion: string,
   interests?: string
 ): Promise<Gift[]> => {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    throw new Error(
-      "Er is geen Gemini API-sleutel ingesteld. Voeg je API key toe of stel GEMINI_API_KEY in."
-    );
+  // 1) Try calling serverless API (keeps key secret in production)
+  try {
+    const resp = await fetch('/api/gifts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipient, budget, occasion, interests }),
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      if (Array.isArray(data)) return data as Gift[];
+      // if API returns shape with data
+      if (Array.isArray((data as any)?.gifts)) return (data as any).gifts as Gift[];
+      // else fallthrough to client if unexpected
+    } else if (resp.status === 404) {
+      // No serverless function present in this environment, fallback to client
+    } else {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err?.error || `Serverfout (${resp.status})`);
+    }
+  } catch (e) {
+    // In local dev without serverless, continue to client method
   }
 
+  // 2) Client-side fallback (demo/local only)
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error("Geen server-API en geen API-sleutel gevonden. Stel Vercel API in of voeg tijdelijk een key toe.");
+  }
   const ai = new GoogleGenAI({ apiKey });
 
   const interestsPrompt = interests ? `- Hobbies/Interests: ${interests}` : "";
