@@ -123,7 +123,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         </div>
 
         {/* API key helper (demo only) */}
-        {!hasEnvKey && (
+  {!hasEnvKey && !(import.meta as any)?.env?.PROD && (
         <div className="bg-secondary p-4 rounded-lg mb-6">
           <div className="flex items-center justify-between gap-4">
             <label htmlFor="api-key" className="font-display font-bold text-primary">Gemini API-sleutel (alleen voor test)</label>
@@ -142,7 +142,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
           <p className="text-xs text-gray-600 mt-2">Je sleutel wordt lokaal in je browser opgeslagen.</p>
         </div>
         )}
-        {hasEnvKey && (
+  {(hasEnvKey || (import.meta as any)?.env?.PROD) && (
           <div className="bg-secondary p-3 rounded-lg mb-6 text-sm text-primary">
             Gemini API-sleutel is geconfigureerd via de omgeving.
           </div>

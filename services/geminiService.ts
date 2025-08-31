@@ -84,6 +84,9 @@ export const findGifts = async (
   }
 
   // 2) Client-side fallback (demo/local only)
+  if ((import.meta as any)?.env?.PROD) {
+    throw new Error('Server-API is niet beschikbaar. Probeer het later opnieuw.');
+  }
   const apiKey = getApiKey();
   if (!apiKey) {
     throw new Error("Geen server-API en geen API-sleutel gevonden. Stel Vercel API in of voeg tijdelijk een key toe.");
