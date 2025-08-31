@@ -28,6 +28,21 @@ const giftSchema = {
 
 // Prefer env var from Vite define; fall back to localStorage for demo usage
 const getApiKey = (): string | undefined => {
+  // 1) Vite env (preferred for builds)
+  try {
+    const viteKey = (import.meta as any)?.env?.VITE_GEMINI_API_KEY as string | undefined;
+    if (typeof viteKey === "string" && viteKey.trim()) return viteKey.trim();
+  } catch {}
+
+  // 2) process.env (if defined during build)
+  try {
+    const nodeKey = (typeof process !== "undefined" ? (process as any)?.env?.GEMINI_API_KEY : undefined) as
+      | string
+      | undefined;
+    if (typeof nodeKey === "string" && nodeKey.trim()) return nodeKey.trim();
+  } catch {}
+
+  // 3) Local fallback for demos (client-side)
   try {
     const key =
       (typeof localStorage !== "undefined" &&

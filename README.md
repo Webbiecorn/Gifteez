@@ -15,6 +15,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/12yHmfFpzOGsAVUJYXEU3QM
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+2. Set the `VITE_GEMINI_API_KEY` in `.env.local` to your Gemini API key (preferred)
+   - Alternatively for quick demos, you can paste your key on the GiftFinder page; it will be stored in `localStorage` (not recommended for production).
 3. Run the app:
    `npm run dev`

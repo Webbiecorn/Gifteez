@@ -35,6 +35,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [occasion, setOccasion] = useState<string>(occasions[0]);
   const [interests, setInterests] = useState<string>('');
   const [apiKey, setApiKey] = useState<string>('');
+  const [hasEnvKey, setHasEnvKey] = useState<boolean>(false);
   
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,6 +55,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       }
     }
     try {
+      const envKey = (import.meta as any)?.env?.VITE_GEMINI_API_KEY as string | undefined;
+      setHasEnvKey(!!(envKey && envKey.trim()));
       const stored = localStorage.getItem('GEMINI_API_KEY') || localStorage.getItem('API_KEY') || '';
       setApiKey(stored);
     } catch {}
@@ -120,6 +123,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         </div>
 
         {/* API key helper (demo only) */}
+        {!hasEnvKey && (
         <div className="bg-secondary p-4 rounded-lg mb-6">
           <div className="flex items-center justify-between gap-4">
             <label htmlFor="api-key" className="font-display font-bold text-primary">Gemini API-sleutel (alleen voor test)</label>
@@ -137,6 +141,12 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
           </div>
           <p className="text-xs text-gray-600 mt-2">Je sleutel wordt lokaal in je browser opgeslagen.</p>
         </div>
+        )}
+        {hasEnvKey && (
+          <div className="bg-secondary p-3 rounded-lg mb-6 text-sm text-primary">
+            Gemini API-sleutel is geconfigureerd via de omgeving.
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-8">
           
