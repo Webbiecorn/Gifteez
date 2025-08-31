@@ -34,6 +34,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [budget, setBudget] = useState<number>(50);
   const [occasion, setOccasion] = useState<string>(occasions[0]);
   const [interests, setInterests] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>('');
   
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -52,6 +53,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         setOccasion(validOccasion);
       }
     }
+    try {
+      const stored = localStorage.getItem('GEMINI_API_KEY') || localStorage.getItem('API_KEY') || '';
+      setApiKey(stored);
+    } catch {}
   }, [initialData]);
 
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -84,6 +89,20 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       setIsLoading(false);
     }
   }, [recipient, budget, occasion, interests]);
+
+  const saveApiKey = () => {
+    try {
+      const trimmed = apiKey.trim();
+      if (!trimmed) {
+        showToast('Vul een geldige API-sleutel in.');
+        return;
+      }
+      localStorage.setItem('GEMINI_API_KEY', trimmed);
+      showToast('API-sleutel opgeslagen.');
+    } catch {
+      setError('Kan API-sleutel niet opslaan in deze browser.');
+    }
+  };
   
   const handleInterestClick = (interest: string) => {
     const currentInterests = interests.split(',').map(i => i.trim()).filter(Boolean);
@@ -98,6 +117,25 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold text-primary">AI GiftFinder</h1>
           <p className="mt-2 text-lg text-gray-600">Vul de details in en laat onze AI het perfecte cadeau voor je vinden!</p>
+        </div>
+
+        {/* API key helper (demo only) */}
+        <div className="bg-secondary p-4 rounded-lg mb-6">
+          <div className="flex items-center justify-between gap-4">
+            <label htmlFor="api-key" className="font-display font-bold text-primary">Gemini API-sleutel (alleen voor test)</label>
+          </div>
+          <div className="mt-2 flex flex-col md:flex-row gap-2">
+            <input
+              id="api-key"
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Voer je API key in"
+              className="w-full md:flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+            />
+            <Button type="button" variant="primary" onClick={saveApiKey} className="md:w-auto">Opslaan</Button>
+          </div>
+          <p className="text-xs text-gray-600 mt-2">Je sleutel wordt lokaal in je browser opgeslagen.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-8">
