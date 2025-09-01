@@ -1,6 +1,10 @@
 // scripts/generate-sitemap.mjs
 import { promises as fs } from "fs";
 import path from "path";
+import url from "url";
+
+// Import TS blog data via dynamic transpile (simple, using ts-node-esque loader is overkill). We read and regex slugs.
+const BLOG_DATA_FILE = path.resolve("data/blogData.ts");
 
 const SITE = "https://gifteez.nl";
 const OUT_FILE = path.resolve("public/sitemap.xml");
@@ -22,7 +26,7 @@ function escapeXml(s) {
 
 async function getPostUrls() {
   try {
-    const files = await fs.readdir(POSTS_DIR);
+  const files = await fs.readdir(POSTS_DIR);
     const urls = [];
     for (const file of files) {
       if (!file.endsWith(".md")) continue;
@@ -41,7 +45,17 @@ async function getPostUrls() {
     return urls;
   } catch (e) {
     // Map bestaat (nog) niet—geen posts
-    return [];
+    // Fallback: parse slugs from data/blogData.ts
+    try {
+      const src = await fs.readFile(BLOG_DATA_FILE, "utf8");
+      const slugMatches = [...src.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
+      for (const slug of slugMatches) {
+        urls.push({ loc: `${SITE}/blog/${encodeURIComponent(slug)}`, changefreq: "weekly", priority: "0.7" });
+      }
+      return urls;
+    } catch (_) {
+      return [];
+    }
   }
 }
 

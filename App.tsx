@@ -2,25 +2,26 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import HomePage from './components/HomePage';
-import GiftFinderPage from './components/GiftFinderPage';
-import CategoriesPage from './components/CategoriesPage';
-import BlogPage from './components/BlogPage';
-import FavoritesPage from './components/FavoritesPage';
+import ReactLazy = React.lazy;
+const HomePage = ReactLazy(() => import('./components/HomePage'));
+const GiftFinderPage = ReactLazy(() => import('./components/GiftFinderPage'));
+const CategoriesPage = ReactLazy(() => import('./components/CategoriesPage'));
+const BlogPage = ReactLazy(() => import('./components/BlogPage'));
+const FavoritesPage = ReactLazy(() => import('./components/FavoritesPage'));
 import Toast from './components/Toast';
-import SharedFavoritesPage from './components/SharedFavoritesPage';
-import BlogDetailPage from './components/BlogDetailPage';
-import ContactPage from './components/ContactPage';
-import AboutPage from './components/AboutPage';
-import LoginPage from './components/LoginPage';
-import SignUpPage from './components/SignUpPage';
-import AccountPage from './components/AccountPage';
-import QuizPage from './components/QuizPage';
-import DownloadPage from './components/DownloadPage';
-import ShopPage from './components/ShopPage';
-import CartPage from './components/CartPage';
-import CheckoutSuccessPage from './components/CheckoutSuccessPage';
-import DealsPage from './components/DealsPage';
+const SharedFavoritesPage = ReactLazy(() => import('./components/SharedFavoritesPage'));
+const BlogDetailPage = ReactLazy(() => import('./components/BlogDetailPage'));
+const ContactPage = ReactLazy(() => import('./components/ContactPage'));
+const AboutPage = ReactLazy(() => import('./components/AboutPage'));
+const LoginPage = ReactLazy(() => import('./components/LoginPage'));
+const SignUpPage = ReactLazy(() => import('./components/SignUpPage'));
+const AccountPage = ReactLazy(() => import('./components/AccountPage'));
+const QuizPage = ReactLazy(() => import('./components/QuizPage'));
+const DownloadPage = ReactLazy(() => import('./components/DownloadPage'));
+const ShopPage = ReactLazy(() => import('./components/ShopPage'));
+const CartPage = ReactLazy(() => import('./components/CartPage'));
+const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'));
+const DealsPage = ReactLazy(() => import('./components/DealsPage'));
 import { Page, InitialGiftFinderData, Gift } from './types';
 import { blogPosts } from './data/blogData';
 import { AuthContext } from './contexts/AuthContext';
@@ -194,7 +195,9 @@ const App: React.FC = () => {
     <div className="bg-light-bg font-sans text-gray-800 min-h-screen flex flex-col">
       <Header navigateTo={navigateTo} currentPage={currentPage} />
       <main key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
-        {renderPage()}
+        <React.Suspense fallback={<div className="flex items-center justify-center py-24 text-gray-500">Laden…</div>}>
+          {renderPage()}
+        </React.Suspense>
       </main>
       <Footer navigateTo={navigateTo} />
       <Toast message={toastMessage} />

@@ -26,7 +26,7 @@ const BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ 
 const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showToast }) => {
     
   useEffect(() => {
-    const schema = {
+        const schema = {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "mainEntityOfPage": {
@@ -58,15 +58,38 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
     script.innerHTML = JSON.stringify(schema);
     document.head.appendChild(script);
 
-    const metaDesc = document.createElement('meta');
-    metaDesc.name = 'description';
-    metaDesc.content = post.excerpt;
-    document.head.appendChild(metaDesc);
+        const ensure = (selector: string, create: () => HTMLElement) => {
+            let el = document.head.querySelector(selector) as HTMLElement | null;
+            if (!el) { el = create(); document.head.appendChild(el); }
+            return el;
+        };
+
+        const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
+        metaDesc.setAttribute('content', post.excerpt);
+
+        const url = window.location.href;
+        const setMeta = (attr: 'name'|'property', key: string, content: string) => {
+            const sel = attr === 'name' ? `meta[name="${key}"]` : `meta[property="${key}"]`;
+            const el = ensure(sel, () => { const m = document.createElement('meta'); m.setAttribute(attr, key); return m; });
+            el.setAttribute('content', content);
+            return el;
+        };
+        // Open Graph
+        const ogTitle = setMeta('property', 'og:title', `${post.title} — Gifteez.nl`);
+        const ogDesc = setMeta('property', 'og:description', post.excerpt);
+        const ogType = setMeta('property', 'og:type', 'article');
+        const ogUrl = setMeta('property', 'og:url', url);
+        const ogImage = setMeta('property', 'og:image', post.imageUrl);
+        // Twitter
+        const twCard = setMeta('name', 'twitter:card', 'summary_large_image');
+        const twTitle = setMeta('name', 'twitter:title', `${post.title} — Gifteez.nl`);
+        const twDesc = setMeta('name', 'twitter:description', post.excerpt);
+        const twImage = setMeta('name', 'twitter:image', post.imageUrl);
 
 
     return () => {
       document.head.removeChild(script);
-      document.head.removeChild(metaDesc);
+            // Don't remove meta tags; allow next page to overwrite. Only JSON-LD is cleaned up.
     };
   }, [post]);
 
