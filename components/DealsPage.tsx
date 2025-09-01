@@ -3,6 +3,7 @@ import React from 'react';
 import { NavigateTo, DealItem, DealCategory } from '../types';
 import { dealOfTheWeek, top10Deals, dealCategories } from '../data/dealsData';
 import Button from './Button';
+import { withAffiliate } from '../services/affiliate';
 import { StarIcon, TagIcon } from './IconComponents';
 import AmazonTeaser from './AmazonTeaser';
 
@@ -20,7 +21,7 @@ const DealCard: React.FC<{ item: DealItem }> = ({ item }) => (
             <p className="mt-2 text-gray-600 text-sm">{item.description}</p>
             <div className="mt-6 flex justify-between items-center">
                 <p className="font-bold text-primary text-lg">{item.price}</p>
-                <a href={item.affiliateLink} target="_blank" rel="noopener noreferrer">
+                <a href={withAffiliate(item.affiliateLink)} target="_blank" rel="noopener noreferrer sponsored nofollow">
                     <Button variant="primary" className="py-2 px-4 text-sm">Bekijk</Button>
                 </a>
             </div>
@@ -53,7 +54,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 <h2 className="font-display text-4xl font-bold text-primary mt-4">{dealOfTheWeek.name}</h2>
                 <p className="mt-4 text-gray-600 leading-relaxed">{dealOfTheWeek.description}</p>
                 <p className="font-display text-4xl font-bold text-accent mt-6">{dealOfTheWeek.price}</p>
-                <a href={dealOfTheWeek.affiliateLink} target="_blank" rel="noopener noreferrer" className="mt-6 block">
+                <a href={withAffiliate(dealOfTheWeek.affiliateLink)} target="_blank" rel="noopener noreferrer sponsored nofollow" className="mt-6 block">
                     <Button variant="accent" className="w-full md:w-auto">Profiteer van de deal</Button>
                 </a>
             </div>
@@ -80,7 +81,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                             <h3 className="font-display text-md font-bold text-primary flex-grow">{item.name}</h3>
                             <div className="mt-4 flex justify-between items-center">
                                 <p className="font-bold text-primary text-md">{item.price}</p>
-                                <a href={item.affiliateLink} target="_blank" rel="noopener noreferrer">
+                                <a href={withAffiliate(item.affiliateLink)} target="_blank" rel="noopener noreferrer sponsored nofollow">
                                     <Button variant="primary" className="py-1 px-3 text-xs">Bekijk</Button>
                                 </a>
                             </div>
