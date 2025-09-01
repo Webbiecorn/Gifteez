@@ -1,8 +1,9 @@
 import * as functions from 'firebase-functions';
+import { defineSecret } from 'firebase-functions/params';
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import { getItem, searchItems } from './amazon.js';
+import { getItem, searchItems, isPaapiConfigured } from './amazon.js';
 const cache = new Map();
 const TTL_MS = 1000 * 60 * 60; // 1 hour
 function getCache(key) {
@@ -41,6 +42,9 @@ app.get('/api/health', (_req, res) => {
 });
 app.get('/api/amazon-search', async (req, res) => {
     try {
+        if (!isPaapiConfigured()) {
+            return res.json({ items: [], fetchedAtISO: new Date().toISOString(), disabled: true });
+        }
         const { q, page, minPrice, maxPrice, sort, prime } = req.query;
         const keywords = String(q || '').trim();
         if (!keywords)
@@ -66,6 +70,9 @@ app.get('/api/amazon-search', async (req, res) => {
 });
 app.get('/api/amazon-item/:asin', async (req, res) => {
     try {
+        if (!isPaapiConfigured()) {
+            return res.json({ item: null, fetchedAtISO: new Date().toISOString(), disabled: true });
+        }
         const asin = String(req.params.asin || '').trim();
         if (!asin)
             return res.status(400).json({ error: 'Missing asin' });
@@ -81,4 +88,13 @@ app.get('/api/amazon-item/:asin', async (req, res) => {
         res.status(500).json({ error: e?.message || 'Unknown error' });
     }
 });
-export const api = functions.region('europe-west1').https.onRequest(app);
+// Bind PA-API secrets to the function to expose them via process.env at runtime.
+const PAAPI_ACCESS_KEY = defineSecret('PAAPI_ACCESS_KEY');
+const PAAPI_SECRET_KEY = defineSecret('PAAPI_SECRET_KEY');
+const PAAPI_PARTNER_TAG = defineSecret('PAAPI_PARTNER_TAG');
+const PAAPI_HOST = defineSecret('PAAPI_HOST');
+const PAAPI_REGION = defineSecret('PAAPI_REGION');
+export const api = functions
+    .region('europe-west1')
+    .runWith({ secrets: [PAAPI_ACCESS_KEY, PAAPI_SECRET_KEY, PAAPI_PARTNER_TAG, PAAPI_HOST, PAAPI_REGION] })
+    .https.onRequest(app);

@@ -77,7 +77,9 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
         </div>
         <div className="mt-12 pt-8 border-t border-blue-800 text-center text-gray-400 text-sm">
           <p>&copy; {new Date().getFullYear()} Gifteez.nl. Alle rechten voorbehouden.</p>
-          <p className="mt-2">Als partner van Bol.com, Amazon en andere webshops verdienen wij aan gekwalificeerde aankopen. Prijzen en beschikbaarheid kunnen veranderen. Controleer altijd de actuele prijs op de productpagina.</p>
+                <p className="mt-2">
+                  Als Amazon-partner en partner van Bol.com en andere webshops verdienen wij aan in aanmerking komende aankopen. Prijzen en beschikbaarheid kunnen veranderen. Controleer altijd de actuele prijs op de productpagina.
+                </p>
         </div>
       </div>
     </footer>

@@ -4,6 +4,7 @@ import { NavigateTo, DealItem, DealCategory } from '../types';
 import { dealOfTheWeek, top10Deals, dealCategories } from '../data/dealsData';
 import Button from './Button';
 import { StarIcon, TagIcon } from './IconComponents';
+import AmazonTeaser from './AmazonTeaser';
 
 interface DealsPageProps {
   navigateTo: NavigateTo;
@@ -88,6 +89,33 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 ))}
             </div>
         </section>
+
+                {/* Amazon teaser (affiliatelinks, geen API nodig) */}
+                <AmazonTeaser
+                    items={[
+                        {
+                            title: 'JBL Tune 510BT On‑Ear Koptelefoon',
+                            imageUrl: 'https://m.media-amazon.com/images/I/61ZP0edkQwL._AC_SL1500_.jpg',
+                              affiliateUrl: 'https://www.amazon.nl/dp/B08VJDLPG3?tag=gifteez77-21',
+                        },
+                        {
+                            title: 'LEGO Technic Formula E Porsche 99X',
+                            imageUrl: 'https://m.media-amazon.com/images/I/81gLz3J3iVL._AC_SL1500_.jpg',
+                              affiliateUrl: 'https://www.amazon.nl/dp/B0BPCPFRRC?tag=gifteez77-21',
+                        },
+                        {
+                            title: 'Rituals The Ritual of Sakura Gift Set',
+                            imageUrl: 'https://m.media-amazon.com/images/I/71CH1Ejh1cL._AC_SL1500_.jpg',
+                              affiliateUrl: 'https://www.amazon.nl/dp/B07W7J5Z5J?tag=gifteez77-21',
+                        },
+                        {
+                            title: 'Philips Hue White Ambiance E27 (2‑pack)',
+                            imageUrl: 'https://m.media-amazon.com/images/I/61khtjB8ZEL._AC_SL1500_.jpg',
+                              affiliateUrl: 'https://www.amazon.nl/dp/B07SNRG7V6?tag=gifteez77-21',
+                        },
+                    ]}
+                      note="Amazon‑links werken zonder API. Tag ingesteld: gifteez77-21."
+                />
 
         {/* Categorized Deals */}
         {dealCategories.map((category, index) => (

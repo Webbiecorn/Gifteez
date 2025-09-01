@@ -11,6 +11,13 @@ export interface AmazonItem {
   rating?: number;
 }
 
+export function isPaapiConfigured() {
+  const accessKey = process.env.PAAPI_ACCESS_KEY || '';
+  const secretKey = process.env.PAAPI_SECRET_KEY || '';
+  const partnerTag = process.env.PAAPI_PARTNER_TAG || '';
+  return Boolean(accessKey && secretKey && partnerTag);
+}
+
 function cfg() {
   const accessKey = process.env.PAAPI_ACCESS_KEY || '';
   const secretKey = process.env.PAAPI_SECRET_KEY || '';
