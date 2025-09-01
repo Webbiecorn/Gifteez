@@ -1,4 +1,5 @@
 import React from 'react';
+import { withAffiliate } from '../services/affiliate';
 
 type AmazonTeaserProps = {
   items: Array<{
@@ -21,7 +22,7 @@ const AmazonTeaser: React.FC<AmazonTeaserProps> = ({ items, note }) => {
             </div>
             <div className="p-4 flex flex-col flex-grow">
               <h3 className="font-display text-lg font-bold text-primary flex-grow">{it.title}</h3>
-              <a href={it.affiliateUrl} target="_blank" rel="noopener noreferrer sponsored nofollow" className="mt-4 inline-block bg-primary text-white rounded-md px-4 py-2 text-center font-semibold">
+              <a href={withAffiliate(it.affiliateUrl)} target="_blank" rel="noopener noreferrer sponsored nofollow" className="mt-4 inline-block bg-primary text-white rounded-md px-4 py-2 text-center font-semibold">
                 Bekijk op Amazon
               </a>
             </div>
