@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Gift, ShowToast } from '../types';
 import Button from './Button';
+import { withAffiliate } from '../services/affiliate';
 import { FacebookIcon, TwitterIcon, WhatsAppIcon, HeartIcon, HeartIconFilled } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -109,12 +110,12 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({ gift, index, onFavorite
         
         {gift.retailers && gift.retailers.length > 0 && (
             <div className="mt-6 space-y-2">
-                {gift.retailers.map((retailer, i) => (
+        {gift.retailers.map((retailer, i) => (
                     <a 
                       key={i} 
-                      href={retailer.affiliateLink} 
+          href={withAffiliate(retailer.affiliateLink)} 
                       target="_blank" 
-                      rel="noopener noreferrer" 
+          rel="noopener noreferrer sponsored nofollow" 
                       className="block"
                       aria-label={`Bekijk ${gift.productName} bij ${retailer.name}`}
                     >
