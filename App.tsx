@@ -52,6 +52,64 @@ const App: React.FC = () => {
   const [initialGiftFinderData, setInitialGiftFinderData] = useState<InitialGiftFinderData>({});
   const [toastMessage, setToastMessage] = useState('');
 
+  const pathFor = (page: Page, data?: any) => {
+    switch (page) {
+      case 'home': return '/';
+      case 'giftFinder': return '/giftfinder';
+      case 'categories': return '/categories';
+      case 'blog': return '/blog';
+      case 'blogDetail': return `/blog/${data?.slug ?? currentPostSlug ?? ''}`;
+      case 'favorites': return '/favorites';
+      case 'contact': return '/contact';
+      case 'about': return '/about';
+      case 'login': return '/login';
+      case 'signup': return '/signup';
+      case 'account': return '/account';
+      case 'quiz': return '/quiz';
+      case 'download': return '/download';
+      case 'shop': return '/shop';
+      case 'cart': return '/cart';
+      case 'checkoutSuccess': return '/checkout-success';
+      case 'deals': return '/deals';
+      default: return '/';
+    }
+  };
+
+  const applyRoute = useCallback(() => {
+    const { pathname } = window.location;
+    const parts = pathname.replace(/\/+$/, '').split('/').filter(Boolean);
+    if (parts.length === 0) { setCurrentPage('home'); setCurrentPostSlug(null); return; }
+    const [first, second] = parts;
+    switch (first) {
+      case 'giftfinder': setCurrentPage('giftFinder'); break;
+      case 'categories': setCurrentPage('categories'); break;
+      case 'blog':
+        if (second) { setCurrentPage('blogDetail'); setCurrentPostSlug(second); }
+        else { setCurrentPage('blog'); setCurrentPostSlug(null); }
+        break;
+      case 'favorites': setCurrentPage('favorites'); break;
+      case 'contact': setCurrentPage('contact'); break;
+      case 'about': setCurrentPage('about'); break;
+      case 'login': setCurrentPage('login'); break;
+      case 'signup': setCurrentPage('signup'); break;
+      case 'account': setCurrentPage('account'); break;
+      case 'quiz': setCurrentPage('quiz'); break;
+      case 'download': setCurrentPage('download'); break;
+      case 'shop': setCurrentPage('shop'); break;
+      case 'cart': setCurrentPage('cart'); break;
+      case 'checkout-success': setCurrentPage('checkoutSuccess'); break;
+      case 'deals': setCurrentPage('deals'); break;
+      default: setCurrentPage('home'); setCurrentPostSlug(null); break;
+    }
+  }, []);
+
+  useEffect(() => {
+    applyRoute();
+    const onPop = () => applyRoute();
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [applyRoute]);
+
   const navigateTo = useCallback((page: Page, data?: any) => {
     setInitialGiftFinderData({});
     setCurrentPostSlug(null);
@@ -62,6 +120,10 @@ const App: React.FC = () => {
         setCurrentPostSlug(data.slug);
     }
     setCurrentPage(page);
+    const newPath = pathFor(page, data);
+    if (window.location.pathname !== newPath) {
+      window.history.pushState({}, '', newPath);
+    }
     window.scrollTo(0, 0);
   }, []);
 

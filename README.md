@@ -1,3 +1,23 @@
+## Deploy
+- Development: `npm run dev`
+- Build: `npm run build`
+- Deploy (Firebase Hosting): `npm run deploy`
+
+## Environment
+Zet sleutels in `.env` met VITE_ prefix (zie `.env.example`).
+
+## SEO
+- Canonical, robots.txt, sitemap.xml (auto via prebuild script)
+- OG/Twitter tags met social image (`public/og-image-*.png`)
+- Structured data (Organization + Website) in `index.html`
+
+## PWA & Icons
+- Favicons en Apple touch icons worden automatisch gegenereerd uit `assets/favicon-source.png`
+- Maskable icons (192/512) in `manifest.webmanifest`
+- Safari pinned tab: `public/safari-pinned-tab.svg` (auto gegenereerd)
+
+## Routing
+- Simpele client-side routing via `App.tsx` met pushState; deep links op Firebase Hosting werken dankzij SPA rewrite.
 <div align="center">
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
