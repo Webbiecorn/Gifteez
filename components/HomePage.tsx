@@ -5,6 +5,7 @@ import Button from './Button';
 import TestimonialCard from './TestimonialCard';
 import { blogPosts } from '../data/blogData';
 import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon } from './IconComponents';
+import AmazonTeaser from './AmazonTeaser';
 
 interface HomePageProps {
   navigateTo: NavigateTo;
@@ -136,6 +137,19 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                   <Button variant="accent" onClick={() => navigateTo('deals')}>Bekijk de Deals</Button>
               </div>
           </div>
+      </section>
+
+      {/* Amazon Teaser Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '900ms' }}>
+        <AmazonTeaser
+          items={[
+            { title: 'JBL Tune 510BT On‑Ear Koptelefoon', imageUrl: 'https://m.media-amazon.com/images/I/61ZP0edkQwL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B08VJDLPG3?tag=gifteez77-21' },
+            { title: 'LEGO Technic Formula E Porsche 99X', imageUrl: 'https://m.media-amazon.com/images/I/81gLz3J3iVL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B0BPCPFRRC?tag=gifteez77-21' },
+            { title: 'Rituals The Ritual of Sakura Gift Set', imageUrl: 'https://m.media-amazon.com/images/I/71CH1Ejh1cL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B07W7J5Z5J?tag=gifteez77-21' },
+            { title: 'Philips Hue White Ambiance E27 (2‑pack)', imageUrl: 'https://m.media-amazon.com/images/I/61khtjB8ZEL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B07SNRG7V6?tag=gifteez77-21' },
+          ]}
+          note="Amazon‑links werken zonder API. Tag ingesteld: gifteez77-21."
+        />
       </section>
 
        {/* Shop CTA Section */}

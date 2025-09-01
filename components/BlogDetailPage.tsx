@@ -4,6 +4,7 @@ import { BlogPost, NavigateTo, Gift, ContentBlock, ShowToast, ComparisonTableBlo
 import { blogPosts } from '../data/blogData';
 import { CalendarIcon, ChevronRightIcon, FacebookIcon, TwitterIcon, WhatsAppIcon, CheckIcon, XCircleIcon, StarIcon } from './IconComponents';
 import GiftResultCard from './GiftResultCard';
+import AmazonTeaser from './AmazonTeaser';
 
 interface BlogDetailPageProps {
   post: BlogPost;
@@ -282,6 +283,17 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                 </div>
                             </div>
                         )}
+
+                                                {/* Amazon teaser (no API required) */}
+                                                <div className="bg-white p-6 rounded-lg shadow-lg">
+                                                    <AmazonTeaser
+                                                        items={[
+                                                            { title: 'JBL Tune 510BT On‑Ear Koptelefoon', imageUrl: 'https://m.media-amazon.com/images/I/61ZP0edkQwL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B08VJDLPG3?tag=gifteez77-21' },
+                                                            { title: 'Rituals Sakura Gift Set', imageUrl: 'https://m.media-amazon.com/images/I/71CH1Ejh1cL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B07W7J5Z5J?tag=gifteez77-21' }
+                                                        ]}
+                                                        note="Amazon‑links werken zonder API. Tag ingesteld: gifteez77-21."
+                                                    />
+                                                </div>
                     </div>
                 </aside>
             </div>
