@@ -26,6 +26,7 @@
       { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 }
     ],
     "rewrites": [
+      { "source": "/api/**", "function": "api" },
       { "source": "**", "destination": "/index.html" }
     ]
   }

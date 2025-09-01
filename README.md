@@ -49,15 +49,16 @@ Production-ready scaffold with Vite, TypeScript, Tailwind CSS, and placeholders 
     - Authentication > Sign-in method: Email/Password aanzetten
     - Firestore Database aanmaken (Production mode) en Rules instellen zoals in firestore.rules
 
+### Amazon API (server)
+
+We added a Firebase Functions API that proxies Amazon Product Advertising API (PA-API) calls. Configure secrets in the Functions environment (see `functions/README.md`). Hosting rewrites map `/api/**` to the `api` function.
+
 3) Run dev
    - npm run dev
 
 4) Build production
    - npm run build
    - npm run preview (optional)
-   - Public files (robots.txt, sitemap.xml) staan in /public en worden automatisch meegenomen
-
-## Notes
 - Tailwind is compiled locally via PostCSS. Styles live in index.css.
 - Vite env variables must be prefixed with VITE_.
 - Firebase is initialized in services/firebase.ts (only if env vars are set).
