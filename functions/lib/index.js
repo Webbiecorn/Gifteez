@@ -1,5 +1,4 @@
 import * as functions from 'firebase-functions';
-import { defineSecret } from 'firebase-functions/params';
 import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
@@ -40,6 +39,38 @@ app.use(rateLimit({ windowMs: 60000, max: 60 }));
 app.get('/api/health', (_req, res) => {
     res.json({ ok: true, time: new Date().toISOString() });
 });
+// Outbound redirect helper to avoid ad blockers breaking direct affiliate links
+// Only allows a safe-list of hosts and will ensure Amazon tag presence.
+// Shared redirect handler logic
+function handleAffiliateRedirect(req, res) {
+    try {
+        const to = String(req.query.to || '');
+        if (!to)
+            return res.status(400).send('Missing to');
+        const url = new URL(to);
+        if (!/^https?:$/.test(url.protocol))
+            return res.status(400).send('Invalid protocol');
+        const host = url.hostname.toLowerCase();
+        const allowed = ['amazon.nl', 'www.amazon.nl', 'bol.com', 'www.bol.com'];
+        if (!allowed.includes(host))
+            return res.status(400).send('Host not allowed');
+        // If Amazon, enforce associate tag
+        if (host.endsWith('amazon.nl')) {
+            const partnerTag = process.env.PAAPI_PARTNER_TAG || 'gifteez77-21';
+            if (!url.searchParams.has('tag'))
+                url.searchParams.set('tag', partnerTag);
+        }
+        // 302 Found redirect
+        res.redirect(302, url.toString());
+    }
+    catch (e) {
+        res.status(400).send('Bad request');
+    }
+}
+// Backwards-compatible path
+app.get('/api/out', (req, res) => handleAffiliateRedirect(req, res));
+// New, less blocker-prone path
+app.get('/api/visit', (req, res) => handleAffiliateRedirect(req, res));
 app.get('/api/amazon-search', async (req, res) => {
     try {
         if (!isPaapiConfigured()) {
@@ -88,13 +119,13 @@ app.get('/api/amazon-item/:asin', async (req, res) => {
         res.status(500).json({ error: e?.message || 'Unknown error' });
     }
 });
-// Bind PA-API secrets to the function to expose them via process.env at runtime.
-const PAAPI_ACCESS_KEY = defineSecret('PAAPI_ACCESS_KEY');
-const PAAPI_SECRET_KEY = defineSecret('PAAPI_SECRET_KEY');
-const PAAPI_PARTNER_TAG = defineSecret('PAAPI_PARTNER_TAG');
-const PAAPI_HOST = defineSecret('PAAPI_HOST');
-const PAAPI_REGION = defineSecret('PAAPI_REGION');
+// Export HTTPS function without Secret Manager binding; code handles missing secrets gracefully.
 export const api = functions
     .region('europe-west1')
-    .runWith({ secrets: [PAAPI_ACCESS_KEY, PAAPI_SECRET_KEY, PAAPI_PARTNER_TAG, PAAPI_HOST, PAAPI_REGION] })
     .https.onRequest(app);
+// Dedicated 404 function to deliver an actual 404 HTTP status (can be targeted via rewrite to /404)
+export const notFound = functions
+    .region('europe-west1')
+    .https.onRequest((_req, res) => {
+    res.status(404).set('Cache-Control', 'public, max-age=60').send(`<!DOCTYPE html><html lang="nl"><head><meta charset='UTF-8'><title>404 - Pagina niet gevonden</title><meta name='robots' content='noindex, follow'><meta name='viewport' content='width=device-width,initial-scale=1'><style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f8fafc;color:#334155;padding:2rem;text-align:center}h1{font-size:4rem;margin:.2em 0;color:#e11d48}p{max-width:40rem;margin:0 auto 1.2rem;line-height:1.5}a{display:inline-block;margin:.35rem .45rem;padding:.8rem 1.3rem;border-radius:999px;font-weight:600;text-decoration:none}a.primary{background:#e11d48;color:#fff}a.secondary{background:#f1f5f9;color:#e11d48}a.primary:hover{background:#be123c}a.secondary:hover{background:#e2e8f0}</style></head><body><main><h1>404</h1><p>De pagina die je zoekt bestaat niet. Gebruik de links hieronder om verder te gaan.</p><div><a class='primary' href='/'>Home</a><a class='secondary' href='/giftfinder'>GiftFinder</a><a class='secondary' href='/blog'>Blogs</a><a class='secondary' href='/deals'>Deals</a></div></main></body></html>`);
+});

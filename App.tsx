@@ -18,12 +18,13 @@ const SignUpPage = ReactLazy(() => import('./components/SignUpPage'));
 const AccountPage = ReactLazy(() => import('./components/AccountPage'));
 const QuizPage = ReactLazy(() => import('./components/QuizPage'));
 const DownloadPage = ReactLazy(() => import('./components/DownloadPage'));
-const ShopPage = ReactLazy(() => import('./components/ShopPage'));
 const CartPage = ReactLazy(() => import('./components/CartPage'));
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'));
 const DealsPage = ReactLazy(() => import('./components/DealsPage'));
+const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
+const PrivacyPolicyPage = ReactLazy(() => import('./components/PrivacyPolicyPage'));
+const NotFoundPage = ReactLazy(() => import('./components/NotFoundPage'));
 import { Page, InitialGiftFinderData, Gift } from './types';
-import { blogPosts } from './data/blogData';
 import { AuthContext } from './contexts/AuthContext';
 import { SpinnerIcon } from './components/IconComponents';
 
@@ -68,11 +69,13 @@ const App: React.FC = () => {
       case 'account': return '/account';
       case 'quiz': return '/quiz';
       case 'download': return '/download';
-      case 'shop': return '/shop';
       case 'cart': return '/cart';
       case 'checkoutSuccess': return '/checkout-success';
       case 'deals': return '/deals';
-      default: return '/';
+  case 'disclaimer': return '/disclaimer';
+  case 'privacy': return '/privacy';
+  case 'notFound': return '/404';
+  default: return '/404';
     }
   };
 
@@ -96,11 +99,27 @@ const App: React.FC = () => {
       case 'account': setCurrentPage('account'); break;
       case 'quiz': setCurrentPage('quiz'); break;
       case 'download': setCurrentPage('download'); break;
-      case 'shop': setCurrentPage('shop'); break;
+      case 'shop': {
+        // Temporarily redirect /shop to /deals
+        setCurrentPage('deals');
+        if (window.location.pathname !== '/deals') {
+          window.history.replaceState({}, '', '/deals');
+        }
+        break;
+      }
       case 'cart': setCurrentPage('cart'); break;
       case 'checkout-success': setCurrentPage('checkoutSuccess'); break;
       case 'deals': setCurrentPage('deals'); break;
-      default: setCurrentPage('home'); setCurrentPostSlug(null); break;
+  case 'disclaimer': setCurrentPage('disclaimer'); break;
+  case 'privacy': setCurrentPage('privacy'); break;
+  case '404': setCurrentPage('notFound'); break;
+      default: {
+        setCurrentPage('notFound'); setCurrentPostSlug(null);
+        if (window.location.pathname !== '/404') {
+          window.history.replaceState({}, '', '/404');
+        }
+        break;
+      }
     }
   }, []);
 
@@ -112,6 +131,10 @@ const App: React.FC = () => {
   }, [applyRoute]);
 
   const navigateTo = useCallback((page: Page, data?: any) => {
+    // Temporary: reroute any programmatic navigation to 'shop' towards 'deals'
+    if (page === 'shop') {
+      page = 'deals';
+    }
     setInitialGiftFinderData({});
     setCurrentPostSlug(null);
 
@@ -145,6 +168,36 @@ const App: React.FC = () => {
     return <SharedFavoritesPage gifts={sharedGifts} navigateToHome={() => setSharedGifts(null)} />;
   }
 
+  // Helper: ensure a canonical tag always reflects the current URL (prevents duplicate content signals)
+  useEffect(() => {
+    const ensureCanonical = () => {
+      const existing = document.querySelector('link[rel="canonical"]');
+      const href = window.location.origin + window.location.pathname.replace(/\/+/g, '/');
+      if (existing) {
+        existing.setAttribute('href', href);
+      } else {
+        const link = document.createElement('link');
+        link.rel = 'canonical';
+        link.href = href;
+        document.head.appendChild(link);
+      }
+    };
+    ensureCanonical();
+  }, [currentPage, currentPostSlug]);
+
+  // Dynamic robots meta: block low-value utility/account pages
+  useEffect(() => {
+    const disallowPages: Page[] = ['login','signup','account','checkoutSuccess','cart'];
+    const value = disallowPages.includes(currentPage) ? 'noindex, nofollow' : 'index, follow';
+    let robots = document.head.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.appendChild(robots);
+    }
+    robots.content = value;
+  }, [currentPage]);
+
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
@@ -156,11 +209,9 @@ const App: React.FC = () => {
       case 'blog':
         return <BlogPage navigateTo={navigateTo} />;
       case 'blogDetail':
-        const post = blogPosts.find(p => p.slug === currentPostSlug);
-        if (post) {
-            return <BlogDetailPage post={post} navigateTo={navigateTo} showToast={showToast} />;
+        if (currentPostSlug) {
+          return <BlogDetailPage slug={currentPostSlug} navigateTo={navigateTo} showToast={showToast} />;
         }
-        // Fallback to blog overview if slug not found
         return <BlogPage navigateTo={navigateTo} />;
       case 'favorites':
         return <FavoritesPage navigateTo={navigateTo} showToast={showToast} />;
@@ -178,16 +229,18 @@ const App: React.FC = () => {
         return <QuizPage navigateTo={navigateTo} />;
       case 'download':
         return <DownloadPage navigateTo={navigateTo} />;
-      case 'shop':
-        return <ShopPage navigateTo={navigateTo} showToast={showToast} />;
       case 'cart':
         return <CartPage navigateTo={navigateTo} showToast={showToast} />;
       case 'checkoutSuccess':
         return <CheckoutSuccessPage navigateTo={navigateTo} />;
       case 'deals':
         return <DealsPage navigateTo={navigateTo} />;
-      default:
-        return <HomePage navigateTo={navigateTo} />;
+      case 'disclaimer':
+        return <DisclaimerPage />;
+      case 'privacy':
+        return <PrivacyPolicyPage />;
+      case 'notFound':
+        return <NotFoundPage navigateTo={navigateTo} />;
     }
   };
 

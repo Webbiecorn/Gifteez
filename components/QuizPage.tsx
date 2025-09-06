@@ -5,6 +5,7 @@ import { quizQuestions, quizResults } from '../data/quizData';
 import { blogPosts } from '../data/blogData';
 import Button from './Button';
 import { GiftIcon } from './IconComponents';
+import ImageWithFallback from './ImageWithFallback';
 
 interface QuizPageProps {
   navigateTo: NavigateTo;
@@ -126,7 +127,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ navigateTo }) => {
                                 className="flex items-center gap-4 p-3 bg-light-bg rounded-lg cursor-pointer hover:bg-gray-200 transition-colors"
                                 onClick={() => navigateTo('blogDetail', { slug: post.slug })}
                             >
-                                <img src={post.imageUrl} alt={post.title} className="w-20 h-20 object-cover rounded-md" />
+                                <ImageWithFallback src={post.imageUrl} alt={post.title} className="w-20 h-20 object-cover rounded-md" />
                                 <div>
                                     <h4 className="font-bold text-primary">{post.title}</h4>
                                     <p className="text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>

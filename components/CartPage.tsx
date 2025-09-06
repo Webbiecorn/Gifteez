@@ -3,6 +3,7 @@ import { NavigateTo, ShowToast, CartItem } from '../types';
 import { CartContext } from '../contexts/CartContext';
 import Button from './Button';
 import { TrashIcon, ShoppingCartIcon } from './IconComponents';
+import ImageWithFallback from './ImageWithFallback';
 
 interface CartPageProps {
   navigateTo: NavigateTo;
@@ -38,7 +39,7 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
             <ShoppingCartIcon className="w-24 h-24 text-gray-300 mx-auto" />
             <p className="mt-4 text-lg text-gray-600">Je winkelwagen is leeg.</p>
             <div className="mt-6">
-              <Button variant="accent" onClick={() => navigateTo('shop')}>
+              <Button variant="accent" onClick={() => navigateTo('deals')}>
                 Ga naar de Winkel
               </Button>
             </div>
@@ -49,7 +50,7 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
               {cart.map((item: CartItem) => (
                 <div key={item.id} className="flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex items-center gap-4">
-                    <img src={item.imageUrl} alt={item.name} className="w-20 h-24 object-cover rounded-md" />
+                    <ImageWithFallback src={item.imageUrl} alt={item.name} className="w-20 h-24 object-cover rounded-md" />
                     <div>
                       <h3 className="font-bold text-primary text-lg">{item.name}</h3>
                       <p className="text-sm text-gray-600">Aantal: {item.quantity}</p>

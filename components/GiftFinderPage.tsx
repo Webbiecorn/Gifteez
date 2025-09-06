@@ -1,6 +1,13 @@
 import React, { useState, useCallback, useEffect, useContext, ChangeEvent } from 'react';
 import { Gift, InitialGiftFinderData, ShowToast, GiftProfile } from '../types';
-import { findGifts } from '../services/geminiService';
+// Lazy import AI service zodat de startbundle kleiner wordt
+let _findGifts: typeof import('../services/geminiService').findGifts | null = null;
+async function loadFindGifts() {
+  if (_findGifts) return _findGifts;
+  const mod = await import('../services/geminiService');
+  _findGifts = mod.findGifts;
+  return _findGifts;
+}
 import Button from './Button';
 import GiftResultCard from './GiftResultCard';
 import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents';
@@ -35,7 +42,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [occasion, setOccasion] = useState<string>(occasions[0]);
   const [interests, setInterests] = useState<string>('');
   
-  const [gifts, setGifts] = useState<Gift[]>([]);
+  const [gifts, setGifts] = useState<Gift[]>([]); // currently visible
+  const [allGifts, setAllGifts] = useState<Gift[]>([]); // full filtered list
+  const [visibleCount, setVisibleCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
@@ -72,12 +81,25 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     
     setIsLoading(true);
     setError(null);
-    setGifts([]);
+  setGifts([]);
+  setAllGifts([]);
+  setVisibleCount(0);
     setSearchPerformed(true);
 
     try {
-      const results = await findGifts(recipient, budget, occasion, interests);
-      setGifts(results);
+      const findGifts = await loadFindGifts();
+      const results = await findGifts(recipient, budget, occasion, interests, { count: 12 });
+      // Temporarily: only keep results that have at least one Amazon.nl retailer
+  const amazonOnly = results
+        .map(g => ({
+          ...g,
+          retailers: (g.retailers || []).filter(r => /(^|\.)amazon\.nl$/i.test(new URL(r.affiliateLink).hostname))
+        }))
+        .filter(g => g.retailers && g.retailers.length > 0);
+  setAllGifts(amazonOnly);
+  const initial = amazonOnly.slice(0, 3);
+  setGifts(initial);
+  setVisibleCount(initial.length);
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred.');
     } finally {
@@ -212,9 +234,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         </form>
 
         <div className="mt-16">
-          {isLoading && (
+      {isLoading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[...Array(3)].map((_, i) => <GiftResultCardSkeleton key={i} />)}
+        {[...Array(3)].map((_, i) => <GiftResultCardSkeleton key={i} />)}
             </div>
           )}
           {error && <p className="text-center text-red-600 bg-red-100 p-4 rounded-md">{error}</p>}
@@ -231,8 +253,33 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             <div className="opacity-0 animate-fade-in">
               <h2 className="font-display text-3xl font-bold text-center text-primary mb-8">Hier zijn je AI-cadeautips!</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {gifts.map((gift, index) => <GiftResultCard key={gift.productName} gift={gift} index={index} showToast={showToast} />)}
+                {gifts.map((gift, index) => (
+                  <GiftResultCard
+                    key={gift.productName}
+                    gift={gift}
+                    index={index}
+                    showToast={showToast}
+                    hideImage
+                  />
+                ))}
               </div>
+
+        {visibleCount < allGifts.length && (
+                <div className="mt-8 text-center">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => {
+          const next = Math.min(visibleCount + 3, allGifts.length);
+                      setGifts(allGifts.slice(0, next));
+                      setVisibleCount(next);
+                    }}
+                    className="px-6"
+                  >
+                    Meer laden
+                  </Button>
+                </div>
+              )}
               
               <div className="mt-12 text-center p-6 bg-secondary rounded-lg">
                 <h3 className="font-display text-xl font-bold text-primary">Tevreden met deze suggesties?</h3>

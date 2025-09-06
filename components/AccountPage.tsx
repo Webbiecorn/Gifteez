@@ -90,6 +90,42 @@ const AccountPage: React.FC<AccountPageProps> = ({ navigateTo, showToast }) => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Email verification notice */}
+        {auth.currentUser.emailVerified === false && (
+            <div className="mb-6 border border-yellow-300 bg-yellow-50 text-yellow-900 p-4 rounded-md">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <p>
+                        Bevestig je e-mailadres om alle functies te gebruiken. We hebben een verificatiemail gestuurd.
+                    </p>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="primary"
+                            onClick={async () => {
+                                const ok = await auth.sendVerificationEmail();
+                                if (ok) {
+                                    showToast('Verificatie-e-mail verzonden. Bekijk je inbox.');
+                                } else {
+                                    showToast('Kon verificatie niet versturen. Probeer later opnieuw.');
+                                }
+                            }}
+                        >
+                            Stuur opnieuw
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            onClick={async () => {
+                                const ok = await auth.refreshAuthUser();
+                                if (ok) {
+                                    showToast('Status bijgewerkt.');
+                                }
+                            }}
+                        >
+                            Status verversen
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        )}
         {isModalOpen && (
             <ProfileModal
                 profileToEdit={editingProfile}

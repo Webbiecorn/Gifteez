@@ -1,21 +1,23 @@
 
 import React, { useEffect } from 'react';
+import ImageWithFallback from './ImageWithFallback';
+import AffiliateNotice from './AffiliateNotice';
 import { BlogPost, NavigateTo, Gift, ContentBlock, ShowToast, ComparisonTableBlock, ProsConsBlock, VerdictBlock } from '../types';
-import { blogPosts } from '../data/blogData';
 import { CalendarIcon, ChevronRightIcon, FacebookIcon, TwitterIcon, WhatsAppIcon, CheckIcon, XCircleIcon, StarIcon } from './IconComponents';
 import GiftResultCard from './GiftResultCard';
 import AmazonTeaser from './AmazonTeaser';
+import { amazonTeaserItems } from '../data/amazonItems';
 
 interface BlogDetailPageProps {
-  post: BlogPost;
-  navigateTo: NavigateTo;
-  showToast: ShowToast;
+    slug: string;
+    navigateTo: NavigateTo;
+    showToast: ShowToast;
 }
 
 const BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ post, navigateTo }) => (
     <div className="bg-white rounded-lg shadow-md overflow-hidden group cursor-pointer flex gap-4" onClick={() => navigateTo('blogDetail', { slug: post.slug })}>
         <div className="overflow-hidden w-1/3">
-            <img src={post.imageUrl} alt={post.title} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"/>
+            <ImageWithFallback src={post.imageUrl} alt={post.title} className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"/>
         </div>
         <div className="p-2 w-2/3">
             <h4 className="font-display text-md font-bold text-primary line-clamp-2">{post.title}</h4>
@@ -24,9 +26,43 @@ const BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ 
     </div>
 );
 
-const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showToast }) => {
+const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showToast }) => {
+    const [post, setPost] = React.useState<BlogPost | null>(null);
+    const [allPosts, setAllPosts] = React.useState<BlogPost[]>([]);
+    const [loaded, setLoaded] = React.useState(false);
+
+    useEffect(() => {
+        let active = true;
+        setLoaded(false);
+        import('../data/blogData').then(mod => {
+            if (!active) return;
+            setAllPosts(mod.blogPosts);
+            const found = mod.blogPosts.find(p => p.slug === slug) || null;
+            setPost(found);
+            setLoaded(true);
+        });
+        return () => { active = false; };
+    }, [slug]);
+
+    // If finished loading and no post found -> navigate to 404 (hard UX + proper signal)
+    useEffect(() => {
+        if (loaded && post === null) {
+            // Use navigateTo so history + internal state stay consistent
+            if (window.location.pathname !== '/404') {
+                navigateTo('notFound');
+            }
+        }
+    }, [loaded, post, navigateTo]);
+
+    if (!loaded) {
+        return <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center text-gray-500">Artikel laden…</div>;
+    }
+    if (loaded && post === null) {
+        // Brief empty placeholder; navigation effect above will swap view
+        return <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center text-gray-500">Niet gevonden…</div>;
+    }
     
-  useEffect(() => {
+    useEffect(() => {
         const schema = {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -47,7 +83,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
             "name": "Gifteez.nl",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://picsum.photos/seed/logo/200/60" // Placeholder logo
+                "url": "https://gifteez.nl/android-chrome-512x512.png"
             }
         },
         "datePublished": post.publishedDate,
@@ -68,7 +104,10 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
         const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
         metaDesc.setAttribute('content', post.excerpt);
 
-        const url = window.location.href;
+    const url = window.location.href;
+    // Canonical
+    const canonical = document.querySelector('link[rel="canonical"]') || (() => { const l = document.createElement('link'); l.rel='canonical'; document.head.appendChild(l); return l; })();
+    canonical.setAttribute('href', url.split('?')[0]);
         const setMeta = (attr: 'name'|'property', key: string, content: string) => {
             const sel = attr === 'name' ? `meta[name="${key}"]` : `meta[property="${key}"]`;
             const el = ensure(sel, () => { const m = document.createElement('meta'); m.setAttribute(attr, key); return m; });
@@ -103,7 +142,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
     { name: 'WhatsApp', icon: WhatsAppIcon, url: `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}` }
   ];
 
-  const relatedPosts = blogPosts.filter(p => p.category === post.category && p.slug !== post.slug).slice(0, 3);
+    const relatedPosts = allPosts.filter(p => p.category === post.category && p.slug !== post.slug).slice(0, 3);
   
   const headings = post.content.filter(block => block.type === 'heading') as {type: 'heading', content: string}[];
   const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
@@ -191,7 +230,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
     }
   }
 
-  const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
+    const formattedDate = new Date(post!.publishedDate).toLocaleDateString('nl-NL', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
 
@@ -212,12 +251,12 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                 <main className="lg:col-span-8">
                     <div className="bg-white p-8 md:p-12 rounded-lg shadow-lg">
                         <header>
-                            <p className="text-sm font-bold text-accent">{post.category.toUpperCase()}</p>
-                            <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mt-2">{post.title}</h1>
+                            <p className="text-sm font-bold text-accent">{post!.category.toUpperCase()}</p>
+                            <h1 className="font-display text-4xl md:text-5xl font-bold text-primary mt-2">{post!.title}</h1>
                             <div className="flex items-center gap-x-6 mt-6 text-sm text-gray-600 border-b pb-6">
                                 <div className="flex items-center gap-2">
-                                    <img src={post.author.avatarUrl} alt={post.author.name} className="w-10 h-10 rounded-full object-cover"/>
-                                    <span className="font-semibold">{post.author.name}</span>
+                                    <ImageWithFallback src={post!.author.avatarUrl} alt={post!.author.name} className="w-10 h-10 rounded-full object-cover"/>
+                                    <span className="font-semibold">{post!.author.name}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <CalendarIcon className="w-5 h-5"/>
@@ -227,7 +266,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         </header>
 
                         <div className="w-full my-8 rounded-lg overflow-hidden">
-                            <img src={post.imageUrl} alt={post.title} className="w-full h-auto object-cover"/>
+                            <ImageWithFallback src={post!.imageUrl} alt={post!.title} className="w-full h-auto object-cover"/>
                         </div>
                         
                         {headings.length > 1 && (
@@ -286,14 +325,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
 
                                                 {/* Amazon teaser (no API required) */}
                                                 <div className="bg-white p-6 rounded-lg shadow-lg">
-                                                    <AmazonTeaser
-                                                        items={[
-                                                            { title: 'JBL Tune 510BT On‑Ear Koptelefoon', imageUrl: 'https://m.media-amazon.com/images/I/61ZP0edkQwL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B08VJDLPG3?tag=gifteez77-21' },
-                                                            { title: 'Rituals Sakura Gift Set', imageUrl: 'https://m.media-amazon.com/images/I/71CH1Ejh1cL._AC_SL1500_.jpg', affiliateUrl: 'https://www.amazon.nl/dp/B07W7J5Z5J?tag=gifteez77-21' }
-                                                        ]}
-                                                        note="Amazon‑links werken zonder API. Tag ingesteld: gifteez77-21."
-                                                    />
+                                                    <AmazonTeaser items={amazonTeaserItems.slice(0, 3)} variant="sidebar" />
                                                 </div>
+                                                <AffiliateNotice className="bg-white/60 border-none" />
                     </div>
                 </aside>
             </div>

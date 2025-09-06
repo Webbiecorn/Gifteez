@@ -131,14 +131,14 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                         <MailIcon className="w-6 h-6 text-primary" />
                         <span className="text-gray-700 group-hover:text-accent transition-colors">info@gifteez.nl</span>
                     </a>
-                    <div className="flex items-center gap-4">
-                         <InstagramIcon className="w-6 h-6 text-primary" />
-                         <span className="text-gray-700">Volg ons op Instagram</span>
-                    </div>
-                     <div className="flex items-center gap-4">
-                         <PinterestIcon className="w-6 h-6 text-primary" />
-                         <span className="text-gray-700">Bekijk ons op Pinterest</span>
-                    </div>
+        <a href="https://www.instagram.com/gifteez.nl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
+          <InstagramIcon className="w-6 h-6 text-primary group-hover:text-accent transition-colors" />
+          <span className="text-gray-700 group-hover:text-accent transition-colors">Volg ons op Instagram</span>
+        </a>
+        <a href="https://www.pinterest.com/gifteez01/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
+          <PinterestIcon className="w-6 h-6 text-primary group-hover:text-accent transition-colors" />
+          <span className="text-gray-700 group-hover:text-accent transition-colors">Bekijk ons op Pinterest</span>
+        </a>
                 </div>
             </div>
              <div className="bg-white p-8 rounded-lg shadow-lg">

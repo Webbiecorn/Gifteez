@@ -7,7 +7,7 @@ const gift_duurzaam_1: Gift = {
   description: "Stijlvolle, duurzame beker gemaakt van koffieschillen. Perfect voor onderweg en helpt de afvalberg te verminderen.",
   priceRange: "€15 - €25",
   retailers: [{ name: "Bol.com", affiliateLink: "https://www.bol.com/nl/nl/s/?searchtext=HuskeeCup" }],
-  imageUrl: "https://picsum.photos/seed/huskee/300/300"
+  imageUrl: "https://picsum.photos/seed/reusable-coffee-cup/300/300"
 };
 
 const gift_duurzaam_2: Gift = {
@@ -15,7 +15,7 @@ const gift_duurzaam_2: Gift = {
   description: "100% gerecycled en superzacht toiletpapier. Met de winst bouwen ze toiletten in ontwikkelingslanden. Een cadeau met impact!",
   priceRange: "€20 - €30",
   retailers: [{ name: "The Good Roll", affiliateLink: "https://www.thegoodroll.com/" }],
-  imageUrl: "https://picsum.photos/seed/goodroll/300/300"
+  imageUrl: "https://picsum.photos/seed/eco-toilet-paper/300/300"
 };
 
 const gift_man_1: Gift = {
@@ -26,7 +26,7 @@ const gift_man_1: Gift = {
         { name: "Bol.com", affiliateLink: "https://www.bol.com/nl/nl/s/?searchtext=LEGO+Technic+auto" },
         { name: "Amazon.nl", affiliateLink: "https://www.amazon.nl/s?k=LEGO+Technic+auto" },
     ],
-    imageUrl: "https://picsum.photos/seed/legocar/300/300"
+  imageUrl: "https://picsum.photos/seed/lego-technic-car/300/300"
 };
 
 const gift_man_2: Gift = {
@@ -36,7 +36,7 @@ const gift_man_2: Gift = {
     retailers: [
         { name: "Bol.com", affiliateLink: "https://www.bol.com/nl/nl/s/?searchtext=luxe+scheerset+man" },
     ],
-    imageUrl: "https://picsum.photos/seed/shaving/300/300"
+  imageUrl: "https://picsum.photos/seed/shaving-kit-classy/300/300"
 };
 
 const gift_kerst_1: Gift = {
@@ -44,7 +44,7 @@ const gift_kerst_1: Gift = {
     description: "Een luxe giftset met heerlijk geurende producten voor een ontspannen moment. Een klassieker die altijd goed is.",
     priceRange: "€25 - €75",
     retailers: [{ name: "Bol.com", affiliateLink: "https://www.bol.com/nl/nl/s/?searchtext=Rituals+giftset" }],
-    imageUrl: "https://picsum.photos/seed/rituals/300/300"
+  imageUrl: "https://picsum.photos/seed/cosmetics-gift-set/300/300"
 };
 
 const gift_kerst_2: Gift = {
@@ -52,7 +52,7 @@ const gift_kerst_2: Gift = {
     description: "Een compacte, draagbare en krachtige speaker voor thuis en onderweg. Waterdicht en met een indrukwekkend geluid.",
     priceRange: "€150 - €200",
     retailers: [{ name: "Coolblue", affiliateLink: "https://www.coolblue.nl/product/885783/sonos-roam-sl-wit.html" }],
-    imageUrl: "https://picsum.photos/seed/sonos/300/300"
+  imageUrl: "https://picsum.photos/seed/portable-speaker/300/300"
 };
 
 const gift_earbuds_1: Gift = {
@@ -60,7 +60,7 @@ const gift_earbuds_1: Gift = {
     description: "Indrukwekkende noise cancelling, draadloos opladen en een aanpasbaar geluid via de app. Enorme waarde voor je geld.",
     priceRange: "€70 - €90",
     retailers: [{ name: "Coolblue", affiliateLink: "https://www.coolblue.nl/product/889553/anker-soundcore-life-p3-zwart.html" }],
-    imageUrl: "https://picsum.photos/seed/anker-p3/300/300"
+  imageUrl: "https://picsum.photos/seed/wireless-earbuds-black/300/300"
 };
 
 const gift_earbuds_2: Gift = {
@@ -68,7 +68,7 @@ const gift_earbuds_2: Gift = {
     description: "De kenmerkende diepe bas van JBL, actieve noise cancelling en een comfortabele pasvorm voor dagelijks gebruik.",
     priceRange: "€60 - €80",
     retailers: [{ name: "Bol.com", affiliateLink: "https://www.bol.com/nl/nl/p/jbl-tune-230nc-tws-draadloze-oordopjes-met-noise-cancelling-zwart/9300000057285194/" }],
-    imageUrl: "https://picsum.photos/seed/jbl-230/300/300"
+  imageUrl: "https://picsum.photos/seed/wireless-earbuds-orange/300/300"
 };
 
 const gift_earbuds_3: Gift = {
@@ -76,7 +76,7 @@ const gift_earbuds_3: Gift = {
     description: "Focus op geluidskwaliteit. Compact, licht en met Sony's DSEE-technologie die de muziekkwaliteit verbetert.",
     priceRange: "€50 - €70",
     retailers: [{ name: "Amazon.nl", affiliateLink: "https://www.amazon.nl/Sony-WF-C500-volledig-draadloze-hoofdtelefoon/dp/B09HSJ3C64/" }],
-    imageUrl: "https://picsum.photos/seed/sony-c500/300/300"
+  imageUrl: "https://picsum.photos/seed/wireless-earbuds-green/300/300"
 };
 
 export const blogPosts: BlogPost[] = [
@@ -84,7 +84,7 @@ export const blogPosts: BlogPost[] = [
     slug: "ultieme-gids-kerstcadeaus",
     title: "De Ultieme Gids voor Kerstcadeaus 2024",
     excerpt: "Van de nieuwste tech-gadgets tot persoonlijke en duurzame cadeaus. Met deze complete gids vind je gegarandeerd het perfecte kerstcadeau voor iedereen op je lijst.",
-    imageUrl: "https://picsum.photos/seed/blog-kerst/800/600",
+  imageUrl: "https://picsum.photos/seed/christmas-gifts/800/600",
     category: "Kerstmis",
     author: { name: "Gifteez Redactie", avatarUrl: "https://i.pravatar.cc/150?u=redactie" },
     publishedDate: "2024-11-15",
@@ -102,7 +102,7 @@ export const blogPosts: BlogPost[] = [
     slug: "vergelijking-draadloze-oordopjes",
     title: "De Beste Draadloze Oordopjes Onder €100 (2025)",
     excerpt: "Op zoek naar de beste 'bang for your buck'? We vergelijken de Anker Soundcore Life P3, JBL Tune 230NC en Sony WF-C500 om jou te helpen de perfecte keuze te maken.",
-    imageUrl: "https://picsum.photos/seed/earbuds-main/800/600",
+  imageUrl: "https://picsum.photos/seed/earbuds-wireless/800/600",
     category: "Tech",
     author: { name: "Mark de Cadeau-Expert", avatarUrl: "https://i.pravatar.cc/150?u=mark" },
     publishedDate: "2025-02-01",
@@ -158,7 +158,7 @@ export const blogPosts: BlogPost[] = [
     slug: "originele-cadeaus-voor-de-man",
     title: "10 Originele Cadeaus voor de Man Die Alles Al Heeft",
     excerpt: "Moeite met het vinden van een cadeau voor hem? Deze lijst staat vol met unieke en verrassende ideeën die gegarandeerd in de smaak vallen.",
-    imageUrl: "https://picsum.photos/seed/blog1/600/400",
+  imageUrl: "https://picsum.photos/seed/gifts-for-him/600/400",
     category: "Voor Hem",
     author: { name: "Mark de Cadeau-Expert", avatarUrl: "https://i.pravatar.cc/150?u=mark" },
     publishedDate: "2024-10-28",
@@ -176,7 +176,7 @@ export const blogPosts: BlogPost[] = [
     slug: "duurzame-cadeaus-die-goed-doen",
     title: "Duurzame Cadeaus: Geef Een Gift Die Goed Doet",
     excerpt: "Ontdek onze selectie van milieuvriendelijke en ethisch verantwoorde cadeaus. Perfect voor de bewuste consument die de wereld een beetje beter wil maken.",
-    imageUrl: "https://picsum.photos/seed/blog2/600/400",
+  imageUrl: "https://picsum.photos/seed/sustainable-gifts/600/400",
     category: "Duurzaam",
     author: { name: "Linda Groen", avatarUrl: "https://i.pravatar.cc/150?u=linda" },
     publishedDate: "2024-10-12",
@@ -194,7 +194,7 @@ export const blogPosts: BlogPost[] = [
     slug: "valentijnsdag-cadeau-gids",
     title: "De Ultieme Gids voor Valentijnsdag Cadeaus",
     excerpt: "Of je nu op zoek bent naar iets romantisch, persoonlijks of gewoon leuks, hier vind je de beste cadeaus om je liefde te tonen en de dag onvergetelijk te maken.",
-    imageUrl: "https://picsum.photos/seed/blog3/600/400",
+  imageUrl: "https://picsum.photos/seed/valentines-gifts/600/400",
     category: "Valentijnsdag",
     author: { name: "Gifteez Redactie", avatarUrl: "https://i.pravatar.cc/150?u=redactie" },
     publishedDate: "2025-01-10",

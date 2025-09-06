@@ -1,7 +1,9 @@
 import React from 'react';
+import { topicImage, Topics } from '../services/images';
 import { NavigateTo } from '../types';
 import Button from './Button';
 import { TargetIcon, SparklesIcon, CheckCircleIcon } from './IconComponents';
+import ImageWithFallback from './ImageWithFallback';
 
 interface AboutPageProps {
   navigateTo: NavigateTo;
@@ -74,7 +76,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="opacity-0 animate-fade-in">
-                    <img src="https://picsum.photos/seed/about/600/400" alt="Het verhaal van Gifteez.nl" className="rounded-lg shadow-xl" />
+                    <ImageWithFallback src={topicImage(Topics.about, 600, 400)} alt="Het verhaal van Gifteez.nl" className="rounded-lg shadow-xl" />
                 </div>
                 <div className="opacity-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
                     <h2 className="font-display text-3xl font-bold text-primary">Ons Verhaal</h2>
@@ -95,7 +97,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-5xl mx-auto">
           {teamMembers.map((member, index) => (
             <div key={member.name} className="text-center opacity-0 animate-fade-in-up" style={{ animationDelay: `${200 * (index + 1)}ms` }}>
-              <img src={member.imageUrl} alt={member.name} className="w-32 h-32 mx-auto rounded-full shadow-lg" />
+              <ImageWithFallback src={member.imageUrl} alt={member.name} className="w-32 h-32 mx-auto rounded-full shadow-lg" />
               <h3 className="font-display text-xl font-bold text-primary mt-6">{member.name}</h3>
               <p className="text-accent font-semibold">{member.role}</p>
               <p className="mt-2 text-gray-600 text-sm">{member.bio}</p>

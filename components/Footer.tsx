@@ -36,7 +36,6 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
               <li><button onClick={() => navigateTo('giftFinder')} className="hover:text-secondary transition-colors">GiftFinder</button></li>
               <li><button onClick={() => navigateTo('deals')} className="hover:text-secondary transition-colors">Deals</button></li>
               <li><button onClick={() => navigateTo('quiz')} className="hover:text-secondary transition-colors">Cadeau Quiz</button></li>
-              <li><button onClick={() => navigateTo('shop')} className="hover:text-secondary transition-colors">Winkel</button></li>
               <li><button onClick={() => navigateTo('blog')} className="hover:text-secondary transition-colors">Blog</button></li>
               <li><button onClick={() => navigateTo('about')} className="hover:text-secondary transition-colors">Over Ons</button></li>
             </ul>
@@ -61,16 +60,16 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
           <div>
             <h3 className="font-display font-bold text-lg mb-4">Volg Ons</h3>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-secondary transition-colors"><InstagramIcon className="w-6 h-6" /></a>
-              <a href="#" className="hover:text-secondary transition-colors"><PinterestIcon className="w-6 h-6" /></a>
+              <a href="https://www.instagram.com/gifteez.nl" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-secondary transition-colors"><InstagramIcon className="w-6 h-6" /></a>
+              <a href="https://www.pinterest.com/gifteez01/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="hover:text-secondary transition-colors"><PinterestIcon className="w-6 h-6" /></a>
             </div>
           </div>
           {/* Column 4: Customer Service */}
           <div>
             <h3 className="font-display font-bold text-lg mb-4">Klantenservice</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-secondary transition-colors">Disclaimer</a></li>
-              <li><a href="#" className="hover:text-secondary transition-colors">Privacybeleid</a></li>
+              <li><button onClick={() => navigateTo('disclaimer')} className="hover:text-secondary transition-colors">Disclaimer</button></li>
+              <li><button onClick={() => navigateTo('privacy')} className="hover:text-secondary transition-colors">Privacybeleid</button></li>
               <li><button onClick={() => navigateTo('contact')} className="hover:text-secondary transition-colors">Contact</button></li>
             </ul>
           </div>

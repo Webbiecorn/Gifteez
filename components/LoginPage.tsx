@@ -16,6 +16,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ navigateTo, showToast }) => {
   const [error, setError] = useState('');
   const [info, setInfo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const auth = useContext(AuthContext);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -24,20 +25,22 @@ const LoginPage: React.FC<LoginPageProps> = ({ navigateTo, showToast }) => {
   setLoading(true);
   setInfo('');
 
-    try {
-        const user = await auth?.login(email, password);
-        if(user) {
-            showToast(`Welkom terug, ${user.name}!`);
-            navigateTo('account');
-        } else {
-            setError('Ongeldige e-mail of wachtwoord.');
-        }
+  try {
+    const user = await auth?.login(email, password);
+    if(user) {
+      showToast(`Welkom terug, ${user.name}!`);
+      navigateTo('account');
+    } else {
+      setError('Ongeldige e-mail of wachtwoord.');
+    }
   } catch (err: any) {
     const code = err?.code || err?.message || '';
     if (typeof code === 'string' && code.includes('auth/invalid-credential')) {
       setError('Ongeldige e-mail of wachtwoord.');
     } else if (typeof code === 'string' && code.includes('auth/too-many-requests')) {
       setError('Te veel pogingen. Probeer later opnieuw.');
+  } else if (typeof code === 'string' && code.includes('auth/network-request-failed')) {
+    setError('Netwerkfout. Controleer je verbinding en probeer opnieuw.');
     } else {
       setError('Er is een fout opgetreden. Probeer het opnieuw.');
     }
@@ -107,6 +110,44 @@ const LoginPage: React.FC<LoginPageProps> = ({ navigateTo, showToast }) => {
                   Inloggen...
                 </>
               ) : 'Log In'}
+            </Button>
+          </div>
+          <div className="flex items-center my-4">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="px-3 text-gray-400 text-sm">of</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
+          <div>
+            <Button
+              type="button"
+              variant="primary"
+              disabled={googleLoading}
+              className="w-full"
+              onClick={async () => {
+                setError('');
+                setInfo('');
+                setGoogleLoading(true);
+                try {
+                  const user = await auth?.loginWithGoogle();
+                  if (user) {
+                    showToast(`Welkom terug, ${user.name}!`);
+                    navigateTo('account');
+                  }
+                } catch (err: any) {
+                  const code = err?.code || err?.message || '';
+                  if (typeof code === 'string' && code.includes('auth/popup-blocked')) {
+                    setError('Popup geblokkeerd. Sta pop-ups toe of probeer opnieuw.');
+                  } else if (typeof code === 'string' && code.includes('auth/popup-closed-by-user')) {
+                    setError('Popup gesloten voordat de login was voltooid.');
+                  } else {
+                    setError('Google-login mislukt. Probeer opnieuw.');
+                  }
+                } finally {
+                  setGoogleLoading(false);
+                }
+              }}
+            >
+              {googleLoading ? 'Bezig met Google…' : 'Log in met Google'}
             </Button>
           </div>
         </form>

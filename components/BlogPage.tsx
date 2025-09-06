@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { BlogPost, NavigateTo } from '../types';
 import { blogPosts } from '../data/blogData';
 import { SearchIcon } from './IconComponents';
+import ImageWithFallback from './ImageWithFallback';
 
 const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ post, navigateTo }) => {
     const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
@@ -10,7 +11,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ post,
     return (
         <article className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col group transition-transform duration-300 hover:-translate-y-1">
             <div className="overflow-hidden cursor-pointer" onClick={() => navigateTo('blogDetail', { slug: post.slug })}>
-                <img src={post.imageUrl} alt={post.title} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300" />
+                <ImageWithFallback src={post.imageUrl} alt={post.title} className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300" />
             </div>
             <div className="p-6 flex flex-col flex-grow">
                 <p className="text-sm font-bold text-primary">{post.category.toUpperCase()}</p>
@@ -19,7 +20,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ post,
                 </h3>
                 <p className="mt-2 text-gray-600 line-clamp-3">{post.excerpt}</p>
                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-4 text-sm text-gray-500">
-                    <img src={post.author.avatarUrl} alt={post.author.name} className="w-10 h-10 rounded-full object-cover" />
+                    <ImageWithFallback src={post.author.avatarUrl} alt={post.author.name} className="w-10 h-10 rounded-full object-cover" />
                     <div>
                         <p className="font-bold text-gray-700">{post.author.name}</p>
                         <p>{formattedDate}</p>
@@ -37,14 +38,14 @@ const FeaturedBlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = 
     return (
         <article className="bg-white rounded-lg shadow-xl overflow-hidden md:grid md:grid-cols-2 group" >
             <div className="overflow-hidden">
-                <img src={post.imageUrl} alt={post.title} className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
+                <ImageWithFallback src={post.imageUrl} alt={post.title} className="w-full h-64 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"/>
             </div>
             <div className="p-8 flex flex-col justify-center">
                 <p className="text-sm font-bold text-accent">UITGELICHT</p>
                 <h2 className="font-display text-3xl font-bold text-primary mt-2">{post.title}</h2>
                 <p className="mt-4 text-gray-600">{post.excerpt}</p>
                 <div className="mt-6 flex items-center gap-4 text-sm text-gray-600">
-                     <img src={post.author.avatarUrl} alt={post.author.name} className="w-10 h-10 rounded-full object-cover" />
+                     <ImageWithFallback src={post.author.avatarUrl} alt={post.author.name} className="w-10 h-10 rounded-full object-cover" />
                     <div>
                         <p className="font-bold text-gray-700">{post.author.name}</p>
                         <p>{formattedDate}</p>
@@ -65,35 +66,34 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
   const [selectedAuthor, setSelectedAuthor] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
 
-  useEffect(() => {
-    const pageDescription = "Jouw bron voor inspiratie, tips en de beste cadeau-ideeën voor elke gelegenheid. Perfect voorbereid met de gidsen van Gifteez.";
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": "Onze Cadeaugidsen & Blogs - Gifteez.nl",
-      "description": pageDescription,
-      "url": window.location.href,
-      "publisher": {
-        "@type": "Organization",
-        "name": "Gifteez.nl"
-      }
-    };
-
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.innerHTML = JSON.stringify(schema);
-    document.head.appendChild(script);
-
-    const metaDesc = document.createElement('meta');
-    metaDesc.name = 'description';
-    metaDesc.content = pageDescription;
-    document.head.appendChild(metaDesc);
-
-    return () => {
-      document.head.removeChild(script);
-      document.head.removeChild(metaDesc);
-    };
-  }, []);
+    useEffect(() => {
+        const pageDescription = "Jouw bron voor inspiratie, tips en de beste cadeau-ideeën voor elke gelegenheid. Perfect voorbereid met de gidsen van Gifteez.";
+        const ensure = (selector: string, create: () => HTMLElement) => {
+            let el = document.head.querySelector(selector) as HTMLElement | null;
+            if (!el) { el = create(); document.head.appendChild(el); }
+            return el;
+        };
+        const descMeta = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
+        descMeta.setAttribute('content', pageDescription);
+        const title = ensure('title', () => document.createElement('title')); title.textContent = 'Onze Cadeaugidsen & Blogs - Gifteez.nl';
+        const schema = {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'Onze Cadeaugidsen & Blogs - Gifteez.nl',
+            description: pageDescription,
+            url: window.location.origin + '/blog'
+        };
+        const existingJsonLd = document.head.querySelector('script[data-blog-collection]');
+        if (existingJsonLd) {
+            existingJsonLd.textContent = JSON.stringify(schema);
+        } else {
+            const script = document.createElement('script');
+            script.type = 'application/ld+json';
+            script.setAttribute('data-blog-collection', 'true');
+            script.textContent = JSON.stringify(schema);
+            document.head.appendChild(script);
+        }
+    }, []);
 
   const categories = useMemo(() => ['All', ...new Set(blogPosts.map(p => p.category))], []);
   const authors = useMemo(() => ['All', ...new Set(blogPosts.map(p => p.author.name))], []);

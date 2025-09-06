@@ -20,12 +20,12 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
 
+  // 'shop' is temporarily hidden
   const navItems: { page: Page; label: string, icon?: React.ElementType }[] = [
     { page: 'home', label: 'Home' },
     { page: 'giftFinder', label: 'GiftFinder' },
     { page: 'deals', label: 'Deals', icon: TagIcon },
     { page: 'quiz', label: 'Cadeau Quiz', icon: QuestionMarkCircleIcon },
-    { page: 'shop', label: 'Winkel' },
     { page: 'blog', label: 'Blog' },
     { page: 'about', label: 'Over Ons' },
     { page: 'contact', label: 'Contact' },

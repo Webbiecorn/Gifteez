@@ -3,6 +3,7 @@ import { NavigateTo, ShowToast, Product } from '../types';
 import { shopProducts } from '../data/shopData';
 import { CartContext } from '../contexts/CartContext';
 import Button from './Button';
+import ImageWithFallback from './ImageWithFallback';
 
 interface ShopPageProps {
   navigateTo: NavigateTo;
@@ -12,9 +13,9 @@ interface ShopPageProps {
 const ProductCard: React.FC<{ product: Product, onAddToCart: () => void }> = ({ product, onAddToCart }) => {
     return (
         <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col group">
-            <div className="overflow-hidden">
-                <img src={product.imageUrl} alt={product.name} className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300" />
-            </div>
+      <div className="overflow-hidden">
+        <ImageWithFallback src={product.imageUrl} alt={product.name} className="w-full h-80 object-cover group-hover:scale-105 transition-transform duration-300" />
+      </div>
             <div className="p-6 flex flex-col flex-grow">
                 <h3 className="font-display text-2xl font-bold text-primary">{product.name}</h3>
                 <p className="mt-2 text-gray-600 flex-grow">{product.description}</p>

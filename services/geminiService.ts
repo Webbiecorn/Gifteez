@@ -40,7 +40,15 @@ const giftSchema = {
   },
 };
 
-export const findGifts = async (recipient: string, budget: number, occasion: string, interests?: string): Promise<Gift[]> => {
+type FindGiftsOptions = { count?: number; exclude?: string[] };
+
+export const findGifts = async (
+  recipient: string,
+  budget: number,
+  occasion: string,
+  interests?: string,
+  options: FindGiftsOptions = {}
+): Promise<Gift[]> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
   if (!apiKey) {
     throw new Error("VITE_GEMINI_API_KEY is not set.");
@@ -49,20 +57,26 @@ export const findGifts = async (recipient: string, budget: number, occasion: str
   const ai = new GoogleGenAI({ apiKey });
 
   const interestsPrompt = interests ? `- Hobbies/Interests: ${interests}` : '';
+  const count = options.count && options.count > 0 ? options.count : 12;
+  const excludeList = (options.exclude || []).filter(Boolean);
+  const excludePrompt = excludeList.length
+    ? `\n    Avoid suggesting these product names (provide different, unique ideas): ${excludeList.slice(0, 30).join('; ')}`
+    : '';
 
   const prompt = `
-    Find 3 to 5 perfect gift ideas for the following criteria:
+    Find ${count} perfect gift ideas for the following criteria:
     - Recipient: ${recipient}
     - Budget: Up to ${budget} euros
     - Occasion: ${occasion}
     ${interestsPrompt}
+    ${excludePrompt}
 
     Provide modern, popular, and thoughtful gift suggestions available in the Netherlands.
     For each gift, provide:
     1. A product name.
     2. A short, compelling description (max 30 words).
     3. An estimated price range in euros (e.g., "€25 - €50").
-    4. A list of 1 to 3 major Dutch online retailers (specifically from Bol.com, Coolblue, or Amazon.nl). For each retailer, provide their name and a direct, functional search URL for the product on their respective Dutch (.nl) website (e.g., for Amazon, use Amazon.nl, not Amazon.com).
+    4. A list of 1 to 3 major Dutch online retailers (from Bol.com, Coolblue, or Amazon.nl). IMPORTANT: Include Amazon.nl in the retailers for every gift. For each retailer, provide their name and a direct, functional search URL for the product on their Dutch (.nl) website.
     5. A placeholder image URL from picsum.photos.
   `;
 

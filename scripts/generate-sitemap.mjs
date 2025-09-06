@@ -9,12 +9,19 @@ const BLOG_DATA_FILE = path.resolve("data/blogData.ts");
 const SITE = "https://gifteez.nl";
 const OUT_FILE = path.resolve("public/sitemap.xml");
 
-// Handmatige “vaste routes” (passen bij jouw app)
+// Handmatige “vaste routes” (passen bij jouw app) – uitgebreid voor betere dekking
+const today = new Date().toISOString().split('T')[0];
 const staticRoutes = [
-  { loc: `${SITE}/`, changefreq: "daily", priority: "0.9" },
-  { loc: `${SITE}/giftfinder`, changefreq: "daily", priority: "0.8" },
-  { loc: `${SITE}/blog`, changefreq: "daily", priority: "0.7" },
-  { loc: `${SITE}/categories`, changefreq: "weekly", priority: "0.6" },
+  { loc: `${SITE}/`, changefreq: "daily", priority: "0.9", lastmod: today },
+  { loc: `${SITE}/giftfinder`, changefreq: "daily", priority: "0.8", lastmod: today },
+  { loc: `${SITE}/blog`, changefreq: "daily", priority: "0.7", lastmod: today },
+  { loc: `${SITE}/categories`, changefreq: "weekly", priority: "0.6", lastmod: today },
+  { loc: `${SITE}/deals`, changefreq: "daily", priority: "0.7", lastmod: today },
+  { loc: `${SITE}/quiz`, changefreq: "weekly", priority: "0.6", lastmod: today },
+  { loc: `${SITE}/about`, changefreq: "monthly", priority: "0.3", lastmod: today },
+  { loc: `${SITE}/contact`, changefreq: "monthly", priority: "0.3", lastmod: today },
+  { loc: `${SITE}/disclaimer`, changefreq: "yearly", priority: "0.2", lastmod: today },
+  { loc: `${SITE}/privacy`, changefreq: "yearly", priority: "0.2", lastmod: today }
 ];
 
 // Als je later blogposts als Markdown toevoegt, zet ze in src/content/posts/*.md
@@ -25,16 +32,15 @@ function escapeXml(s) {
 }
 
 async function getPostUrls() {
+  const urls = [];
   try {
-  const files = await fs.readdir(POSTS_DIR);
-    const urls = [];
+    const files = await fs.readdir(POSTS_DIR);
     for (const file of files) {
       if (!file.endsWith(".md")) continue;
       const slug = file.replace(/\.md$/, "");
       const filePath = path.join(POSTS_DIR, file);
       const stat = await fs.stat(filePath);
       const lastmod = stat.mtime.toISOString().split("T")[0];
-
       urls.push({
         loc: `${SITE}/blog/${encodeURIComponent(slug)}`,
         lastmod,
@@ -44,16 +50,22 @@ async function getPostUrls() {
     }
     return urls;
   } catch (e) {
-    // Map bestaat (nog) niet—geen posts
-    // Fallback: parse slugs from data/blogData.ts
+    // Fallback: parse blogData.ts (slugs + publishedDate)
     try {
       const src = await fs.readFile(BLOG_DATA_FILE, "utf8");
-      const slugMatches = [...src.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
-      for (const slug of slugMatches) {
-        urls.push({ loc: `${SITE}/blog/${encodeURIComponent(slug)}`, changefreq: "weekly", priority: "0.7" });
+      const postMatches = [...src.matchAll(/slug:\s*"([^"]+)"[\s\S]*?publishedDate:\s*"([^"]+)"/g)];
+      for (const m of postMatches) {
+        const slug = m[1];
+        const publishedDate = m[2];
+        urls.push({
+          loc: `${SITE}/blog/${encodeURIComponent(slug)}`,
+          lastmod: publishedDate,
+          changefreq: "weekly",
+          priority: "0.7"
+        });
       }
       return urls;
-    } catch (_) {
+    } catch (err) {
       return [];
     }
   }

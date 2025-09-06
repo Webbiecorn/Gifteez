@@ -5,6 +5,7 @@ import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
 import { FacebookIcon, TwitterIcon, WhatsAppIcon, HeartIcon, HeartIconFilled } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
+import ImageWithFallback from './ImageWithFallback';
 
 interface GiftResultCardProps {
   gift: Gift;
@@ -13,9 +14,10 @@ interface GiftResultCardProps {
   showToast?: ShowToast;
   isReadOnly?: boolean;
   isEmbedded?: boolean;
+  hideImage?: boolean;
 }
 
-const GiftResultCard: React.FC<GiftResultCardProps> = ({ gift, index, onFavoriteChange, showToast, isReadOnly = false, isEmbedded = false }) => {
+const GiftResultCard: React.FC<GiftResultCardProps> = ({ gift, index, onFavoriteChange, showToast, isReadOnly = false, isEmbedded = false, hideImage = false }) => {
   const auth = useContext(AuthContext);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
@@ -89,18 +91,20 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({ gift, index, onFavorite
       className={containerClasses}
       style={!isEmbedded ? { animationDelay: `${index * 100}ms` } : {}}
     >
-      <div className="relative">
-        <img src={gift.imageUrl} alt={gift.productName} className="w-full h-48 object-cover" />
-        {!isReadOnly && (
-          <button
-            onClick={handleToggleFavorite}
-            className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
-            aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
-          >
-            {isFavorite ? <HeartIconFilled className="w-6 h-6" /> : <HeartIcon className="w-6 h-6" />}
-          </button>
-        )}
-      </div>
+      {!hideImage && (
+        <div className="relative">
+          <ImageWithFallback src={gift.imageUrl} alt={gift.productName} className="w-full h-48 object-cover" />
+          {!isReadOnly && (
+            <button
+              onClick={handleToggleFavorite}
+              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+              aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
+            >
+              {isFavorite ? <HeartIconFilled className="w-6 h-6" /> : <HeartIcon className="w-6 h-6" />}
+            </button>
+          )}
+        </div>
+      )}
       <div className="p-6 flex flex-col flex-grow">
         <h3 className="font-display text-xl font-bold text-primary">{gift.productName}</h3>
         {gift.priceRange && (

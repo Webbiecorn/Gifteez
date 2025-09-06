@@ -1,9 +1,11 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { AuthContextType, User, Gift, GiftProfile } from '../types';
-import { auth, db, firebaseEnabled } from '../services/firebase';
-import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile as fbUpdateProfile, sendPasswordResetEmail } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { loadFirebase, getFirebaseSync } from '../services/firebase';
+// Firebase symbols worden dynamisch geladen; types importeren voor TS hints
+import type { User as FBUser } from 'firebase/auth';
+
+// We gebruiken dynamic imports binnen functies om bundle klein te houden.
 
 const GUEST_FAVORITES_KEY = 'gifteezFavorites';
 const USERS_KEY = 'gifteezUsers';
@@ -16,40 +18,48 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        if (firebaseEnabled && auth && db) {
-            const unsub = onAuthStateChanged(auth, async (fbUser) => {
+        // Start lazy load firebase;
+        loadFirebase().then(async ({ auth, db, enabled }) => {
+            if (enabled && auth && db) {
+                const { onAuthStateChanged } = await import('firebase/auth');
+                const { doc, getDoc, setDoc } = await import('firebase/firestore');
+                const unsub = onAuthStateChanged(auth, async (fbUser) => {
                 if (!fbUser) {
                     setCurrentUser(null);
                     setLoading(false);
                     return;
                 }
                 try {
-                    const userRef = doc(db, 'users', fbUser.uid);
-                    const snap = await getDoc(userRef);
+                        const userRef = doc(db, 'users', fbUser.uid);
+                        const snap = await getDoc(userRef);
+                    let u: User;
                     if (snap.exists()) {
-                        const u = snap.data() as User;
-                        setCurrentUser(u);
+                        u = snap.data() as User;
                     } else {
                         // First login after signup: create user doc
-                        const base: User = {
+                        u = {
                             id: fbUser.uid,
                             name: fbUser.displayName || fbUser.email || 'Gebruiker',
                             email: fbUser.email || '',
+                            emailVerified: fbUser.emailVerified,
                             favorites: [],
                             profiles: [],
                         };
-                        await setDoc(userRef, base);
-                        setCurrentUser(base);
                     }
+                    // Always attempt to merge any guest favorites on login
+                    const merged = mergeGuestFavorites(u);
+                    // Persist merged state (merge to avoid overwriting other fields)
+                        await setDoc(userRef, merged, { merge: true });
+                    setCurrentUser({ ...merged, emailVerified: fbUser.emailVerified });
                 } catch (e) {
                     console.error('Error loading user from Firestore', e);
                     setCurrentUser(null);
                 } finally {
                     setLoading(false);
                 }
-            });
-            return () => unsub();
-        } else {
+                });
+                return () => unsub();
+            } else {
             // Fallback: keep legacy localStorage mode
             try {
                 const currentUserId = localStorage.getItem(CURRENT_USER_ID_KEY);
@@ -66,7 +76,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             } finally {
                 setLoading(false);
             }
-        }
+            }
+        }).catch(() => {
+            // On any load failure, fallback to legacy
+            setLoading(false);
+        });
     }, []);
 
     const getUsers = (): User[] => {
@@ -101,10 +115,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
 
     const login = async (email: string, passwordInput: string): Promise<User | null> => {
-        if (firebaseEnabled && auth && db) {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth && fb.db) {
             try {
-                const cred = await signInWithEmailAndPassword(auth, email, passwordInput);
-                const userRef = doc(db, 'users', cred.user.uid);
+                const { signInWithEmailAndPassword } = await import('firebase/auth');
+                const { doc, getDoc, setDoc } = await import('firebase/firestore');
+                const cred = await signInWithEmailAndPassword(fb.auth, email, passwordInput);
+                const userRef = doc(fb.db, 'users', cred.user.uid);
                 const snap = await getDoc(userRef);
                 if (!snap.exists()) return null;
 
@@ -112,11 +129,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 let u = snap.data() as User;
                 u = mergeGuestFavorites(u);
                 await setDoc(userRef, u, { merge: true });
-                setCurrentUser(u);
+                setCurrentUser({ ...u, emailVerified: cred.user.emailVerified });
                 return u;
             } catch (e) {
                 console.error('Firebase login error', e);
-                return null;
+                throw e;
             }
         }
         // Legacy fallback
@@ -135,9 +152,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const signup = async (name: string, email: string, passwordInput: string): Promise<User | null> => {
-        if (firebaseEnabled && auth && db) {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth && fb.db) {
             try {
-                const cred = await createUserWithEmailAndPassword(auth, email, passwordInput);
+                const { createUserWithEmailAndPassword, updateProfile: fbUpdateProfile } = await import('firebase/auth');
+                const { doc, setDoc } = await import('firebase/firestore');
+                const cred = await createUserWithEmailAndPassword(fb.auth, email, passwordInput);
                 if (cred.user && name) {
                     try { await fbUpdateProfile(cred.user, { displayName: name }); } catch {}
                 }
@@ -145,16 +165,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     id: cred.user.uid,
                     name,
                     email,
+                    emailVerified: cred.user.emailVerified,
                     favorites: [],
                     profiles: [],
                 };
                 newUser = mergeGuestFavorites(newUser);
-                await setDoc(doc(db, 'users', cred.user.uid), newUser);
+                await setDoc(doc(fb.db, 'users', cred.user.uid), newUser);
                 setCurrentUser(newUser);
                 return newUser;
             } catch (e) {
                 console.error('Firebase signup error', e);
-                return null;
+                throw e;
             }
         }
         // Legacy fallback
@@ -177,17 +198,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const logout = () => {
-        if (firebaseEnabled && auth) {
-            signOut(auth).catch(console.error);
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth) {
+            import('firebase/auth').then(m => m.signOut(fb.auth!)).catch(console.error);
         }
         setCurrentUser(null);
         localStorage.removeItem(CURRENT_USER_ID_KEY);
     };
 
     const resetPassword = async (email: string): Promise<boolean> => {
-        if (firebaseEnabled && auth) {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth) {
             try {
-                await sendPasswordResetEmail(auth, email);
+                const { sendPasswordResetEmail } = await import('firebase/auth');
+                await sendPasswordResetEmail(fb.auth, email);
                 return true;
             } catch (e) {
                 console.error('Password reset error', e);
@@ -198,11 +222,73 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return false;
     };
 
-    const toggleFavorite = (gift: Gift) => {
+    const loginWithGoogle = async (): Promise<User | null> => {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth && fb.db) {
+            try {
+                const { GoogleAuthProvider, signInWithRedirect } = await import('firebase/auth');
+                const provider = new GoogleAuthProvider();
+                await signInWithRedirect(fb.auth, provider);
+                return null; // Flow continues after redirect
+            } catch (e) {
+                console.error('Google login error', e);
+                throw e;
+            }
+        }
+        // Legacy fallback: not supported
+        return null;
+    };
+
+    const sendVerificationEmailWrapper = async (): Promise<boolean> => {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth) {
+            try {
+                if (!fb.auth.currentUser) return false;
+                // Force Dutch templates and use our site as the action URL host
+                try { fb.auth.languageCode = 'nl'; } catch {}
+                const actionCodeSettings = {
+                    url: `${window.location.origin}/account`,
+                    // For web we don't handle in-app, just open in browser
+                    handleCodeInApp: false,
+                } as const;
+                const { sendEmailVerification } = await import('firebase/auth');
+                await sendEmailVerification(fb.auth.currentUser, actionCodeSettings);
+                return true;
+            } catch (e) {
+                console.error('Send verification error', e);
+                return false;
+            }
+        }
+        return false;
+    };
+
+    const refreshAuthUser = async (): Promise<boolean> => {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.auth) {
+            try {
+                if (!fb.auth.currentUser) return false;
+                const { reload } = await import('firebase/auth');
+                await reload(fb.auth.currentUser);
+                // Sync emailVerified flag into our state
+                if (currentUser) {
+                    setCurrentUser({ ...currentUser, emailVerified: fb.auth.currentUser.emailVerified });
+                }
+                return true;
+            } catch (e) {
+                console.error('Reload user error', e);
+                return false;
+            }
+        }
+        return false;
+    };
+
+    const toggleFavorite = async (gift: Gift) => {
         if (!currentUser) return;
 
-        if (firebaseEnabled && db) {
-            const userRef = doc(db, 'users', currentUser.id);
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.db) {
+            const { doc, updateDoc } = await import('firebase/firestore');
+            const userRef = doc(fb.db, 'users', currentUser.id);
             const isCurrentlyFavorite = currentUser.favorites.some(fav => fav.productName === gift.productName);
             const updatedFavorites = isCurrentlyFavorite
                 ? currentUser.favorites.filter(f => f.productName !== gift.productName)
@@ -229,8 +315,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     const updateUserInStorageAndState = async (updatedUser: User) => {
-        if (firebaseEnabled && db) {
-            await updateDoc(doc(db, 'users', updatedUser.id), {
+        const fb = getFirebaseSync();
+        if (fb?.enabled && fb.db) {
+            const { doc, updateDoc } = await import('firebase/firestore');
+            await updateDoc(doc(fb.db, 'users', updatedUser.id), {
                 name: updatedUser.name,
                 profiles: updatedUser.profiles,
                 favorites: updatedUser.favorites,
@@ -276,10 +364,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         loading,
         login,
         signup,
+    loginWithGoogle,
         logout,
-        toggleFavorite,
+    toggleFavorite,
         isFavorite,
     resetPassword,
+    sendVerificationEmail: sendVerificationEmailWrapper,
+    refreshAuthUser,
         addProfile,
         updateProfile,
         deleteProfile,

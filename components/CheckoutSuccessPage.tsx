@@ -41,7 +41,7 @@ const CheckoutSuccessPage: React.FC<CheckoutSuccessPageProps> = ({ navigateTo })
                 </div>
 
                 <div className="mt-12">
-                    <Button variant="primary" onClick={() => navigateTo('shop')}>
+                    <Button variant="primary" onClick={() => navigateTo('deals')}>
                         Verder winkelen
                     </Button>
                 </div>

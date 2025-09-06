@@ -1,4 +1,7 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "functions": {
     "source": "functions",
     "runtime": "nodejs20",
@@ -27,15 +30,41 @@
       { "source": "**", "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" }
+        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), camera=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+        { "key": "X-Frame-Options", "value": "DENY" }
       ]}
     ],
     "redirects": [
-      { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 }
+      { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 },
+      { "source": "/shop", "destination": "/deals", "type": 301 },
+      { "source": "/shop/**", "destination": "/deals", "type": 301 },
+      { "source": "/hello-world", "destination": "/blog", "type": 301 },
+      { "source": "**/feed/", "destination": "/blog", "type": 301 },
+      { "source": "**/comments/feed/", "destination": "/blog", "type": 301 }
     ],
     "rewrites": [
       { "source": "/api/**", "function": "api" },
-      { "source": "**", "destination": "/index.html" }
+      { "source": "/404", "function": "notFound" },
+  { "source": "/", "destination": "/index.html" },
+      { "source": "/blog", "destination": "/index.html" },
+      { "source": "/blog/**", "destination": "/index.html" },
+      { "source": "/giftfinder", "destination": "/index.html" },
+      { "source": "/categories", "destination": "/index.html" },
+      { "source": "/favorites", "destination": "/index.html" },
+      { "source": "/contact", "destination": "/index.html" },
+      { "source": "/about", "destination": "/index.html" },
+      { "source": "/login", "destination": "/index.html" },
+      { "source": "/signup", "destination": "/index.html" },
+      { "source": "/account", "destination": "/index.html" },
+      { "source": "/quiz", "destination": "/index.html" },
+      { "source": "/download", "destination": "/index.html" },
+      { "source": "/cart", "destination": "/index.html" },
+      { "source": "/checkout-success", "destination": "/index.html" },
+      { "source": "/deals", "destination": "/index.html" },
+      { "source": "/disclaimer", "destination": "/index.html" },
+      { "source": "/privacy", "destination": "/index.html" },
+      { "source": "**", "function": "notFound" }
     ]
   }
 }

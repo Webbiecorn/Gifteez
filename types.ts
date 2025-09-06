@@ -1,5 +1,5 @@
 import type React from 'react';
-export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | 'shop' | 'cart' | 'checkoutSuccess' | 'deals';
+export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | 'shop' | 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy' | 'notFound';
 
 export type NavigateTo = (page: Page, data?: any) => void;
 
@@ -96,6 +96,8 @@ export interface User {
     id: string;
     name: string;
     email: string;
+  // Firebase-only: whether the user's email is verified
+  emailVerified?: boolean;
     password?: string; // Should not be stored long term, but needed for simulation
     favorites: Gift[];
     profiles: GiftProfile[];
@@ -106,8 +108,12 @@ export interface AuthContextType {
     loading: boolean;
     login: (email: string, password: string) => Promise<User | null>;
     signup: (name: string, email: string, password: string) => Promise<User | null>;
+  loginWithGoogle: () => Promise<User | null>;
     logout: () => void;
   resetPassword: (email: string) => Promise<boolean>;
+  // Firebase-only helpers; return false/no-op in legacy mode
+  sendVerificationEmail: () => Promise<boolean>;
+  refreshAuthUser: () => Promise<boolean>;
     toggleFavorite: (gift: Gift) => void;
     isFavorite: (gift: Gift) => boolean;
     addProfile: (profileData: Omit<GiftProfile, 'id'>) => Promise<void>;
