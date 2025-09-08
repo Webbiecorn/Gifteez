@@ -5,6 +5,7 @@ import Button from './Button';
 import GiftResultCard from './GiftResultCard';
 import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
+import { pinterestPageVisit, pinterestSearch } from '../services/pinterestTracking';
 
 const occasions = ["Verjaardag", "Kerstmis", "Valentijnsdag", "Jubileum", "Zomaar"];
 const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
@@ -52,6 +53,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         setOccasion(validOccasion);
       }
     }
+
+    // Pinterest PageVisit tracking for gift finder
+    pinterestPageVisit('gift_finder', `finder_${Date.now()}`);
   }, [initialData]);
 
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -74,6 +78,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     setError(null);
     setGifts([]);
     setSearchPerformed(true);
+
+    // Pinterest Search tracking
+    const searchQuery = `${recipient} ${occasion} ${interests} budget:€${budget}`;
+    pinterestSearch(searchQuery, `search_${Date.now()}`);
 
     try {
       const results = await findGifts(recipient, budget, occasion, interests);

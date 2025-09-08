@@ -12,6 +12,7 @@ import { blogPosts } from '../data/blogData';
 import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon } from './IconComponents';
 import AmazonTeaser from './AmazonTeaser';
 import QuizIllustration from './QuizIllustration';
+import { pinterestPageVisit } from '../services/pinterestTracking';
 
 interface HomePageProps {
   navigateTo: NavigateTo;
@@ -50,6 +51,10 @@ const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
 const latestPosts = blogPosts.slice(0, 3);
 
 const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
+  // Pinterest PageVisit tracking for homepage
+  useEffect(() => {
+    pinterestPageVisit('homepage', `home_${Date.now()}`);
+  }, []);
   const [previewRecipient, setPreviewRecipient] = useState<string>(recipients[0]);
   const [newsletterEmail, setNewsletterEmail] = useState('');
 

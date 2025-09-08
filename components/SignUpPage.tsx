@@ -4,6 +4,7 @@ import { NavigateTo, ShowToast } from '../types';
 import { AuthContext } from '../contexts/AuthContext';
 import Button from './Button';
 import { SpinnerIcon } from './IconComponents';
+import { pinterestSignup, pinterestPageVisit } from '../services/pinterestTracking';
 
 interface SignUpPageProps {
   navigateTo: NavigateTo;
@@ -18,6 +19,11 @@ const SignUpPage: React.FC<SignUpPageProps> = ({ navigateTo, showToast }) => {
   const [loading, setLoading] = useState(false);
   const auth = useContext(AuthContext);
 
+  // Pinterest PageVisit tracking for signup page
+  React.useEffect(() => {
+    pinterestPageVisit('signup_page', `signup_page_${Date.now()}`);
+  }, []);
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (password.length < 6) {
@@ -30,6 +36,9 @@ const SignUpPage: React.FC<SignUpPageProps> = ({ navigateTo, showToast }) => {
     try {
         const user = await auth?.signup(name, email, password);
         if(user) {
+            // Pinterest Signup tracking
+            pinterestSignup(`signup_${user.id}_${Date.now()}`);
+            
             showToast(`Account aangemaakt! Welkom, ${user.name}.`);
             navigateTo('account');
         } else {

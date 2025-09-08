@@ -6,6 +6,7 @@ import { blogPosts } from '../data/blogData';
 import { CalendarIcon, ChevronRightIcon, FacebookIcon, TwitterIcon, WhatsAppIcon, CheckIcon, XCircleIcon, StarIcon, BookOpenIcon, SparklesIcon, TargetIcon, ShareIcon } from './IconComponents';
 import GiftResultCard from './GiftResultCard';
 import AmazonTeaser from './AmazonTeaser';
+import { pinterestPageVisit } from '../services/pinterestTracking';
 
 interface BlogDetailPageProps {
   post: BlogPost;
@@ -140,6 +141,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
     return () => { document.head.removeChild(script); document.head.removeChild(breadcrumbScript);
             // Don't remove meta tags; allow next page to overwrite. Only JSON-LD is cleaned up.
     };
+
+    // Pinterest PageVisit tracking for blog articles
+    pinterestPageVisit('blog_article', `blog_${post.slug}_${Date.now()}`);
   }, [post]);
 
   const shareUrl = window.location.href;

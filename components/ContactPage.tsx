@@ -4,6 +4,7 @@ import Button from './Button';
 import Accordion from './Accordion';
 import { MailIcon, InstagramIcon, PinterestIcon, SpinnerIcon, QuestionMarkCircleIcon, CheckIcon } from './IconComponents';
 import { socialLinks } from '../socialLinks';
+import { pinterestPageVisit, pinterestLead } from '../services/pinterestTracking';
 
 interface ContactPageProps {
   showToast: ShowToast;
@@ -24,6 +25,11 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
   // Anti-spam: honeypot + timestamp (must be > 1500ms before submit)
   const [honeypot, setHoneypot] = useState('');
   const [ts] = useState<number>(() => Date.now());
+
+  // Pinterest PageVisit tracking for contact page
+  React.useEffect(() => {
+    pinterestPageVisit('contact_page', `contact_${Date.now()}`);
+  }, []);
 
   const validate = (): boolean => {
     const newErrors: { [key: string]: string } = {};
@@ -60,6 +66,10 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
         return;
       }
       setFormStatus('success');
+      
+      // Pinterest Lead tracking for contact form submission
+      pinterestLead('contact_form', `contact_${formData.subject}_${Date.now()}`);
+      
       showToast('Bericht succesvol verzonden!');
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setFormStatus('idle'), 6000);
