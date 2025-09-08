@@ -209,135 +209,135 @@ const gift_tech_8: Gift = {
   imageUrl: 'https://picsum.photos/seed/tech-solar-power/300/300'
 };
 
-// Experience Gifts (alleen Amazon links)
-const gift_exp_1: Gift = {
-  productName: 'Avontuurlijke Smartbox (Bungeejump / Indoor Skydiving)',
-  description: 'Adrenaline in een doosje: keuze uit meerdere activiteiten voor waaghalzen of bucket‑list starters.',
-  priceRange: '€50 - €120',
+// AI & Smart Home Gifts (echte Amazon producten)
+const gift_ai_1: Gift = {
+  productName: 'Amazon Echo Dot (5th Gen) met Alexa',
+  description: 'Slimme speaker met verbeterde audio, Alexa integratie en smart home controle. Perfect voor beginners in smart home.',
+  priceRange: '€39 - €59',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=smartbox+avontuur&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/dp/B09B8V1LZ3?tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-adventure/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_2: Gift = {
-  productName: 'Wellness / Sauna Cadeaubon',
-  description: 'Een dag volledige ontspanning: sauna, massages en rust. Perfect voor drukke levens.',
-  priceRange: '€40 - €150',
+const gift_ai_2: Gift = {
+  productName: 'Ring Indoor Cam Pro',
+  description: 'HD beveiligingscamera met nachtzicht, bewegingsdetectie en Alexa integratie. Bewaak je huis eenvoudig.',
+  priceRange: '€89 - €129',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=wellness+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=ring+indoor+cam&tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-wellness/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_3: Gift = {
-  productName: 'Kookworkshop / Culinaire Cadeaubon',
-  description: 'Samen leren & proeven: van sushi of pasta maken tot barista of chocoladekunst.',
-  priceRange: '€45 - €110',
+const gift_ai_3: Gift = {
+  productName: 'Philips Hue Starter Kit (White & Color)',
+  description: 'Slimme LED verlichting met 16 miljoen kleuren. Stel sfeer, timers en integratie met smart home systemen in.',
+  priceRange: '€79 - €149',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=kookworkshop+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=philips+hue+starter+kit&tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-cooking/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_4: Gift = {
-  productName: 'Creatieve Workshop (Keramiek / Schilderen)',
-  description: 'Actief & mindful bezig zijn en met een tastbaar eigen resultaat naar huis gaan.',
-  priceRange: '€35 - €90',
+const gift_ai_4: Gift = {
+  productName: 'Google Nest Mini (2nd Gen)',
+  description: 'Compacte smart speaker met Google Assistant. Uitstekende audio, smart home integratie en voice control.',
+  priceRange: '€29 - €49',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=creatieve+workshop+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/dp/B07Z8JV8QC?tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-creative/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_5: Gift = {
-  productName: 'Escape Room Cadeaubon (Team Experience)',
-  description: 'Samen puzzelen onder tijdsdruk – versterkt vriendschappen & zorgt voor verhalen achteraf.',
-  priceRange: '€60 - €140',
+const gift_ai_5: Gift = {
+  productName: 'TP-Link Tapo Smart Plug',
+  description: 'Slimme stekker voor afstandsbediening via app. Energie monitoring, timers en voice control ondersteuning.',
+  priceRange: '€12 - €25',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=escape+room+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=tp-link+tapo+smart+plug&tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-escaperoom/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_6: Gift = {
-  productName: 'Romantisch Diner Cadeaubon',
-  description: 'Een avond culinair genieten – ideaal als gedeeld cadeau met beleving én herinnering.',
-  priceRange: '€50 - €130',
+const gift_ai_6: Gift = {
+  productName: 'eufy Smart Doorbell Video',
+  description: 'Video deurbel met 2K camera, nachtzicht, bewegingsdetectie en lokale opslag. Geen maandelijkse kosten.',
+  priceRange: '€99 - €149',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=restaurant+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=eufy+smart+doorbell&tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-dinner/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_7: Gift = {
-  productName: 'Indoor Klim- of Boulder Intro',
-  description: 'Fysieke uitdaging + mentale focus. Toegankelijk voor beginners en verslavend leuk.',
-  priceRange: '€25 - €60',
+const gift_ai_7: Gift = {
+  productName: 'Logitech Circle View Webcam',
+  description: 'Slimme webcam met 360° zicht, bewegingsdetectie en smart home integratie. Perfect voor security en streaming.',
+  priceRange: '€79 - €119',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=klim+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=logitech+circle+view&tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-climb/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
-const gift_exp_8: Gift = {
-  productName: 'Fotografie Workshop / Instap Cursus',
-  description: 'Verbeter direct compositie & storytelling – ook leuk in combinatie met bestaande camera.',
-  priceRange: '€70 - €180',
+const gift_ai_8: Gift = {
+  productName: 'Samsung SmartThings Station',
+  description: 'Universele smart home hub voor Matter apparaten. Centraliseert controle van al je smart devices.',
+  priceRange: '€59 - €89',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=fotografie+workshop+cadeaubon&tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/s?k=samsung+smartthings+station&tag=gifteez77-21' }
   ],
-  imageUrl: 'https://picsum.photos/seed/experience-photo/300/300'
+  imageUrl: '/images/trending-tech.png'
 };
 
 export const blogPosts: BlogPost[] = [
   {
-    slug: 'beste-ervaringscadeaus-2025',
-    title: 'De Beste Ervaringscadeaus (2025): 35+ Belevingen die Blijvend Herinnerd Worden',
-    excerpt: 'Geef een herinnering in plaats van een voorwerp. Van adrenaline en wellness tot culinair en creatief – deze ervaringscadeaus scoren écht.',
-    imageUrl: '/images/trending-ervaringen.png',
-    category: 'Ervaringen',
-    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=ervaringen' },
-    publishedDate: '2025-09-07',
+    slug: 'ai-smart-home-gadgets-2025',
+    title: 'AI & Smart Home Gadgets (2025): 25+ Innovatieve Apparaten voor een Slimmere Woning',
+    excerpt: 'Ontdek de nieuwste AI-gadgets en smart home apparaten die je leven makkelijker maken. Van voice assistants tot beveiligingssystemen.',
+    imageUrl: '/images/trending-tech.png',
+    category: 'Tech',
+    author: { name: 'Tech Expert', avatarUrl: 'https://i.pravatar.cc/150?u=tech' },
+    publishedDate: '2025-09-08',
     content: [
-      { type: 'paragraph', content: 'Ervaringscadeaus winnen razendsnel terrein: minder spullen, meer betekenis. Een goed gekozen beleving levert verhalen, foto’s en verbondenheid op – en verdwijnt niet in een lade. In deze gids helpen we je gericht kiezen voor verschillende persoonlijkheden & budgetten.' },
-  { type: 'paragraph', content: 'Zoek je juist iets technisch of duurzaam? Bekijk ook onze <a href="/blog/cadeaus-voor-tech-liefhebbers">Tech Cadeaugids</a> of de <a href="/blog/duurzame-eco-vriendelijke-cadeaus">Duurzame Cadeaus gids</a> voor alternatieven met hardware of eco-impact.' },
-      { type: 'heading', content: 'Waarom een Ervaringscadeau?' },
-      { type: 'paragraph', content: 'Psychologisch onderzoek laat zien dat ervaringen vaak meer langdurige tevredenheid geven dan materiële cadeaus. Ze worden gedeeld, opnieuw verteld en vormen emotionele ankerpunten. Zeker voor minimalisten of mensen “die alles al hebben” is dit een gouden categorie.' },
-      { type: 'heading', content: 'Avontuur & Adrenaline' },
-      { type: 'paragraph', content: 'Voor de durfal of bucket‑list bouwer. Kies iets schaalbaars: van indoor skydive tot klimintro of een escape uitdaging.' },
-      { type: 'gift', content: gift_exp_1 },
-      { type: 'gift', content: gift_exp_5 },
-      { type: 'gift', content: gift_exp_7 },
-      { type: 'heading', content: 'Ontspanning & Wellness' },
-      { type: 'paragraph', content: 'Perfect voor wie altijd “druk” is. Een wellnessdag of massage cadeaubon forceert letterlijk ontspanning en herstel.' },
-      { type: 'gift', content: gift_exp_2 },
-      { type: 'gift', content: gift_exp_6 },
-      { type: 'heading', content: 'Culinair & Gezellig' },
-      { type: 'paragraph', content: 'Samen koken of proeven zorgt voor verbinding. Workshops leveren nieuwe skills + smaakherinneringen.' },
-      { type: 'gift', content: gift_exp_3 },
-      { type: 'heading', content: 'Creatief & Leren' },
-      { type: 'paragraph', content: 'Ideaal voor nieuwsgierige geesten. Creatieve workshops geven tastbaar resultaat en vergroting van zelfvertrouwen.' },
-      { type: 'gift', content: gift_exp_4 },
-      { type: 'gift', content: gift_exp_8 },
-      { type: 'heading', content: 'Vergelijking: Ervaringstypen' },
-      { type: 'comparisonTable', headers: ['Avontuur', 'Wellness', 'Workshop'], rows: [
-          { feature: 'Intensiteit', values: ['Hoog', 'Laag', 'Middel'] },
-          { feature: 'Herinneringswaarde', values: ['Spektakel / verhaal', 'Diepe ontspanning', 'Nieuwe skill'] },
-          { feature: 'Geschikt Voor', values: ['Waaghalzen / groepen', 'Stressgevoelige personen', 'Creatieven / hobbyisten'] },
-          { feature: 'Voorbereiding', values: ['Reserveren & soms reistijd', 'Reserveren', 'Datum + materiaal soms'] },
-          { feature: 'Risico op Niet Gebruiken', values: ['Middel', 'Laag', 'Laag'] }
+      { type: 'paragraph', content: 'In 2025 is je huis niet langer dom – het is intelligent, adaptief en helpt je dagelijks. AI en smart home technologie maken woningen veiliger, efficiënter en comfortabeler dan ooit. Van spraakgestuurde assistenten tot geautomatiseerde beveiligingssystemen, deze gadgets transformeren hoe we thuis leven.' },
+      { type: 'paragraph', content: 'Ben je nieuw met smart home? Begin klein met een voice assistant. Zoek je een complete setup? Bekijk onze <a href="/blog/duurzame-eco-vriendelijke-cadeaus">Duurzame Cadeaus gids</a> voor eco-vriendelijke smart apparaten.' },
+      { type: 'heading', content: 'Waarom Smart Home Gadgets in 2025?' },
+      { type: 'paragraph', content: 'Volgens onderzoek van Statista zal de smart home markt in 2025 €180 miljard bereiken. AI maakt apparaten slimmer: ze leren van je gewoonten, voorspellen je behoeften en werken samen voor optimale efficiency. Gemiddeld besparen huishoudens €200-€400 per jaar aan energiekosten.' },
+      { type: 'heading', content: 'Voice Assistants & AI Speakers' },
+      { type: 'paragraph', content: 'De toegangspoort tot je smart home. Moderne AI-assistants begrijpen context, meerdere talen en integreren naadloos met duizenden apparaten.' },
+      { type: 'gift', content: gift_ai_1 },
+      { type: 'gift', content: gift_ai_4 },
+      { type: 'heading', content: 'Slimme Beveiliging' },
+      { type: 'paragraph', content: 'AI-gedreven camera\'s herkennen gezichten, dieren en bewegingen. Lokale opslag voorkomt privacy issues en maandelijkse kosten.' },
+      { type: 'gift', content: gift_ai_2 },
+      { type: 'gift', content: gift_ai_6 },
+      { type: 'gift', content: gift_ai_7 },
+      { type: 'heading', content: 'Slimme Verlichting & Atmosfeer' },
+      { type: 'paragraph', content: 'Creëer de perfecte sfeer met miljoenen kleuren, automatische timers en integratie met je dagelijkse routine.' },
+      { type: 'gift', content: gift_ai_3 },
+      { type: 'heading', content: 'Smart Plugs & Energie Management' },
+      { type: 'paragraph', content: 'Bespaar energie door apparaten automatisch uit te schakelen. Monitor verbruik en creëer routines voor efficiency.' },
+      { type: 'gift', content: gift_ai_5 },
+      { type: 'heading', content: 'Smart Home Hubs & Integratie' },
+      { type: 'paragraph', content: 'Het brein van je smart home. Centraliseert controle en zorgt voor naadloze communicatie tussen apparaten.' },
+      { type: 'gift', content: gift_ai_8 },
+      { type: 'heading', content: 'Budget vs Premium: Wat Past Bij Jou?' },
+      { type: 'comparisonTable', headers: ['Budget (€0-€100)', 'Middenklasse (€100-€200)', 'Premium (€200+)'], rows: [
+          { feature: 'Voorbeelden', values: ['Echo Dot, Smart Plugs', 'Ring Cam, Philips Hue', 'Eufy Doorbell, Logitech Circle'] },
+          { feature: 'Setup Moeilijkheid', values: ['Zeer eenvoudig', 'Middelmatig', 'Geavanceerd'] },
+          { feature: 'Features', values: ['Basis voice control', 'Video, kleuren, energie', '4K video, AI herkenning'] },
+          { feature: 'Besparingspotentieel', values: ['€50-€100/jaar', '€100-€200/jaar', '€200-€400/jaar'] },
+          { feature: 'Geschikt Voor', values: ['Beginners, kleine woningen', 'Gezinnen, gemiddelde huizen', 'Tech lovers, grote woningen'] }
         ] },
-      { type: 'heading', content: 'Plus- & Minpunten per Segment' },
-      { type: 'prosCons', items: [
-        { title: 'Avontuur', pros: ['Sterk verhaal achteraf', 'Emotionele piek', 'Bucket‑list tick'], cons: ['Niet voor iedereen', 'Kan uitstellen veroorzaken'] },
-        { title: 'Wellness', pros: ['Universeel gewaardeerd', 'Stressreductie', 'Makkelijk te plannen'], cons: ['Minder “spectaculair”', 'Soms drukke locaties'] },
-        { title: 'Workshops', pros: ['Skill blijft', 'Sociaal & leerzaam', 'Combinatie van fun + groei'], cons: ['Afhankelijk van docent kwaliteit', 'Kan worden uitgesteld'] }
-      ] },
-      { type: 'heading', content: 'Tips om de Beleving Nog Sterker te Maken' },
-      { type: 'paragraph', content: 'Voeg een handgeschreven kaartje toe met een “reden waarom juist dit bij je past”. Plan eventueel alvast 2 datumopties om uitstel te voorkomen. Combineer een workshop met een klein fysiek item (notitieboekje, mok) voor blijvende associatie.' },
+      { type: 'heading', content: 'Privacy & Beveiliging: Belangrijke Overwegingen' },
+      { type: 'paragraph', content: 'Kies apparaten met lokale verwerking en sterke encryptie. Vermijd systemen die al je data naar de cloud sturen. Europese merken zoals Ring en Eufy bieden betere privacy bescherming dan sommige Aziatische alternatieven.' },
+      { type: 'heading', content: 'Installatie & Setup Tips' },
+      { type: 'paragraph', content: 'Begin met één ruimte (bijv. woonkamer) en breid uit. Gebruik dezelfde merk/ecosysteem voor eenvoudigere integratie. Test alle apparaten grondig voordat je ze weggeeft.' },
+      { type: 'heading', content: 'Toekomst van Smart Home in 2025' },
+      { type: 'paragraph', content: 'Matter standaard zorgt voor betere cross-brand compatibiliteit. AI wordt slimmer in het voorspellen van behoeften. Energie management wordt crucialer met stijgende prijzen.' },
       { type: 'heading', content: 'Ons Eindoordeel' },
-      { type: 'verdict', title: 'Welke ervaring kies je?', content: 'Kies Avontuur voor impact & adrenaline (perfect voor jubilea of mijlpalen), Wellness voor herstel & zorgzaamheid, en Workshops voor blijvende groei. Twijfel je? Combineer een kleinere workshop met een diner: eerst leren, daarna vieren. Zo ontstaat automatisch een verhaal dat langer blijft dan elk object.' }
+      { type: 'verdict', title: 'Start met Echo Dot of Nest Mini', content: 'Voor beginners: begin met een voice assistant (€30-€50) en bouw vanaf daar uit. Voor gevorderden: investeer in een complete beveiligings- en verlichtingssetup. Het gemiddelde huishouden ziet ROI binnen 6-12 maanden door energiebesparingen en convenience.' }
     ]
   },
   {
