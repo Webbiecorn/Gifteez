@@ -5,6 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import Button from './Button';
 import { SpinnerIcon } from './IconComponents';
 import { pinterestSignup, pinterestPageVisit } from '../services/pinterestTracking';
+import { gaSignup, gaPageView } from '../services/googleAnalytics';
 
 interface SignUpPageProps {
   navigateTo: NavigateTo;
@@ -22,6 +23,8 @@ const SignUpPage: React.FC<SignUpPageProps> = ({ navigateTo, showToast }) => {
   // Pinterest PageVisit tracking for signup page
   React.useEffect(() => {
     pinterestPageVisit('signup_page', `signup_page_${Date.now()}`);
+    // Google Analytics pageview tracking for signup page
+    gaPageView('/signup', 'Account Aanmaken - Gifteez.nl');
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -38,6 +41,9 @@ const SignUpPage: React.FC<SignUpPageProps> = ({ navigateTo, showToast }) => {
         if(user) {
             // Pinterest Signup tracking
             pinterestSignup(`signup_${user.id}_${Date.now()}`);
+            
+            // Google Analytics Signup tracking
+            gaSignup('form');
             
             showToast(`Account aangemaakt! Welkom, ${user.name}.`);
             navigateTo('account');

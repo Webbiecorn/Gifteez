@@ -6,6 +6,7 @@ import GiftResultCard from './GiftResultCard';
 import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 import { pinterestPageVisit, pinterestSearch } from '../services/pinterestTracking';
+import { gaSearch, gaPageView } from '../services/googleAnalytics';
 
 const occasions = ["Verjaardag", "Kerstmis", "Valentijnsdag", "Jubileum", "Zomaar"];
 const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
@@ -56,6 +57,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
 
     // Pinterest PageVisit tracking for gift finder
     pinterestPageVisit('gift_finder', `finder_${Date.now()}`);
+    
+    // Google Analytics pageview tracking for gift finder
+    gaPageView('/gift-finder', 'AI Gift Finder - Gifteez.nl');
   }, [initialData]);
 
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -82,6 +86,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     // Pinterest Search tracking
     const searchQuery = `${recipient} ${occasion} ${interests} budget:€${budget}`;
     pinterestSearch(searchQuery, `search_${Date.now()}`);
+    
+    // Google Analytics Search tracking
+    gaSearch(searchQuery);
 
     try {
       const results = await findGifts(recipient, budget, occasion, interests);

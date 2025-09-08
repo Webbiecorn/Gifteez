@@ -7,6 +7,7 @@ import { CalendarIcon, ChevronRightIcon, FacebookIcon, TwitterIcon, WhatsAppIcon
 import GiftResultCard from './GiftResultCard';
 import AmazonTeaser from './AmazonTeaser';
 import { pinterestPageVisit } from '../services/pinterestTracking';
+import { gaPageView } from '../services/googleAnalytics';
 
 interface BlogDetailPageProps {
   post: BlogPost;
@@ -144,6 +145,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
 
     // Pinterest PageVisit tracking for blog articles
     pinterestPageVisit('blog_article', `blog_${post.slug}_${Date.now()}`);
+    
+    // Google Analytics pageview tracking for blog articles
+    gaPageView(`/blog/${post.slug}`, post.title);
   }, [post]);
 
   const shareUrl = window.location.href;

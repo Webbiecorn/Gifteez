@@ -5,6 +5,7 @@ import Accordion from './Accordion';
 import { MailIcon, InstagramIcon, PinterestIcon, SpinnerIcon, QuestionMarkCircleIcon, CheckIcon } from './IconComponents';
 import { socialLinks } from '../socialLinks';
 import { pinterestPageVisit, pinterestLead } from '../services/pinterestTracking';
+import { gaLead, gaPageView } from '../services/googleAnalytics';
 
 interface ContactPageProps {
   showToast: ShowToast;
@@ -29,6 +30,8 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
   // Pinterest PageVisit tracking for contact page
   React.useEffect(() => {
     pinterestPageVisit('contact_page', `contact_${Date.now()}`);
+    // Google Analytics pageview tracking for contact page
+    gaPageView('/contact', 'Contact - Gifteez.nl');
   }, []);
 
   const validate = (): boolean => {
@@ -69,6 +72,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
       
       // Pinterest Lead tracking for contact form submission
       pinterestLead('contact_form', `contact_${formData.subject}_${Date.now()}`);
+      
+      // Google Analytics Lead tracking
+      gaLead('contact_form');
       
       showToast('Bericht succesvol verzonden!');
       setFormData({ name: '', email: '', subject: '', message: '' });

@@ -12,6 +12,7 @@ import { blogPosts } from '../data/blogData';
 import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon } from './IconComponents';
 import AmazonTeaser from './AmazonTeaser';
 import QuizIllustration from './QuizIllustration';
+import { gaPageView } from '../services/googleAnalytics';
 import { pinterestPageVisit } from '../services/pinterestTracking';
 
 interface HomePageProps {
@@ -54,6 +55,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
   // Pinterest PageVisit tracking for homepage
   useEffect(() => {
     pinterestPageVisit('homepage', `home_${Date.now()}`);
+    // Google Analytics pageview tracking
+    gaPageView('/', 'Gifteez.nl - AI Gift Finder');
   }, []);
   const [previewRecipient, setPreviewRecipient] = useState<string>(recipients[0]);
   const [newsletterEmail, setNewsletterEmail] = useState('');
