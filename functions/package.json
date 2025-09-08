@@ -2,7 +2,9 @@
   "name": "gifteez-functions",
   "private": true,
   "type": "module",
-  "engines": { "node": "^20" },
+  "engines": {
+    "node": "^20"
+  },
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -11,17 +13,18 @@
     "dev": "firebase emulators:start --only functions,hosting"
   },
   "dependencies": {
-  "aws4": "^1.13.2",
-  "cors": "^2.8.5",
-  "express": "^4.19.2",
-  "express-rate-limit": "^7.4.1",
-  "firebase-admin": "^12.6.0",
-  "firebase-functions": "^5.1.1"
+    "aws4": "^1.13.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.1",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.0",
+    "resend": "^4.8.0"
   },
   "devDependencies": {
-  "@types/aws4": "^1.11.5",
-  "@types/cors": "^2.8.17",
-  "@types/express": "^4.17.21",
+    "@types/aws4": "^1.11.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   }

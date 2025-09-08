@@ -19,7 +19,7 @@ const CategoryCard: React.FC<{ category: Category; onClick: () => void }> = ({ c
     className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center justify-center text-center cursor-pointer
                group hover:bg-secondary transition-all duration-300 transform hover:-translate-y-1"
   >
-    <category.icon className="w-16 h-16 text-primary mb-4 group-hover:text-accent transition-colors duration-300" />
+    <category.icon className="w-16 h-16 text-primary mb-4 group-hover:text-blue-600 transition-colors duration-300" />
     <h3 className="font-display text-xl font-bold text-primary">{category.name === 'Zomaar' ? 'Zomaar een cadeau' : category.name}</h3>
   </div>
 );

@@ -16,6 +16,13 @@ Zet sleutels in `.env` met VITE_ prefix (zie `.env.example`).
 - Maskable icons (192/512) in `manifest.webmanifest`
 - Safari pinned tab: `public/safari-pinned-tab.svg` (auto gegenereerd)
 
+## Afbeeldingen
+Statische hero / trending afbeeldingen staan in `public/images/`. Vervang de placeholder bestanden (`trending-*.jpg`) met geoptimaliseerde JPEG/WebP (aan te raden ~60-80 kwaliteit, 400x300 voor kaarten) en commit.
+
+Optimalisatie tip:
+- Gebruik bijv. Squoosh of `sharp` script voor batch compressie.
+- Overweeg WebP/AVIF varianten en `<picture>` voor verdere besparing.
+
 ## Routing
 - Simpele client-side routing via `App.tsx` met pushState; deep links op Firebase Hosting werken dankzij SPA rewrite.
 <div align="center">

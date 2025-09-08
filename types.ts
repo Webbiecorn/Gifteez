@@ -1,5 +1,5 @@
 import type React from 'react';
-export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | 'shop' | 'cart' | 'checkoutSuccess' | 'deals';
+export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | 'shop' | 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy';
 
 export type NavigateTo = (page: Page, data?: any) => void;
 

@@ -22,14 +22,19 @@ const ShopPage = ReactLazy(() => import('./components/ShopPage'));
 const CartPage = ReactLazy(() => import('./components/CartPage'));
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'));
 const DealsPage = ReactLazy(() => import('./components/DealsPage'));
+const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
+const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
+const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
 import { Page, InitialGiftFinderData, Gift } from './types';
 import { blogPosts } from './data/blogData';
 import { AuthContext } from './contexts/AuthContext';
 import { SpinnerIcon } from './components/IconComponents';
+import { useCookieConsent } from './hooks/useCookieConsent';
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null);
   const auth = useContext(AuthContext);
+  const { showBanner, acceptCookies, declineCookies } = useCookieConsent();
   
   useEffect(() => {
     try {
@@ -72,6 +77,8 @@ const App: React.FC = () => {
       case 'cart': return '/cart';
       case 'checkoutSuccess': return '/checkout-success';
       case 'deals': return '/deals';
+      case 'disclaimer': return '/disclaimer';
+      case 'privacy': return '/privacy';
       default: return '/';
     }
   };
@@ -100,6 +107,8 @@ const App: React.FC = () => {
       case 'cart': setCurrentPage('cart'); break;
       case 'checkout-success': setCurrentPage('checkoutSuccess'); break;
       case 'deals': setCurrentPage('deals'); break;
+      case 'disclaimer': setCurrentPage('disclaimer'); break;
+      case 'privacy': setCurrentPage('privacy'); break;
       default: setCurrentPage('home'); setCurrentPostSlug(null); break;
     }
   }, []);
@@ -126,6 +135,52 @@ const App: React.FC = () => {
       window.history.pushState({}, '', newPath);
     }
     window.scrollTo(0, 0);
+    // Basic per-route meta (skip blog pages which manage their own inside components)
+    if (!['blog','blogDetail'].includes(page)) {
+      const ensure = (selector: string, create: () => HTMLElement) => {
+        let el = document.head.querySelector(selector) as HTMLElement | null;
+        if (!el) { el = create(); document.head.appendChild(el); }
+        return el;
+      };
+      const canonical = ensure('link[rel="canonical"]', () => { const l=document.createElement('link'); l.rel='canonical'; return l; });
+      const path = pathFor(page, data);
+      canonical.setAttribute('href', window.location.origin + path);
+      const baseTitle = 'Gifteez.nl';
+      const pageTitles: Record<string,string> = {
+        home: 'Vind binnen 30 seconden het perfecte cadeau met AI',
+        giftFinder: 'AI GiftFinder — Persoonlijke cadeau-ideeën',
+        categories: 'Cadeaucategorieën — Ontdek ideeënpagina\'s',
+        favorites: 'Favoriete cadeaus — Deel & bewaar',
+        contact: 'Contact — Neem contact op met Gifteez',
+        about: 'Over Gifteez — Onze missie',
+        login: 'Inloggen',
+        signup: 'Account aanmaken',
+        account: 'Mijn account',
+        quiz: 'Cadeau Quiz',
+        download: 'Download — Gratis cadeaugids',
+        shop: 'Shop — Producten & Cadeaus',
+        cart: 'Winkelwagen',
+        checkoutSuccess: 'Bestelling geslaagd',
+        deals: 'Deals & Aanbiedingen',
+        disclaimer: 'Disclaimer — Gifteez.nl',
+        privacy: 'Privacybeleid — Gifteez.nl'
+      };
+      const title = pageTitles[page] ? `${pageTitles[page]} — ${baseTitle}` : baseTitle;
+      document.title = title;
+      const descriptions: Record<string,string> = {
+        giftFinder: 'Gebruik de AI GiftFinder en ontvang direct een gepersonaliseerde lijst cadeautips.',
+        categories: 'Blader door tientallen cadeaucategorieën voor inspiratie voor elke gelegenheid.',
+        favorites: 'Bekijk en deel je bewaarde favoriete cadeau-ideeën.',
+        contact: 'Neem contact op met het Gifteez team voor vragen of samenwerkingen.',
+        about: 'Lees over de missie achter Gifteez: cadeaustress voorgoed verminderen.',
+        quiz: 'Doe de cadeau quiz en ontdek welk type cadeau het beste past.',
+        download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
+        shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
+        deals: 'Pak de beste actuele cadeau deals en aanbiedingen.'
+      };
+      const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
+      metaDesc.setAttribute('content', descriptions[page] || 'Vind snel het perfecte cadeau met de AI GiftFinder, inspiratie, gidsen en deals.');
+    }
   }, []);
 
   const showToast = useCallback((message: string) => {
@@ -186,6 +241,10 @@ const App: React.FC = () => {
         return <CheckoutSuccessPage navigateTo={navigateTo} />;
       case 'deals':
         return <DealsPage navigateTo={navigateTo} />;
+      case 'disclaimer':
+        return <DisclaimerPage navigateTo={navigateTo} />;
+      case 'privacy':
+        return <PrivacyPage navigateTo={navigateTo} />;
       default:
         return <HomePage navigateTo={navigateTo} />;
     }
@@ -201,6 +260,11 @@ const App: React.FC = () => {
       </main>
       <Footer navigateTo={navigateTo} />
       <Toast message={toastMessage} />
+      {showBanner && (
+        <React.Suspense fallback={null}>
+          <CookieBanner onAccept={acceptCookies} onDecline={declineCookies} />
+        </React.Suspense>
+      )}
     </div>
   );
 };

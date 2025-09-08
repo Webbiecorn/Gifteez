@@ -35,7 +35,7 @@ const CheckoutSuccessPage: React.FC<CheckoutSuccessPageProps> = ({ navigateTo })
                             className="flex items-center justify-between p-4 bg-light-bg rounded-lg hover:bg-gray-200 transition-colors"
                         >
                             <span className="font-bold text-primary">{item.name}</span>
-                            <DownloadIcon className="w-6 h-6 text-accent" />
+                            <DownloadIcon className="w-6 h-6 text-blue-600" />
                         </a>
                     ))}
                 </div>

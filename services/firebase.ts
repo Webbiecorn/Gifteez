@@ -26,14 +26,44 @@ if (hasRequired) {
   app = getApps().length ? getApp() : initializeApp(cfg);
   authInst = getAuth(app);
   dbInst = getFirestore(app);
-  // Analytics is optional; only init if supported and measurementId is present (web only)
-  if (cfg.measurementId && typeof window !== 'undefined') {
-    isSupported().then((ok) => {
-      if (ok && app) {
-        try { analyticsInst = getAnalytics(app); } catch { /* ignore */ }
-      }
-    }).catch(() => {});
+}
+
+// Function to initialize analytics with consent
+export const initializeAnalyticsWithConsent = async (): Promise<void> => {
+  if (!cfg.measurementId || typeof window === 'undefined' || analyticsInst) {
+    return;
   }
+
+  try {
+    const ok = await isSupported();
+    if (ok && app) {
+      analyticsInst = getAnalytics(app);
+      console.log('Firebase Analytics initialized with user consent');
+    }
+  } catch (error) {
+    console.warn('Failed to initialize Firebase Analytics:', error);
+  }
+};
+
+// Check if analytics should be initialized based on stored consent
+const checkStoredConsent = (): boolean => {
+  if (typeof window === 'undefined') return false;
+
+  try {
+    const storedConsent = localStorage.getItem('gifteez_cookie_consent');
+    if (storedConsent) {
+      const consentData = JSON.parse(storedConsent);
+      return consentData.preferences?.analytics === true;
+    }
+  } catch (error) {
+    console.error('Error checking stored cookie consent:', error);
+  }
+  return false;
+};
+
+// Initialize analytics if consent was previously given
+if (hasRequired && checkStoredConsent()) {
+  initializeAnalyticsWithConsent();
 }
 
 export const auth = authInst;

@@ -31,7 +31,7 @@ const ProfileCard: React.FC<{
             <button onClick={onEdit} className="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-full transition-colors" aria-label="Bewerk profiel">
                 <EditIcon className="w-5 h-5" />
             </button>
-            <button onClick={onDelete} className="p-2 text-gray-500 hover:text-accent hover:bg-gray-100 rounded-full transition-colors" aria-label="Verwijder profiel">
+            <button onClick={onDelete} className="p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-colors" aria-label="Verwijder profiel">
                 <TrashIcon className="w-5 h-5" />
             </button>
         </div>

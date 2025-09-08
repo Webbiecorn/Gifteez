@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Status - Gifteez</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>PWA Status Check</h1>
+    <div id="status"></div>
+    <script>
+        const statusEl = document.getElementById('status');
+        
+        // Check Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(() => {
+                    statusEl.innerHTML += '<div class="status success">✅ Service Worker registered successfully</div>';
+                })
+                .catch((error) => {
+                    statusEl.innerHTML += '<div class="status error">❌ Service Worker registration failed: ' + error.message + '</div>';
+                });
+        } else {
+            statusEl.innerHTML += '<div class="status error">❌ Service Worker not supported</div>';
+        }
+        
+        // Check Manifest
+        fetch('/manifest.webmanifest')
+            .then(response => {
+                if (response.ok) {
+                    statusEl.innerHTML += '<div class="status success">✅ Web App Manifest found</div>';
+                } else {
+                    statusEl.innerHTML += '<div class="status error">❌ Web App Manifest not found</div>';
+                }
+            })
+            .catch(() => {
+                statusEl.innerHTML += '<div class="status error">❌ Web App Manifest error</div>';
+            });
+        
+        // Check PWA install status
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            statusEl.innerHTML += '<div class="status success">✅ PWA is installed and running in standalone mode</div>';
+        } else {
+            statusEl.innerHTML += '<div class="status warning">⚠️ PWA is running in browser mode</div>';
+        }
+        
+        // Check other PWA features
+        const features = {
+            'Cache API': 'caches' in window,
+            'Fetch API': 'fetch' in window,
+            'Push API': 'PushManager' in window,
+            'Notifications': 'Notification' in window
+        };
+        
+        for (const [feature, supported] of Object.entries(features)) {
+            const statusClass = supported ? 'success' : 'warning';
+            const icon = supported ? '✅' : '⚠️';
+            statusEl.innerHTML += `<div class="status ${statusClass}">${icon} ${feature}: ${supported ? 'Supported' : 'Not supported'}</div>`;
+        }
+    </script>
+</body>
+</html>

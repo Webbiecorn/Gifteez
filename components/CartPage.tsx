@@ -3,6 +3,7 @@ import { NavigateTo, ShowToast, CartItem } from '../types';
 import { CartContext } from '../contexts/CartContext';
 import Button from './Button';
 import { TrashIcon, ShoppingCartIcon } from './IconComponents';
+import ImageWithFallback from './ImageWithFallback';
 
 interface CartPageProps {
   navigateTo: NavigateTo;
@@ -49,7 +50,7 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
               {cart.map((item: CartItem) => (
                 <div key={item.id} className="flex items-center justify-between gap-4 border-b pb-4">
                   <div className="flex items-center gap-4">
-                    <img src={item.imageUrl} alt={item.name} className="w-20 h-24 object-cover rounded-md" />
+                    <ImageWithFallback src={item.imageUrl} alt={item.name} className="w-20 h-24 object-cover rounded-md" />
                     <div>
                       <h3 className="font-bold text-primary text-lg">{item.name}</h3>
                       <p className="text-sm text-gray-600">Aantal: {item.quantity}</p>
@@ -59,7 +60,7 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
                      <p className="font-bold text-primary text-lg">€{(item.price * item.quantity).toFixed(2)}</p>
                      <button
                         onClick={() => removeFromCart(item.id)}
-                        className="p-2 text-gray-500 hover:text-accent hover:bg-red-50 rounded-full"
+                        className="p-2 text-gray-500 hover:text-blue-600 hover:bg-red-50 rounded-full"
                         aria-label={`Verwijder ${item.name}`}
                      >
                         <TrashIcon className="w-5 h-5" />
@@ -70,11 +71,11 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
             </div>
             
             <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <button onClick={clearCart} className="font-bold text-gray-600 hover:text-accent transition-colors">
+                <button onClick={clearCart} className="font-bold text-gray-600 hover:text-blue-600 transition-colors">
                     Winkelwagen legen
                 </button>
                 <div className="text-right">
-                    <p className="text-xl font-bold text-primary">Totaal: <span className="text-accent">€{total.toFixed(2)}</span></p>
+                    <p className="text-xl font-bold text-primary">Totaal: <span className="text-blue-600">€{total.toFixed(2)}</span></p>
                     <p className="text-sm text-gray-500">Inclusief BTW</p>
                 </div>
             </div>

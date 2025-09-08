@@ -11,7 +11,7 @@ const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', classNam
   
   const variantClasses = {
     primary: 'bg-primary text-white hover:bg-opacity-90 focus:ring-primary',
-    accent: 'bg-accent text-white hover:bg-accent-hover focus:ring-accent',
+    accent: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-600',
   };
 
   return (

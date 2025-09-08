@@ -5,6 +5,7 @@ import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
 import { FacebookIcon, TwitterIcon, WhatsAppIcon, HeartIcon, HeartIconFilled } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
+import ImageWithFallback from './ImageWithFallback';
 
 interface GiftResultCardProps {
   gift: Gift;
@@ -13,9 +14,24 @@ interface GiftResultCardProps {
   showToast?: ShowToast;
   isReadOnly?: boolean;
   isEmbedded?: boolean;
+  imageHeightClass?: string; // Tailwind height utility override (e.g., h-48, h-40, h-32)
+  imageFit?: 'cover' | 'contain';
+  hideAmazonBadge?: boolean;
+  candidateVariant?: boolean; // special compact alignment variant for comparison sections
 }
 
-const GiftResultCard: React.FC<GiftResultCardProps> = ({ gift, index, onFavoriteChange, showToast, isReadOnly = false, isEmbedded = false }) => {
+const GiftResultCard: React.FC<GiftResultCardProps> = ({
+  gift,
+  index,
+  onFavoriteChange,
+  showToast,
+  isReadOnly = false,
+  isEmbedded = false,
+  imageHeightClass = 'h-48',
+  imageFit = 'cover',
+  hideAmazonBadge = false,
+  candidateVariant = false,
+}) => {
   const auth = useContext(AuthContext);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
@@ -84,32 +100,48 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({ gift, index, onFavorite
     ? "bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
     : "bg-white rounded-lg shadow-lg overflow-hidden flex flex-col opacity-0 animate-fade-in-up";
 
+  const imageContainerHeight = candidateVariant ? 'h-40 md:h-44' : imageHeightClass;
+
   return (
-    <div 
-      className={containerClasses}
+    <div
+      className={containerClasses + ' h-full'}
       style={!isEmbedded ? { animationDelay: `${index * 100}ms` } : {}}
     >
-      <div className="relative">
-        <img src={gift.imageUrl} alt={gift.productName} className="w-full h-48 object-cover" />
+      <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : ''}`}>
+        {candidateVariant ? (
+          <ImageWithFallback
+            src={gift.imageUrl}
+            alt={gift.productName}
+            className="max-h-full max-w-full w-auto h-auto mx-auto"
+            fit={imageFit}
+          />
+        ) : (
+          <ImageWithFallback src={gift.imageUrl} alt={gift.productName} className={`w-full ${imageContainerHeight} bg-white`} fit={imageFit} />
+        )}
+  {(!hideAmazonBadge) && gift.retailers && gift.retailers.length > 0 && gift.retailers.every(r => r.name.toLowerCase().includes('amazon')) && (
+          <span className="absolute top-3 left-3 bg-[#232F3E] text-white text-xs font-semibold px-2 py-1 rounded shadow-md tracking-wide">
+            Alleen Amazon
+          </span>
+        )}
         {!isReadOnly && (
           <button
             onClick={handleToggleFavorite}
-            className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+            className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-blue-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
             aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
           >
             {isFavorite ? <HeartIconFilled className="w-6 h-6" /> : <HeartIcon className="w-6 h-6" />}
           </button>
         )}
       </div>
-      <div className="p-6 flex flex-col flex-grow">
-        <h3 className="font-display text-xl font-bold text-primary">{gift.productName}</h3>
+      <div className={`p-6 flex flex-col flex-grow ${candidateVariant ? 'items-center text-center' : ''}`}>
+        <h3 className={`font-display text-xl font-bold text-primary ${candidateVariant ? 'text-center' : ''}`}>{gift.productName}</h3>
         {gift.priceRange && (
-            <p className="mt-1 font-bold text-primary text-lg">{gift.priceRange}</p>
+            <p className={`mt-1 font-bold text-primary text-lg ${candidateVariant ? 'text-center' : ''}`}>{gift.priceRange}</p>
         )}
-        <p className="mt-2 text-gray-600 flex-grow">{gift.description}</p>
+        <p className={`mt-2 text-gray-600 ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>{gift.description}</p>
         
-        {gift.retailers && gift.retailers.length > 0 && (
-            <div className="mt-6 space-y-2">
+    {gift.retailers && gift.retailers.length > 0 && (
+      <div className={`mt-6 space-y-2 ${candidateVariant ? 'w-full mt-auto' : ''}`}>
         {gift.retailers.map((retailer, i) => (
                     <a 
                       key={i} 
