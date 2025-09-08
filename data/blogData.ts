@@ -290,7 +290,145 @@ const gift_ai_8: Gift = {
   imageUrl: '/images/trending-tech.png'
 };
 
+// Ervaringscadeaus 2025 (cadeaubonnen en ervaringen)
+const gift_exp_1: Gift = {
+  productName: 'Escape Room Ervaring',
+  description: 'Spannende escape room ervaring voor 2-6 personen. Los raadsels op en ontsnap uit een thema kamer binnen 60 minuten.',
+  priceRange: '€25 - €45 per persoon',
+  retailers: [
+    { name: 'Viabox', affiliateLink: 'https://www.viabox.com/nl/escape-room' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/escape-room' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/escape-room/300/300'
+};
+
+const gift_exp_2: Gift = {
+  productName: 'Wellness & Spa Arrangement',
+  description: 'Luxe wellness dag met sauna, massages en ontspannende behandelingen. Perfect voor stressverlichting.',
+  priceRange: '€85 - €150 per persoon',
+  retailers: [
+    { name: 'SpaFinder', affiliateLink: 'https://www.spafinder.nl/' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/wellness' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/spa-wellness/300/300'
+};
+
+const gift_exp_3: Gift = {
+  productName: 'Kookworkshop voor Beginners',
+  description: 'Leer de basics van koken in een professionele keuken. Inclusief recepten, technieken en een 3-gangen menu.',
+  priceRange: '€45 - €75 per persoon',
+  retailers: [
+    { name: 'HelloFresh', affiliateLink: 'https://www.hellofresh.nl/workshops' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/kookworkshop' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/cooking-workshop/300/300'
+};
+
+const gift_exp_4: Gift = {
+  productName: 'Fotografie Workshop',
+  description: 'Leer fotografie basics met professionele apparatuur. Van compositie tot bewerking in een dag workshop.',
+  priceRange: '€65 - €95 per persoon',
+  retailers: [
+    { name: 'Fotografie.nl', affiliateLink: 'https://www.fotografie.nl/workshops' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/fotografie' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/photography-workshop/300/300'
+};
+
+const gift_exp_5: Gift = {
+  productName: 'Indoor Skydiving Sessie',
+  description: 'Vlieg door de lucht in een verticale windtunnel. Een veilige manier om de sensatie van skydiven te ervaren.',
+  priceRange: '€45 - €75 per persoon',
+  retailers: [
+    { name: 'iFLY', affiliateLink: 'https://www.iflyworld.com/nl/' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/skydiving' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/indoor-skydiving/300/300'
+};
+
+const gift_exp_6: Gift = {
+  productName: 'Hot Air Balloon Vaart',
+  description: 'Zweef boven het Nederlandse landschap in een heteluchtballon. Een magische ervaring bij zonsopgang.',
+  priceRange: '€125 - €175 per persoon',
+  retailers: [
+    { name: 'Ballooning.nl', affiliateLink: 'https://www.ballooning.nl/' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/ballonvaart' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/hot-air-balloon/300/300'
+};
+
+const gift_exp_7: Gift = {
+  productName: 'Rock Climbing Intro',
+  description: 'Leer klimmen in een klimpark met professionele instructeurs. Van beginner tot gevorderde routes.',
+  priceRange: '€35 - €55 per persoon',
+  retailers: [
+    { name: 'Climbing.nl', affiliateLink: 'https://www.climbing.nl/intro' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/klimmen' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/rock-climbing/300/300'
+};
+
+const gift_exp_8: Gift = {
+  productName: 'Wine Tasting Experience',
+  description: 'Proef verschillende wijnen met uitleg van een sommelier. Leer over druiven, regio\'s en smaakprofielen.',
+  priceRange: '€55 - €85 per persoon',
+  retailers: [
+    { name: 'WineTasting.nl', affiliateLink: 'https://www.winetasting.nl/experience' },
+    { name: 'GiftCard', affiliateLink: 'https://www.giftcard.nl/wijnproeverij' }
+  ],
+  imageUrl: 'https://picsum.photos/seed/wine-tasting/300/300'
+};
+
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'beste-ervaringscadeaus-2025',
+    title: 'De Beste Ervaringscadeaus (2025): 35+ Belevingen die Blijvend Herinnerd Worden',
+    excerpt: 'Geef een herinnering in plaats van een voorwerp. Van adrenaline en wellness tot culinair en creatief – deze ervaringscadeaus scoren écht.',
+    imageUrl: '/images/trending-experiences.png',
+    category: 'Ervaringen',
+    author: { name: 'Ervaringen Expert', avatarUrl: 'https://i.pravatar.cc/150?u=ervaringen' },
+    publishedDate: '2025-09-08',
+    content: [
+      { type: 'paragraph', content: 'Ervaringscadeaus winnen razendsnel terrein: minder spullen, meer betekenis. Een goed gekozen beleving levert verhalen, foto\'s en verbondenheid op – en verdwijnt niet in een lade. In deze gids helpen we je gericht kiezen voor verschillende persoonlijkheden & budgetten.' },
+      { type: 'paragraph', content: 'Zoek je juist iets technisch of duurzaam? Bekijk ook onze <a href="/blog/cadeaus-voor-tech-liefhebbers">Tech Cadeaugids</a> of de <a href="/blog/duurzame-eco-vriendelijke-cadeaus">Duurzame Cadeaus gids</a> voor alternatieven met hardware of eco-impact.' },
+      { type: 'heading', content: 'Waarom een Ervaringscadeau?' },
+      { type: 'paragraph', content: 'Volgens onderzoek van Harvard Business Review geven ervaringen vaak meer langdurige tevredenheid dan materiële cadeaus. Ze worden gedeeld, opnieuw verteld en vormen emotionele ankerpunten. Zeker voor minimalisten of mensen "die alles al hebben" is dit een gouden categorie.' },
+      { type: 'heading', content: 'Avontuur & Adrenaline' },
+      { type: 'paragraph', content: 'Voor de durfal of bucket‑list bouwer. Kies iets schaalbaars: van indoor skydive tot klimintro of een escape uitdaging.' },
+      { type: 'gift', content: gift_exp_1 },
+      { type: 'gift', content: gift_exp_5 },
+      { type: 'gift', content: gift_exp_7 },
+      { type: 'heading', content: 'Ontspanning & Wellness' },
+      { type: 'paragraph', content: 'Perfect voor wie altijd "druk" is. Een wellnessdag of massage cadeaubon forceert letterlijk ontspanning en herstel.' },
+      { type: 'gift', content: gift_exp_2 },
+      { type: 'gift', content: gift_exp_6 },
+      { type: 'heading', content: 'Culinair & Gezellig' },
+      { type: 'paragraph', content: 'Samen koken of proeven zorgt voor verbinding. Workshops leveren nieuwe skills + smaakherinneringen.' },
+      { type: 'gift', content: gift_exp_3 },
+      { type: 'heading', content: 'Creatief & Leren' },
+      { type: 'paragraph', content: 'Ideaal voor nieuwsgierige geesten. Creatieve workshops geven tastbaar resultaat en vergroting van zelfvertrouwen.' },
+      { type: 'gift', content: gift_exp_4 },
+      { type: 'gift', content: gift_exp_8 },
+      { type: 'heading', content: 'Vergelijking: Ervaringstypen' },
+      { type: 'comparisonTable', headers: ['Avontuur', 'Wellness', 'Workshop'], rows: [
+          { feature: 'Intensiteit', values: ['Hoog', 'Laag', 'Middel'] },
+          { feature: 'Herinneringswaarde', values: ['Spektakel / verhaal', 'Diepe ontspanning', 'Nieuwe skill'] },
+          { feature: 'Geschikt Voor', values: ['Waaghalzen / groepen', 'Stressgevoelige personen', 'Creatieven / hobbyisten'] },
+          { feature: 'Voorbereiding', values: ['Reserveren & soms reistijd', 'Reserveren', 'Datum + materiaal soms'] },
+          { feature: 'Risico op Niet Gebruiken', values: ['Middel', 'Laag', 'Laag'] }
+        ] },
+      { type: 'heading', content: 'Plus- & Minpunten per Segment' },
+      { type: 'prosCons', items: [
+        { title: 'Avontuur', pros: ['Sterk verhaal achteraf', 'Emotionele piek', 'Bucket‑list tick'], cons: ['Niet voor iedereen', 'Kan uitstel veroorzaken'] },
+        { title: 'Wellness', pros: ['Universeel gewaardeerd', 'Stressreductie', 'Makkelijk te plannen'], cons: ['Minder "spectaculair"', 'Soms drukke locaties'] },
+        { title: 'Workshops', pros: ['Skill blijft', 'Sociaal & leerzaam', 'Combinatie van fun + groei'], cons: ['Afhankelijk van docent kwaliteit', 'Kan worden uitgesteld'] }
+      ] },
+      { type: 'heading', content: 'Tips om de Beleving Nog Sterker te Maken' },
+      { type: 'paragraph', content: 'Voeg een handgeschreven kaartje toe met een "reden waarom juist dit bij je past". Plan eventueel alvast 2 datumopties om uitstel te voorkomen. Combineer een workshop met een klein fysiek item (notitieboekje, mok) voor blijvende associatie.' },
+      { type: 'heading', content: 'Ons Eindoordeel' },
+      { type: 'verdict', title: 'Welke ervaring kies je?', content: 'Kies Avontuur voor impact & adrenaline (perfect voor jubilea of mijlpalen), Wellness voor herstel & zorgzaamheid, en Workshops voor blijvende groei. Twijfel je? Combineer een kleinere workshop met een diner: eerst leren, daarna vieren. Zo ontstaat automatisch een verhaal dat langer blijft dan elk object.' }
+    ]
+  },
   {
     slug: 'ai-smart-home-gadgets-2025',
     title: 'AI & Smart Home Gadgets (2025): 25+ Innovatieve Apparaten voor een Slimmere Woning',
