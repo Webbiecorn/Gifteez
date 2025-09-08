@@ -35,8 +35,8 @@ const DownloadPage: React.FC<DownloadPageProps> = ({ navigateTo }) => {
                 <h2 className="font-display text-3xl font-bold">Vond je de planner handig?</h2>
                 <p className="mt-2 text-gray-200">Til je cadeau-skills naar een hoger niveau met ons premium e-book "Het Jaar Rond Perfecte Cadeaus". Nu beschikbaar in de winkel!</p>
                 <div className="mt-6">
-                    <Button variant="accent" onClick={() => navigateTo('shop')}>
-                        Bekijk het E-book
+                    <Button variant="accent" onClick={() => navigateTo('home')} disabled>
+                        E-book binnenkort beschikbaar
                     </Button>
                 </div>
             </div>

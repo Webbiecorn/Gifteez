@@ -72,9 +72,9 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
                 <br />
                 <strong>Gifteez.nl</strong>
                 <br />
-                Email: info@gifteez.nl
+                Email: <a href="mailto:info@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">info@gifteez.nl</a>
                 <br />
-                Website: https://gifteez.nl
+                Website: <a href="https://gifteez.nl" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">https://gifteez.nl</a>
               </p>
 
               <h2>3. Welke Gegevens Verzamelen Wij?</h2>

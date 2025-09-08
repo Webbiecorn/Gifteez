@@ -39,8 +39,8 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
             <ShoppingCartIcon className="w-24 h-24 text-gray-300 mx-auto" />
             <p className="mt-4 text-lg text-gray-600">Je winkelwagen is leeg.</p>
             <div className="mt-6">
-              <Button variant="accent" onClick={() => navigateTo('shop')}>
-                Ga naar de Winkel
+              <Button variant="accent" onClick={() => navigateTo('home')}>
+                Ga naar Home
               </Button>
             </div>
           </div>

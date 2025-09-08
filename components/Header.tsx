@@ -24,7 +24,6 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
     { page: 'giftFinder', label: 'GiftFinder' },
     { page: 'deals', label: 'Deals', icon: TagIcon },
     { page: 'quiz', label: 'Cadeau Quiz', icon: QuestionMarkCircleIcon },
-    { page: 'shop', label: 'Winkel' },
     { page: 'blog', label: 'Blog' },
     { page: 'about', label: 'Over Ons' },
     { page: 'contact', label: 'Contact' },

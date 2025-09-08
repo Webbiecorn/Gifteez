@@ -277,7 +277,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">E-mail</h4>
-                        <p className="text-gray-600">info@gifteez.nl</p>
+                        <a href="mailto:info@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">
+                          info@gifteez.nl
+                        </a>
                         <p className="text-sm text-gray-500 mt-1">Voor algemene vragen</p>
                       </div>
                     </div>
@@ -288,7 +290,9 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Support</h4>
-                        <p className="text-gray-600">support@gifteez.nl</p>
+                        <a href="mailto:support@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">
+                          support@gifteez.nl
+                        </a>
                         <p className="text-sm text-gray-500 mt-1">Voor technische ondersteuning</p>
                       </div>
                     </div>
@@ -375,7 +379,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
 
                 <Accordion title="Hoe kan ik adverteren op Gifteez.nl?">
                   <div className="text-gray-600 leading-relaxed">
-                    Voor samenwerkingen of advertentiemogelijkheden kun je het beste contact met ons opnemen via het formulier hierboven of door een e-mail te sturen naar info@gifteez.nl. We bespreken graag de mogelijkheden voor partnerships met merken, webshops of andere bedrijven in de cadeau-industrie.
+                    Voor samenwerkingen of advertentiemogelijkheden kun je het beste contact met ons opnemen via het formulier hierboven of door een e-mail te sturen naar <a href="mailto:info@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">info@gifteez.nl</a>. We bespreken graag de mogelijkheden voor partnerships met merken, webshops of andere bedrijven in de cadeau-industrie.
                   </div>
                 </Accordion>
 

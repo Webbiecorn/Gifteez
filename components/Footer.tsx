@@ -41,9 +41,9 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
           {/* Column 1: Brand & Navigation */}
-          <div className="lg:col-span-2">
+          <div className="md:col-span-2 lg:col-span-5">
             <div className="flex items-center space-x-3 mb-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-secondary rounded-lg blur-lg opacity-30"></div>
@@ -63,14 +63,14 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
             </p>
 
             {/* Quick Navigation */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div>
                 <h4 className="font-semibold text-white mb-3">Ontdek</h4>
                 <ul className="space-y-2">
                   <li><button onClick={() => navigateTo('giftFinder')} className="text-gray-300 hover:text-white transition-colors duration-300 text-sm">GiftFinder</button></li>
                   <li><button onClick={() => navigateTo('quiz')} className="text-gray-300 hover:text-white transition-colors duration-300 text-sm">Cadeau Quiz</button></li>
                   <li><button onClick={() => navigateTo('deals')} className="text-gray-300 hover:text-white transition-colors duration-300 text-sm">Deals</button></li>
-                  <li><button onClick={() => navigateTo('shop')} className="text-gray-300 hover:text-white transition-colors duration-300 text-sm">Winkel</button></li>
+                  {/* <li><button onClick={() => navigateTo('shop')} className="text-gray-300 hover:text-white transition-colors duration-300 text-sm">Winkel</button></li> */}
                 </ul>
               </div>
               <div>
@@ -85,7 +85,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
           </div>
 
           {/* Column 2: Newsletter */}
-          <div>
+          <div className="md:col-span-2 lg:col-span-3">
             <h3 className="font-display font-bold text-lg mb-4">Blijf Op De Hoogte</h3>
             <p className="text-gray-300 mb-6 text-sm leading-relaxed">
               Krijg de beste cadeau-tips en aanbiedingen direct in je inbox.
@@ -115,7 +115,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
           </div>
 
           {/* Column 3: Social & Contact */}
-          <div>
+          <div className="md:col-span-2 lg:col-span-4">
             <h3 className="font-display font-bold text-lg mb-4">Volg Ons</h3>
             <div className="flex space-x-4 mb-6">
               <a
@@ -153,21 +153,21 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
 
         {/* Bottom Section */}
         <div className="pt-8 border-t border-white/20">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-center md:text-left">
-              <p className="text-gray-300 text-sm">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="flex-1 max-w-2xl">
+              <p className="text-gray-300 text-sm mb-2">
                 &copy; {new Date().getFullYear()} Gifteez.nl. Alle rechten voorbehouden.
               </p>
-              <p className="text-xs text-gray-400 mt-1 max-w-2xl">
+              <p className="text-xs text-gray-400 leading-relaxed">
                 Als Amazon-partner en partner van Bol.com en andere webshops verdienen wij aan in aanmerking komende aankopen.
                 Prijzen en beschikbaarheid kunnen veranderen. Controleer altijd de actuele prijs op de productpagina.
               </p>
             </div>
 
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center justify-center lg:justify-end space-x-6">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                <span className="text-xs text-gray-300">Powered by AI</span>
+                <span className="text-xs text-gray-300 font-medium">Powered by AI</span>
               </div>
             </div>
           </div>

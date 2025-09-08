@@ -1,8 +1,8 @@
 
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
 import ReactLazy = React.lazy;
+const Header = ReactLazy(() => import('./components/Header'));
+const Footer = ReactLazy(() => import('./components/Footer'));
 const HomePage = ReactLazy(() => import('./components/HomePage'));
 const GiftFinderPage = ReactLazy(() => import('./components/GiftFinderPage'));
 const CategoriesPage = ReactLazy(() => import('./components/CategoriesPage'));
@@ -18,7 +18,7 @@ const SignUpPage = ReactLazy(() => import('./components/SignUpPage'));
 const AccountPage = ReactLazy(() => import('./components/AccountPage'));
 const QuizPage = ReactLazy(() => import('./components/QuizPage'));
 const DownloadPage = ReactLazy(() => import('./components/DownloadPage'));
-const ShopPage = ReactLazy(() => import('./components/ShopPage'));
+// const ShopPage = ReactLazy(() => import('./components/ShopPage')); // Temporarily disabled
 const CartPage = ReactLazy(() => import('./components/CartPage'));
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'));
 const DealsPage = ReactLazy(() => import('./components/DealsPage'));
@@ -29,29 +29,24 @@ import { Page, InitialGiftFinderData, Gift } from './types';
 import { blogPosts } from './data/blogData';
 import { AuthContext } from './contexts/AuthContext';
 import { SpinnerIcon } from './components/IconComponents';
+import LoadingSpinner from './components/LoadingSpinner';
 import { useCookieConsent } from './hooks/useCookieConsent';
+import { usePerformanceMonitor } from './hooks/usePerformanceMonitor';
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null);
   const auth = useContext(AuthContext);
   const { showBanner, acceptCookies, declineCookies } = useCookieConsent();
+  const { logMetrics } = usePerformanceMonitor();
   
   useEffect(() => {
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const favoritesParam = urlParams.get('favorites');
-      if (favoritesParam && favoritesParam.length > 10) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-        const decodedJson = decodeURIComponent(atob(favoritesParam));
-        const gifts: Gift[] = JSON.parse(decodedJson);
-        if (Array.isArray(gifts) && gifts.length > 0) {
-          setSharedGifts(gifts);
-        }
-      }
-    } catch (e) {
-      console.error("Failed to parse shared favorites from URL", e);
-    }
-  }, []);
+    // Log performance metrics after initial load
+    const timer = setTimeout(() => {
+      logMetrics();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [logMetrics]);
 
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [currentPostSlug, setCurrentPostSlug] = useState<string | null>(null);
@@ -73,7 +68,7 @@ const App: React.FC = () => {
       case 'account': return '/account';
       case 'quiz': return '/quiz';
       case 'download': return '/download';
-      case 'shop': return '/shop';
+      // case 'shop': return '/shop'; // Temporarily disabled
       case 'cart': return '/cart';
       case 'checkoutSuccess': return '/checkout-success';
       case 'deals': return '/deals';
@@ -103,7 +98,7 @@ const App: React.FC = () => {
       case 'account': setCurrentPage('account'); break;
       case 'quiz': setCurrentPage('quiz'); break;
       case 'download': setCurrentPage('download'); break;
-      case 'shop': setCurrentPage('shop'); break;
+      // case 'shop': setCurrentPage('shop'); break; // Temporarily disabled
       case 'cart': setCurrentPage('cart'); break;
       case 'checkout-success': setCurrentPage('checkoutSuccess'); break;
       case 'deals': setCurrentPage('deals'); break;
@@ -233,8 +228,8 @@ const App: React.FC = () => {
         return <QuizPage navigateTo={navigateTo} />;
       case 'download':
         return <DownloadPage navigateTo={navigateTo} />;
-      case 'shop':
-        return <ShopPage navigateTo={navigateTo} showToast={showToast} />;
+      // case 'shop':
+      //   return <ShopPage navigateTo={navigateTo} showToast={showToast} />; // Temporarily disabled
       case 'cart':
         return <CartPage navigateTo={navigateTo} showToast={showToast} />;
       case 'checkoutSuccess':
@@ -252,13 +247,17 @@ const App: React.FC = () => {
 
   return (
     <div className="bg-light-bg font-sans text-gray-800 min-h-screen flex flex-col">
-      <Header navigateTo={navigateTo} currentPage={currentPage} />
+      <React.Suspense fallback={<div className="h-20 bg-white border-b border-gray-100 flex items-center justify-center"><LoadingSpinner size="sm" message="Header laden…" /></div>}>
+        <Header navigateTo={navigateTo} currentPage={currentPage} />
+      </React.Suspense>
       <main key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
-        <React.Suspense fallback={<div className="flex items-center justify-center py-24 text-gray-500">Laden…</div>}>
+        <React.Suspense fallback={<LoadingSpinner size="lg" message="Pagina laden…" />}>
           {renderPage()}
         </React.Suspense>
       </main>
-      <Footer navigateTo={navigateTo} />
+      <React.Suspense fallback={<div className="h-32 bg-white border-t border-gray-100 flex items-center justify-center"><LoadingSpinner size="sm" message="Footer laden…" /></div>}>
+        <Footer navigateTo={navigateTo} />
+      </React.Suspense>
       <Toast message={toastMessage} />
       {showBanner && (
         <React.Suspense fallback={null}>
