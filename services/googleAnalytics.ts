@@ -13,7 +13,7 @@ export const sendGtag = (...args: any[]) => {
 };
 
 export const gaPageView = (pagePath: string, pageTitle?: string) => {
-  sendGtag('config', 'GA_MEASUREMENT_ID', {
+  sendGtag('config', 'G-P63273J3JE', {
     page_path: pagePath,
     page_title: pageTitle
   });
