@@ -11,6 +11,30 @@ export interface InitialGiftFinderData {
   interests?: string;
 }
 
+export interface AdvancedFilters {
+  priceRange: {
+    min: number;
+    max: number;
+  };
+  categories: string[];
+  deliverySpeed: 'standard' | 'fast' | 'instant';
+  giftType: 'physical' | 'experience' | 'digital' | 'subscription';
+  popularity: 'trending' | 'classic' | 'unique';
+  availability: 'in-stock' | 'pre-order' | 'all';
+  sustainability: boolean;
+  personalization: boolean;
+  ageGroup: string;
+  gender: 'male' | 'female' | 'unisex';
+}
+
+export interface GiftSearchParams {
+  recipient: string;
+  budget: number;
+  occasion: string;
+  interests: string;
+  filters?: Partial<AdvancedFilters>;
+}
+
 export interface Retailer {
   name: string;
   affiliateLink: string;
@@ -22,6 +46,19 @@ export interface Gift {
   priceRange: string;
   retailers: Retailer[];
   imageUrl: string;
+  // Enhanced metadata for filtering
+  category?: string;
+  tags?: string[];
+  rating?: number;
+  reviews?: number;
+  deliverySpeed?: 'standard' | 'fast' | 'instant';
+  giftType?: 'physical' | 'experience' | 'digital' | 'subscription';
+  sustainability?: boolean;
+  personalization?: boolean;
+  ageGroup?: string;
+  gender?: 'male' | 'female' | 'unisex';
+  popularity?: number;
+  availability?: 'in-stock' | 'pre-order' | 'out-of-stock';
 }
 
 export interface Testimonial {
@@ -99,6 +136,33 @@ export interface User {
     password?: string; // Should not be stored long term, but needed for simulation
     favorites: Gift[];
     profiles: GiftProfile[];
+    // Enhanced account features
+    avatar?: string;
+    preferences: UserPreferences;
+    createdAt: string;
+    lastActive: string;
+    favoritesSyncedAt?: string;
+    notifications: NotificationSettings;
+}
+
+export interface UserPreferences {
+    currency: 'EUR' | 'USD' | 'GBP';
+    language: 'nl' | 'en' | 'de' | 'fr';
+    theme: 'light' | 'dark' | 'auto';
+    emailNotifications: boolean;
+    pushNotifications: boolean;
+    favoriteCategories: string[];
+    priceRange: {
+        min: number;
+        max: number;
+    };
+}
+
+export interface NotificationSettings {
+    newBlogPosts: boolean;
+    giftRecommendations: boolean;
+    priceDrops: boolean;
+    weeklyDigest: boolean;
 }
 
 export interface AuthContextType {
@@ -107,12 +171,20 @@ export interface AuthContextType {
     login: (email: string, password: string) => Promise<User | null>;
     signup: (name: string, email: string, password: string) => Promise<User | null>;
     logout: () => void;
-  resetPassword: (email: string) => Promise<boolean>;
+    resetPassword: (email: string) => Promise<boolean>;
     toggleFavorite: (gift: Gift) => void;
     isFavorite: (gift: Gift) => boolean;
     addProfile: (profileData: Omit<GiftProfile, 'id'>) => Promise<void>;
     updateProfile: (profile: GiftProfile) => Promise<void>;
     deleteProfile: (profileId: string) => Promise<void>;
+    // Enhanced user management
+    updateUserPreferences: (preferences: Partial<UserPreferences>) => Promise<void>;
+    updateNotificationSettings: (settings: Partial<NotificationSettings>) => Promise<void>;
+    syncFavorites: () => Promise<void>;
+    updateAvatar: (avatar: string) => Promise<void>;
+    getFavoritesByCategory: () => Record<string, Gift[]>;
+    exportFavorites: () => Promise<string>; // JSON export
+    importFavorites: (data: string) => Promise<void>;
 }
 
 export interface QuizAnswer {

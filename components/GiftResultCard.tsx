@@ -3,9 +3,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Gift, ShowToast } from '../types';
 import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
-import { FacebookIcon, TwitterIcon, WhatsAppIcon, HeartIcon, HeartIconFilled } from './IconComponents';
+import { HeartIcon, HeartIconFilled } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 import ImageWithFallback from './ImageWithFallback';
+import SocialShare from './SocialShare';
 
 interface GiftResultCardProps {
   gift: Gift;
@@ -85,54 +86,60 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     onFavoriteChange?.(gift.productName, isNowFavorite);
   };
 
-  const shareText = `Leuke cadeautip gevonden op Gifteez.nl: ${gift.productName}`;
-  const encodedShareText = encodeURIComponent(shareText);
-  const mainUrl = gift.retailers?.[0]?.affiliateLink || window.location.href;
-  const encodedUrl = encodeURIComponent(mainUrl);
-
-  const socialLinks = [
-    { name: 'Facebook', icon: FacebookIcon, url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
-    { name: 'Twitter', icon: TwitterIcon, url: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedShareText}` },
-    { name: 'WhatsApp', icon: WhatsAppIcon, url: `https://api.whatsapp.com/send?text=${encodedShareText}%20${encodedUrl}` }
-  ];
-  
   const containerClasses = isEmbedded
     ? "bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
     : "bg-white rounded-lg shadow-lg overflow-hidden flex flex-col opacity-0 animate-fade-in-up";
 
-  const imageContainerHeight = candidateVariant ? 'h-40 md:h-44' : imageHeightClass;
+  const imageContainerHeight = candidateVariant ? 'h-32 md:h-36' : 'h-24';
 
   return (
     <div
       className={containerClasses + ' h-full'}
       style={!isEmbedded ? { animationDelay: `${index * 100}ms` } : {}}
     >
-      <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : ''}`}>
-        {candidateVariant ? (
-          <ImageWithFallback
-            src={gift.imageUrl}
-            alt={gift.productName}
-            className="max-h-full max-w-full w-auto h-auto mx-auto"
-            fit={imageFit}
-          />
-        ) : (
-          <ImageWithFallback src={gift.imageUrl} alt={gift.productName} className={`w-full ${imageContainerHeight} bg-white`} fit={imageFit} />
-        )}
-  {(!hideAmazonBadge) && gift.retailers && gift.retailers.length > 0 && gift.retailers.every(r => r.name.toLowerCase().includes('amazon')) && (
-          <span className="absolute top-3 left-3 bg-[#232F3E] text-white text-xs font-semibold px-2 py-1 rounded shadow-md tracking-wide">
-            Alleen Amazon
-          </span>
-        )}
-        {!isReadOnly && (
+      {/* Only show image section if there's an imageUrl */}
+      {gift.imageUrl && gift.imageUrl.trim() !== '' && (
+        <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : 'aspect-square'}`}>
+          {candidateVariant ? (
+            <ImageWithFallback
+              src={gift.imageUrl}
+              alt={gift.productName}
+              className="max-h-full max-w-full w-auto h-auto mx-auto"
+              fit={imageFit}
+            />
+          ) : (
+            <ImageWithFallback src={gift.imageUrl} alt={gift.productName} className="w-full h-full bg-white" fit={imageFit} />
+          )}
+          {(!hideAmazonBadge) && gift.retailers && gift.retailers.length > 0 && gift.retailers.every(r => r.name.toLowerCase().includes('amazon')) && (
+            <span className="absolute top-3 left-3 bg-[#232F3E] text-white text-xs font-semibold px-2 py-1 rounded shadow-md tracking-wide">
+              Alleen Amazon
+            </span>
+          )}
+          {!isReadOnly && (
+            <button
+              onClick={handleToggleFavorite}
+              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-blue-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+              aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
+            >
+              {isFavorite ? <HeartIconFilled className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Add favorite button outside image section if no image */}
+      {(!gift.imageUrl || gift.imageUrl.trim() === '') && !isReadOnly && (
+        <div className="absolute top-3 right-3">
           <button
             onClick={handleToggleFavorite}
-            className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-blue-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className="bg-white/80 p-2 rounded-full text-blue-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
             aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
           >
-            {isFavorite ? <HeartIconFilled className="w-6 h-6" /> : <HeartIcon className="w-6 h-6" />}
+            {isFavorite ? <HeartIconFilled className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
           </button>
-        )}
-      </div>
+        </div>
+      )}
+
       <div className={`p-6 flex flex-col flex-grow ${candidateVariant ? 'items-center text-center' : ''}`}>
         <h3 className={`font-display text-xl font-bold text-primary ${candidateVariant ? 'text-center' : ''}`}>{gift.productName}</h3>
         {gift.priceRange && (
@@ -161,21 +168,12 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
 
         {!isReadOnly && !isEmbedded && (
             <div className="mt-6 pt-4 border-t border-gray-200">
-            <p className="text-center text-sm font-bold text-primary mb-2">Deel deze tip!</p>
-            <div className="flex justify-center space-x-4">
-                {socialLinks.map(social => (
-                <a 
-                    key={social.name}
-                    href={social.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    aria-label={`Share ${gift.productName} on ${social.name}`}
-                    className="text-gray-500 hover:text-primary transition-colors"
-                >
-                    <social.icon className="w-6 h-6" />
-                </a>
-                ))}
-            </div>
+                <SocialShare 
+                    item={gift} 
+                    type="gift" 
+                    variant="compact"
+                    className="justify-center"
+                />
             </div>
         )}
       </div>

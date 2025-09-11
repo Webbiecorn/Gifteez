@@ -25,6 +25,10 @@ const DealsPage = ReactLazy(() => import('./components/DealsPage'));
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
+import ErrorBoundary from './components/ErrorBoundary';
+import { useSEO } from './hooks/useSEO';
+import { BlogCardSkeleton, TextSkeleton } from './components/SkeletonLoader';
+import { BlogNotificationService } from './services/blogNotificationService';
 import { Page, InitialGiftFinderData, Gift } from './types';
 import { blogPosts } from './data/blogData';
 import { AuthContext } from './contexts/AuthContext';
@@ -112,7 +116,14 @@ const App: React.FC = () => {
     applyRoute();
     const onPop = () => applyRoute();
     window.addEventListener('popstate', onPop);
-    return () => window.removeEventListener('popstate', onPop);
+    
+    // Initialize email notification scheduling
+    BlogNotificationService.scheduleNotifications();
+    
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      BlogNotificationService.clearSchedules();
+    };
   }, [applyRoute]);
 
   const navigateTo = useCallback((page: Page, data?: any) => {
@@ -246,25 +257,55 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-light-bg font-sans text-gray-800 min-h-screen flex flex-col">
-      <React.Suspense fallback={<div className="h-20 bg-white border-b border-gray-100 flex items-center justify-center"><LoadingSpinner size="sm" message="Header laden…" /></div>}>
-        <Header navigateTo={navigateTo} currentPage={currentPage} />
-      </React.Suspense>
-      <main key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
-        <React.Suspense fallback={<LoadingSpinner size="lg" message="Pagina laden…" />}>
-          {renderPage()}
+    <ErrorBoundary onError={(error, errorInfo) => {
+      // Log error to analytics
+      if (typeof window !== 'undefined' && (window as any).gtag) {
+        (window as any).gtag('event', 'exception', {
+          description: `React Error: ${error.toString()}`,
+          fatal: false
+        });
+      }
+    }}>
+      <div className="bg-light-bg font-sans text-gray-800 min-h-screen flex flex-col">
+        <React.Suspense fallback={
+          <div className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-8">
+            <TextSkeleton lines={1} />
+            <div className="flex gap-4">
+              <TextSkeleton lines={1} />
+              <TextSkeleton lines={1} />
+            </div>
+          </div>
+        }>
+          <Header navigateTo={navigateTo} currentPage={currentPage} />
         </React.Suspense>
-      </main>
-      <React.Suspense fallback={<div className="h-32 bg-white border-t border-gray-100 flex items-center justify-center"><LoadingSpinner size="sm" message="Footer laden…" /></div>}>
-        <Footer navigateTo={navigateTo} />
-      </React.Suspense>
-      <Toast message={toastMessage} />
-      {showBanner && (
-        <React.Suspense fallback={null}>
-          <CookieBanner onAccept={acceptCookies} onDecline={declineCookies} />
+        <main key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
+          <React.Suspense fallback={
+            <div className="container mx-auto px-4 py-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <BlogCardSkeleton />
+                <BlogCardSkeleton />
+                <BlogCardSkeleton />
+              </div>
+            </div>
+          }>
+            {renderPage()}
+          </React.Suspense>
+        </main>
+        <React.Suspense fallback={
+          <div className="h-32 bg-white border-t border-gray-100 flex items-center justify-center px-4">
+            <TextSkeleton lines={2} />
+          </div>
+        }>
+          <Footer navigateTo={navigateTo} />
         </React.Suspense>
-      )}
-    </div>
+        <Toast message={toastMessage} />
+        {showBanner && (
+          <React.Suspense fallback={null}>
+            <CookieBanner onAccept={acceptCookies} onDecline={declineCookies} />
+          </React.Suspense>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 

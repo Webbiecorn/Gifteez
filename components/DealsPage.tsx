@@ -22,11 +22,11 @@ const DealCard: React.FC<{ item: DealItem; featured?: boolean }> = ({ item, feat
           </div>
         </div>
       )}
-      <div className="overflow-hidden">
+      <div className="overflow-hidden bg-white flex items-center justify-center">
         <img
           src={item.imageUrl}
           alt={item.name}
-          className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-56 object-contain group-hover:scale-110 transition-transform duration-500"
         />
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -97,7 +97,7 @@ const DealCard: React.FC<{ item: DealItem; featured?: boolean }> = ({ item, feat
         {/* Deal of the Week */}
         <section className="mb-20">
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden md:flex items-center border border-gray-100">
-            <div className="md:w-1/2 overflow-hidden relative">
+            <div className="md:w-1/2 overflow-hidden relative bg-white flex items-center justify-center">
               <div className="absolute top-6 left-6 z-10">
                 <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 shadow-lg">
                   <TagIcon className="w-5 h-5" />
@@ -107,7 +107,7 @@ const DealCard: React.FC<{ item: DealItem; featured?: boolean }> = ({ item, feat
               <img
                 src={dealOfTheWeek.imageUrl}
                 alt={dealOfTheWeek.name}
-                className="w-full h-80 md:h-full object-cover transition-transform duration-500 hover:scale-105"
+                className="w-full h-80 md:h-full object-contain transition-transform duration-500 hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
             </div>
@@ -170,11 +170,11 @@ const DealCard: React.FC<{ item: DealItem; featured?: boolean }> = ({ item, feat
                       #{index+1}
                     </div>
                   </div>
-                  <div className="overflow-hidden">
+                  <div className="overflow-hidden bg-white flex items-center justify-center">
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-40 object-contain group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

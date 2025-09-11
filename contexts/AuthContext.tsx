@@ -1,9 +1,10 @@
 
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { AuthContextType, User, Gift, GiftProfile } from '../types';
+import { AuthContextType, User, Gift, GiftProfile, UserPreferences, NotificationSettings } from '../types';
 import { auth, db, firebaseEnabled } from '../services/firebase';
 import { onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile as fbUpdateProfile, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import UserService from '../services/userService';
 
 const GUEST_FAVORITES_KEY = 'gifteezFavorites';
 const USERS_KEY = 'gifteezUsers';
@@ -37,6 +38,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                             email: fbUser.email || '',
                             favorites: [],
                             profiles: [],
+                            preferences: UserService.getDefaultPreferences(),
+                            createdAt: new Date().toISOString(),
+                            lastActive: new Date().toISOString(),
+                            notifications: UserService.getDefaultNotificationSettings()
                         };
                         await setDoc(userRef, base);
                         setCurrentUser(base);
@@ -147,6 +152,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                     email,
                     favorites: [],
                     profiles: [],
+                    preferences: UserService.getDefaultPreferences(),
+                    createdAt: new Date().toISOString(),
+                    lastActive: new Date().toISOString(),
+                    notifications: UserService.getDefaultNotificationSettings()
                 };
                 newUser = mergeGuestFavorites(newUser);
                 await setDoc(doc(db, 'users', cred.user.uid), newUser);
@@ -167,6 +176,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             password: passwordInput,
             favorites: [],
             profiles: [],
+            preferences: UserService.getDefaultPreferences(),
+            createdAt: new Date().toISOString(),
+            lastActive: new Date().toISOString(),
+            notifications: UserService.getDefaultNotificationSettings()
         };
         newUser = mergeGuestFavorites(newUser);
         saveUsers([...users, newUser]);
@@ -270,6 +283,90 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateUserInStorageAndState(updatedUser);
     };
 
+    // Enhanced user management methods
+    const updateUserPreferences = async (preferences: Partial<UserPreferences>) => {
+        if (!currentUser) return;
+        
+        const updatedPreferences = { ...currentUser.preferences, ...preferences };
+        const updatedUser = { ...currentUser, preferences: updatedPreferences };
+        
+        if (firebaseEnabled && db) {
+            await UserService.updateUserPreferences(currentUser.id, updatedPreferences);
+        }
+        
+        updateUserInStorageAndState(updatedUser);
+    };
+
+    const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {
+        if (!currentUser) return;
+        
+        const updatedSettings = { ...currentUser.notifications, ...settings };
+        const updatedUser = { ...currentUser, notifications: updatedSettings };
+        
+        if (firebaseEnabled && db) {
+            await UserService.updateNotificationSettings(currentUser.id, updatedSettings);
+        }
+        
+        updateUserInStorageAndState(updatedUser);
+    };
+
+    const syncFavorites = async () => {
+        if (!currentUser || !firebaseEnabled || !db) return;
+        
+        try {
+            const mergedFavorites = await UserService.syncFavorites(currentUser.id, currentUser.favorites);
+            const updatedUser = { 
+                ...currentUser, 
+                favorites: mergedFavorites,
+                favoritesSyncedAt: new Date().toISOString()
+            };
+            setCurrentUser(updatedUser);
+        } catch (error) {
+            console.error('Error syncing favorites:', error);
+        }
+    };
+
+    const updateAvatar = async (avatar: string) => {
+        if (!currentUser) return;
+        
+        const updatedUser = { ...currentUser, avatar };
+        
+        if (firebaseEnabled && db) {
+            await UserService.updateAvatar(currentUser.id, avatar);
+        }
+        
+        updateUserInStorageAndState(updatedUser);
+    };
+
+    const getFavoritesByCategory = () => {
+        if (!currentUser) return {};
+        return UserService.getFavoritesByCategory(currentUser.favorites);
+    };
+
+    const exportFavorites = async () => {
+        if (!currentUser) return '{}';
+        return UserService.exportFavorites(currentUser.favorites);
+    };
+
+    const importFavorites = async (data: string) => {
+        if (!currentUser) return;
+        
+        try {
+            const importedFavorites = await UserService.importFavorites(data);
+            const mergedFavorites = UserService.mergeFavorites(currentUser.favorites, importedFavorites);
+            const updatedUser = { ...currentUser, favorites: mergedFavorites };
+            
+            if (firebaseEnabled && db) {
+                await UserService.syncFavorites(currentUser.id, mergedFavorites);
+            }
+            
+            updateUserInStorageAndState(updatedUser);
+        } catch (error) {
+            console.error('Error importing favorites:', error);
+            throw error;
+        }
+    };
+
 
     const value = {
         currentUser,
@@ -279,10 +376,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         logout,
         toggleFavorite,
         isFavorite,
-    resetPassword,
+        resetPassword,
         addProfile,
         updateProfile,
         deleteProfile,
+        // Enhanced methods
+        updateUserPreferences,
+        updateNotificationSettings,
+        syncFavorites,
+        updateAvatar,
+        getFavoritesByCategory,
+        exportFavorites,
+        importFavorites,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

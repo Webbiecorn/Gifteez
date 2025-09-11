@@ -25,7 +25,7 @@ const giftSchema = {
         items: {
           type: Type.OBJECT,
           properties: {
-            name: { type: Type.STRING, description: 'Name of the webshop, e.g., "Bol.com" or "Coolblue".' },
+            name: { type: Type.STRING, description: 'Name of the webshop, e.g., "Coolblue" or "Amazon".' },
             affiliateLink: { type: Type.STRING, description: 'A plausible affiliate search link for that webshop.' },
           },
           required: ['name', 'affiliateLink'],
@@ -33,10 +33,10 @@ const giftSchema = {
       },
       imageUrl: {
         type: Type.STRING,
-        description: 'A placeholder image URL from `https://picsum.photos/300/300`'
+        description: 'Empty string "" as we do not have product image APIs yet'
       }
     },
-    required: ['productName', 'description', 'priceRange', 'retailers', 'imageUrl'],
+    required: ['productName', 'description', 'priceRange', 'retailers'],
   },
 };
 
@@ -62,8 +62,15 @@ export const findGifts = async (recipient: string, budget: number, occasion: str
     1. A product name.
     2. A short, compelling description (max 30 words).
     3. An estimated price range in euros (e.g., "€25 - €50").
-    4. A list of 1 to 3 major Dutch online retailers (specifically from Bol.com, Coolblue, or Amazon.nl). For each retailer, provide their name and a direct, functional search URL for the product on their respective Dutch (.nl) website (e.g., for Amazon, use Amazon.nl, not Amazon.com).
-    5. A placeholder image URL from picsum.photos.
+    4. A list of 1 to 2 major Dutch online retailers (ONLY from Coolblue or Amazon.nl - these are the only retailers we have affiliate partnerships with). 
+       IMPORTANT RETAILER GUIDELINES:
+       - For electronics, tech gadgets, appliances, gaming: use Coolblue.nl
+       - For books, home items, general products, clothing, toys: use Amazon.nl
+       - Always provide BOTH retailers when the product could be available on both
+       - Use specific search terms in URLs: for Coolblue use format "https://www.coolblue.nl/zoeken?query=[product-keywords]"
+       - For Amazon use format "https://www.amazon.nl/s?k=[product-keywords]"
+       - Replace spaces with + in URLs
+    5. NO IMAGE URL - set imageUrl to an empty string "" as we don't have product image APIs yet.
   `;
 
   try {

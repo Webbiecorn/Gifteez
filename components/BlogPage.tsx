@@ -3,6 +3,7 @@ import { BlogPost, NavigateTo } from '../types';
 import { blogPosts } from '../data/blogData';
 import { SearchIcon, BookOpenIcon, CalendarIcon, UserIcon, SparklesIcon, MenuIcon, TargetIcon } from './IconComponents';
 import ImageWithFallback from './ImageWithFallback';
+import { NewsletterSignup } from './NewsletterSignup';
 
 const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: boolean; }> = ({ post, navigateTo, isFeatured = false }) => {
     const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
@@ -390,6 +391,14 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                     </div>
                 )}
             </main>
+
+            {/* Newsletter Signup Section */}
+            <section className="my-16">
+                <NewsletterSignup 
+                    variant="inline" 
+                    className="max-w-2xl mx-auto"
+                />
+            </section>
         </div>
     </div>
   );

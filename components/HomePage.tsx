@@ -432,9 +432,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                 <Button
                   variant="primary"
                   onClick={() => navigateTo('deals')}
-                  className="px-12 py-5 text-xl font-bold bg-gradient-to-r from-white to-gray-100 text-blue-600 hover:from-gray-100 hover:to-white shadow-2xl hover:shadow-white/25 transform hover:scale-105 transition-all duration-500 border-2 border-white/20 hover:border-white/40 rounded-2xl"
+                  className="px-12 py-5 text-xl font-bold bg-gradient-to-r from-blue-800 to-blue-900 text-white hover:from-blue-900 hover:to-blue-800 shadow-2xl hover:shadow-blue-900/50 transform hover:scale-105 transition-all duration-500 border-4 border-blue-700 rounded-2xl backdrop-blur-sm"
                 >
-                  <span className="flex items-center gap-3">
+                  <span className="flex items-center gap-3 font-extrabold">
                     Ontdek de Deals
                     <span className="text-2xl animate-bounce">🚀</span>
                   </span>

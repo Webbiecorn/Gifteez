@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useEffect, useContext, ChangeEvent } from 'react';
-import { Gift, InitialGiftFinderData, ShowToast, GiftProfile } from '../types';
-import { findGifts } from '../services/geminiService';
+import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, AdvancedFilters, GiftSearchParams } from '../types';
+import { findGiftsWithFilters, sortGifts, enhanceGiftsWithMetadata } from '../services/giftFilterService';
+import { processGiftsForAffiliateOnly } from '../services/affiliateFilterService';
 import Button from './Button';
 import GiftResultCard from './GiftResultCard';
+import AdvancedFilterPanel from './AdvancedFilterPanel';
 import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 import { pinterestPageVisit, pinterestSearch } from '../services/pinterestTracking';
@@ -14,14 +16,17 @@ const suggestedInterests = ["Koken", "Tech", "Boeken", "Reizen", "Sport", "Duurz
 
 const GiftResultCardSkeleton: React.FC = () => (
   <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col animate-pulse">
-    <div className="w-full h-48 bg-gray-200"></div>
     <div className="p-6 flex flex-col flex-grow">
       <div className="h-6 w-3/4 bg-gray-200 rounded"></div>
       <div className="mt-4 space-y-2 flex-grow">
         <div className="h-4 bg-gray-200 rounded"></div>
         <div className="h-4 w-5/6 bg-gray-200 rounded"></div>
+        <div className="h-4 w-4/5 bg-gray-200 rounded"></div>
       </div>
-      <div className="mt-6 h-12 bg-gray-200 rounded-lg"></div>
+      <div className="mt-6 space-y-2">
+        <div className="h-10 bg-gray-200 rounded-lg"></div>
+        <div className="h-10 bg-gray-200 rounded-lg"></div>
+      </div>
     </div>
   </div>
 );
@@ -37,7 +42,13 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [occasion, setOccasion] = useState<string>(occasions[0]);
   const [interests, setInterests] = useState<string>('');
   
+  // Advanced filtering state
+  const [filters, setFilters] = useState<Partial<AdvancedFilters>>({});
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<'relevance' | 'price' | 'rating' | 'popularity'>('relevance');
+  
   const [gifts, setGifts] = useState<Gift[]>([]);
+  const [allGifts, setAllGifts] = useState<Gift[]>([]); // Store unfiltered results
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
@@ -91,14 +102,34 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     gaSearch(searchQuery);
 
     try {
-      const results = await findGifts(recipient, budget, occasion, interests);
-      setGifts(results);
+      const searchParams: GiftSearchParams = {
+        recipient,
+        budget,
+        occasion,
+        interests,
+        filters
+      };
+
+      const results = await findGiftsWithFilters(searchParams);
+      const enhancedResults = enhanceGiftsWithMetadata(results);
+      
+      // Filter to only show gifts with affiliate retailers (Amazon, Coolblue)
+      const affiliateResults = processGiftsForAffiliateOnly(enhancedResults);
+      
+      const sortedResults = sortGifts(affiliateResults, sortBy);
+      
+      setAllGifts(affiliateResults);
+      setGifts(sortedResults);
+      
+      if (affiliateResults.length === 0) {
+        setError('Geen cadeaus gevonden met affiliate partners. We tonen alleen producten van Amazon en Coolblue waar we commissie op verdienen.');
+      }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred.');
     } finally {
       setIsLoading(false);
     }
-  }, [recipient, budget, occasion, interests]);
+  }, [recipient, budget, occasion, interests, filters, sortBy]);
   
   const handleInterestClick = (interest: string) => {
     const currentInterests = interests.split(',').map(i => i.trim()).filter(Boolean);
@@ -288,6 +319,14 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               </div>
             </div>
 
+            {/* Advanced Filters */}
+            <AdvancedFilterPanel
+              filters={filters}
+              onFiltersChange={setFilters}
+              isVisible={showAdvancedFilters}
+              onToggle={() => setShowAdvancedFilters(!showAdvancedFilters)}
+            />
+
             {/* Submit Button */}
             <div className="pt-6 border-t border-gray-200">
               <Button
@@ -329,7 +368,35 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
 
             {gifts.length > 0 && (
               <div className="opacity-0 animate-fade-in">
-                <h2 className="font-display text-3xl font-bold text-center text-primary mb-8">Hier zijn je AI-cadeautips!</h2>
+                {/* Results Summary and Sort Controls */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
+                  <div className="mb-4 sm:mb-0">
+                    <h2 className="font-display text-2xl font-bold text-primary">Hier zijn je AI-cadeautips!</h2>
+                    <p className="text-gray-600">
+                      {gifts.length} {gifts.length === 1 ? 'cadeau' : 'cadeaus'} gevonden
+                      {Object.keys(filters).length > 0 && ` met ${Object.keys(filters).length} filter${Object.keys(filters).length > 1 ? 's' : ''}`}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <label className="text-sm font-medium text-gray-700">Sorteren op:</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => {
+                        const newSortBy = e.target.value as typeof sortBy;
+                        setSortBy(newSortBy);
+                        setGifts(sortGifts(allGifts, newSortBy));
+                      }}
+                      className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                    >
+                      <option value="relevance">Relevantie</option>
+                      <option value="price">Prijs</option>
+                      <option value="rating">Waardering</option>
+                      <option value="popularity">Populariteit</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {gifts.map((gift, index) => <GiftResultCard key={gift.productName} gift={gift} index={index} showToast={showToast} />)}
                 </div>
