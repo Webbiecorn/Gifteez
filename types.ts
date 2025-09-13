@@ -233,6 +233,10 @@ export interface DealItem {
   imageUrl: string;
   price: string;
   affiliateLink: string;
+  originalPrice?: string;
+  isOnSale?: boolean;
+  tags?: string[];
+  giftScore?: number;
 }
 
 export interface DealCategory {

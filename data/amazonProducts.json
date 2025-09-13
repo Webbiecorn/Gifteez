@@ -1,0 +1,181 @@
+[
+  {
+    "asin": "B08N5WRWNW",
+    "name": "Amazon Echo Dot (4e generatie) - Antraciet",
+    "description": "Kompakte slimme luidspreker met Alexa. Bedien muziek, smart home-apparaten en meer met je stem.",
+    "price": 59.99,
+    "originalPrice": 79.99,
+    "currency": "EUR",
+    "image": "https://m.media-amazon.com/images/I/714Rq4k05UL._AC_SL1000_.jpg",
+    "category": "Smart Home",
+    "subcategory": "Smart Speakers",
+    "affiliateLink": "https://www.amazon.nl/dp/B08N5WRWNW?tag=gifteez77-21",
+    "inStock": true,
+    "prime": true,
+    "rating": 4.5,
+    "reviewCount": 45000,
+    "features": [
+      "Alexa spraakbesturing",
+      "Compact design",
+      "Smart home hub"
+    ],
+    "tags": [
+      "smart-home",
+      "alexa",
+      "speaker"
+    ],
+    "giftScore": 8,
+    "ageGroup": "18-65",
+    "occasion": [
+      "verjaardag",
+      "kerstmis",
+      "housewarming"
+    ],
+    "priceRange": "budget",
+    "lastUpdated": "2025-09-13T16:46:49.505Z"
+  },
+  {
+    "asin": "B09B8RRQTY",
+    "name": "Apple AirPods (3e generatie)",
+    "description": "Draadloze oordopjes met ruimtelijke audio en MagSafe oplaadcase. Tot 30 uur luistertijd.",
+    "price": 179,
+    "originalPrice": 199,
+    "currency": "EUR",
+    "image": "https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_SL1500_.jpg",
+    "category": "Electronics",
+    "subcategory": "Audio",
+    "affiliateLink": "https://www.amazon.nl/dp/B09B8RRQTY?tag=gifteez77-21",
+    "inStock": true,
+    "prime": true,
+    "rating": 4.4,
+    "reviewCount": 25000,
+    "features": [
+      "Ruimtelijke audio",
+      "MagSafe case",
+      "30 uur batterij"
+    ],
+    "tags": [
+      "audio",
+      "wireless",
+      "apple",
+      "premium"
+    ],
+    "giftScore": 9,
+    "ageGroup": "16-45",
+    "occasion": [
+      "verjaardag",
+      "geslaagd",
+      "valentijn"
+    ],
+    "priceRange": "mid-range",
+    "lastUpdated": "2025-09-13T16:46:49.505Z"
+  },
+  {
+    "asin": "B08GKXX4C9",
+    "name": "Kindle Paperwhite (11e generatie)",
+    "description": "Waterbestendige e-reader met 6.8\" display en verstelbare warme licht. Wekenlange batterijduur.",
+    "price": 139.99,
+    "originalPrice": 159.99,
+    "currency": "EUR",
+    "image": "https://m.media-amazon.com/images/I/61A1Zl6jOML._AC_SL1000_.jpg",
+    "category": "Books & Reading",
+    "subcategory": "E-Readers",
+    "affiliateLink": "https://www.amazon.nl/dp/B08GKXX4C9?tag=gifteez77-21",
+    "inStock": true,
+    "prime": true,
+    "rating": 4.6,
+    "reviewCount": 75000,
+    "features": [
+      "Waterbestendig",
+      "Warm licht",
+      "Wekenlange batterij"
+    ],
+    "tags": [
+      "reading",
+      "e-reader",
+      "waterproof",
+      "books"
+    ],
+    "giftScore": 7,
+    "ageGroup": "25-65",
+    "occasion": [
+      "verjaardag",
+      "kerstmis",
+      "moederdag"
+    ],
+    "priceRange": "mid-range",
+    "lastUpdated": "2025-09-13T16:46:49.505Z"
+  },
+  {
+    "asin": "B08C1W5N87",
+    "name": "Fire TV Stick 4K Max",
+    "description": "Snelste Fire TV Stick met Wi-Fi 6 ondersteuning. Stream in 4K Ultra HD met Dolby Vision.",
+    "price": 54.99,
+    "originalPrice": 64.99,
+    "currency": "EUR",
+    "image": "https://m.media-amazon.com/images/I/51TjJOTfslL._AC_SL1000_.jpg",
+    "category": "Electronics",
+    "subcategory": "Streaming",
+    "affiliateLink": "https://www.amazon.nl/dp/B08C1W5N87?tag=gifteez77-21",
+    "inStock": true,
+    "prime": true,
+    "rating": 4.3,
+    "reviewCount": 30000,
+    "features": [
+      "4K Ultra HD",
+      "Wi-Fi 6",
+      "Alexa Voice Remote"
+    ],
+    "tags": [
+      "streaming",
+      "4k",
+      "tv",
+      "entertainment"
+    ],
+    "giftScore": 8,
+    "ageGroup": "18-55",
+    "occasion": [
+      "verjaardag",
+      "housewarming",
+      "kerstmis"
+    ],
+    "priceRange": "budget",
+    "lastUpdated": "2025-09-13T16:46:49.505Z"
+  },
+  {
+    "asin": "B08DNPX8B7",
+    "name": "JBL Clip 4 Draagbare Bluetooth Speaker",
+    "description": "Ultraportable speaker met geïntegreerde karabijnhaak. IP67 waterdicht en stofdicht.",
+    "price": 59.99,
+    "originalPrice": 69.99,
+    "currency": "EUR",
+    "image": "https://m.media-amazon.com/images/I/71FIgBem2XL._AC_SL1500_.jpg",
+    "category": "Electronics",
+    "subcategory": "Audio",
+    "affiliateLink": "https://www.amazon.nl/dp/B08DNPX8B7?tag=gifteez77-21",
+    "inStock": true,
+    "prime": true,
+    "rating": 4.4,
+    "reviewCount": 15000,
+    "features": [
+      "IP67 waterdicht",
+      "Karabijnhaak",
+      "10 uur batterij"
+    ],
+    "tags": [
+      "speaker",
+      "portable",
+      "waterproof",
+      "outdoor"
+    ],
+    "giftScore": 8,
+    "ageGroup": "16-45",
+    "occasion": [
+      "verjaardag",
+      "sport",
+      "zomer"
+    ],
+    "priceRange": "budget",
+    "lastUpdated": "2025-09-13T16:46:49.505Z"
+  }
+]

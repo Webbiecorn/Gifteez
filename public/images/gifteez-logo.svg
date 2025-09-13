@@ -1,0 +1,37 @@
+<svg width="400" height="100" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gift Box -->
+  <rect x="10" y="40" width="50" height="40" fill="#D2B48C" stroke="#000" stroke-width="2"/>
+  
+  <!-- Bow left loop -->
+  <path d="M 15 40 Q 5 20 25 30 Q 30 35 25 40 Z" fill="#DC143C" stroke="#000" stroke-width="2"/>
+  
+  <!-- Bow right loop -->
+  <path d="M 45 40 Q 65 20 45 30 Q 40 35 45 40 Z" fill="#DC143C" stroke="#000" stroke-width="2"/>
+  
+  <!-- Bow center knot -->
+  <circle cx="35" cy="40" r="5" fill="#DC143C" stroke="#000" stroke-width="2"/>
+  
+  <!-- Bow tails -->
+  <path d="M 25 40 L 20 55 L 30 50 Z" fill="#DC143C" stroke="#000" stroke-width="2"/>
+  <path d="M 45 40 L 50 55 L 40 50 Z" fill="#DC143C" stroke="#000" stroke-width="2"/>
+  
+  <!-- Eyes -->
+  <circle cx="25" cy="55" r="5" fill="#FFF" stroke="#000" stroke-width="2"/>
+  <circle cx="45" cy="55" r="5" fill="#FFF" stroke="#000" stroke-width="2"/>
+  <circle cx="25" cy="55" r="3" fill="#000"/>
+  <circle cx="45" cy="55" r="3" fill="#000"/>
+  <circle cx="26" cy="54" r="1" fill="#FFF"/>
+  <circle cx="46" cy="54" r="1" fill="#FFF"/>
+  
+  <!-- Mouth -->
+  <rect x="28" y="65" width="14" height="6" fill="#FFF" rx="3" stroke="#000" stroke-width="2"/>
+  <rect x="30" y="63" width="2" height="6" fill="#FFF"/>
+  <rect x="34" y="63" width="2" height="6" fill="#FFF"/>
+  <rect x="38" y="63" width="2" height="6" fill="#FFF"/>
+  
+  <!-- Tongue -->
+  <ellipse cx="35" cy="73" rx="4" ry="3" fill="#DC143C"/>
+  
+  <!-- Text GIFTEEZ -->
+  <text x="80" y="65" font-family="Arial Black, sans-serif" font-size="32" font-weight="900" fill="#000">GIFTEEZ</text>
+</svg>

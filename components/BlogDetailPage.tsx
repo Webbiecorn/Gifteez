@@ -317,49 +317,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
   const headings = post.content.filter(block => block.type === 'heading') as {type: 'heading', content: string}[];
   const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
     
-    // Preprocess for earbuds candidate grid
-    let earbudsCandidateIndexes: number[] = [];
-    if (post.slug === 'vergelijking-draadloze-oordopjes') {
-        const headingIdx = post.content.findIndex(b => b.type === 'heading' && b.content === 'De Kandidaten');
-        if (headingIdx !== -1) {
-            // The next three gift blocks after heading become candidates (defensive filtering)
-            for (let i = headingIdx + 1; i < post.content.length; i++) {
-                const b = post.content[i];
-                if (b.type === 'gift') earbudsCandidateIndexes.push(i);
-                else if (b.type === 'heading' && earbudsCandidateIndexes.length < 3) break; // stop early if structure shifts
-                if (earbudsCandidateIndexes.length === 3) break;
-            }
-        }
-    }
+    // Removed special-case preprocessing for legacy post 'vergelijking-draadloze-oordopjes'
+    // (Content pruning September 2025)
 
     const renderContentBlock = (block: ContentBlock, index: number) => {
-        const isEarbudsPost = post.slug === 'vergelijking-draadloze-oordopjes';
-        if (isEarbudsPost && earbudsCandidateIndexes.includes(index)) {
-            // Render grid wrapper only once at first candidate
-            if (index === earbudsCandidateIndexes[0]) {
-                const candidateBlocks = earbudsCandidateIndexes.map(ci => post.content[ci]) as any[];
-                return (
-                    <div key={index} className="my-8">
-                <div className="grid gap-8 md:grid-cols-3">
-                            {candidateBlocks.map((cb, i) => (
-                                <GiftResultCard
-                                    key={i}
-                                    gift={cb.content}
-                                    index={i}
-                                    showToast={showToast}
-                                    isEmbedded={true}
-                    imageFit="contain"
-                    hideAmazonBadge={true}
-                    candidateVariant={true}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                );
-            }
-            // Skip rendering for other candidate indices (already rendered)
-            return null;
-        }
+        // No legacy earbuds candidate grid rendering (removed post)
 
         switch(block.type) {
                 case 'heading':
@@ -371,7 +333,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             >
                                 <span className="relative inline-block">
                                     {block.content}
-                                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                                 </span>
                             </h2>
                         );
@@ -379,8 +341,15 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         return <p key={index} dangerouslySetInnerHTML={{ __html: block.content }} className="mb-6 text-gray-700 leading-relaxed text-lg" />
                 case 'gift':
                         return (
-                            <div key={index} className="my-12 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-8 border border-gray-100 shadow-lg">
-                                <GiftResultCard gift={block.content} index={index} showToast={showToast} isEmbedded={true} />
+                            <div key={index} className="my-12 bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-8 border border-gray-100 shadow-lg">
+                                <GiftResultCard 
+                                    gift={block.content} 
+                                    index={index} 
+                                    showToast={showToast} 
+                                    isEmbedded={true} 
+                                    imageHeightClass="h-32"
+                                    imageFit="contain"
+                                />
                             </div>
                         );
         case 'comparisonTable':
@@ -388,7 +357,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
             return (
                 <div key={index} className="my-12 overflow-x-auto bg-white rounded-2xl shadow-lg border border-gray-100">
                     <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-white uppercase bg-gradient-to-r from-blue-600 to-indigo-600">
+                        <thead className="text-xs text-white uppercase bg-gradient-to-r from-emerald-600 to-emerald-700">
                             <tr>
                                 <th scope="col" className="px-8 py-4 font-bold text-white rounded-tl-2xl">Specificatie</th>
                                 {tableBlock.headers.map((header, i) => (
@@ -400,7 +369,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         </thead>
                         <tbody>
                             {tableBlock.rows.map((row, i) => (
-                                <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-blue-50 transition-colors duration-200`}>
+                                <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-emerald-50 transition-colors duration-200`}>
                                     <th scope="row" className="px-8 py-4 font-bold text-gray-900 whitespace-nowrap border-r border-gray-200 bg-gradient-to-r from-gray-100 to-gray-50">
                                         {row.feature}
                                     </th>
@@ -421,7 +390,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                 <div key={index} className={`my-12 grid grid-cols-1 md:grid-cols-${prosConsBlock.items.length} gap-8`}>
                     {prosConsBlock.items.map((item, i) => (
                         <div key={i} className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
+                            <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 p-6">
                                 <h4 className="font-display font-bold text-xl text-white text-center">{item.title}</h4>
                             </div>
                             <div className="p-6">
@@ -465,7 +434,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
         case 'verdict':
             const verdictBlock = block as VerdictBlock;
             return (
-                <div key={index} className="my-12 relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl shadow-2xl">
+                <div key={index} className="my-12 relative overflow-hidden bg-gradient-to-r from-emerald-600 via-emerald-700 to-purple-600 rounded-2xl shadow-2xl">
                     <div className="absolute inset-0 bg-black/10"></div>
                     <div className="relative p-8 md:p-12 text-white">
                         <div className="flex items-center gap-4 mb-6">
@@ -493,56 +462,12 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
         {/* Progress Bar */}
         <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
             <div 
-                className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-300 ease-out"
+                className="h-full bg-gradient-to-r from-emerald-600 to-emerald-700 transition-all duration-300 ease-out"
                 style={{ width: `${scrollProgress}%` }}
             ></div>
         </div>
 
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-primary via-blue-500 to-indigo-600 text-white overflow-hidden">
-            {/* Background decorative elements */}
-            <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
-                <div className="absolute top-1/4 right-20 w-24 h-24 bg-white rounded-full"></div>
-                <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-white rounded-full"></div>
-                <div className="absolute bottom-10 right-10 w-20 h-20 bg-white rounded-full"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white rounded-full opacity-5"></div>
-            </div>
-
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-                        <BookOpenIcon className="w-8 h-8 text-white" />
-                    </div>
-                    <p className="text-sm font-bold text-white/80 uppercase tracking-wider mb-4">{post.category}</p>
-                    <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                        {post.title}
-                    </h1>
-                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
-                        {post.excerpt}
-                    </p>
-
-                    <div className="flex flex-wrap justify-center gap-6 text-sm">
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                            <ImageWithFallback
-                                src={post.author.avatarUrl}
-                                alt={post.author.name}
-                                className="w-8 h-8 rounded-full object-cover border-2 border-white/30"
-                            />
-                            <span className="font-semibold">{post.author.name}</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                            <CalendarIcon className="w-4 h-4" />
-                            <span>{formattedDate}</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                            <TargetIcon className="w-4 h-4" />
-                            <span>~{readingTime} min lezen</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        {/* Hero Section - Removed */}
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <nav aria-label="Breadcrumb" className="mb-8">
@@ -558,47 +483,40 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
             <div className="lg:grid lg:grid-cols-12 lg:gap-12">
                 <main className="lg:col-span-8">
                     <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-                        {/* Featured Image */}
-                        <div className="relative overflow-hidden group">
-                            <button
-                                onClick={toggleHeroFit}
-                                className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-xs font-semibold text-primary shadow-lg hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105"
-                                aria-label={heroFitMode === 'contain' ? 'Vul kader (cover)' : 'Pas in venster (contain)'}
-                            >
-                                {heroFitMode === 'contain' ? 'Vullen' : 'Inpassen'}
-                            </button>
-                            <button
-                                onClick={toggleGlobalImageFit}
-                                className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full text-xs font-semibold text-primary shadow-lg hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105"
-                                aria-label={globalImageFit === 'cover' ? 'Alle blogafbeeldingen insluiten (contain)' : 'Alle blogafbeeldingen vullen (cover)'}
-                            >
-                                {globalImageFit === 'cover' ? 'Alle: Inpassen' : 'Alle: Vullen'}
-                            </button>
-
-                            {/* Reading Progress Overlay */}
-                            <div className="absolute top-0 left-0 w-full h-1 bg-white/20 z-10">
-                                <div 
-                                    className="h-full bg-gradient-to-r from-green-400 to-blue-500 transition-all duration-300"
-                                    style={{ width: `${scrollProgress}%` }}
-                                ></div>
+                        
+                        {/* Article Header */}
+                        <div className="p-8 md:p-12 border-b border-gray-100">
+                            <div className="text-center">
+                                <p className="text-sm font-bold text-primary uppercase tracking-wider mb-4">{post.category}</p>
+                                <h1 className="font-display text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                                    {post.title}
+                                </h1>
+                                <p className="text-lg text-gray-600 mb-6">
+                                    {post.excerpt}
+                                </p>
+                                <div className="flex flex-wrap justify-center gap-6 text-sm">
+                                    <div className="flex items-center gap-2">
+                                        <ImageWithFallback
+                                            src={post.author.avatarUrl}
+                                            alt={post.author.name}
+                                            className="w-8 h-8 rounded-full object-cover"
+                                        />
+                                        <span className="font-semibold text-gray-700">{post.author.name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-gray-600">
+                                        <CalendarIcon className="w-4 h-4" />
+                                        <span>{formattedDate}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-gray-600">
+                                        <TargetIcon className="w-4 h-4" />
+                                        <span>~{readingTime} min lezen</span>
+                                    </div>
+                                </div>
                             </div>
-
-                            {/* Prefer optimized modern formats if available */}
-                            {post.imageUrl.endsWith('.png') ? (
-                                <picture>
-                                    <source srcSet={post.imageUrl.replace(/\.png$/, '.avif')} type="image/avif" />
-                                    <source srcSet={post.imageUrl.replace(/\.png$/, '.webp')} type="image/webp" />
-                                    <img src={post.imageUrl} alt={post.title} className={`w-full h-64 md:h-96 object-${heroFitMode} group-hover:scale-105 transition-transform duration-700`} width={1200} height={1200} loading="lazy" />
-                                </picture>
-                            ) : (
-                                <ImageWithFallback 
-                                    src={post.imageUrl} 
-                                    alt={post.title} 
-                                    className="w-full h-64 md:h-96 group-hover:scale-105 transition-transform duration-700" 
-                                    fit={heroFitMode}
-                                    onError={() => handleImageError(post.imageUrl)}
-                                />
-                            )}
+                        </div>
+                        
+                        {/* Article Content */}
+                        <div className="prose prose-lg max-w-none p-8 md:p-12 text-gray-700">
 
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </div>
@@ -608,16 +526,16 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             {headings.length > 1 && (
                                 <nav className="mb-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100" aria-labelledby="toc-heading">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <SparklesIcon className="w-6 h-6 text-blue-600" aria-hidden="true" />
+                                        <SparklesIcon className="w-6 h-6 text-emerald-600" aria-hidden="true" />
                                         <h2 id="toc-heading" className="font-display font-bold text-primary text-xl">In dit artikel</h2>
                                     </div>
                                     <ol className="space-y-3" role="list">
                                         {headings.map((heading, i) => (
                                             <li key={i} className="flex items-center gap-2" role="listitem">
-                                                <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold" aria-hidden="true">{i + 1}</span>
+                                                <span className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold" aria-hidden="true">{i + 1}</span>
                                                 <a 
                                                     href={`#${slugify(heading.content)}`} 
-                                                    className="font-semibold text-primary hover:text-blue-600 hover:underline transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+                                                    className="font-semibold text-primary hover:text-emerald-600 hover:underline transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1"
                                                     aria-describedby={`heading-${i}-description`}
                                                 >
                                                     {heading.content}
@@ -734,7 +652,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-3">
-                                            <UserIcon className="w-6 h-6 text-blue-600" />
+                                            <UserIcon className="w-6 h-6 text-emerald-600" />
                                             <h3 className="font-display text-2xl font-bold text-primary">Over {post.author.name}</h3>
                                         </div>
                                         <p className="text-gray-700 leading-relaxed mb-4">
@@ -783,7 +701,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
 
                     {/* Enhanced Bottom CTA */}
                     <div className="mt-16 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary via-blue-500 to-indigo-600 opacity-90"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary via-emerald-600 to-emerald-700 opacity-90"></div>
                         <div className="absolute inset-0 bg-black/20"></div>
                         <div className="relative p-8 md:p-12 text-center text-white">
                             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
@@ -838,9 +756,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
 
                             <button
                                 onClick={() => showToast('Bedankt voor je reactie! 💬', 'info')}
-                                className="flex items-center justify-center gap-3 p-4 bg-white hover:bg-blue-50 rounded-2xl border border-blue-200 hover:border-blue-300 transition-all duration-300 group"
+                                className="flex items-center justify-center gap-3 p-4 bg-white hover:bg-emerald-50 rounded-2xl border border-emerald-200 hover:border-emerald-300 transition-all duration-300 group"
                             >
-                                <svg className="w-6 h-6 text-blue-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6 text-emerald-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                                 <span className="font-medium text-blue-700">Reageer</span>
@@ -919,7 +837,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         <div className="sticky top-28">
                             <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                                 <div className="flex items-center gap-3 mb-6">
-                                    <SparklesIcon className="w-6 h-6 text-blue-600" aria-hidden="true" />
+                                    <SparklesIcon className="w-6 h-6 text-emerald-600" aria-hidden="true" />
                                     <h3 className="font-display text-xl font-bold text-primary">Inhoudsopgave</h3>
                                 </div>
                                 <nav aria-label="Artikel secties">
@@ -928,13 +846,13 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                             <li key={i} role="listitem">
                                                 <a 
                                                     href={`#${slugify(heading.content)}`} 
-                                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50 transition-colors duration-300 group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-emerald-50 transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
                                                     aria-describedby={`sidebar-heading-${i}-description`}
                                                 >
-                                                    <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-bold group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300" aria-hidden="true">
+                                                    <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300" aria-hidden="true">
                                                         {i + 1}
                                                     </span>
-                                                    <span className="font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-sm leading-tight">
+                                                    <span className="font-medium text-gray-700 group-hover:text-emerald-600 transition-colors duration-300 text-sm leading-tight">
                                                         {heading.content}
                                                     </span>
                                                 </a>
@@ -948,11 +866,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                 <div className="mt-8 pt-6 border-t border-gray-100" aria-label="Leesvoortgang">
                                     <div className="flex items-center justify-between mb-3">
                                         <span className="text-sm font-medium text-gray-600">Leesvoortgang</span>
-                                        <span className="text-sm font-bold text-blue-600" aria-live="polite">{Math.round(scrollProgress)}%</span>
+                                        <span className="text-sm font-bold text-emerald-600" aria-live="polite">{Math.round(scrollProgress)}%</span>
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-2" role="progressbar" aria-valuenow={Math.round(scrollProgress)} aria-valuemin={0} aria-valuemax={100}>
                                         <div 
-                                            className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
+                                            className="bg-gradient-to-r from-emerald-600 to-emerald-700 h-2 rounded-full transition-all duration-300"
                                             style={{ width: `${scrollProgress}%` }}
                                         ></div>
                                     </div>
@@ -964,7 +882,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                     <div className="space-y-2">
                                         <button
                                             onClick={() => document.getElementById('toc-heading')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors duration-200"
                                         >
                                             📋 Inhoudsopgave
                                         </button>
@@ -996,7 +914,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         {/* Share Section */}
                         <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-full flex items-center justify-center">
                                     <ShareIcon className="w-5 h-5 text-white" />
                                 </div>
                                 <h3 className="font-display text-xl font-bold text-primary">Deel deze gids</h3>
@@ -1008,15 +926,15 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             />
                             
                             {/* Share Statistics */}
-                            <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-4 border border-gray-100">
+                            <div className="bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-4 border border-gray-100">
                                 <div className="flex items-center justify-between mb-3">
                                     <span className="text-sm font-medium text-gray-600">Totale shares</span>
-                                    <span className="text-lg font-bold text-blue-600">{Math.floor(Math.random() * 500) + 100}</span>
+                                    <span className="text-lg font-bold text-emerald-600">{Math.floor(Math.random() * 500) + 100}</span>
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 text-center">
                                     <div className="bg-white rounded-lg p-2">
                                         <div className="text-xs text-gray-500">Facebook</div>
-                                        <div className="font-bold text-blue-600">{Math.floor(Math.random() * 200) + 50}</div>
+                                        <div className="font-bold text-emerald-600">{Math.floor(Math.random() * 200) + 50}</div>
                                     </div>
                                     <div className="bg-white rounded-lg p-2">
                                         <div className="text-xs text-gray-500">Twitter</div>
@@ -1051,7 +969,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                     onClick={() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 z-50 group"
+                    className="fixed bottom-8 right-8 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 z-50 group"
                     aria-label="Terug naar boven"
                 >
                     <ChevronRightIcon className="w-6 h-6 transform rotate-[-90deg] group-hover:rotate-[-90deg] group-hover:scale-110 transition-transform duration-300" />

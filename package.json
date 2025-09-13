@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-favicons.mjs && node scripts/generate-pinned-tab.mjs && node scripts/generate-responsive-images.mjs",
+  "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-favicons.mjs && node scripts/generate-pinned-tab.mjs && node scripts/generate-responsive-images.mjs --dry-run",
     "build": "vite build",
     "preview": "vite preview",
     "check:images": "node scripts/check-image-integrity.mjs",
-    "deploy": "npm run check:images && npm run build && firebase deploy --only hosting"
+  "predeploy": "node scripts/generate-responsive-images.mjs",
+  "deploy": "npm run check:images && npm run predeploy && npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@google/genai": "^1.16.0",

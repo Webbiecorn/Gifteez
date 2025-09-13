@@ -27,7 +27,16 @@
       ]}
     ],
     "redirects": [
-      { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 }
+      { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 },
+      { "source": "/blog/cadeaus-voor-tech-liefhebbers", "destination": "/blog", "type": 301 },
+      { "source": "/blog/beste-ervaringscadeaus-2025", "destination": "/blog", "type": 301 },
+      { "source": "/blog/vergelijking-draadloze-oordopjes", "destination": "/blog", "type": 301 },
+      { "source": "/blog/originele-cadeaus-voor-mannen", "destination": "/blog", "type": 301 },
+      { "source": "/blog/duurzame-cadeaus-die-goed-doen", "destination": "/blog", "type": 301 },
+      { "source": "/blog/valentijnscadeaus", "destination": "/blog", "type": 301 },
+      { "source": "/blog/ultieme-gids-kerstcadeaus", "destination": "/blog", "type": 301 },
+      { "source": "/blog/valentijnsdag-cadeau-gids", "destination": "/blog", "type": 301 },
+      { "source": "/blog/originele-cadeaus-voor-de-man", "destination": "/blog", "type": 301 }
     ],
     "rewrites": [
       { "source": "/api/**", "function": "api" },

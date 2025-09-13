@@ -76,13 +76,13 @@ const QuizPage: React.FC<QuizPageProps> = ({ navigateTo }) => {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
                   <SparklesIcon className="w-10 h-10 text-white" />
                 </div>
-                <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                <h1 className="typo-h1 mb-6 leading-tight text-white">
                   Ontdek je
                   <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
                     Cadeau Persoonlijkheid
                   </span>
                 </h1>
-                <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed mb-8">
+                <p className="typo-lead text-white/90 max-w-2xl mb-8">
                   Beantwoord 3 slimme vragen en krijg een persoonlijk profiel + directe inspiratie voor cadeaus die écht blijven hangen!
                 </p>
 
@@ -270,12 +270,8 @@ const QuizPage: React.FC<QuizPageProps> = ({ navigateTo }) => {
                   <SparklesIcon className="w-4 h-4" />
                   <span className="text-sm font-semibold uppercase tracking-wide">Jouw Resultaat</span>
                 </div>
-                <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                  {result.title}
-                </h1>
-                <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-                  {result.description}
-                </p>
+                <h1 className="typo-h1 mb-6 leading-tight text-white">{result.title}</h1>
+                <p className="typo-lead text-white/90 max-w-3xl mx-auto">{result.description}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { Container } from './layout/Container';
 import { BlogPost, NavigateTo } from '../types';
 import { blogPosts } from '../data/blogData';
 import { SearchIcon, BookOpenIcon, CalendarIcon, UserIcon, SparklesIcon, MenuIcon, TargetIcon } from './IconComponents';
 import ImageWithFallback from './ImageWithFallback';
 import { NewsletterSignup } from './NewsletterSignup';
+import Card from './Card';
 
 const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: boolean; }> = ({ post, navigateTo, isFeatured = false }) => {
     const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
@@ -12,8 +14,12 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
 
     const readingTime = Math.ceil(post.excerpt.split(' ').length / 200); // Rough estimate
 
-    return (
-        <article className={`bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}>
+        return (
+                <Card
+                    as="article"
+                    variant={isFeatured ? 'highlight' : 'interactive'}
+                    className={`rounded-3xl overflow-hidden flex flex-col group ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}
+                >
             <div className="relative overflow-hidden cursor-pointer" onClick={() => navigateTo('blogDetail', { slug: post.slug })}>
                 <ImageWithFallback
                     src={post.imageUrl}
@@ -24,7 +30,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
 
                 {/* Category Badge */}
                 <div className="absolute top-4 left-4">
-                    <span className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg backdrop-blur-sm">
+                    <span className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg backdrop-blur-sm">
                         {post.category}
                     </span>
                 </div>
@@ -46,7 +52,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
             </div>
 
             <div className={`p-6 flex flex-col flex-grow ${isFeatured ? 'md:p-8' : ''}`}>
-                <h3 className={`font-display font-bold text-primary mt-2 flex-grow leading-tight group-hover:text-blue-600 transition-colors duration-300 ${isFeatured ? 'text-xl md:text-2xl' : 'text-lg'}`}>
+                <h3 className={`font-display font-bold text-primary mt-2 flex-grow leading-tight group-hover:text-emerald-600 transition-colors duration-300 ${isFeatured ? 'text-xl md:text-2xl' : 'text-lg'}`}>
                     <button
                         onClick={() => navigateTo('blogDetail', { slug: post.slug })}
                         className="text-left hover:underline decoration-2 underline-offset-4"
@@ -77,14 +83,14 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
 
                     <button
                         onClick={() => navigateTo('blogDetail', { slug: post.slug })}
-                        className="inline-flex items-center gap-2 text-primary hover:text-blue-600 font-semibold text-sm transition-colors duration-300 group"
+                        className="inline-flex items-center gap-2 text-primary hover:text-emerald-600 font-semibold text-sm transition-colors duration-300 group"
                     >
                         <span>Lees meer</span>
                         <BookOpenIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                     </button>
                 </div>
             </div>
-        </article>
+        </Card>
     );
 };
 
@@ -94,7 +100,7 @@ const FeaturedBlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = 
     });
 
     return (
-        <article className="bg-white rounded-3xl shadow-2xl overflow-hidden lg:grid lg:grid-cols-5 group hover:shadow-3xl transition-all duration-500 border border-gray-100">
+        <Card as="article" variant="highlight" className="rounded-3xl overflow-hidden lg:grid lg:grid-cols-5">
             <div className="relative lg:col-span-3 overflow-hidden">
                 <ImageWithFallback
                     src={post.imageUrl}
@@ -121,11 +127,11 @@ const FeaturedBlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = 
 
             <div className="lg:col-span-2 p-8 lg:p-12 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-4">
-                    <SparklesIcon className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm font-semibold text-blue-600 uppercase tracking-wide">Trending</span>
+                    <SparklesIcon className="w-5 h-5 text-emerald-600" />
+                    <span className="text-sm font-semibold text-emerald-600 uppercase tracking-wide">Trending</span>
                 </div>
 
-                <h2 className="font-display text-2xl lg:text-3xl font-bold text-primary mb-4 leading-tight group-hover:text-blue-600 transition-colors duration-300">
+                <h2 className="font-display text-2xl lg:text-3xl font-bold text-primary mb-4 leading-tight group-hover:text-emerald-600 transition-colors duration-300">
                     {post.title}
                 </h2>
 
@@ -150,13 +156,13 @@ const FeaturedBlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = 
 
                 <button
                     onClick={() => navigateTo('blogDetail', { slug: post.slug })}
-                    className="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-blue-600 text-white font-bold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
+                    className="inline-flex items-center gap-3 bg-gradient-to-r from-primary to-emerald-600 text-white font-bold px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
                 >
                     <span>Lees de volledige gids</span>
                     <BookOpenIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </button>
             </div>
-        </article>
+        </Card>
     );
 };
 
@@ -182,11 +188,12 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
         const canonical = ensure('link[rel="canonical"]', () => { const l = document.createElement('link'); l.setAttribute('rel','canonical'); return l; });
         canonical.setAttribute('href', window.location.origin + '/blog');
         // ItemList structured data
+        // Structured data tuned: previously sliced to 25; now fully dynamic for current post set (September 2025 cleanup)
         const itemList = {
             '@context': 'https://schema.org',
             '@type': 'ItemList',
             'name': 'Cadeaugidsen',
-            'itemListElement': blogPosts.slice(0, 25).map((p, i) => ({
+            'itemListElement': blogPosts.map((p, i) => ({
                 '@type': 'ListItem',
                 'position': i + 1,
                 'url': window.location.origin + '/blog/' + p.slug,
@@ -227,9 +234,11 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-b from-white via-emerald-50/40 to-white">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-r from-primary via-blue-500 to-indigo-600 text-white overflow-hidden">
+    <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_30%,#10b98122,transparent_70%)]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-emerald-50/50" />
             {/* Background decorative elements */}
             <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
@@ -239,60 +248,44 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white rounded-full opacity-5"></div>
             </div>
 
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative z-10">
+            <Container size="xl" className="py-20 md:py-28 relative z-10">
                 <div className="text-center max-w-4xl mx-auto">
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-                        <BookOpenIcon className="w-10 h-10 text-white" />
+                    <div className="inline-flex items-center justify-center w-24 h-24 bg-emerald-600 text-white rounded-2xl mb-8 shadow-xl ring-4 ring-emerald-500/20">
+                        <BookOpenIcon className="w-12 h-12" />
                     </div>
-                    <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                        Cadeau
-                        <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
-                            Inspiratie
-                        </span>
+                    <h1 className="typo-h1 mb-6 leading-[1.05] text-slate-900">
+                        Cadeau <span className="text-emerald-600">Inspiratie</span>
                     </h1>
-                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
+                    <p className="typo-lead text-slate-600 max-w-3xl mx-auto mb-10">
                         Jouw bron voor inspiratie, tips en de beste cadeau-ideeën voor elke gelegenheid. Ontdek onze nieuwste cadeaugidsen.
                     </p>
 
                     {/* Statistics */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
-                            <div className="text-2xl md:text-3xl font-bold">{blogPosts.length}</div>
-                            <div className="text-sm text-white/80">Cadeaugidsen</div>
-                        </div>
-                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
-                            <div className="text-2xl md:text-3xl font-bold">{categories.length - 1}</div>
-                            <div className="text-sm text-white/80">Categorieën</div>
-                        </div>
-                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
-                            <div className="text-2xl md:text-3xl font-bold">{authors.length - 1}</div>
-                            <div className="text-sm text-white/80">Experts</div>
-                        </div>
-                        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
-                            <div className="text-2xl md:text-3xl font-bold">24/7</div>
-                            <div className="text-sm text-white/80">Inspiratie</div>
-                        </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+                        {[{label:'Cadeaugidsen',value:blogPosts.length},{label:'Categorieën',value:categories.length-1},{label:'Experts',value:authors.length-1},{label:'Inspiratie',value:'24/7'}].map(stat => (
+                          <div key={stat.label} className="rounded-2xl p-5 bg-white shadow-sm ring-1 ring-emerald-100/60">
+                            <div className="text-2xl md:text-3xl font-bold text-emerald-600">{stat.value}</div>
+                            <div className="text-sm text-slate-500">{stat.label}</div>
+                          </div>
+                        ))}
                     </div>
 
-                    <div className="flex flex-wrap justify-center gap-4 text-sm">
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                            <BookOpenIcon className="w-4 h-4" />
-                            <span>Gratis Gidsen</span>
+                    <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-600">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700">
+                          <BookOpenIcon className="w-4 h-4" /> Gratis Gidsen
                         </div>
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                            <SparklesIcon className="w-4 h-4" />
-                            <span>Expert Tips</span>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700">
+                          <SparklesIcon className="w-4 h-4" /> Expert Tips
                         </div>
-                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                            <UserIcon className="w-4 h-4" />
-                            <span>Voor Iedereen</span>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-700">
+                          <UserIcon className="w-4 h-4" /> Voor Iedereen
                         </div>
                     </div>
                 </div>
-            </div>
+            </Container>
         </section>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <Container size="xl" className="py-16">
             {/* Featured Post */}
             <section className="mb-20">
                 <FeaturedBlogCard post={featuredPost} navigateTo={navigateTo} />
@@ -300,7 +293,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
 
             {/* Filters and Search */}
             <section className="mb-16">
-                <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-xl border border-gray-100">
+                <div className="bg-white rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100">
                     <div className="flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-center">
                         <div className="flex flex-wrap gap-3 items-center">
                             <span className="font-semibold text-primary mr-2">Categorieën:</span>
@@ -308,10 +301,10 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                                 <button
                                     key={category}
                                     onClick={() => setSelectedCategory(category)}
-                                    className={`py-2 px-4 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
+                                    className={`py-2 px-4 rounded-full text-sm font-semibold transition-all duration-300 ${
                                         selectedCategory === category
-                                        ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'
+                                        ? 'bg-emerald-600 text-white shadow-md'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                                 >
                                     {category}
@@ -326,7 +319,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                                     aria-label="Filter op auteur"
                                     value={selectedAuthor}
                                     onChange={e => setSelectedAuthor(e.target.value)}
-                                    className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-sm"
+                                    className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-sm text-sm"
                                 >
                                     {authors.map(author => (
                                         <option key={author} value={author}>{author === 'All' ? 'Alle Auteurs' : author}</option>
@@ -340,7 +333,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                                     aria-label="Filter op publicatiejaar"
                                     value={selectedYear}
                                     onChange={e => setSelectedYear(e.target.value)}
-                                    className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-sm"
+                                    className="py-2 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-sm text-sm"
                                 >
                                     {years.map(year => (
                                         <option key={year} value={year}>{year === 'All' ? 'Alle Jaren' : year}</option>
@@ -354,7 +347,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                                     placeholder="Zoek in gidsen..."
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
-                                    className="pl-12 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm w-64"
+                                    className="pl-12 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white shadow-sm w-64"
                                     aria-label="Zoek in gidsen"
                                 />
                                 <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"/>
@@ -399,7 +392,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                     className="max-w-2xl mx-auto"
                 />
             </section>
-        </div>
+    </Container>
     </div>
   );
 };

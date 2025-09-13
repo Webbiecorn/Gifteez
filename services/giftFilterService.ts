@@ -1,21 +1,91 @@
 import { Gift, GiftSearchParams, AdvancedFilters } from '../types';
+import { ProductBasedGiftService } from './productBasedGiftService';
 import { findGifts as originalFindGifts } from './geminiService';
 
 export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Promise<Gift[]> => {
-  // First get the base gifts from the AI service
-  let gifts = await originalFindGifts(
-    searchParams.recipient,
-    searchParams.budget,
-    searchParams.occasion,
-    searchParams.interests
-  );
+  console.log('🎁 Clean separation: 3 Amazon AI + 3 Pure Coolblue products');
+  
+  try {
+    // Get 3 AI-generated Amazon gifts (original working approach)
+    console.log('🤖 Getting 3 Amazon AI gifts...');
+    const amazonGifts = await originalFindGifts(
+      searchParams.recipient,
+      searchParams.budget,
+      searchParams.occasion,
+      searchParams.interests
+    );
+    
+    // Filter Amazon gifts to ONLY have Amazon retailers (remove Coolblue retailers)
+    const pureAmazonGifts = amazonGifts.map(gift => ({
+      ...gift,
+      retailers: gift.retailers ? gift.retailers.filter(retailer => 
+        retailer.name.toLowerCase().includes('amazon') && 
+        !retailer.name.toLowerCase().includes('coolblue')
+      ) : []
+    })).filter(gift => gift.retailers && gift.retailers.length > 0);
+    
+    // Take only first 3 pure Amazon results
+    const limitedAmazonGifts = pureAmazonGifts.slice(0, 3);
+    console.log(`✅ Got ${limitedAmazonGifts.length} PURE Amazon AI gifts (no Coolblue retailers)`);
+    
+    // Get 3 Coolblue products from feed (filter out Amazon products)
+    console.log('🔵 Getting 3 Coolblue products...');
+    const allProductBasedGifts = await ProductBasedGiftService.findGifts(searchParams);
+    
+    // Filter to only get Coolblue products (exclude Amazon products)
+    const coolblueOnlyGifts = allProductBasedGifts.filter(gift => {
+      // Check if it's a Coolblue product by looking at retailers
+      return gift.retailers && gift.retailers.some(retailer => 
+        retailer.name.toLowerCase().includes('coolblue') && 
+        !retailer.name.toLowerCase().includes('amazon')
+      );
+    });
+    
+    // Take only first 3 Coolblue results
+    const limitedCoolblueGifts = coolblueOnlyGifts.slice(0, 3);
+    console.log(`✅ Got ${limitedCoolblueGifts.length} pure Coolblue products`);
+    
+    // Combine: 3 Amazon AI + 3 Pure Coolblue = 6 total
+    const allGifts = [...limitedAmazonGifts, ...limitedCoolblueGifts];
+    console.log(`🎯 Total gifts: ${allGifts.length} (${limitedAmazonGifts.length} Amazon AI + ${limitedCoolblueGifts.length} Pure Coolblue)`);
+    
+    // Remove images from all gifts for cleaner display
+    const giftsWithoutImages = allGifts.map(gift => ({
+      ...gift,
+      imageUrl: '' // Remove all images
+    }));
+    
+    // Apply advanced filters if provided
+    if (searchParams.filters) {
+      return applyAdvancedFilters(giftsWithoutImages, searchParams.filters);
+    }
 
-  // Apply advanced filters if provided
-  if (searchParams.filters) {
-    gifts = applyAdvancedFilters(gifts, searchParams.filters);
+    return giftsWithoutImages;
+    
+  } catch (error) {
+    console.error('Error in simple hybrid approach:', error);
+    
+    // Fallback to Amazon AI gifts only
+    console.log('⚠️  Falling back to Amazon AI gifts only');
+    const fallbackGifts = await originalFindGifts(
+      searchParams.recipient,
+      searchParams.budget,
+      searchParams.occasion,
+      searchParams.interests
+    );
+    
+    // Remove images and limit to 6
+    const cleanedFallbackGifts = fallbackGifts.slice(0, 6).map(gift => ({
+      ...gift,
+      imageUrl: ''
+    }));
+    
+    if (searchParams.filters) {
+      return applyAdvancedFilters(cleanedFallbackGifts, searchParams.filters);
+    }
+    
+    return cleanedFallbackGifts;
   }
-
-  return gifts;
 };
 
 export const applyAdvancedFilters = (gifts: Gift[], filters: Partial<AdvancedFilters>): Gift[] => {
@@ -86,82 +156,37 @@ export const sortGifts = (gifts: Gift[], sortBy: 'relevance' | 'price' | 'rating
         const priceB = extractPriceFromRange(b.priceRange);
         return priceA - priceB;
       });
-
+    
     case 'rating':
       return sortedGifts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-
+    
     case 'popularity':
       return sortedGifts.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
-
+    
     case 'relevance':
     default:
-      return sortedGifts; // Keep original order from AI
+      // For relevance, maintain the original order as gifts are already sorted by relevance
+      return sortedGifts;
   }
 };
 
-export const extractPriceFromRange = (priceRange: string): number => {
-  // Extract numeric value from price range string (e.g., "€25-50" -> 37.5)
-  const matches = priceRange.match(/(\d+)(?:-(\d+))?/);
-  if (!matches) return 0;
-  
-  const min = parseInt(matches[1]);
-  const max = matches[2] ? parseInt(matches[2]) : min;
-  
-  return (min + max) / 2; // Return average
+// Helper function to extract numeric price from range string
+const extractPriceFromRange = (priceRange: string): number => {
+  // Extract numbers from strings like "€25 - €50" or "€39,99"
+  const matches = priceRange.match(/\d+([.,]\d+)?/g);
+  if (matches && matches.length > 0) {
+    return parseFloat(matches[0].replace(',', '.'));
+  }
+  return 0;
 };
 
 export const enhanceGiftsWithMetadata = (gifts: Gift[]): Gift[] => {
-  // This function would enhance gifts with additional metadata
-  // In a real implementation, this might call external APIs or use a database
-  return gifts.map(gift => ({
+  return gifts.map((gift, index) => ({
     ...gift,
-    // Add default metadata if not present
-    category: gift.category || categorizeGift(gift),
-    rating: gift.rating || Math.random() * 2 + 3, // Random rating 3-5
+    // Add some basic metadata if missing
+    rating: gift.rating || 4.0 + Math.random() * 0.8, // 4.0 - 4.8 range
     reviews: gift.reviews || Math.floor(Math.random() * 500) + 50,
-    deliverySpeed: gift.deliverySpeed || 'standard',
-    giftType: gift.giftType || 'physical',
-    sustainability: gift.sustainability || Math.random() > 0.7,
-    personalization: gift.personalization || Math.random() > 0.8,
-    ageGroup: gift.ageGroup || '',
-    gender: gift.gender || 'unisex',
-    popularity: gift.popularity || Math.random() * 100,
-    availability: gift.availability || 'in-stock',
-    tags: gift.tags || generateTags(gift)
+    popularity: gift.popularity || Math.floor(Math.random() * 10) + 1,
+    availability: gift.availability || 'in-stock'
   }));
-};
-
-const categorizeGift = (gift: Gift): string => {
-  const name = gift.productName.toLowerCase();
-  const description = gift.description.toLowerCase();
-  const text = `${name} ${description}`;
-
-  if (text.includes('boek') || text.includes('lezen')) return 'Boeken & Media';
-  if (text.includes('tech') || text.includes('elektronisch') || text.includes('gadget')) return 'Elektronica';
-  if (text.includes('kleding') || text.includes('mode') || text.includes('accessoire')) return 'Mode & Accessoires';
-  if (text.includes('sport') || text.includes('fitness') || text.includes('gym')) return 'Sport & Fitness';
-  if (text.includes('huis') || text.includes('tuin') || text.includes('interieur')) return 'Huis & Tuin';
-  if (text.includes('eten') || text.includes('drinken') || text.includes('koken')) return 'Voeding & Drinken';
-  if (text.includes('wellness') || text.includes('beauty') || text.includes('verzorging')) return 'Wellness & Beauty';
-  if (text.includes('reis') || text.includes('ervaring') || text.includes('activiteit')) return 'Reizen & Ervaringen';
-  if (text.includes('kunst') || text.includes('cultuur') || text.includes('muziek')) return 'Kunst & Cultuur';
-  
-  return 'Hobby & Vrije tijd';
-};
-
-const generateTags = (gift: Gift): string[] => {
-  const tags: string[] = [];
-  const text = `${gift.productName} ${gift.description}`.toLowerCase();
-
-  // Common tags based on content
-  if (text.includes('luxe') || text.includes('premium')) tags.push('luxe');
-  if (text.includes('handgemaakt') || text.includes('artisaan')) tags.push('handgemaakt');
-  if (text.includes('vintage') || text.includes('retro')) tags.push('vintage');
-  if (text.includes('modern') || text.includes('contemporary')) tags.push('modern');
-  if (text.includes('grappig') || text.includes('humor')) tags.push('grappig');
-  if (text.includes('romantisch') || text.includes('liefde')) tags.push('romantisch');
-  if (text.includes('praktisch') || text.includes('nuttig')) tags.push('praktisch');
-  if (text.includes('uniek') || text.includes('bijzonder')) tags.push('uniek');
-
-  return tags;
 };

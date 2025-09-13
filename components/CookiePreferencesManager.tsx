@@ -55,7 +55,7 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
           {/* Cookie Categories */}
           <div className="space-y-6">
             {/* Necessary Cookies */}
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-emerald-50 rounded-lg p-4">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mt-1">
                   <CheckIcon className="w-4 h-4 text-white" />

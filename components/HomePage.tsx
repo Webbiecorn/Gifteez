@@ -1,5 +1,6 @@
 
 import React, { useState, FormEvent, useEffect } from 'react';
+import { Container } from './layout/Container';
 import ImageWithFallback from './ImageWithFallback';
 import PlannerIllustration from './PlannerIllustration';
 import LazyViewport from './LazyViewport';
@@ -20,9 +21,8 @@ interface HomePageProps {
 }
 
 const trendingGuides = [
-  { id: 1, title: 'Cadeaus voor Tech-Liefhebbers', base: '/images/trending-tech', slug: 'cadeaus-voor-tech-liefhebbers' },
-  { id: 2, title: 'Duurzame & Eco-vriendelijke Cadeaus', base: '/images/trending-eco', slug: 'duurzame-eco-vriendelijke-cadeaus' },
-  { id: 3, title: 'De Beste Ervaringscadeaus', base: '/images/trending-ervaringen', slug: 'beste-ervaringscadeaus-2025' },
+  { id: 1, title: 'Duurzame & Eco-vriendelijke Cadeaus', base: '/images/trending-eco', slug: 'duurzame-eco-vriendelijke-cadeaus' },
+  // Ervaringscadeaus gids verwijderd (content pruning September 2025)
 ];
 
 const curatedCollections = [
@@ -100,53 +100,53 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
   };
 
   return (
-    <div className="space-y-20 pb-20">
+    <div className="space-y-24 pb-24">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-secondary via-secondary to-light-bg overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full"></div>
-          <div className="absolute top-1/4 right-20 w-24 h-24 bg-blue-500 rounded-full"></div>
-          <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-primary rounded-full"></div>
-          <div className="absolute bottom-10 right-10 w-20 h-20 bg-blue-500 rounded-full"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative z-10">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#10b98115,transparent_60%)]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-emerald-50/40"></div>
+        <Container size="xl" className="py-24 md:py-32 relative z-10">
           <div className="text-center max-w-5xl mx-auto">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-500 rounded-full mb-8 shadow-lg">
-              <span className="text-3xl">🎁</span>
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-emerald-600/90 text-white rounded-2xl mb-10 shadow-xl ring-4 ring-emerald-600/20">
+              <span className="text-4xl" aria-hidden="true">🎁</span>
+              <span className="sr-only">Gifteez cadeau zoektocht</span>
             </div>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary leading-tight mb-6">
-              Vind het perfecte cadeau in <span className="text-blue-600">30 seconden</span> met AI
+            <h1 className="typo-h1 mb-8 tracking-tight">
+              Vind in <span className="text-emerald-600">30 seconden</span> het perfecte cadeau met AI
             </h1>
-            <p className="text-lg md:text-xl lg:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-10">
-              Onze AI GiftFinder helpt je voor elk budget en elke gelegenheid. Zeg vaarwel tegen cadeaustress!
+            <p className="typo-lead max-w-3xl mx-auto mb-12">
+              Geen keuzestress meer. Onze slimme GiftFinder geeft je direct persoonlijke inspiratie op basis van relatie, interesses en budget.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
               <Button
                 variant="accent"
                 onClick={() => navigateTo('giftFinder')}
-                className="px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                className="px-10 py-5 text-lg font-semibold shadow-lg hover:shadow-emerald-600/40 hover:-translate-y-0.5 transition-all duration-300"
               >
                 Start GiftFinder
               </Button>
               <Button
                 variant="outline"
                 onClick={() => navigateTo('quiz')}
-                className="px-8 py-4 text-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                className="px-10 py-5 text-lg font-semibold border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-all duration-300"
               >
                 Doe de Quiz
               </Button>
             </div>
+            <div className="mt-12 flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Persoonlijk & snel</div>
+              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Geen account nodig om te starten</div>
+              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Gratis te gebruiken</div>
+            </div>
           </div>
-        </div>
+  </Container>
       </section>
 
       {/* Trending Guides */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+      <Container size="xl" className="opacity-0 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <div className="text-center mb-12">
-          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Trending Cadeaugidsen</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Ontdek onze populairste gidsen voor cadeau-inspiratie</p>
+          <h2 className="typo-h2 mb-4">Trending Cadeaugidsen</h2>
+          <p className="typo-body text-slate-600 max-w-2xl mx-auto">Ontdek onze populairste gidsen voor cadeau-inspiratie</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {trendingGuides.map((guide, i) => (
@@ -175,7 +175,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-blue-600 transition-colors duration-300">{guide.title}</h3>
+                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-emerald-600 transition-colors duration-300">{guide.title}</h3>
                     <div className="mt-4 flex items-center text-sm text-gray-500">
                       <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">
                         Lees meer →
@@ -187,19 +187,19 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             </LazyViewport>
           ))}
         </div>
-      </section>
+  </Container>
 
       {/* GiftFinder Preview */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-20">
+  <section className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             {/* Header Section */}
             <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl mb-6 shadow-xl">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-600 rounded-2xl mb-6 shadow-xl ring-4 ring-emerald-600/25">
                 <span className="text-3xl">🎯</span>
               </div>
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-                Probeer de <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">GiftFinder</span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-slate-900 mb-4 leading-tight">
+                Probeer de <span className="text-emerald-600">GiftFinder</span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Kies voor wie je een cadeau zoekt en onze AI doet de rest. Ontvang direct gepersonaliseerde cadeau-ideeën!
@@ -207,9 +207,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             </div>
 
             {/* Interactive Form Card */}
-            <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
+            <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl border border-gray-100/70 overflow-hidden transition-shadow">
               {/* Top gradient bar */}
-              <div className="h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+              <div className="h-2 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400"></div>
 
               <div className="p-8 md:p-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -223,7 +223,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         <select
                           value={previewRecipient}
                           onChange={(e) => setPreviewRecipient(e.target.value)}
-                          className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-500 bg-white shadow-sm transition-all duration-200 appearance-none"
+                          className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 bg-white shadow-sm transition-all duration-200 appearance-none"
                           aria-label="Voor wie zoek je een cadeau?"
                         >
                           {recipients.map(r => <option key={r} value={r}>{r}</option>)}
@@ -239,7 +239,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     <Button
                       variant="accent"
                       onClick={() => navigateTo('giftFinder', { recipient: previewRecipient })}
-                      className="w-full px-8 py-4 text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 rounded-xl"
+                      className="w-full px-8 py-4 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-emerald-600/40 transform hover:-translate-y-0.5 transition-all duration-300 rounded-xl"
                     >
                       <span className="flex items-center justify-center gap-3">
                         <span>🔍</span>
@@ -252,8 +252,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                   {/* Features Section */}
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 gap-4">
-                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-                        <div className="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100/40 rounded-xl border border-emerald-100">
+                        <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
                           <span className="text-white text-lg">🤖</span>
                         </div>
                         <div>
@@ -262,8 +262,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
-                        <div className="flex-shrink-0 w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center">
+                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-white rounded-xl border border-emerald-100/60">
+                        <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
                           <span className="text-white text-lg">⚡</span>
                         </div>
                         <div>
@@ -272,8 +272,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100">
-                        <div className="flex-shrink-0 w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100/30 rounded-xl border border-emerald-100">
+                        <div className="flex-shrink-0 w-10 h-10 bg-emerald-400 rounded-lg flex items-center justify-center">
                           <span className="text-white text-lg">🎯</span>
                         </div>
                         <div>
@@ -287,17 +287,17 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
                 {/* Bottom stats */}
                 <div className="mt-8 pt-8 border-t border-gray-100">
-                  <div className="flex flex-wrap justify-center gap-8 text-center">
+                  <div className="flex flex-wrap justify-center gap-10 text-center">
                     <div>
-                      <div className="text-2xl font-bold text-blue-600">1000+</div>
+                      <div className="text-2xl font-bold text-emerald-600">1000+</div>
                       <div className="text-sm text-gray-500">Cadeau Ideeën</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-indigo-600">30</div>
+                      <div className="text-2xl font-bold text-emerald-600">30</div>
                       <div className="text-sm text-gray-500">Seconden</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-purple-600">4.8/5</div>
+                      <div className="text-2xl font-bold text-emerald-600">4.8/5</div>
                       <div className="text-sm text-gray-500">Gebruikers Score</div>
                     </div>
                   </div>
@@ -533,7 +533,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-blue-600 transition-colors duration-300 mb-3">
+                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-emerald-600 transition-colors duration-300 mb-3">
                       {post.title}
                     </h3>
                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">

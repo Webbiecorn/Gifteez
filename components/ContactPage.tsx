@@ -114,14 +114,14 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <MailIcon className="w-10 h-10 text-white" />
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="typo-h1 mb-6 leading-tight text-white">
               Neem
               <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
                 Contact
               </span>
               Op
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
+            <p className="typo-lead text-white/90 max-w-3xl mx-auto mb-8">
               Vragen, opmerkingen of suggesties? We horen graag van je! Stuur ons een berichtje en we nemen zo snel mogelijk contact met je op.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -150,10 +150,10 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
               {/* Contact Form */}
               <div className="bg-gradient-to-br from-light-bg to-white p-8 rounded-3xl shadow-xl border border-gray-100">
                 <div className="mb-8">
-                  <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">
+                  <h2 className="typo-h2 mb-4">
                     Stuur ons een bericht
                   </h2>
-                  <p className="text-gray-600 text-lg">
+                  <p className="typo-body text-gray-600">
                     We reageren meestal binnen 24 uur. Vul het formulier in en we nemen zo snel mogelijk contact met je op.
                   </p>
                 </div>
@@ -367,13 +367,13 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full mb-6">
               <QuestionMarkCircleIcon className="w-10 h-10 text-white" />
             </div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-6">
+            <h2 className="typo-h2 mb-6 text-primary">
               Veelgestelde
               <span className="block bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
                 Vragen
               </span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="typo-body text-gray-600 max-w-3xl mx-auto">
               Hier vind je antwoorden op de meest gestelde vragen. Kun je je vraag hier niet vinden? Neem dan gerust contact met ons op.
             </p>
           </div>

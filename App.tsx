@@ -36,6 +36,7 @@ import { SpinnerIcon } from './components/IconComponents';
 import LoadingSpinner from './components/LoadingSpinner';
 import { useCookieConsent } from './hooks/useCookieConsent';
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor';
+import Layout from './components/layout/Layout';
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null);
@@ -278,19 +279,21 @@ const App: React.FC = () => {
         }>
           <Header navigateTo={navigateTo} currentPage={currentPage} />
         </React.Suspense>
-        <main key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
-          <React.Suspense fallback={
-            <div className="container mx-auto px-4 py-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <BlogCardSkeleton />
-                <BlogCardSkeleton />
-                <BlogCardSkeleton />
+        <Layout>
+          <div key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
+            <React.Suspense fallback={
+              <div className="container mx-auto px-4 py-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <BlogCardSkeleton />
+                  <BlogCardSkeleton />
+                  <BlogCardSkeleton />
+                </div>
               </div>
-            </div>
-          }>
-            {renderPage()}
-          </React.Suspense>
-        </main>
+            }>
+              {renderPage()}
+            </React.Suspense>
+          </div>
+        </Layout>
         <React.Suspense fallback={
           <div className="h-32 bg-white border-t border-gray-100 flex items-center justify-center px-4">
             <TextSkeleton lines={2} />

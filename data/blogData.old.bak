@@ -1,0 +1,314 @@
+
+import { BlogPost, Gift } from '../types';
+
+// Gift Definitions
+const gift_duurzaam_1: Gift = {
+  productName: "Herbruikbare Koffiebeker (HuskeeCup)",
+  description: "Stijlvolle, duurzame beker gemaakt van koffieschillen. Perfect voor onderweg en helpt de afvalberg te verminderen.",
+  priceRange: "€15 - €25",
+    // Removed deprecated blog posts after pruning
+  imageUrl: 'https://m.media-amazon.com/images/I/519Yfe+zKnL._AC_SL1000_.jpg'
+};
+
+const gift_ai_4: Gift = {
+  productName: 'Google Nest Mini (2nd Gen)',
+  description: 'Compacte smart speaker met Google Assistant. Uitstekende audio, smart home integratie en voice control.',
+  priceRange: '€29 - €49',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Google-generatie-draadloze-Bluetooth-luidspreker-antraciet/dp/B0CGYFYY34?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1A9TJ5K0FAWN4&dib=eyJ2IjoiMSJ9.uFdKmLKG4TNwYxp985l-JX9pQxazTp-kjkv2H5Xd0XJFFqUxbhega1EL2SlT6gaRHzPAQ1t-dZYkj6gUPDJxz6e3v8LYh_b7cASbrABZSsRRq9uOtjcEXr9bwMwRU9RY5HV3m2cP6yJsRbAWyvPGAbA3gRdwv5HCvtW4x1SMYOByU3-GbE7bsfsp8MXiWwgnqlGQ_K9aMsNxXSKhGTnJbawaBYGienDYgCgQo7RL7Xs.D20YNAjGtm0F3ix_H3TV2INdFQmgsXmIvzVpJFwCLDA&dib_tag=se&keywords=Google%2BNest%2BMini%2B%282nd%2BGen%29&qid=1757334685&sprefix=google%2Bnest%2Bmini%2B2nd%2Bgen%2B%2Caps%2C95&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=840400fc337587b91d273852628946e4&language=nl_NL&ref_=as_li_ss_tl' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71mQEBoemPL._AC_SL1500_.jpg'
+};
+
+const gift_ai_5: Gift = {
+  productName: 'TP-Link Tapo Smart Plug',
+  description: 'Slimme stekker voor afstandsbediening via app. Energie monitoring, timers en voice control ondersteuning.',
+  priceRange: '€12 - €25',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Tapo-P115-energiebewaking-stopcontact-spraakbediening/dp/B09ZBGWYH9?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3EWCV93ZR68KP&dib=eyJ2IjoiMSJ9.BebjIvYDZmKDPx62puUcZz21W7nBbN1ROkj55BSJLJB51c9GyCQ2mlC-SVlz5xuFMU6oC8vSquh7pFieUah-rWW8wRkp5bfXKcCdVSlSQEzt7YNmjRDwJriudDFkoQnqF4xCFYzo9aJ7CzYfMUZ9uDjVaKAuJaqaG8gK58iQGFrRcmkGI7E_MPJJ_yzeR8fiKADylpkHlSYFY5_zrULML5ZIERg4Eow_fSxg1pE9rJVLir4pdzIgzH-zUD3wdium3tGd0J53_DjhJfXFCRUxAET0Vcsz9WIFZRkF0DuAo84.gCr5D0Xt3hAcgKFytHeoF7uS7bUd9WXtGPXYHZsIZkw&dib_tag=se&keywords=TP-Link%2BTapo%2BSmart%2BPlug&qid=1757335140&sprefix=tp-link%2Btapo%2Bsmart%2Bplug%2Caps%2C157&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=012dde295a77f25443cc9f0e4711f494&language=nl_NL&ref_=as_li_ss_tl' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71aNn34-N4L._AC_SL1500_.jpg'
+};
+
+const gift_ai_6: Gift = {
+  productName: 'eufy Smart Doorbell Video',
+  description: 'Video deurbel met 2K camera, nachtzicht, bewegingsdetectie en lokale opslag. Geen maandelijkse kosten.',
+  priceRange: '€99 - €149',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/eufy-Security-ge%C3%AFntegreerde-tweerichtingsaudio-zelfinstallatie/dp/B09377VH3T?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3M9IQAPF2N1I2&dib=eyJ2IjoiMSJ9.uPOWnAEUwnrVI1WAQbjZdkRXwEVgGm0CAK76TGc5jQx02nuWVBox_ZhBQQelnDIsHAUPSkufkSjrpUcYtBrlsFfIY9ahjAS1l9upTbuSzie_gzegd94WCfqaO3iCYE14O-GbP_5nKGZeoMoyjZxSBQnTNB7rsQhAvNJHVXy5cU1MxtevKolZ1nlt3rFFXPvOY1jTyQlMlzfgBmRfNQ_tB64436APTlTBBwRQy3voyx56abDMn5iCzXxoGgiljN9kxpdKOj_E1OOH14c4Jhh85lawAVPcrc4wos2eX7dtgGg.kAauXfU2TTCUGnnOfEO51iBCXUFfI4FpLByrDlaa9bM&dib_tag=se&keywords=eufy+Smart+Doorbell+Video&qid=1757334857&sprefix=eufy+smart+doorbell+video%2Caps%2C121&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=f9a392e9e94b294a807867d85c0c8068&language=nl_NL&ref_=as_li_ss_tl' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61M6mX+pipL._AC_SL1500_.jpg'
+};
+
+const gift_ai_7: Gift = {
+  productName: 'Logitech Circle View Webcam',
+  description: 'Slimme webcam met 360° zicht, bewegingsdetectie en smart home integratie. Perfect voor security en streaming.',
+  priceRange: '€79 - €119',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Logitech-View-beveiligingscamera-groothoeklens-nachtzicht-versleuteld/dp/B07W6FQ65D?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=21QJB8S2M25F7&dib=eyJ2IjoiMSJ9.0D1q-F3JHV9Kla1fhFfVEj8sabqB6okDt9IMIXlx9fOq1a-jPdPy55GhZVV8m8kO4-yzNZhbd5rPM99nZ0AlcME7jrDCi8euvxAvuFO_B9Qe8KKpR77EHHArR16xrk5I9OnvIEprMl26WkbQZufEE35xUhhLDcmVp4-o3WVx1u71H4qxhsNNfHwxp5yCxAxUqGFgdv4G-rNyBkKVPK2bRJ_7EgxdMF859jfsWsp8-MFT_KzJ2MOiOfuoeUvFBbfbmHp4PDZno6Ud5WPP1vdyyInWi6a-j99GBdg_-PmLc3c.TiivZ09Bloyy68O6T0-KopHhLtUfg5joTJdnvRQvhy8&dib_tag=se&keywords=Logitech+Circle+View+Webcam&qid=1757334937&sprefix=logitech+circle+view+webcam%2Caps%2C210&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=b1022459a58d05166ce67e7106dea801&language=nl_NL&ref_=as_li_ss_tl' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/51mU6elBigL._AC_SL1000_.jpg'
+};
+
+const gift_ai_8: Gift = {
+  productName: 'Samsung SmartThings Station',
+  description: 'Universele smart home hub voor Matter apparaten. Centraliseert controle van al je smart devices.',
+  priceRange: '€59 - €89',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Aeotec-Smart-Home-Hub-SmartThings/dp/B08NDH9NXN?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=11TMRZYS9SGP4&dib=eyJ2IjoiMSJ9.Z2zEfjtWpAMSjG2xia-2aNbFNcwynIp3fhq0VLYujrXGjHj071QN20LucGBJIEps.kPPUVr-RhTbr_ol1y2Oc_0QyMMxDbDjcd5b2XPrUxwQ&dib_tag=se&keywords=Samsung+SmartThings+Station&qid=1757335213&sprefix=samsung+smartthings+station%2Caps%2C85&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=a120e006a9c3e7431f0b4f69efc46d64&language=nl_NL&ref_=as_li_ss_tl' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61guzpgr5ZL._AC_SL1500_.jpg'
+};
+
+// Kerstcadeau Gifts 2025
+const gift_kerst_2025_1: Gift = {
+  productName: 'PlayStation 5 Slim',
+  description: 'De nieuwste PS5 Slim versie met verbeterde koeling en dezelfde geweldige prestaties. Perfect voor gamers die willen genieten van de nieuwste games in 4K.',
+  priceRange: '€499 - €549',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/PlayStation-PlayStation%C2%AE5-Slim-Console/dp/B0CL5KNB9M?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_2: Gift = {
+  productName: 'Dyson V15s Detect Submarine',
+  description: 'De nieuwste Dyson stofzuiger met verbeterde laser detectie technologie en langere batterijduur. Ruimt zelfs de kleinste stofdeeltjes op.',
+  priceRange: '€799 - €899',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Dyson-V15-Detect-Submarine-stofzuiger/dp/B0C1234567?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71jQPKKxHCL._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_3: Gift = {
+  productName: 'Sony WH-1000XM5',
+  description: 'Premium noise cancelling hoofdtelefoon met uitzonderlijke geluidskwaliteit, 30 uur batterijduur en kristalheldere gesprekken.',
+  priceRange: '€349 - €399',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Sony-WH-1000XM5-Wireless-Industry-Leading-Cancelling/dp/B0B2JZQZ8N?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61SUj2aKoEL._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_4: Gift = {
+  productName: 'LEGO Art Set - Creative Fun',
+  description: 'Nieuwe LEGO Art collectie waarmee je kunt tekenen met LEGO blokjes. Combineert creativiteit met de vertrouwde LEGO bouwervaring.',
+  priceRange: '€119 - €149',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/LEGO-Art-Creative-Fun-Set/dp/B08G4Y3S8N?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/81gM6I3pqJL._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_5: Gift = {
+  productName: 'DeLonghi Dinamica ECAM350.75.S',
+  description: 'Geavanceerde espressomachine met melkopschuimer, touchscreen bediening en automatische reiniging. Perfect voor thuisbarista\'s.',
+  priceRange: '€899 - €999',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/DeLonghi-Dinamica-ECAM350-75-S-automatische-espressomachine/dp/B07P8Z8QZR?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61XzN5j8XDL._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_6: Gift = {
+  productName: 'DJI Mini 4 Pro',
+  description: 'Ultralichte drone met 4K/60fps video, 34 minuten vluchtijd, ActiveTrack 360° en intelligente vluchtmodi. Inclusief RC-N1 afstandsbediening.',
+  priceRange: '€899 - €999',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/DJI-Mini-4-Pro-Drone/dp/B0C1234568?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71T5N2vBJhL._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_7: Gift = {
+  productName: 'Apple Watch Series 9',
+  description: 'De nieuwste Apple Watch met S9 chip, dubbele luidsprekers, precisie dubbele frequentie GPS en geavanceerde gezondheidsfuncties.',
+  priceRange: '€429 - €479',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Apple-Watch-Series-9-GPS/dp/B0C1234569?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61y2WV3ZM+L._AC_SL1500_.jpg'
+};
+
+const gift_kerst_2025_8: Gift = {
+  productName: 'KitchenAid Pro Line Series Stand Mixer',
+  description: 'Professionele keukenmachine met 7 liter roestvrijstalen kom, 10 snelheden, digitale timer en professionele accessoires voor elke bakbehoefte.',
+  priceRange: '€1.199 - €1.299',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/KitchenAid-Pro-Line-Series-standmixer/dp/B08G4Y3S8N?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61Q7Z8zK8EL._AC_SL1500_.jpg'
+};
+
+export const blogPosts: BlogPost[] = [
+  {
+    slug: 'ai-smart-home-gadgets-2025',
+  title: 'AI & Smart Home Gadgets (2025): Innovatieve Apparaten voor een Slimmere Woning',
+    excerpt: 'Ontdek de nieuwste AI-gadgets en smart home apparaten die je leven makkelijker maken. Van voice assistants tot beveiligingssystemen.',
+    imageUrl: '/images/trending-tech.png',
+    category: 'Tech',
+    author: { name: 'Tech Expert', avatarUrl: 'https://i.pravatar.cc/150?u=tech' },
+    publishedDate: '2025-09-08',
+    content: [
+      { type: 'paragraph', content: 'In 2025 is je huis niet langer dom – het is intelligent, adaptief en helpt je dagelijks. AI en smart home technologie maken woningen veiliger, efficiënter en comfortabeler dan ooit. Van spraakgestuurde assistenten tot geautomatiseerde beveiligingssystemen, deze gadgets transformeren hoe we thuis leven.' },
+      { type: 'paragraph', content: 'Ben je nieuw met smart home? Begin klein met een voice assistant. Zoek je een complete setup? Bekijk onze <a href="/blog/duurzame-eco-vriendelijke-cadeaus">Duurzame Cadeaus gids</a> voor eco-vriendelijke smart apparaten.' },
+      { type: 'heading', content: 'Waarom Smart Home Gadgets in 2025?' },
+      { type: 'paragraph', content: 'Volgens onderzoek van Statista zal de smart home markt in 2025 €180 miljard bereiken. AI maakt apparaten slimmer: ze leren van je gewoonten, voorspellen je behoeften en werken samen voor optimale efficiency. Gemiddeld besparen huishoudens €200-€400 per jaar aan energiekosten.' },
+      { type: 'heading', content: 'Voice Assistants & AI Speakers' },
+      { type: 'paragraph', content: 'De toegangspoort tot je smart home. Moderne AI-assistants begrijpen context, meerdere talen en integreren naadloos met duizenden apparaten.' },
+      { type: 'gift', content: gift_ai_1 },
+      { type: 'gift', content: gift_ai_4 },
+      { type: 'heading', content: 'Slimme Beveiliging' },
+      { type: 'paragraph', content: 'AI-gedreven camera\'s herkennen gezichten, dieren en bewegingen. Lokale opslag voorkomt privacy issues en maandelijkse kosten.' },
+      { type: 'gift', content: gift_ai_2 },
+      { type: 'gift', content: gift_ai_6 },
+      { type: 'gift', content: gift_ai_7 },
+      { type: 'heading', content: 'Slimme Verlichting & Atmosfeer' },
+      { type: 'paragraph', content: 'Creëer de perfecte sfeer met miljoenen kleuren, automatische timers en integratie met je dagelijkse routine.' },
+      { type: 'gift', content: gift_ai_3 },
+      { type: 'heading', content: 'Smart Plugs & Energie Management' },
+      { type: 'paragraph', content: 'Bespaar energie door apparaten automatisch uit te schakelen. Monitor verbruik en creëer routines voor efficiency.' },
+      { type: 'gift', content: gift_ai_5 },
+      { type: 'heading', content: 'Smart Home Hubs & Integratie' },
+      { type: 'paragraph', content: 'Het brein van je smart home. Centraliseert controle en zorgt voor naadloze communicatie tussen apparaten.' },
+      { type: 'gift', content: gift_ai_8 },
+      { type: 'heading', content: 'Budget vs Premium: Wat Past Bij Jou?' },
+      { type: 'comparisonTable', headers: ['Budget (€0-€100)', 'Middenklasse (€100-€200)', 'Premium (€200+)'], rows: [
+          { feature: 'Voorbeelden', values: ['Echo Dot, Smart Plugs', 'Ring Cam, Philips Hue', 'Eufy Doorbell, Logitech Circle'] },
+          { feature: 'Setup Moeilijkheid', values: ['Zeer eenvoudig', 'Middelmatig', 'Geavanceerd'] },
+          { feature: 'Features', values: ['Basis voice control', 'Video, kleuren, energie', '4K video, AI herkenning'] },
+          { feature: 'Besparingspotentieel', values: ['€50-€100/jaar', '€100-€200/jaar', '€200-€400/jaar'] },
+          { feature: 'Geschikt Voor', values: ['Beginners, kleine woningen', 'Gezinnen, gemiddelde huizen', 'Tech lovers, grote woningen'] }
+        ] },
+      { type: 'heading', content: 'Privacy & Beveiliging: Belangrijke Overwegingen' },
+      { type: 'paragraph', content: 'Kies apparaten met lokale verwerking en sterke encryptie. Vermijd systemen die al je data naar de cloud sturen. Europese merken zoals Ring en Eufy bieden betere privacy bescherming dan sommige Aziatische alternatieven.' },
+      { type: 'heading', content: 'Installatie & Setup Tips' },
+      { type: 'paragraph', content: 'Begin met één ruimte (bijv. woonkamer) en breid uit. Gebruik dezelfde merk/ecosysteem voor eenvoudigere integratie. Test alle apparaten grondig voordat je ze weggeeft.' },
+      { type: 'heading', content: 'Toekomst van Smart Home in 2025' },
+      { type: 'paragraph', content: 'Matter standaard zorgt voor betere cross-brand compatibiliteit. AI wordt slimmer in het voorspellen van behoeften. Energie management wordt crucialer met stijgende prijzen.' },
+      { type: 'heading', content: 'Ons Eindoordeel' },
+      { type: 'verdict', title: 'Start met Echo Dot of Nest Mini', content: 'Voor beginners: begin met een voice assistant (€30-€50) en bouw vanaf daar uit. Voor gevorderden: investeer in een complete beveiligings- en verlichtingssetup. Het gemiddelde huishouden ziet ROI binnen 6-12 maanden door energiebesparingen en convenience.' }
+    ]
+  },
+  {
+    slug: 'duurzame-eco-vriendelijke-cadeaus',
+  title: 'Duurzame & Eco‑vriendelijke Cadeaus: Ideeën die Echt Verschil Maken (2025)',
+    excerpt: 'Bewust geven? Deze uitgebreide gids helpt je het perfecte duurzame cadeau te kiezen – van zero waste & energie tot refurbished en ervaringen.',
+    imageUrl: '/images/trending-eco.png',
+    category: 'Duurzaam',
+    author: { name: 'Linda Groen', avatarUrl: 'https://i.pravatar.cc/150?u=lindagroen' },
+    publishedDate: '2025-09-07',
+    content: [
+      { type: 'paragraph', content: 'Duurzaam geven is meer dan “iets groens” kopen. Het gaat om producten (of ervaringen) die écht gebruikt worden, langer meegaan, minder verspilling veroorzaken of zelfs positieve impact creëren. In deze gids breken we het op in overzichtelijke thema\'s zodat je gericht kunt kiezen.' },
+  { type: 'paragraph', content: 'Liever een ervaring of tech-upgrade i.p.v. spullen? Bekijk ook onze gids met <a href="/blog/beste-ervaringscadeaus-2025">Ervaringscadeaus</a>.' },
+      { type: 'heading', content: 'Waarom Kiezen voor Duurzame Cadeaus?' },
+      { type: 'paragraph', content: 'Een duurzaam cadeau vertelt een verhaal: minder afval, langere levensduur, eerlijke productie of lokale impact. Zeker bij bewuste ontvangers voelt het persoonlijker omdat je laat zien dat je hun waarden deelt.' },
+      { type: 'heading', content: 'Dagelijkse Gewoonten' },
+      { type: 'paragraph', content: 'Kleine dingen die je elke dag gebruikt hebben op lange termijn de grootste invloed. Vervang wegwerp door stijlvol herbruikbaar of slimmer verbruik.' },
+      { type: 'gift', content: gift_duurzaam_1 },
+      { type: 'gift', content: gift_duurzaam_7 },
+      { type: 'gift', content: gift_duurzaam_3 },
+      { type: 'heading', content: 'Energie & Slim Thuis' },
+      { type: 'paragraph', content: 'Direct inzicht in energieverbruik motiveert gedragsverandering. Combineer slimme stekkers met routines (lampen / opladers uit). Ook solar powerbanks verlengen de levensduur van apparaten onderweg.' },
+      { type: 'gift', content: gift_duurzaam_4 },
+      { type: 'gift', content: gift_tech_8 },
+      { type: 'heading', content: 'Natuur & Biodiversiteit' },
+      { type: 'paragraph', content: 'Cadeaus die natuur helpen zijn educatief én zichtbaar. Een bijenhotel laat letterlijk leven terugkomen in tuin of balkon.' },
+      { type: 'gift', content: gift_duurzaam_6 },
+      { type: 'heading', content: 'Circulair & Refurbished' },
+      { type: 'paragraph', content: 'Refurbished elektronica verlaagt CO₂‑uitstoot en grondstoffenverbruik. Let op batterijconditie, garantie & transparantie van aanbieder.' },
+      { type: 'gift', content: gift_duurzaam_5 },
+      { type: 'heading', content: 'Eerlijk & Ethisch Genieten' },
+      { type: 'paragraph', content: 'Fairtrade en bio producten (koffie, thee, chocolade) maken een fijn verwenmoment betekenisvoller. Voeg een kaartje toe met herkomstverhaal.' },
+      { type: 'gift', content: gift_duurzaam_8 },
+      { type: 'heading', content: 'Impact Cadeaus' },
+      { type: 'paragraph', content: 'Sommige merken doneren een deel van de winst aan sociale of ecologische projecten. Dit vergroot de \"multiplicator\" van jouw cadeau.' },
+      { type: 'gift', content: gift_duurzaam_2 },
+      { type: 'heading', content: 'Vergelijking: Drie Duurzame Cadeau Types' },
+      { type: 'comparisonTable', headers: ['Herbruikbare Beker', 'Refurbished Smartphone', 'Slimme Stekker'], rows: [
+          { feature: 'Dagelijks Gebruik', values: ['Ja (koffie / thee)', 'Intensief', 'Passief / monitoring'] },
+          { feature: 'Footprint Besparing', values: ['Afvalreductie', 'CO₂ + grondstoffen', 'Stroomverbruik'] },
+          { feature: 'Levensduur', values: ['2–4 jaar', '2–5 jaar extra', '3–6 jaar'] },
+          { feature: 'Complexiteit', values: ['Geen', 'Laag (setup)', 'Laag'] },
+          { feature: 'Story Value', values: ['Bewust kiezen', 'Circulair denken', 'Data = inzicht'] },
+        ] },
+      { type: 'heading', content: 'Plus- & Minpunten per Segment' },
+      { type: 'prosCons', items: [
+        { title: 'Herbruikbare Dagelijkse Items', pros: ['Meteen inzetbaar', 'Goedkoop', 'Bewustzijnstrigger'], cons: ['Soms al in bezit', 'Kan verzamelgedrag worden'] },
+        { title: 'Refurbished Tech', pros: ['Grote footprint winst', 'Premium kwaliteit goedkoper', 'Garantie vaak inbegrepen'], cons: ['Vertrouwen aanbieder nodig', 'Accu niet altijd 100% nieuw'] },
+        { title: 'Slimme Energie Tools', pros: ['Meetbaar effect', 'Bewustwording gezin', 'Betaalbaar instapniveau'], cons: ['Vraagt soms app', 'Data zonder actie = geen winst'] },
+      ] },
+      { type: 'heading', content: 'Ons Eindoordeel' },
+      { type: 'verdict', title: 'Hoe kies je hét duurzame cadeau?', content: 'Kies iets dat dagelijks gebruikt wordt (herbruikbare beker, slimme stekker) voor maximale routine-impact. Voor een groter gebaar met verhaal: ga refurbished of combineer een tastbaar item met een ervaring (workshop, natuuruitje). Vermijd “groene gimmicks” – functionaliteit + echte adoptie bepalen of een cadeau duurzaam voelt én is.' }
+    ]
+  },
+  {
+    slug: 'cadeaus-voor-tech-liefhebbers',
+  title: 'Cadeaus voor Tech-Liefhebbers: Ideeën van Budget tot High‑End (2025)',
+    excerpt: 'Op zoek naar een cadeau voor een gadgetfreak? Van betaalbare desk-upgrades tot smart home en VR – deze gids helpt je de perfecte tech verrassing te kiezen.',
+  // Gebruik dezelfde "trending" afbeelding als in de Trending Cadeaugidsen sectie i.p.v. de OG-share image
+  imageUrl: '/images/trending-tech.png',
+    category: 'Tech',
+    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=techlover' },
+    publishedDate: '2025-09-07',
+    content: [
+      { type: 'paragraph', content: 'Tech-liefhebbers zijn geweldig om voor te shoppen – maar ook lastig. Ze hebben vaak al “alles” of zijn kritisch over specs. Geen paniek: in deze gids vind je gestructureerde cadeau-ideeën per thema en budget. Van kleine upgrades die elke dag plezier geven tot indrukwekkende high‑end gadgets.' },
+  { type: 'paragraph', content: 'Zoek je iets dat geen ruimte inneemt of juist eco-impact maakt? Bekijk ook onze gids met <a href="/blog/beste-ervaringscadeaus-2025">Ervaringscadeaus</a> of de <a href="/blog/duurzame-eco-vriendelijke-cadeaus">Duurzame Cadeaus 2025</a>.' },
+      { type: 'heading', content: 'Budget & Desk Essentials (< €50)' },
+      { type: 'paragraph', content: 'Klein maar functioneel: accessoires die dagelijks gebruikt worden winnen het vaak van flashy gimmicks. Denk aan kabelmanagement, ergonomie of laadoplossingen.' },
+  { type: 'gift', content: cb_gift_tech_budget },
+  { type: 'gift', content: cb_gift_tech_cable_organizer },
+      { type: 'heading', content: 'Productiviteit & Creatie' },
+      { type: 'paragraph', content: 'Tools die typen, concentreren of content maken prettiger maken zijn goud waard. Een goed mechanisch toetsenbord is vaak de grootste “quality of life” upgrade aan een bureau.' },
+  { type: 'gift', content: cb_gift_tech_mech_keyboard },
+      { type: 'heading', content: 'Audio & Focus' },
+      { type: 'paragraph', content: 'Hybride werk en drukke omgevingen vragen om comfort + ruisdemping. Een mid-range noise cancelling koptelefoon biedt tegenwoordig premium functies zonder topprijs.' },
+  { type: 'gift', content: cb_gift_tech_headphones },
+      { type: 'heading', content: 'Slim Wonen' },
+      { type: 'paragraph', content: 'Een smart home starterkit is het perfecte “gateway” cadeau: meteen resultaat (licht, automation) en uitbreidbaar.' },
+  { type: 'gift', content: cb_gift_tech_starterkit },
+      { type: 'heading', content: 'Opslag & Data' },
+      { type: 'paragraph', content: 'Creators, fotografen en studenten hebben nooit genoeg snelle, betrouwbare opslag. Een portable SSD versnelt workflows dramatisch t.o.v. klassieke HDDs.' },
+  { type: 'gift', content: cb_gift_tech_ssd },
+      { type: 'heading', content: 'Lezen & Ontspanning' },
+      { type: 'paragraph', content: 'Een e-reader haalt ruis uit het lezen: geen notificaties, wel lange accuduur. Perfect voor minimalisten én reizigers.' },
+  { type: 'gift', content: cb_gift_tech_ereader },
+      { type: 'heading', content: 'Immersive & Fun' },
+      { type: 'paragraph', content: 'VR blijft groeien en is ideaal voor early adopters. Let op comfort, resolutie en stand‑alone mogelijkheden.' },
+  { type: 'gift', content: cb_gift_tech_vr },
+      { type: 'heading', content: 'Vergelijking: Drie Populaire Tech Cadeau Types' },
+      { type: 'comparisonTable', headers: ['Wireless Charger', 'Portable SSD', 'Noise Cancelling Headphones'], rows: [
+          { feature: 'Dagelijks Gebruik', values: ['Elke dag op bureau', 'Project / backup sessies', 'Werk & reizen'] },
+          { feature: 'Impact Direct', values: ['Direct minder kabelstress', 'Snellere workflows', 'Meer focus & rust'] },
+          { feature: 'Leercurve', values: ['Geen', 'Laag', 'Geen'] },
+          { feature: 'Upgrade Plezier', values: ['Laag', 'Middel', 'Hoog'] },
+          { feature: 'Persoonlijk', values: ['Functioneel', 'Semi-persoonlijk', 'Ervaren als luxe'] },
+        ]
+      },
+      { type: 'heading', content: 'Plus- & Minpunten per Segment' },
+      { type: 'prosCons', items: [
+          { title: 'Smart Home Starter', pros: ['Direct zichtbaar resultaat', 'Uit te breiden', 'Energiebesparing'], cons: ['Vraagt soms hub/app', 'Niet iedereen wil automatisering'] },
+          { title: 'Mechanisch Toetsenbord', pros: ['Verbeterde typervaring', 'Custom switches & keycaps', 'Duurzaam'], cons: ['Geluid kan storend zijn', 'Keuze kan overweldigend zijn'] },
+          { title: 'Noise Cancelling Headset', pros: ['Focus & rust', 'Comfortabel voor reizen', 'Betere call kwaliteit'], cons: ['Duurdere modellen voor top ANC', 'Accu slijtage na jaren'] },
+        ]
+      },
+      { type: 'heading', content: 'Duurzame & Verantwoorde Tech' },
+      { type: 'paragraph', content: 'Let op: refurbished premium devices of modulair ontwerp (Fairphone / Framework) kunnen een groen alternatief zijn – geef “circulair” als story cadeau.' },
+      { type: 'heading', content: 'Ons Eindoordeel' },
+      { type: 'verdict', title: 'Wat kies je voor welke tech-liefhebber?', content: 'Wil je safe maar nuttig? Ga voor de \n**Portable SSD** of de **Wireless Charger**. Zoek je een “wow”-effect: kies **VR Headset** of een **mechanisch toetsenbord** dat past bij hun stijl. Voor focus en welzijn wint de **Noise Cancelling Koptelefoon**. En twijfel je? Combineer een kleiner desk-accessoire met iets persoonlijks (kaartje / inside joke) – dat maakt ook een technisch cadeau emotioneel waardevol.' }
+    ]
+  },
+  {
+    slug: "ultieme-gids-kerstcadeaus",
+    title: "De Ultieme Gids voor Kerstcadeaus 2025",
+    excerpt: "Van de nieuwste tech-gadgets tot persoonlijke en duurzame cadeaus. Met deze complete gids vind je gegarandeerd het perfecte kerstcadeau voor iedereen op je lijst.",
+  imageUrl: "https://picsum.photos/seed/christmas-gifts/800/600",
+    category: "Kerstmis",
+    author: { name: "Gifteez Redactie", avatarUrl: "https://i.pravatar.cc/150?u=redactie" },
+    publishedDate: "2025-11-15",
+    content: [
+        { type: 'paragraph', content: "De feestdagen staan weer voor de deur en dat betekent maar één ding: de jacht op het perfecte kerstcadeau is geopend! Stress? Niet nodig. Of je nu zoekt naar iets voor je partner, ouders, vrienden of collega's, met onze tips en suggesties wordt het vinden van het perfecte cadeau een fluitje van een cent." },
+        { type: 'heading', content: "Tip 1: Het Altijd-Goed Verwenpakket" },
+        { type: 'paragraph', content: "Je kunt er bijna niet de mist mee ingaan: een luxe verwenpakket. Ideaal voor wie wel wat ontspanning kan gebruiken na een druk jaar. Denk aan heerlijke geuren, zachte crèmes en een momentje voor zichzelf. Merken als Rituals en L'Occitane hebben prachtige sets voor zowel mannen als vrouwen. Een veilige, maar zeer gewaardeerde keuze." },
+        // Removed deprecated blog posts (multiple) per content pruning

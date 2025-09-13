@@ -155,10 +155,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <span className="text-4xl">🎯</span>
             </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              AI GiftFinder
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+            <h1 className="typo-h1 mb-6 leading-tight text-white">AI GiftFinder</h1>
+            <p className="typo-lead text-white/90 max-w-2xl mx-auto">
               Vul de details in en laat onze AI het perfecte cadeau voor je vinden in slechts 30 seconden!
             </p>
           </div>

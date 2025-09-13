@@ -49,13 +49,13 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <HeartIcon className="w-10 h-10 text-white" />
             </div>
-            <h1 className="font-display text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="typo-h1 mb-6 text-white leading-tight">
               Ons Verhaal
               <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
                 Cadeau Stress? Voorbij!
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8">
+            <p className="typo-lead text-white/90 max-w-3xl mx-auto mb-8">
               Wij geloven dat het geven van een cadeau een vreugdevolle ervaring moet zijn, geen bron van stress. Daarom hebben we de kracht van AI ingezet om jou te helpen het perfecte geschenk te vinden.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -83,10 +83,10 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent text-white rounded-full mb-6">
               <TargetIcon className="w-8 h-8" />
             </div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4">
+            <h2 className="typo-h2 mb-4">
               Hoe het werkt in 3 simpele stappen
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="typo-body text-gray-600 max-w-2xl mx-auto">
               Van stress naar succes in slechts enkele minuten
             </p>
           </div>
@@ -162,14 +162,14 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                 <span className="text-sm font-semibold text-primary uppercase tracking-wide">Ons Verhaal</span>
               </div>
 
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-primary leading-tight">
+              <h2 className="typo-h2 leading-tight">
                 Geboren uit een
                 <span className="block bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
                   Bekend Probleem
                 </span>
               </h2>
 
-              <div className="space-y-4 text-gray-600 leading-relaxed text-lg">
+              <div className="space-y-4 text-gray-600 leading-relaxed typo-body">
                 <p>
                   Gifteez.nl is geboren uit een bekend probleem: de jaarlijkse zoektocht naar originele cadeaus voor verjaardagen, feestdagen en jubilea. We dachten: dat moet makkelijker kunnen.
                 </p>
@@ -207,10 +207,10 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent text-white rounded-full mb-6">
               <UserIcon className="w-8 h-8" />
             </div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4">
+            <h2 className="typo-h2 mb-4">
               Ons Team
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="typo-body text-gray-600 max-w-2xl mx-auto">
               De mensen achter Gifteez.nl die werken aan een cadeaulozere wereld
             </p>
           </div>
@@ -258,7 +258,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               <GiftIcon className="w-10 h-10 text-white" />
             </div>
 
-            <h2 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <h2 className="typo-h1 mb-6 leading-tight text-white">
               Klaar om de
               <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
                 Cadeau Stress
@@ -266,7 +266,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               Achter Je Te Laten?
             </h2>
 
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="typo-lead text-white/90 max-w-2xl mx-auto mb-10">
               Probeer de GiftFinder vandaag nog en ontdek hoe makkelijk het kan zijn om het perfecte cadeau te vinden.
             </p>
 

@@ -39,24 +39,25 @@ export const quizResults: Record<string, QuizResult> = {
     title: "De Huiselijke Genieter",
     description: "Deze persoon hecht waarde aan comfort, rust en gezelligheid. Een perfect cadeau voor hen maakt hun huis nog aangenamer of helpt ze te ontspannen. Denk aan zachte dekens, sfeerverlichting, een goed boek of een luxe set voor een spa-dag thuis.",
     recommendedInterests: "Wellness, Lezen, Films, Koken, Interieur",
-    relatedBlogSlugs: ["ultieme-gids-kerstcadeaus", "duurzame-cadeaus-die-goed-doen"],
+  // Updated September 2025: prune removed blog slugs
+  relatedBlogSlugs: ["ai-smart-home-gadgets-2025", "duurzame-eco-vriendelijke-cadeaus"],
   },
   adventurer: {
     title: "De Avontuurlijke Ontdekker",
     description: "Stilzitten is niks voor deze persoon! Ze houden van nieuwe ervaringen, reizen en de buitenlucht. Een geweldig cadeau is iets dat hun volgende avontuur ondersteunt, zoals een goede rugzak, een portable speaker, een outdoor-gadget of een reisgids.",
     recommendedInterests: "Reizen, Sport, Outdoor, Fotografie, Avontuur",
-    relatedBlogSlugs: ["originele-cadeaus-voor-de-man", "duurzame-cadeaus-die-goed-doen"],
+  relatedBlogSlugs: ["ai-smart-home-gadgets-2025", "duurzame-eco-vriendelijke-cadeaus"],
   },
   foodie: {
     title: "De Culinaire Fijnproever",
     description: "Het leven van deze persoon draait om lekker eten en drinken. Ze zijn vaak in de keuken te vinden of proberen het nieuwste restaurant in de stad. Maak ze blij met een speciaal kookboek, een luxe ingrediënt, een mooie pannenset, of een workshop van een topchef.",
     recommendedInterests: "Koken, Eten, Wijn, Barbecue, Restaurants",
-    relatedBlogSlugs: ["ultieme-gids-kerstcadeaus", "originele-cadeaus-voor-de-man"],
+  relatedBlogSlugs: ["duurzame-eco-vriendelijke-cadeaus", "ai-smart-home-gadgets-2025"],
   },
   creative: {
     title: "De Creatieve Ziel",
     description: "Deze persoon heeft een passie voor kunst, muziek, design en zelfexpressie. Ze waarderen unieke, handgemaakte en esthetisch mooie dingen. Denk aan een prachtig notitieboek, een set professionele potloden, een museumkaart, of een design-object voor in huis.",
     recommendedInterests: "Kunst, Muziek, Design, Fotografie, DIY",
-    relatedBlogSlugs: ["valentijnsdag-cadeau-gids", "duurzame-cadeaus-die-goed-doen"],
+  relatedBlogSlugs: ["duurzame-eco-vriendelijke-cadeaus", "ai-smart-home-gadgets-2025"],
   },
 };

@@ -4,6 +4,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---------------------------------------
+   Semantic Typography Utilities
+   Usage: apply .typo-h1 … .typo-lead instead van ruwe text-4xl/md:text-6xl
+----------------------------------------- */
+@layer utilities {
+  .typo-h1 { @apply font-display text-h1 text-primary; }
+  .typo-h2 { @apply font-display text-h2 text-primary; }
+  .typo-h3 { @apply font-display text-h3 text-primary; }
+  .typo-h4 { @apply font-display text-h4 text-primary; }
+  .typo-h5 { @apply font-display text-h5 text-primary; }
+  .typo-lead { @apply text-lead text-slate-600; }
+  .typo-body { @apply text-body text-slate-700; }
+  .typo-small { @apply text-small text-slate-500 font-medium; }
+  .typo-micro { @apply text-micro uppercase tracking-wide text-slate-500; }
+}
+
 /* Accessibility: improved focus outlines */
 :focus-visible {
   outline: 2px solid theme('colors.accent');

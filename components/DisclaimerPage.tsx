@@ -37,10 +37,10 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <span className="text-3xl">⚖️</span>
             </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="typo-h1 mb-6 leading-tight text-white">
               Disclaimer
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            <p className="typo-lead text-white/90 max-w-3xl mx-auto">
               Algemene voorwaarden en juridische informatie
             </p>
           </div>
@@ -143,7 +143,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ navigateTo }) => {
                 met ons op.
               </p>
 
-              <div className="mt-12 p-6 bg-blue-50 rounded-2xl border border-blue-200">
+              <div className="mt-12 p-6 bg-emerald-50 rounded-2xl border border-emerald-200">
                 <h3 className="text-lg font-semibold text-blue-900 mb-2">Belangrijke Opmerking</h3>
                 <p className="text-blue-800">
                   Deze disclaimer is bedoeld om onze rechten en plichten duidelijk te maken. Het gebruik van Gifteez.nl

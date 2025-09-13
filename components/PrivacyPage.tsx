@@ -37,10 +37,10 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <span className="text-3xl">🔒</span>
             </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="typo-h1 mb-6 leading-tight text-white">
               Privacybeleid
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            <p className="typo-lead text-white/90 max-w-3xl mx-auto">
               Hoe wij omgaan met uw persoonsgegevens
             </p>
           </div>

@@ -3,6 +3,23 @@
 - Build: `npm run build`
 - Deploy (Firebase Hosting): `npm run deploy`
 
+### Build lifecycle scripts
+De build pipeline voert automatisch de volgende stappen uit:
+
+1. `prebuild` (dry-run image variants + meta assets)
+   - `generate-sitemap.mjs`
+   - `generate-favicons.mjs`
+   - `generate-pinned-tab.mjs`
+   - `generate-responsive-images.mjs --dry-run` (alleen logging, geen schrijven)
+2. `predeploy`
+   - `generate-responsive-images.mjs` (echte generatie WebP / AVIF indien nog niet aanwezig)
+3. `deploy`
+   - `check:images` integriteitscontrole
+   - `build`
+   - `firebase deploy --only hosting`
+
+Voordeel: idempotente image variant generatie + snelle feedback zonder per ongeluk large batch writes tijdens lokaal itereren.
+
 ## Environment
 Zet sleutels in `.env` met VITE_ prefix (zie `.env.example`).
 
@@ -22,6 +39,25 @@ Statische hero / trending afbeeldingen staan in `public/images/`. Vervang de pla
 Optimalisatie tip:
 - Gebruik bijv. Squoosh of `sharp` script voor batch compressie.
 - Overweeg WebP/AVIF varianten en `<picture>` voor verdere besparing.
+
+### Automatische variant generatie
+Tijdens build / pre-deploy kan het script `scripts/generate-responsive-images.mjs` gedraaid worden om voor bepaalde whitelisted bestanden (`trending-*`, `collection-*`, `planner*`, `about-*`, `og-tech-gifts*`, `quiz-illustration*`) WebP en AVIF varianten te genereren.
+
+Gedrag:
+- Slaat bronnen over die geen `.png`, `.jpg`, `.jpeg` extensie hebben.
+- Slaat conversie over als zowel `.webp` als `.avif` al bestaan (idempotent).
+- Resized naar max breedte 800px (geen upscaling) en quality: WebP 82 / AVIF 50.
+- Logt gestructureerd (JSON) met status per bestand + eind rapport.
+- `--dry-run` vlag toont wat er zou gebeuren zonder te schrijven.
+- Bij conversiefout wordt een `.failed` kopie aangemaakt voor diagnose.
+
+Voorbeeld gebruik:
+```
+node scripts/generate-responsive-images.mjs --dry-run
+node scripts/generate-responsive-images.mjs
+```
+
+Integratietip: voeg aan `prebuild` of `predeploy` script toe in `package.json` voor automatische uitvoering.
 
 ## Routing
 - Simpele client-side routing via `App.tsx` met pushState; deep links op Firebase Hosting werken dankzij SPA rewrite.

@@ -97,7 +97,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
                 <h4 className="font-semibold text-gray-900 mb-3">Cookie Categorieën</h4>
 
                 {/* Necessary Cookies */}
-                <div className="flex items-start gap-3 mb-3 p-3 bg-blue-50 rounded-lg">
+                <div className="flex items-start gap-3 mb-3 p-3 bg-emerald-50 rounded-lg">
                   <div className="flex-shrink-0 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center mt-0.5">
                     <CheckIcon className="w-3 h-3 text-white" />
                   </div>

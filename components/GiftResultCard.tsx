@@ -28,7 +28,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
   showToast,
   isReadOnly = false,
   isEmbedded = false,
-  imageHeightClass = 'h-48',
+  imageHeightClass = 'h-24 md:h-32 lg:h-40',
   imageFit = 'cover',
   hideAmazonBadge = false,
   candidateVariant = false,
@@ -90,7 +90,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     ? "bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
     : "bg-white rounded-lg shadow-lg overflow-hidden flex flex-col opacity-0 animate-fade-in-up";
 
-  const imageContainerHeight = candidateVariant ? 'h-32 md:h-36' : 'h-24';
+  const imageContainerHeight = candidateVariant ? 'h-32 md:h-36' : imageHeightClass;
 
   return (
     <div
@@ -99,7 +99,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     >
       {/* Only show image section if there's an imageUrl */}
       {gift.imageUrl && gift.imageUrl.trim() !== '' && (
-        <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : 'aspect-square'}`}>
+    <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : imageContainerHeight + ' w-full'}`}>
           {candidateVariant ? (
             <ImageWithFallback
               src={gift.imageUrl}
@@ -118,7 +118,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           {!isReadOnly && (
             <button
               onClick={handleToggleFavorite}
-              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-blue-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-emerald-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600"
               aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
             >
               {isFavorite ? <HeartIconFilled className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
@@ -130,11 +130,11 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
       {/* Add favorite button outside image section if no image */}
       {(!gift.imageUrl || gift.imageUrl.trim() === '') && !isReadOnly && (
         <div className="absolute top-3 right-3">
-          <button
-            onClick={handleToggleFavorite}
-            className="bg-white/80 p-2 rounded-full text-blue-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600"
-            aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
-          >
+            <button
+              onClick={handleToggleFavorite}
+              className="bg-white/80 p-2 rounded-full text-emerald-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
+            >
             {isFavorite ? <HeartIconFilled className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
           </button>
         </div>
@@ -149,22 +149,45 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
         
     {gift.retailers && gift.retailers.length > 0 && (
       <div className={`mt-6 space-y-2 ${candidateVariant ? 'w-full mt-auto' : ''}`}>
-        {gift.retailers.map((retailer, i) => (
-                    <a 
-                      key={i} 
-          href={withAffiliate(retailer.affiliateLink)} 
-                      target="_blank" 
-          rel="noopener noreferrer sponsored nofollow" 
-                      className="block"
-                      aria-label={`Bekijk ${gift.productName} bij ${retailer.name}`}
-                    >
-                        <Button variant={i === 0 ? "accent" : "primary"} className="w-full">
-                            Bekijk bij {retailer.name}
-                        </Button>
-                    </a>
-                ))}
-            </div>
-        )}
+        {gift.retailers.map((retailer, i) => {
+          const affiliateUrl = withAffiliate(retailer.affiliateLink);
+          const handleClick = () => {
+            const eventPayload = {
+              event: 'affiliate_click',
+              retailer: retailer.name,
+              product: gift.productName,
+              url: affiliateUrl,
+              position: i,
+              embedded: isEmbedded,
+              candidateVariant,
+              ts: Date.now()
+            };
+            // Console debug
+            console.log('🛒 Affiliate click', eventPayload);
+            // dataLayer push (GTM)
+            // @ts-ignore
+            window.dataLayer = window.dataLayer || [];
+            // @ts-ignore
+            window.dataLayer.push(eventPayload);
+          };
+          return (
+            <a
+              key={i}
+              href={affiliateUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored nofollow"
+              className="block"
+              aria-label={`Bekijk ${gift.productName} bij ${retailer.name}`}
+              onClick={handleClick}
+            >
+              <Button variant={i === 0 ? 'accent' : 'primary'} className="w-full">
+                Bekijk bij {retailer.name}
+              </Button>
+            </a>
+          );
+        })}
+      </div>
+    )}
 
         {!isReadOnly && !isEmbedded && (
             <div className="mt-6 pt-4 border-t border-gray-200">
