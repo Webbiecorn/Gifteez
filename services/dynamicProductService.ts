@@ -1,11 +1,13 @@
 import { DealItem, DealCategory } from '../types';
+import CoolblueFeedService, { CoolblueProduct } from './coolblueFeedService';
+import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary';
 
 /**
  * Dynamic Product Service for Gifteez
  * Loads and manages products from multiple feeds (Coolblue + Amazon)
  */
 export class DynamicProductService {
-  private static coolblueProducts: any[] = [];
+  private static coolblueProducts: CoolblueProduct[] = [];
   private static amazonProducts: any[] = [];
   private static lastUpdated: Date | null = null;
   private static isLoading = false;
@@ -21,12 +23,11 @@ export class DynamicProductService {
     try {
       console.log('📦 Loading products from multiple sources...');
       
-      // Load Coolblue products (automated feed)
+      // Load Coolblue products (managed feed)
       try {
-        const coolblueResponse = await fetch('/data/sampleProducts.json');
-        const coolblueData = await coolblueResponse.json();
+        const coolblueData = await CoolblueFeedService.loadProducts();
         this.coolblueProducts = coolblueData;
-        console.log(`🔵 Loaded ${this.coolblueProducts.length} Coolblue products`);
+        console.log(`🔵 Loaded ${this.coolblueProducts.length} Coolblue products via feed service`);
       } catch (error) {
         console.warn('⚠️  Could not load Coolblue products:', error);
         this.coolblueProducts = [];
@@ -34,10 +35,15 @@ export class DynamicProductService {
       
       // Load Amazon products (manual feed)
       try {
-        const amazonResponse = await fetch('/data/amazonSample.json');
-        const amazonData = await amazonResponse.json();
-        this.amazonProducts = amazonData;
-        console.log(`� Loaded ${this.amazonProducts.length} Amazon products`);
+        const amazonData = await AmazonProductLibrary.loadProducts();
+        this.amazonProducts = amazonData.map((product: AmazonProduct) => ({
+          ...product,
+          id: product.id ?? product.asin,
+          image: product.image ?? product.imageLarge,
+          imageUrl: product.imageLarge ?? product.image,
+          shortDescription: product.shortDescription ?? product.description,
+        }));
+        console.log(`🟠 Loaded ${this.amazonProducts.length} Amazon products`);
       } catch (error) {
         console.warn('⚠️  Could not load Amazon products:', error);
         this.amazonProducts = [];

@@ -55,7 +55,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
           {/* Icon */}
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center">
               <span className="text-2xl">🍪</span>
             </div>
           </div>
@@ -72,7 +72,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
             <div className="flex flex-wrap gap-3 mb-4">
               <button
                 onClick={handleAcceptAll}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-blue-600 text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-primary via-accent to-accent-hover text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
               >
                 <CheckIcon className="w-4 h-4" />
                 Alles Accepteren
@@ -93,18 +93,18 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
 
             {/* Detailed Preferences */}
             {showDetails && (
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <div className="bg-secondary rounded-lg p-4 mb-4 border border-muted-rose/60">
                 <h4 className="font-semibold text-gray-900 mb-3">Cookie Categorieën</h4>
 
                 {/* Necessary Cookies */}
-                <div className="flex items-start gap-3 mb-3 p-3 bg-emerald-50 rounded-lg">
-                  <div className="flex-shrink-0 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center mt-0.5">
+                <div className="flex items-start gap-3 mb-3 p-3 bg-muted-rose rounded-lg border border-muted-rose/80">
+                  <div className="flex-shrink-0 w-5 h-5 bg-accent rounded-full flex items-center justify-center mt-0.5">
                     <CheckIcon className="w-3 h-3 text-white" />
                   </div>
                   <div className="flex-grow">
                     <div className="flex items-center justify-between">
                       <h5 className="font-medium text-gray-900">Noodzakelijke Cookies</h5>
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Altijd actief</span>
+                      <span className="text-xs bg-light-bg text-accent px-2 py-1 rounded-full">Altijd actief</span>
                     </div>
                     <p className="text-sm text-gray-600 mt-1">
                       Deze cookies zijn essentieel voor de werking van de website en kunnen niet worden uitgeschakeld.
@@ -153,7 +153,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
                 <div className="flex gap-3 mt-4">
                   <button
                     onClick={handleAcceptSelected}
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-blue-600 text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-primary via-accent to-accent-hover text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                   >
                     <CheckIcon className="w-4 h-4" />
                     Voorkeuren Opslaan
@@ -170,10 +170,10 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
 
             {/* Links */}
             <div className="flex flex-wrap gap-4 text-sm">
-              <a href="/privacy" className="text-primary hover:text-blue-600 underline">
+              <a href="/privacy" className="text-primary hover:text-accent underline">
                 Privacybeleid
               </a>
-              <a href="/disclaimer" className="text-primary hover:text-blue-600 underline">
+              <a href="/disclaimer" className="text-primary hover:text-accent underline">
                 Disclaimer
               </a>
             </div>

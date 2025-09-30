@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Category, NavigateTo } from '../types';
 import { HeartIcon, SnowflakeIcon, CakeIcon, GiftIcon } from './IconComponents';
+import Meta from './Meta';
+import JsonLd from './JsonLd';
 
 interface CategoriesPageProps {
   navigateTo: NavigateTo;
@@ -30,8 +32,27 @@ const CategoriesPage: React.FC<CategoriesPageProps> = ({ navigateTo }) => {
     navigateTo('giftFinder', { occasion: categoryName });
   };
 
+  const itemListSchema = useMemo(() => ({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Cadeau categorieën',
+    itemListElement: categories.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      url: `https://gifteez.nl/categories#${encodeURIComponent(c.name)}`
+    }))
+  }), []);
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Meta 
+        title="Cadeau Categorieën — Gifteez.nl" 
+        description="Vind cadeau inspiratie per gelegenheid: verjaardag, kerst, valentijn en meer. Start sneller met kiezen."
+        canonical="https://gifteez.nl/categories"
+        ogImage="https://gifteez.nl/images/trending-eco.png"
+      />
+      <JsonLd data={itemListSchema} id="jsonld-categories-itemlist" />
       <div className="text-center mb-12">
         <h1 className="font-display text-4xl font-bold text-primary">Cadeau Categorieën</h1>
         <p className="mt-2 text-lg text-gray-600">Vind inspiratie voor elke speciale gelegenheid.</p>

@@ -1,8 +1,11 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import Meta from './Meta';
 import ImageWithFallback from './ImageWithFallback';
-import { BlogPost, NavigateTo, Gift, ContentBlock, ShowToast, ComparisonTableBlock, ProsConsBlock, VerdictBlock } from '../types';
-import { blogPosts } from '../data/blogData';
+import { BlogPost, NavigateTo, ContentBlock, ShowToast, ComparisonTableBlock, ProsConsBlock, VerdictBlock, FAQBlock, ImageBlock } from '../types';
+import { useBlogContext } from '../contexts/BlogContext';
+import BlogService from '../services/blogService';
+import { blogPostDataToBlogPost } from '../services/blogMapper';
 import { CalendarIcon, ChevronRightIcon, FacebookIcon, TwitterIcon, WhatsAppIcon, CheckIcon, XCircleIcon, StarIcon, BookOpenIcon, SparklesIcon, TargetIcon, ShareIcon, MailIcon, UserIcon, TagIcon } from './IconComponents';
 import GiftResultCard from './GiftResultCard';
 import { pinterestPageVisit } from '../services/pinterestTracking';
@@ -11,46 +14,11 @@ import SocialShare from './SocialShare';
 
 // Print styles component
 const PrintStyles = () => (
-    <style dangerouslySetInnerHTML={{
-        __html: `
-            @media print                             {/* Copy Link Button */}
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(window.location.href);
-                                    showToast('Link gekopieerd naar klembord!', 'success');
-                                }}
-                                className="w-full mt-4 flex items-center justify-center gap-2 p-3 bg-gray-100 hover:bg-gray-200 rounded-2xl text-gray-700 hover:text-gray-900 transition-all duration-300 group"
-                            >
-                                <ShareIcon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                                <span className="text-sm font-semibold">Kopieer link</span>
-                            </button>
-                            
-                            {/* Article Actions */}
-                            <div className="mt-6 pt-6 border-t border-gray-100">
-                                <h4 className="text-sm font-bold text-gray-800 mb-4">Artikel acties</h4>
-                                <div className="grid grid-cols-1 gap-3">
-                                    <button
-                                        onClick={() => {
-                                            // Toggle bookmark functionality (could be implemented with localStorage)
-                                            showToast('Artikel opgeslagen voor later!', 'success');
-                                        }}
-                                        className="flex items-center justify-center gap-2 p-3 bg-yellow-50 hover:bg-yellow-100 rounded-2xl text-yellow-700 hover:text-yellow-800 transition-all duration-300 group"
-                                    >
-                                        <BookOpenIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                                        <span className="text-sm font-semibold">Opslaan voor later</span>
-                                    </button>
-                                    
-                                    <button
-                                        onClick={() => {
-                                            window.print();
-                                        }}
-                                        className="flex items-center justify-center gap-2 p-3 bg-gray-50 hover:bg-gray-100 rounded-2xl text-gray-700 hover:text-gray-800 transition-all duration-300 group"
-                                    >
-                                        <DownloadIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
-                                        <span className="text-sm font-semibold">Print artikel</span>
-                                    </button>
-                                </div>
-                            </div>       .no-print { display: none !important; }
+    <style
+        dangerouslySetInnerHTML={{
+            __html: `
+            @media print {
+                .no-print { display: none !important; }
                 .print-break-before { page-break-before: always; }
                 .print-break-after { page-break-after: always; }
                 body { font-size: 12pt; line-height: 1.4; }
@@ -64,13 +32,14 @@ const PrintStyles = () => (
                 .border { border: 1px solid #ccc !important; }
             }
         `
-    }} />
+        }}
+    />
 );
 
 interface BlogDetailPageProps {
-  post: BlogPost;
-  navigateTo: NavigateTo;
-  showToast: ShowToast;
+    slug: string;
+    navigateTo: NavigateTo;
+    showToast: ShowToast;
 }
 
 const BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ post, navigateTo }) => (
@@ -92,7 +61,206 @@ const BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo; }> = ({ 
     </div>
 );
 
-const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showToast }) => {
+const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showToast }) => {
+    const { posts, loading: postsLoading, findPostBySlug } = useBlogContext();
+    const [post, setPost] = useState<BlogPost | null>(null);
+    const [isFetching, setIsFetching] = useState(false);
+    const [fetchError, setFetchError] = useState<string | null>(null);
+    const [heroFitMode, setHeroFitMode] = useState<'contain' | 'cover'>(() => {
+        if (typeof window === 'undefined') {
+            return 'contain';
+        }
+        const stored = window.localStorage.getItem('gifteezHeroFit');
+        return stored === 'cover' ? 'cover' : 'contain';
+    });
+    const [globalImageFit, setGlobalImageFit] = useState<'contain' | 'cover'>(() => {
+        if (typeof window === 'undefined') {
+            return 'cover';
+        }
+        const stored = window.localStorage.getItem('gifteezGlobalImageFit');
+        return stored === 'contain' ? 'contain' : 'cover';
+    });
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [showJumpToTop, setShowJumpToTop] = useState(false);
+    const [imageErrors, setImageErrors] = useState<Set<string>>(() => new Set());
+
+    useEffect(() => {
+        if (postsLoading) {
+            return;
+        }
+
+        const existing = findPostBySlug(slug);
+        if (existing) {
+            setPost(existing);
+            setFetchError(null);
+            return;
+        }
+
+        let isMounted = true;
+        setIsFetching(true);
+        setFetchError(null);
+
+        BlogService.getPostBySlug(slug)
+            .then((data) => {
+                if (!isMounted) return;
+                if (!data || data.isDraft) {
+                    setPost(null);
+                    setFetchError('Deze blogpost kon niet worden gevonden.');
+                    return;
+                }
+                setPost(blogPostDataToBlogPost(data));
+            })
+            .catch(() => {
+                if (!isMounted) return;
+                setPost(null);
+                setFetchError('Er ging iets mis bij het laden van de blogpost.');
+            })
+            .finally(() => {
+                if (!isMounted) return;
+                setIsFetching(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [slug, postsLoading, findPostBySlug, posts]);
+
+    useEffect(() => {
+        if (!post || typeof window === 'undefined') {
+            return;
+        }
+
+        const updateScrollProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            setScrollProgress(Math.min(scrollPercent, 100));
+            setShowJumpToTop(scrollTop > 300);
+        };
+
+        window.addEventListener('scroll', updateScrollProgress);
+        updateScrollProgress();
+
+        const appendedScripts: HTMLElement[] = [];
+        const appendJsonLd = (schema: Record<string, unknown>) => {
+            const scriptEl = document.createElement('script');
+            scriptEl.type = 'application/ld+json';
+            scriptEl.innerHTML = JSON.stringify(schema);
+            document.head.appendChild(scriptEl);
+            appendedScripts.push(scriptEl);
+            return scriptEl;
+        };
+
+        const articleSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            mainEntityOfPage: {
+                '@type': 'WebPage',
+                '@id': window.location.href
+            },
+            headline: post.title,
+            description: post.excerpt,
+            image: post.imageUrl,
+            author: {
+                '@type': 'Person',
+                name: post.author.name,
+                image: post.author.avatarUrl
+            },
+            publisher: {
+                '@type': 'Organization',
+                name: 'Gifteez.nl',
+                logo: {
+                    '@type': 'ImageObject',
+                    url: 'https://gifteez.nl/android-chrome-512x512.png'
+                }
+            },
+            datePublished: post.publishedDate,
+            dateModified: post.publishedDate
+        };
+
+        appendJsonLd(articleSchema);
+
+        const faqBlocks = post.content.filter((b): b is FAQBlock => b.type === 'faq');
+        if (faqBlocks.length) {
+            const entities = faqBlocks.flatMap(block =>
+                block.items.map(item => ({
+                    '@type': 'Question',
+                    name: item.question,
+                    acceptedAnswer: { '@type': 'Answer', text: item.answer }
+                }))
+            );
+            if (entities.length) {
+                const faqSchema = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: entities };
+                appendJsonLd(faqSchema);
+            }
+        }
+
+        const breadcrumbSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: `${window.location.origin}/` },
+                { '@type': 'ListItem', position: 2, name: 'Blog', item: `${window.location.origin}/blog` },
+                { '@type': 'ListItem', position: 3, name: post.title, item: `${window.location.origin}/blog/${post.slug}` }
+            ]
+        };
+
+        appendJsonLd(breadcrumbSchema);
+
+        pinterestPageVisit('blog_article', `blog_${post.slug}_${Date.now()}`);
+        gaPageView(`/blog/${post.slug}`, post.title);
+
+        return () => {
+            window.removeEventListener('scroll', updateScrollProgress);
+            appendedScripts.forEach((el) => {
+                if (el.parentNode) {
+                    el.parentNode.removeChild(el);
+                }
+            });
+        };
+    }, [post]);
+
+    const relatedPosts = useMemo(
+        () => (post ? posts.filter((p) => p.category === post.category && p.slug !== post.slug).slice(0, 3) : []),
+        [posts, post]
+    );
+
+    if (postsLoading || isFetching) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-muted-rose/30 to-white">
+                <div className="text-center space-y-3">
+                    <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <p className="text-gray-600">Blogpost laden...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (fetchError || !post) {
+        return (
+            <div className="min-h-screen bg-gradient-to-b from-white via-muted-rose/30 to-white flex items-center justify-center px-4">
+                <div className="max-w-lg bg-white border border-gray-100 shadow-xl rounded-3xl p-8 text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-100 text-rose-600 text-2xl">😕</div>
+                    <h1 className="text-2xl font-bold text-gray-900">Blogpost niet gevonden</h1>
+                    <p className="text-gray-600">{fetchError ?? 'Het artikel waar je naar zocht bestaat niet meer of is verplaatst.'}</p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button
+                            onClick={() => navigateTo('blog')}
+                            className="px-6 py-3 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+                        >
+                            Bekijk alle gidsen
+                        </button>
+                        <button
+                            onClick={() => navigateTo('home')}
+                            className="px-6 py-3 rounded-full border border-gray-200 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                        >
+                            Terug naar home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     // Calculate reading time
     const calculateReadingTime = (content: ContentBlock[]): number => {
         const text = content
@@ -114,26 +282,13 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
 
     const readingTime = calculateReadingTime(post.content);
 
+    const heroImage = post.imageUrl;
+    const heroDisplaySrc = heroImage ? (imageErrors.has(heroImage) ? '/images/amazon-placeholder.png' : heroImage) : null;
+
     // Image error handler
     const handleImageError = (imageUrl: string) => {
         setImageErrors(prev => new Set([...prev, imageUrl]));
     };
-
-    // User toggle for hero image fit mode
-    const [heroFitMode, setHeroFitMode] = useState<'contain' | 'cover'>(() => {
-        const stored = localStorage.getItem('gifteezHeroFit');
-        return stored === 'cover' ? 'cover' : 'contain';
-    });
-    // Global apply to all in-article images (future-proof; currently only hero uses contain/cover)
-    const [globalImageFit, setGlobalImageFit] = useState<'contain' | 'cover'>(() => {
-        const stored = localStorage.getItem('gifteezGlobalImageFit');
-        return stored === 'contain' ? 'contain' : 'cover';
-    });
-
-    // Progress bar state
-    const [scrollProgress, setScrollProgress] = useState(0);
-    const [showJumpToTop, setShowJumpToTop] = useState(false);
-    const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
 
     const toggleHeroFit = () => {
         setHeroFitMode(prev => {
@@ -150,142 +305,8 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
             return next;
         });
     };
-    
-    useEffect(() => {
-        // Scroll progress tracking
-        const updateScrollProgress = () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollPercent = (scrollTop / docHeight) * 100;
-            setScrollProgress(Math.min(scrollPercent, 100));
-            
-            // Show jump to top button after scrolling 300px
-            setShowJumpToTop(scrollTop > 300);
-        };
-
-        window.addEventListener('scroll', updateScrollProgress);
-        
-        document.title = `${post.title} — Gifteez.nl`;
-        const ensure = (selector: string, create: () => HTMLElement) => {
-            let el = document.head.querySelector(selector) as HTMLElement | null;
-            if (!el) { el = create(); document.head.appendChild(el); }
-            return el;
-        };
-        const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
-        metaDesc.setAttribute('content', post.excerpt);
-        const canonical = ensure('link[rel="canonical"]', () => { const l = document.createElement('link'); l.rel='canonical'; return l; });
-        canonical.setAttribute('href', window.location.origin + '/blog/' + post.slug);
-    const schema = {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": window.location.href
-        },
-        "headline": post.title,
-        "description": post.excerpt,
-        "image": post.imageUrl,
-        "author": {
-            "@type": "Person",
-            "name": post.author.name,
-            "image": post.author.avatarUrl
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "Gifteez.nl",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://gifteez.nl/android-chrome-512x512.png"
-            }
-        },
-        "datePublished": post.publishedDate,
-        "dateModified": post.publishedDate
-    };
-    
-        const script = document.createElement('script'); script.type='application/ld+json'; script.innerHTML=JSON.stringify(schema); document.head.appendChild(script);
-        const breadcrumbSchema = {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            'itemListElement': [
-                { '@type': 'ListItem', position: 1, name: 'Home', item: window.location.origin + '/' },
-                { '@type': 'ListItem', position: 2, name: 'Blog', item: window.location.origin + '/blog' },
-                { '@type': 'ListItem', position: 3, name: post.title, item: window.location.origin + '/blog/' + post.slug }
-            ]
-        };
-        const breadcrumbScript = document.createElement('script'); breadcrumbScript.type='application/ld+json'; breadcrumbScript.innerHTML = JSON.stringify(breadcrumbSchema); document.head.appendChild(breadcrumbScript);
-        
-        // Add FAQ Schema if post has comparison/verdict content
-        const hasComparisonContent = post.content.some(block => block.type === 'comparison' || block.type === 'verdict');
-        if (hasComparisonContent) {
-            const faqSchema = {
-                "@context": "https://schema.org",
-                "@type": "FAQPage",
-                "mainEntity": [
-                    {
-                        "@type": "Question",
-                        "name": `Wat zijn de beste ${post.category.toLowerCase()} cadeaus in ${new Date().getFullYear()}?`,
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": `In onze uitgebreide gids vind je de beste ${post.category.toLowerCase()} cadeau ideeën voor ${new Date().getFullYear()}. We vergelijken verschillende opties en helpen je de perfecte keuze te maken.`
-                        }
-                    },
-                    {
-                        "@type": "Question", 
-                        "name": "Waarom kiezen voor een cadeau uit onze gids?",
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": "Onze cadeau gidsen zijn gebaseerd op grondig onderzoek en echte gebruikerservaringen. We werken samen met experts en houden rekening met duurzaamheid, kwaliteit en prijs-kwaliteit verhouding."
-                        }
-                    }
-                ]
-            };
-            const faqScript = document.createElement('script'); faqScript.type='application/ld+json'; faqScript.innerHTML=JSON.stringify(faqSchema); document.head.appendChild(faqScript);
-        }
-        
-    // (Duplicate ensure/metaDesc removed – initial definitions above reused here)
-
-        const url = window.location.href;
-        const setMeta = (attr: 'name'|'property', key: string, content: string) => {
-            const sel = attr === 'name' ? `meta[name="${key}"]` : `meta[property="${key}"]`;
-            const el = ensure(sel, () => { const m = document.createElement('meta'); m.setAttribute(attr, key); return m; });
-            el.setAttribute('content', content);
-            return el;
-        };
-        // Open Graph
-        const ogTitle = setMeta('property', 'og:title', `${post.title} — Gifteez.nl`);
-        const ogDesc = setMeta('property', 'og:description', post.excerpt);
-        const ogType = setMeta('property', 'og:type', 'article');
-        const ogUrl = setMeta('property', 'og:url', url);
-        const ogImage = setMeta('property', 'og:image', post.imageUrl);
-    // Extra Open Graph image metadata (helps some scrapers)
-    setMeta('property', 'og:image:alt', post.title);
-    setMeta('property', 'og:image:type', 'image/png');
-    setMeta('property', 'og:image:width', '1200');
-    setMeta('property', 'og:image:height', '1200');
-        // Twitter
-        const twCard = setMeta('name', 'twitter:card', 'summary_large_image');
-        const twTitle = setMeta('name', 'twitter:title', `${post.title} — Gifteez.nl`);
-        const twDesc = setMeta('name', 'twitter:description', post.excerpt);
-        const twImage = setMeta('name', 'twitter:image', post.imageUrl);
-    setMeta('name', 'twitter:image:alt', post.title);
-
-
-    return () => { 
-        window.removeEventListener('scroll', updateScrollProgress);
-        document.head.removeChild(script); 
-        document.head.removeChild(breadcrumbScript);
-            // Don't remove meta tags; allow next page to overwrite. Only JSON-LD is cleaned up.
-    };
-
-    // Pinterest PageVisit tracking for blog articles
-    pinterestPageVisit('blog_article', `blog_${post.slug}_${Date.now()}`);
-    
-    // Google Analytics pageview tracking for blog articles
-    gaPageView(`/blog/${post.slug}`, post.title);
-  }, [post]);
-
-  const shareUrl = window.location.href;
-  const shareText = encodeURIComponent(`Bekijk deze cadeaugids op Gifteez.nl: ${post.title}`);
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const shareText = encodeURIComponent(`Bekijk deze cadeaugids op Gifteez.nl: ${post?.title ?? ''}`);
 
   // Native Web Share API function
   const handleNativeShare = async () => {
@@ -311,9 +332,6 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
     { name: 'Twitter', icon: TwitterIcon, url: `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}` },
     { name: 'WhatsApp', icon: WhatsAppIcon, url: `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}` }
   ];
-
-  const relatedPosts = blogPosts.filter(p => p.category === post.category && p.slug !== post.slug).slice(0, 3);
-  
   const headings = post.content.filter(block => block.type === 'heading') as {type: 'heading', content: string}[];
   const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
     
@@ -333,15 +351,60 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             >
                                 <span className="relative inline-block">
                                     {block.content}
-                                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                    <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-accent to-accent-hover rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                                 </span>
                             </h2>
                         );
                 case 'paragraph':
-                        return <p key={index} dangerouslySetInnerHTML={{ __html: block.content }} className="mb-6 text-gray-700 leading-relaxed text-lg" />
+                        return (
+                            <div
+                                key={index}
+                                className="content-paragraph mb-6"
+                                dangerouslySetInnerHTML={{ __html: block.content }}
+                            />
+                        );
+        case 'image': {
+            const { src, alt, caption, href } = block as ImageBlock;
+                        if (!src) {
+                            return null;
+                        }
+                        const broken = imageErrors.has(src);
+                        const displaySrc = broken ? '/images/amazon-placeholder.png' : src;
+                        const imageElement = (
+                            <img
+                                src={displaySrc}
+                                alt={alt || post.title}
+                                loading="lazy"
+                                decoding="async"
+                                className={`${globalImageFit === 'cover' ? 'w-full h-full object-cover' : 'w-full h-auto object-contain'} transition-transform duration-500`}
+                                onError={() => handleImageError(src)}
+                            />
+                        );
+                        return (
+                            <figure key={index} className="my-12">
+                                <div className={`relative overflow-hidden rounded-3xl border border-gray-100 shadow-xl bg-white ${globalImageFit === 'cover' ? 'h-80 md:h-[26rem]' : 'p-4 md:p-6'}`}>
+                                    {globalImageFit === 'cover' && (
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"></div>
+                                    )}
+                                    {href ? (
+                                        <a href={href} target="_blank" rel="noopener noreferrer" className="block h-full">
+                                            {imageElement}
+                                        </a>
+                                    ) : (
+                                        imageElement
+                                    )}
+                                </div>
+                                {(caption || alt) && (
+                                    <figcaption className="mt-4 text-center text-sm text-gray-500">
+                                        {caption || alt}
+                                    </figcaption>
+                                )}
+                            </figure>
+                        );
+                }
                 case 'gift':
                         return (
-                            <div key={index} className="my-12 bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-8 border border-gray-100 shadow-lg">
+                            <div key={index} className="my-12 bg-gradient-to-r from-secondary to-muted-rose rounded-2xl p-8 border border-gray-100 shadow-lg">
                                 <GiftResultCard 
                                     gift={block.content} 
                                     index={index} 
@@ -357,7 +420,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
             return (
                 <div key={index} className="my-12 overflow-x-auto bg-white rounded-2xl shadow-lg border border-gray-100">
                     <table className="w-full text-sm text-left text-gray-500">
-                        <thead className="text-xs text-white uppercase bg-gradient-to-r from-emerald-600 to-emerald-700">
+                        <thead className="text-xs text-white uppercase bg-gradient-to-r from-accent to-accent-hover">
                             <tr>
                                 <th scope="col" className="px-8 py-4 font-bold text-white rounded-tl-2xl">Specificatie</th>
                                 {tableBlock.headers.map((header, i) => (
@@ -369,7 +432,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         </thead>
                         <tbody>
                             {tableBlock.rows.map((row, i) => (
-                                <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-emerald-50 transition-colors duration-200`}>
+                                <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-muted-rose/70 transition-colors duration-200`}>
                                     <th scope="row" className="px-8 py-4 font-bold text-gray-900 whitespace-nowrap border-r border-gray-200 bg-gradient-to-r from-gray-100 to-gray-50">
                                         {row.feature}
                                     </th>
@@ -390,7 +453,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                 <div key={index} className={`my-12 grid grid-cols-1 md:grid-cols-${prosConsBlock.items.length} gap-8`}>
                     {prosConsBlock.items.map((item, i) => (
                         <div key={i} className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                            <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 p-6">
+                            <div className="bg-gradient-to-r from-accent to-accent-hover p-6">
                                 <h4 className="font-display font-bold text-xl text-white text-center">{item.title}</h4>
                             </div>
                             <div className="p-6">
@@ -434,16 +497,16 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
         case 'verdict':
             const verdictBlock = block as VerdictBlock;
             return (
-                <div key={index} className="my-12 relative overflow-hidden bg-gradient-to-r from-emerald-600 via-emerald-700 to-purple-600 rounded-2xl shadow-2xl">
-                    <div className="absolute inset-0 bg-black/10"></div>
-                    <div className="relative p-8 md:p-12 text-white">
+                <div key={index} className="my-12 relative overflow-hidden bg-white border-2 border-muted-rose rounded-2xl shadow-xl">
+                    <div className="absolute inset-0 bg-gradient-to-br from-muted-rose via-white to-secondary/80"></div>
+                    <div className="relative p-8 md:p-12">
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                                <StarIcon className="w-8 h-8 text-yellow-300"/>
+                            <div className="w-16 h-16 bg-gradient-to-br from-accent to-highlight rounded-full flex items-center justify-center shadow-lg">
+                                <StarIcon className="w-8 h-8 text-white"/>
                             </div>
-                            <h3 className="font-display text-3xl md:text-4xl font-bold">{verdictBlock.title}</h3>
+                            <h3 className="font-display text-3xl md:text-4xl font-bold text-slate-900">{verdictBlock.title}</h3>
                         </div>
-                        <p className="text-lg md:text-xl text-white/90 leading-relaxed max-w-4xl">{verdictBlock.content}</p>
+                        <p className="text-lg md:text-xl text-slate-700 leading-relaxed max-w-4xl">{verdictBlock.content}</p>
                     </div>
                 </div>
             )
@@ -454,22 +517,76 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
     year: 'numeric', month: 'long', day: 'numeric'
   });
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
+                <Meta 
+                    title={`${post.title} — Gifteez.nl`}
+                    description={post.excerpt}
+                    canonical={`https://gifteez.nl/blog/${post.slug}`}
+                    ogImage={post.imageUrl.startsWith('http') ? post.imageUrl : `https://gifteez.nl${post.imageUrl}`}
+                />
         {/* Print Styles */}
         <PrintStyles />
         
         {/* Progress Bar */}
         <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
             <div 
-                className="h-full bg-gradient-to-r from-emerald-600 to-emerald-700 transition-all duration-300 ease-out"
+                className="h-full bg-gradient-to-r from-accent to-accent-hover transition-all duration-300 ease-out"
                 style={{ width: `${scrollProgress}%` }}
             ></div>
         </div>
 
-        {/* Hero Section - Removed */}
-
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {heroDisplaySrc && (
+                <section className="mb-12">
+                    <div className={`relative overflow-hidden rounded-3xl border border-gray-100 shadow-2xl ${heroFitMode === 'cover' ? 'h-[340px] sm:h-[420px] lg:h-[520px]' : 'bg-white p-6 sm:p-10'}`}>
+                        {heroFitMode === 'cover' ? (
+                            <img
+                                src={heroDisplaySrc}
+                                alt={post.title}
+                                className="absolute inset-0 w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                onError={() => heroImage && handleImageError(heroImage)}
+                            />
+                        ) : (
+                            <div className="relative flex items-center justify-center min-h-[260px] sm:min-h-[320px]">
+                                <img
+                                    src={heroDisplaySrc}
+                                    alt={post.title}
+                                    className="max-h-[420px] w-full sm:w-auto object-contain"
+                                    loading="lazy"
+                                    decoding="async"
+                                    onError={() => heroImage && handleImageError(heroImage)}
+                                />
+                            </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent pointer-events-none"></div>
+                        <div className="absolute top-6 left-6 flex flex-wrap items-center gap-3 text-sm font-semibold">
+                            <span className="bg-white/85 text-primary px-4 py-1.5 rounded-full shadow-lg backdrop-blur-sm">{post.category}</span>
+                            <span className="bg-white/75 text-gray-700 px-4 py-1.5 rounded-full shadow-md backdrop-blur-sm">{formattedDate}</span>
+                        </div>
+                        <div className="absolute top-6 right-6 flex flex-wrap gap-3">
+                            <button
+                                onClick={toggleHeroFit}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/55 text-white backdrop-blur-sm hover:bg-black/70 transition-colors"
+                                type="button"
+                            >
+                                <span className="inline-flex h-2 w-2 rounded-full bg-white/80" aria-hidden="true"></span>
+                                {heroFitMode === 'cover' ? 'Vullend' : 'Volledig zichtbaar'}
+                            </button>
+                            <button
+                                onClick={handleNativeShare}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-colors"
+                                type="button"
+                            >
+                                <ShareIcon className="w-4 h-4" />
+                                Deel artikel
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            )}
             <nav aria-label="Breadcrumb" className="mb-8">
                 <ol className="flex items-center gap-2 text-sm text-gray-600">
                     <li><button onClick={() => navigateTo('home')} className="hover:text-primary transition-colors font-medium">Home</button></li>
@@ -515,27 +632,21 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             </div>
                         </div>
                         
-                        {/* Article Content */}
-                        <div className="prose prose-lg max-w-none p-8 md:p-12 text-gray-700">
-
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        </div>
-
                         <div className="p-8 md:p-12">
                             {/* Table of Contents */}
                             {headings.length > 1 && (
-                                <nav className="mb-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100" aria-labelledby="toc-heading">
+                                <nav className="mb-12 p-6 bg-gradient-to-r from-secondary to-muted-rose rounded-2xl border border-muted-rose" aria-labelledby="toc-heading">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <SparklesIcon className="w-6 h-6 text-emerald-600" aria-hidden="true" />
+                                        <SparklesIcon className="w-6 h-6 text-accent" aria-hidden="true" />
                                         <h2 id="toc-heading" className="font-display font-bold text-primary text-xl">In dit artikel</h2>
                                     </div>
                                     <ol className="space-y-3" role="list">
                                         {headings.map((heading, i) => (
                                             <li key={i} className="flex items-center gap-2" role="listitem">
-                                                <span className="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-bold" aria-hidden="true">{i + 1}</span>
+                                                <span className="w-6 h-6 bg-accent text-white rounded-full flex items-center justify-center text-xs font-bold" aria-hidden="true">{i + 1}</span>
                                                 <a 
                                                     href={`#${slugify(heading.content)}`} 
-                                                    className="font-semibold text-primary hover:text-emerald-600 hover:underline transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded px-2 py-1"
+                                                    className="font-semibold text-primary hover:text-accent hover:underline transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 rounded px-2 py-1"
                                                     aria-describedby={`heading-${i}-description`}
                                                 >
                                                     {heading.content}
@@ -550,6 +661,16 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             {/* Article Actions */}
                             <div className="mb-8 flex flex-wrap items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                 <span className="text-sm font-medium text-gray-600 mr-2">Acties:</span>
+                                <button
+                                    onClick={toggleGlobalImageFit}
+                                    className="inline-flex items-center gap-2 px-3 py-2 bg-white hover:bg-gray-50 rounded-lg text-gray-700 hover:text-gray-900 transition-colors duration-200 text-sm font-medium border border-gray-200"
+                                    type="button"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16M12 4v16" />
+                                    </svg>
+                                    Afbeeldingen: {globalImageFit === 'cover' ? 'vullend' : 'volledig zichtbaar'}
+                                </button>
                                 
                                 <button
                                     onClick={() => window.print()}
@@ -616,32 +737,32 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                     <span>Categorie: {post.category}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted-rose text-accent rounded-full text-xs font-medium">
                                         <SparklesIcon className="w-3 h-3" aria-hidden="true" />
                                         {readingTime} min lezen
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 ml-auto">
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-highlight/10 text-highlight rounded-full text-xs font-medium">
                                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                                         </svg>
                                         {Math.floor(Math.random() * 5000) + 1000} views
                                     </span>
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                        <CheckIcon className="w-3 h-3" aria-hidden="true" />
+                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted-rose text-accent rounded-full text-xs font-medium">
+                                        <CheckIcon className="w-3 h-3 text-accent" aria-hidden="true" />
                                         Bijgewerkt {new Date().toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' })}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Article Content */}
-                            <article className="prose prose-lg lg:prose-xl max-w-none text-gray-700 prose-headings:font-display prose-headings:text-primary prose-headings:font-bold prose-headings:leading-tight prose-p:leading-relaxed prose-p:mb-6 prose-strong:text-gray-900 prose-strong:font-semibold">
+                            <article className="prose prose-lg lg:prose-xl max-w-none text-gray-700 prose-headings:font-display prose-headings:text-primary prose-headings:font-bold prose-headings:leading-tight prose-p:leading-relaxed prose-p:mb-6 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-primary prose-a:font-semibold hover:prose-a:text-accent prose-a:no-underline prose-a:underline-offset-4 prose-a:transition-colors prose-img:rounded-3xl prose-img:shadow-xl prose-img:border prose-img:border-gray-100 prose-img:bg-white prose-li:marker:text-accent">
                                 {post.content.map(renderContentBlock)}
                             </article>
 
                             {/* Author Bio Section */}
-                            <div className="mt-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-100" data-author-section>
+                            <div className="mt-16 bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 border border-muted-rose" data-author-section>
                                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                                     <div className="flex-shrink-0">
                                         <ImageWithFallback
@@ -652,7 +773,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-3">
-                                            <UserIcon className="w-6 h-6 text-emerald-600" />
+                                            <UserIcon className="w-6 h-6 text-accent" />
                                             <h3 className="font-display text-2xl font-bold text-primary">Over {post.author.name}</h3>
                                         </div>
                                         <p className="text-gray-700 leading-relaxed mb-4">
@@ -668,11 +789,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                             }
                                         </p>
                                         <div className="flex flex-wrap gap-3">
-                                            <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                                            <span className="inline-flex items-center gap-2 bg-muted-rose text-accent px-3 py-1 rounded-full text-sm font-medium">
                                                 <BookOpenIcon className="w-4 h-4" />
                                                 Cadeau Expert
                                             </span>
-                                            <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                                            <span className="inline-flex items-center gap-2 bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">
                                                 <CheckIcon className="w-4 h-4" />
                                                 {Math.floor(Math.random() * 50) + 10} Artikelen
                                             </span>
@@ -700,8 +821,8 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                     </div>
 
                     {/* Enhanced Bottom CTA */}
-                    <div className="mt-16 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary via-emerald-600 to-emerald-700 opacity-90"></div>
+                    <div className="mt-16 relative overflow-hidden bg-purple-800">
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-900 via-purple-700 to-purple-600 opacity-95"></div>
                         <div className="absolute inset-0 bg-black/20"></div>
                         <div className="relative p-8 md:p-12 text-center text-white">
                             <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
@@ -722,26 +843,26 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                     </div>
 
                     {/* Article Engagement Section */}
-                    <div className="mt-16 bg-gradient-to-r from-green-50 to-emerald-50 rounded-3xl p-8 border border-green-100" data-comments-section>
+                    <div className="mt-16 bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 border border-muted-rose" data-comments-section>
                         <div className="text-center mb-8">
-                            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-muted-rose rounded-full mb-4">
+                                <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
-                            <h3 className="font-display text-2xl font-bold text-green-800 mb-2">Wat vind je van dit artikel?</h3>
-                            <p className="text-green-700">Deel je mening of stel een vraag in de reacties</p>
+                            <h3 className="font-display text-2xl font-bold text-primary mb-2">Wat vind je van dit artikel?</h3>
+                            <p className="text-accent">Deel je mening of stel een vraag in de reacties</p>
                         </div>
 
                         <div className="grid md:grid-cols-3 gap-4 mb-8">
                             <button
                                 onClick={() => showToast('Bedankt voor je positieve feedback! 👍', 'success')}
-                                className="flex items-center justify-center gap-3 p-4 bg-white hover:bg-green-50 rounded-2xl border border-green-200 hover:border-green-300 transition-all duration-300 group"
+                                className="flex items-center justify-center gap-3 p-4 bg-white hover:bg-highlight/10 rounded-2xl border border-highlight/40 hover:border-highlight/60 transition-all duration-300 group"
                             >
-                                <svg className="w-6 h-6 text-green-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6 text-highlight group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
                                 </svg>
-                                <span className="font-medium text-green-700">Helpful</span>
+                                <span className="font-medium text-highlight">Helpful</span>
                             </button>
 
                             <button
@@ -756,24 +877,25 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
 
                             <button
                                 onClick={() => showToast('Bedankt voor je reactie! 💬', 'info')}
-                                className="flex items-center justify-center gap-3 p-4 bg-white hover:bg-emerald-50 rounded-2xl border border-emerald-200 hover:border-emerald-300 transition-all duration-300 group"
+                                className="flex items-center justify-center gap-3 p-4 bg-white hover:bg-muted-rose/70 rounded-2xl border border-muted-rose hover:border-accent transition-all duration-300 group"
                             >
-                                <svg className="w-6 h-6 text-emerald-600 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6 text-accent group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
-                                <span className="font-medium text-blue-700">Reageer</span>
+                                <span className="font-medium text-primary">Reageer</span>
                             </button>
                         </div>
 
                         <div className="text-center">
-                            <p className="text-sm text-green-600 mb-4">
+                            <p className="text-sm text-accent mb-4">
                                 💡 <strong>Pro tip:</strong> Gebruik de snelle navigatie in de zijbalk om direct naar interessante secties te springen!
                             </p>
                         </div>
                     </div>
 
                     {/* Newsletter Signup Section */}
-                    <div className="mt-16 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-3xl overflow-hidden shadow-2xl" data-newsletter-section>
+                    <div className="mt-16 relative overflow-hidden rounded-3xl shadow-2xl bg-purple-800" data-newsletter-section>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-900 via-purple-700 to-purple-600 opacity-95"></div>
                         <div className="relative p-8 md:p-12 text-center text-white">
                             <div className="absolute inset-0 bg-black/10"></div>
                             <div className="relative z-10">
@@ -837,7 +959,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         <div className="sticky top-28">
                             <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                                 <div className="flex items-center gap-3 mb-6">
-                                    <SparklesIcon className="w-6 h-6 text-emerald-600" aria-hidden="true" />
+                                    <SparklesIcon className="w-6 h-6 text-accent" aria-hidden="true" />
                                     <h3 className="font-display text-xl font-bold text-primary">Inhoudsopgave</h3>
                                 </div>
                                 <nav aria-label="Artikel secties">
@@ -846,13 +968,13 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                             <li key={i} role="listitem">
                                                 <a 
                                                     href={`#${slugify(heading.content)}`} 
-                                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-emerald-50 transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2"
+                                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-muted-rose/70 transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                                                     aria-describedby={`sidebar-heading-${i}-description`}
                                                 >
-                                                    <span className="w-6 h-6 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xs font-bold group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300" aria-hidden="true">
+                                                    <span className="w-6 h-6 bg-muted-rose text-accent rounded-full flex items-center justify-center text-xs font-bold group-hover:bg-accent group-hover:text-white transition-colors duration-300" aria-hidden="true">
                                                         {i + 1}
                                                     </span>
-                                                    <span className="font-medium text-gray-700 group-hover:text-emerald-600 transition-colors duration-300 text-sm leading-tight">
+                                                    <span className="font-medium text-gray-700 group-hover:text-accent transition-colors duration-300 text-sm leading-tight">
                                                         {heading.content}
                                                     </span>
                                                 </a>
@@ -866,11 +988,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                 <div className="mt-8 pt-6 border-t border-gray-100" aria-label="Leesvoortgang">
                                     <div className="flex items-center justify-between mb-3">
                                         <span className="text-sm font-medium text-gray-600">Leesvoortgang</span>
-                                        <span className="text-sm font-bold text-emerald-600" aria-live="polite">{Math.round(scrollProgress)}%</span>
+                                        <span className="text-sm font-bold text-accent" aria-live="polite">{Math.round(scrollProgress)}%</span>
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-2" role="progressbar" aria-valuenow={Math.round(scrollProgress)} aria-valuemin={0} aria-valuemax={100}>
                                         <div 
-                                            className="bg-gradient-to-r from-emerald-600 to-emerald-700 h-2 rounded-full transition-all duration-300"
+                                            className="bg-gradient-to-r from-accent to-accent-hover h-2 rounded-full transition-all duration-300"
                                             style={{ width: `${scrollProgress}%` }}
                                         ></div>
                                     </div>
@@ -882,25 +1004,25 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                                     <div className="space-y-2">
                                         <button
                                             onClick={() => document.getElementById('toc-heading')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors duration-200"
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
                                         >
                                             📋 Inhoudsopgave
                                         </button>
                                         <button
                                             onClick={() => document.querySelector('[data-author-section]')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
                                         >
                                             👤 Over auteur
                                         </button>
                                         <button
                                             onClick={() => document.querySelector('[data-newsletter-section]')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
                                         >
                                             📧 Nieuwsbrief
                                         </button>
                                         <button
                                             onClick={() => document.querySelector('[data-comments-section]')?.scrollIntoView({ behavior: 'smooth' })}
-                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                            className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
                                         >
                                             💬 Reacties
                                         </button>
@@ -914,7 +1036,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                         {/* Share Section */}
                         <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent-hover rounded-full flex items-center justify-center">
                                     <ShareIcon className="w-5 h-5 text-white" />
                                 </div>
                                 <h3 className="font-display text-xl font-bold text-primary">Deel deze gids</h3>
@@ -926,23 +1048,23 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                             />
                             
                             {/* Share Statistics */}
-                            <div className="bg-gradient-to-r from-slate-50 to-emerald-50 rounded-2xl p-4 border border-gray-100">
+                            <div className="bg-gradient-to-r from-secondary to-muted-rose rounded-2xl p-4 border border-muted-rose/60">
                                 <div className="flex items-center justify-between mb-3">
                                     <span className="text-sm font-medium text-gray-600">Totale shares</span>
-                                    <span className="text-lg font-bold text-emerald-600">{Math.floor(Math.random() * 500) + 100}</span>
+                                    <span className="text-lg font-bold text-accent">{Math.floor(Math.random() * 500) + 100}</span>
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 text-center">
                                     <div className="bg-white rounded-lg p-2">
                                         <div className="text-xs text-gray-500">Facebook</div>
-                                        <div className="font-bold text-emerald-600">{Math.floor(Math.random() * 200) + 50}</div>
+                                        <div className="font-bold text-accent">{Math.floor(Math.random() * 200) + 50}</div>
                                     </div>
                                     <div className="bg-white rounded-lg p-2">
                                         <div className="text-xs text-gray-500">Twitter</div>
-                                        <div className="font-bold text-blue-400">{Math.floor(Math.random() * 100) + 20}</div>
+                                        <div className="font-bold text-highlight">{Math.floor(Math.random() * 100) + 20}</div>
                                     </div>
                                     <div className="bg-white rounded-lg p-2">
                                         <div className="text-xs text-gray-500">Pinterest</div>
-                                        <div className="font-bold text-red-500">{Math.floor(Math.random() * 150) + 30}</div>
+                                        <div className="font-bold text-primary">{Math.floor(Math.random() * 150) + 30}</div>
                                     </div>
                                 </div>
                             </div>
@@ -969,12 +1091,45 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ post, navigateTo, showT
                     onClick={() => {
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="fixed bottom-8 right-8 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 z-50 group"
+                    className="fixed bottom-8 right-8 bg-gradient-to-r from-accent to-accent-hover text-white p-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 z-50 group"
                     aria-label="Terug naar boven"
                 >
                     <ChevronRightIcon className="w-6 h-6 transform rotate-[-90deg] group-hover:rotate-[-90deg] group-hover:scale-110 transition-transform duration-300" />
                 </button>
             )}
+            {/* Related Guides */}
+            <section className="mt-24">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h3 className="font-display text-2xl md:text-3xl font-bold text-primary mb-8 flex items-center gap-3">
+                        <SparklesIcon className="w-7 h-7 text-accent" />
+                        Gerelateerde Gidsen
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {posts.filter(p => p.slug !== post.slug).slice(0,2).map(rel => (
+                            <div key={rel.slug} className="bg-white rounded-2xl shadow-lg overflow-hidden group border border-gray-100 hover:shadow-xl transition-all duration-300">
+                                <div className="overflow-hidden h-40">
+                                    <ImageWithFallback src={rel.imageUrl} alt={rel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                </div>
+                                <div className="p-5 flex flex-col h-full">
+                                    <span className="inline-block text-[11px] font-semibold tracking-wide px-2 py-1 bg-muted-rose text-accent rounded-full mb-3 uppercase">{rel.category}</span>
+                                    <h4 className="font-display text-lg font-bold text-primary leading-snug line-clamp-2 mb-3">{rel.title}</h4>
+                                    <p className="text-sm text-gray-600 line-clamp-3 mb-4">{rel.excerpt}</p>
+                                    <button onClick={() => navigateTo('blogDetail', { slug: rel.slug })} className="mt-auto inline-flex items-center gap-2 text-accent font-semibold text-sm hover:underline underline-offset-4">
+                                        Lees meer <ChevronRightIcon className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                        <div className="bg-gradient-to-br from-accent to-accent-hover rounded-2xl p-6 flex flex-col justify-center text-white shadow-lg">
+                            <h4 className="font-display text-xl font-bold mb-3">Meer Cadeau Inspiratie?</h4>
+                            <p className="text-sm text-secondary mb-4 leading-relaxed">Gebruik onze AI GiftFinder voor een persoonlijke lijst cadeau ideeën – sneller kiezen, beter geven.</p>
+                            <button onClick={() => navigateTo('giftFinder', {})} className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold transition-colors">
+                                Start GiftFinder <TargetIcon className="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
   );

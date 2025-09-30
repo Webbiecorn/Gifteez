@@ -32,7 +32,7 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center">
                 <TargetIcon className="w-5 h-5 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">Cookie Voorkeuren</h2>
@@ -55,15 +55,15 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
           {/* Cookie Categories */}
           <div className="space-y-6">
             {/* Necessary Cookies */}
-            <div className="bg-emerald-50 rounded-lg p-4">
+            <div className="bg-muted-rose rounded-lg p-4 border border-muted-rose/80">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center mt-1">
+                <div className="flex-shrink-0 w-6 h-6 bg-accent rounded-full flex items-center justify-center mt-1">
                   <CheckIcon className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-grow">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">Noodzakelijke Cookies</h3>
-                    <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Altijd actief</span>
+                    <span className="text-sm bg-light-bg text-accent px-3 py-1 rounded-full">Altijd actief</span>
                   </div>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     Deze cookies zijn essentieel voor de basisfunctionaliteit van de website, zoals navigatie,
@@ -126,7 +126,7 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
           <div className="flex flex-col sm:flex-row gap-3 mt-8">
             <button
               onClick={handleSave}
-              className="flex-1 bg-gradient-to-r from-primary to-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              className="flex-1 bg-gradient-to-r from-primary via-accent to-accent-hover text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               Voorkeuren Opslaan
             </button>
@@ -140,10 +140,10 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
 
           {/* Links */}
           <div className="flex flex-wrap justify-center gap-6 mt-6 pt-6 border-t border-gray-200">
-            <a href="/privacy" className="text-primary hover:text-blue-600 underline text-sm">
+            <a href="/privacy" className="text-primary hover:text-accent underline text-sm">
               Privacybeleid
             </a>
-            <a href="/disclaimer" className="text-primary hover:text-blue-600 underline text-sm">
+            <a href="/disclaimer" className="text-primary hover:text-accent underline text-sm">
               Disclaimer
             </a>
           </div>

@@ -392,3 +392,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+// Hook to use the AuthContext
+export const useAuth = () => {
+    const context = React.useContext(AuthContext);
+    return context;
+};

@@ -31,6 +31,18 @@ async function ensureFormats(file) {
   }
   const base = full.slice(0, -ext.length);
 
+  // Clean up leftovers from previous failed attempts
+  for (const t of TARGETS) {
+    const failedPath = base + t.ext + '.failed';
+    if (fs.existsSync(failedPath)) {
+      try {
+        fs.unlinkSync(failedPath);
+      } catch (e) {
+        log('warn', 'Cannot remove stale failed artifact', { file: path.basename(failedPath), error: e.message });
+      }
+    }
+  }
+
   // Short-circuit: if all targets exist, skip quickly
   const allPresent = TARGETS.every(t => fs.existsSync(base + t.ext));
   if (allPresent) {
@@ -75,7 +87,10 @@ async function run() {
   const started = Date.now();
   const files = fs.readdirSync(imagesDir);
   const whitelistPrefixes = ['trending-', 'collection-', 'planner', 'about-', 'og-tech-gifts', 'quiz-illustration'];
-  const candidateFiles = files.filter(f => whitelistPrefixes.some(p => f.startsWith(p)));
+  const candidateFiles = files.filter(f => {
+    const ext = path.extname(f).toLowerCase();
+    return SUPPORTED_INPUTS.includes(ext) && whitelistPrefixes.some(p => f.startsWith(p));
+  });
   let totalGenerated = 0;
   let totalSkipped = 0;
   for (const f of candidateFiles) {

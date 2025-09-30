@@ -118,7 +118,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           {!isReadOnly && (
             <button
               onClick={handleToggleFavorite}
-              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-emerald-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
               aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
             >
               {isFavorite ? <HeartIconFilled className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
@@ -132,7 +132,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
         <div className="absolute top-3 right-3">
             <button
               onClick={handleToggleFavorite}
-              className="bg-white/80 p-2 rounded-full text-emerald-600 hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-600"
+              className="bg-white/80 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
               aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
             >
             {isFavorite ? <HeartIconFilled className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}

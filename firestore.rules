@@ -5,5 +5,43 @@ service cloud.firestore {
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    
+    // Blog posts - public read, admin write
+    match /blog-posts/{postId} {
+      // Iedereen kan gepubliceerde blog posts lezen
+      allow read: if true;
+      
+      // Alleen admins kunnen blog posts maken/bewerken/verwijderen
+      allow write: if request.auth != null && 
+                      request.auth.token.email in [
+                        'admin@gifteez.nl',
+                        'kevin@gifteez.nl',
+                        'beheer@gifteez.nl',
+                        'test@gifteez.nl'
+                      ];
+    }
+
+    // Amazon productbibliotheek - publieke leesrechten, admin write
+    match /amazonProducts/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+                      request.auth.token.email in [
+                        'admin@gifteez.nl',
+                        'kevin@gifteez.nl',
+                        'beheer@gifteez.nl',
+                        'test@gifteez.nl'
+                      ];
+    }
+    
+    // Analytics en andere admin data
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null && 
+                            request.auth.token.email in [
+                              'admin@gifteez.nl',
+                              'kevin@gifteez.nl',
+                              'beheer@gifteez.nl',
+                              'test@gifteez.nl'
+                            ];
+    }
   }
 }

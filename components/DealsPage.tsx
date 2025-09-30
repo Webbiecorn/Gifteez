@@ -1,7 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Container } from './layout/Container';
 import { NavigateTo, DealItem, DealCategory } from '../types';
+import Meta from './Meta';
+import JsonLd from './JsonLd';
 import { DynamicProductService } from '../services/dynamicProductService';
 import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
@@ -89,6 +91,23 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Build ItemList structured data for Top 10 + featured
+  const itemListSchema = useMemo(() => {
+    const items: DealItem[] = [];
+    if (dealOfTheWeek) items.push(dealOfTheWeek);
+    items.push(...top10Deals);
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: items.map((d, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: d.name,
+        url: `https://gifteez.nl/deals#${d.id}`
+      }))
+    };
+  }, [dealOfTheWeek, top10Deals]);
+
   useEffect(() => {
     const loadDeals = async () => {
       try {
@@ -148,7 +167,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-muted-rose/60 flex items-center justify-center">
         <div className="text-center animate-pulse">
             <div className="mx-auto mb-6 w-16 h-16 rounded-full border-4 border-accent/30 border-t-accent animate-spin" aria-hidden="true"></div>
             <p className="text-slate-600 text-base font-medium">Bezig met laden van de beste deals…</p>
@@ -161,7 +180,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   // Error state with fallback
   if (error && !dealOfTheWeek) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-muted-rose/60 flex items-center justify-center">
         <div className="text-center max-w-md mx-auto p-6">
           <div className="bg-red-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <span className="text-red-600 text-2xl">⚠️</span>
@@ -177,7 +196,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   }
   return (
     <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/10">
-      {/* Hero Section */}
+      <Meta
+        title="Beste Cadeau Deals & Aanbiedingen | Gifteez"
+        description="Ontdek dagelijks geüpdatete cadeau deals: top 10 populaire cadeaus, weekdeal en categorie selectie. Altijd inspiratie met voordeel."
+        canonical="https://gifteez.nl/deals"
+        ogImage="https://gifteez.nl/images/og-deals.png"
+      />
+      <JsonLd data={itemListSchema} id="jsonld-deals-itemlist" />
+  {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-primary via-accent to-accent-hover text-white overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_30%_40%,#ffffff,transparent_60%),radial-gradient(circle_at_70%_60%,#ffffff,transparent_55%)]"></div>
@@ -188,7 +214,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <SparklesIcon className="w-10 h-10 text-white" />
             </div>
             <h1 className="typo-h1 mb-6 tracking-tight text-white">
-              Beste <span className="bg-gradient-to-r from-emerald-200 to-emerald-400 bg-clip-text text-transparent">Cadeau Deals</span>
+              Beste <span className="bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent">Cadeau Deals</span>
             </h1>
             <p className="typo-lead text-white/90 max-w-3xl mx-auto mb-8">
               Ontdek de beste aanbiedingen en meest populaire cadeaus, zorgvuldig geselecteerd voor de hoogste kwaliteit tegen de laagste prijzen!
@@ -225,7 +251,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 </div>
                 {dealOfTheWeek.isOnSale && (
                   <div className="absolute top-6 right-6 z-10">
-                    <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold flex items-center gap-2 shadow">
+                    <div className="bg-gradient-to-r from-accent to-accent-hover text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold flex items-center gap-2 shadow">
                       <CheckIcon className="w-5 h-5" />
                       SALE
                     </div>
@@ -298,11 +324,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               De meest geliefde en hoog beoordeelde cadeaus van dit moment. Altijd een veilige keuze voor uiteenlopende gelegenheden.
             </p>
             <div className="flex justify-center items-center gap-4 mt-6">
-              <div className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-full text-sm font-semibold">
+              <div className="flex items-center gap-2 bg-muted-rose text-accent px-4 py-2 rounded-full text-sm font-semibold">
                 <CheckIcon className="w-4 h-4" />
                 Hoogste Kwaliteit
               </div>
-              <div className="flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold">
+              <div className="flex items-center gap-2 bg-highlight/10 text-highlight px-4 py-2 rounded-full text-sm font-semibold">
                 <StarIcon className="w-4 h-4" />
                 Best Beoordeeld
               </div>
@@ -351,7 +377,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
         {/* Amazon Teaser */}
         <section className="mb-20" aria-labelledby="amazon-deals-heading">
-          <div className="bg-gradient-to-r from-slate-50 to-emerald-50 rounded-3xl p-8 md:p-12 border border-emerald-100/60">
+          <div className="bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 md:p-12 border border-muted-rose/60">
             <div className="text-center mb-8">
               <h3 id="amazon-deals-heading" className="font-display text-3xl font-bold text-primary mb-4 tracking-tight">Amazon Aanbiedingen</h3>
               <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">Ontdek interessante Amazon deals via onze affiliate links (geen extra kosten voor jou – helpt ons platform ❤️).</p>

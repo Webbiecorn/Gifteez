@@ -1,0 +1,434 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import Button from './Button';
+import ImageWithFallback from './ImageWithFallback';
+import CoolblueFeedService, { CoolblueFeedMeta, CoolblueProduct } from '../services/coolblueFeedService';
+import { BlogPostData } from '../services/blogService';
+
+interface ProductPostWizardProps {
+  isOpen: boolean;
+  onCancel: () => void;
+  onGenerate: (postTemplate: BlogPostData) => void;
+}
+
+interface WizardState {
+  products: CoolblueProduct[];
+  meta: CoolblueFeedMeta;
+  loading: boolean;
+  error?: string;
+}
+
+const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel, onGenerate }) => {
+  const [state, setState] = useState<WizardState>({
+    products: [],
+    meta: CoolblueFeedService.getMeta(),
+    loading: true,
+  });
+  const [search, setSearch] = useState('');
+  const [selectedProducts, setSelectedProducts] = useState<CoolblueProduct[]>([]);
+  const [focusedProductId, setFocusedProductId] = useState<string | null>(null);
+  const [selectionWarning, setSelectionWarning] = useState<string | null>(null);
+  const MAX_SELECTION = 5;
+  const focusedProduct = useMemo(() => {
+    if (!selectedProducts.length) {
+      return null;
+    }
+    if (focusedProductId) {
+      const match = selectedProducts.find((item) => item.id === focusedProductId);
+      if (match) {
+        return match;
+      }
+    }
+    return selectedProducts[0] ?? null;
+  }, [selectedProducts, focusedProductId]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    let cancelled = false;
+    setState((prev) => ({ ...prev, loading: true, error: undefined }));
+
+    CoolblueFeedService.loadProducts()
+      .then((products) => {
+        if (cancelled) return;
+        setState({
+          products,
+          meta: CoolblueFeedService.getMeta(),
+          loading: false,
+        });
+  setSelectedProducts([]);
+  setFocusedProductId(null);
+  setSearch('');
+  setSelectionWarning(null);
+      })
+      .catch((error: any) => {
+        if (cancelled) return;
+        console.error('Kon Coolblue feed niet laden:', error);
+        setState({
+          products: [],
+          meta: CoolblueFeedService.getMeta(),
+          loading: false,
+          error: 'De productfeed kon niet geladen worden. Probeer het later opnieuw of importeer een nieuwe feed via het Shop tabblad.'
+        });
+        setSelectedProducts([]);
+        setFocusedProductId(null);
+        setSelectionWarning(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!selectedProducts.length) {
+      setFocusedProductId(null);
+      return;
+    }
+
+    setFocusedProductId((current) => {
+      if (!current || !selectedProducts.some((item) => item.id === current)) {
+        return selectedProducts[0].id;
+      }
+      return current;
+    });
+  }, [selectedProducts]);
+
+  const filteredProducts = useMemo(() => {
+    if (!state.products.length) {
+      return [];
+    }
+    const term = search.trim().toLowerCase();
+    if (!term) {
+      return state.products.slice(0, 40);
+    }
+
+    return state.products
+      .filter((product) => {
+        const haystack = `${product.name} ${product.description ?? ''} ${product.category ?? ''} ${(product.tags ?? []).join(' ')}`.toLowerCase();
+        return haystack.includes(term);
+      })
+      .slice(0, 60);
+  }, [state.products, search]);
+
+  const handleGenerate = () => {
+    if (!selectedProducts.length) {
+      setSelectionWarning('Selecteer minstens één product om een concept te genereren.');
+      return;
+    }
+
+    try {
+      const template = CoolblueFeedService.generateMultiProductTemplate(selectedProducts);
+      onGenerate(template);
+    } catch (error: any) {
+      console.error('Kon productpost niet genereren:', error);
+      setSelectionWarning(error?.message ?? 'Genereren mislukt. Probeer het opnieuw.');
+    }
+  };
+
+  const toggleProduct = (product: CoolblueProduct) => {
+    setSelectedProducts((prev) => {
+      const exists = prev.some((item) => item.id === product.id);
+      if (exists) {
+        const next = prev.filter((item) => item.id !== product.id);
+        setSelectionWarning(null);
+        setFocusedProductId((current) => {
+          if (current === product.id) {
+            return next[0]?.id ?? null;
+          }
+          return current;
+        });
+        return next;
+      }
+
+      if (prev.length >= MAX_SELECTION) {
+        setSelectionWarning(`Je kunt maximaal ${MAX_SELECTION} producten selecteren voor één artikel.`);
+        return prev;
+      }
+
+      setSelectionWarning(null);
+      setFocusedProductId(product.id);
+      return [...prev, product];
+    });
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-6">
+      <div className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+        <div className="border-b px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900">Productpost bouwen vanuit Coolblue feed</h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Kies een product uit de feed om automatisch een concept blogpost te genereren.
+              </p>
+              <p className="mt-1 text-xs text-gray-400">
+                Bron: {state.meta.source ?? 'onbekend'} · Laatst bijgewerkt: {new Date(state.meta.importedAt).toLocaleString('nl-NL')} · {state.meta.total} producten beschikbaar
+              </p>
+            </div>
+            <button
+              onClick={onCancel}
+              className="text-2xl text-gray-400 transition hover:text-gray-600"
+              aria-label="Sluiten"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+
+        <div className="grid flex-1 grid-cols-1 gap-0 overflow-hidden md:grid-cols-[2fr_3fr]">
+          <div className="border-r p-6">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Zoek in feed</label>
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Zoek op productnaam, categorie of tags..."
+                className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-200"
+              />
+            </div>
+
+            <div className="space-y-3 overflow-y-auto pr-2" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+              {state.loading && (
+                <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-gray-50 py-12 text-gray-500">
+                  <div className="mb-3 h-8 w-8 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
+                  <p className="text-sm">Producten laden...</p>
+                </div>
+              )}
+
+              {state.error && !state.loading && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  {state.error}
+                </div>
+              )}
+
+              {!state.loading && !state.error && filteredProducts.length === 0 && (
+                <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 text-center text-sm text-gray-500">
+                  Geen producten gevonden voor deze zoekopdracht.
+                </div>
+              )}
+
+              {!state.loading && !state.error && filteredProducts.map((product) => {
+                const isSelected = selectedProducts.some((item) => item.id === product.id);
+                const rank = isSelected ? selectedProducts.findIndex((item) => item.id === product.id) + 1 : null;
+                const disabled = !isSelected && selectedProducts.length >= MAX_SELECTION;
+                return (
+                  <button
+                    type="button"
+                    key={product.id}
+                    onClick={() => toggleProduct(product)}
+                    disabled={disabled}
+                    className={`flex w-full items-start gap-3 rounded-xl border px-3 py-3 text-left transition ${
+                      isSelected
+                        ? 'border-rose-500 bg-rose-50/80 shadow-sm'
+                        : 'border-gray-200 bg-white hover:border-rose-200 hover:bg-rose-50/50'
+                    } ${disabled ? 'cursor-not-allowed opacity-60' : ''}`}
+                  >
+                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      <ImageWithFallback
+                        src={product.imageUrl || product.image || '/images/amazon-placeholder.png'}
+                        alt={product.name}
+                        className="h-full w-full object-cover"
+                      />
+                      {isSelected && (
+                        <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-rose-500 text-xs font-semibold text-white shadow-md">
+                          {rank}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900 line-clamp-2">{product.name}</p>
+                          <p className="mt-1 text-xs text-gray-500 line-clamp-2">{product.description}</p>
+                        </div>
+                        <div className="text-right text-xs font-semibold text-rose-500">
+                          €{product.price.toFixed(2)}
+                        </div>
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-2 text-[11px] uppercase tracking-wide text-gray-400">
+                        {product.category && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-rose-600">{product.category}</span>}
+                        {(product.tags ?? []).slice(0, 3).map((tag) => (
+                          <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5">{tag}</span>
+                        ))}
+                      </div>
+                      {!isSelected && disabled && (
+                        <p className="mt-2 text-[11px] font-medium text-amber-600">Maximum van {MAX_SELECTION} items bereikt. Deselecteer eerst een product.</p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex flex-col p-6">
+            <div className="mb-4 flex flex-col gap-1 border-b border-gray-200 pb-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Geselecteerde producten ({selectedProducts.length}/{MAX_SELECTION})
+                </h3>
+                {selectedProducts.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedProducts([]);
+                      setFocusedProductId(null);
+                      setSelectionWarning(null);
+                    }}
+                    className="text-xs font-semibold text-rose-500 hover:text-rose-600"
+                  >
+                    Reset selectie
+                  </button>
+                )}
+              </div>
+              <p className="text-xs text-gray-500">
+                Hero-afbeelding wordt bewust niet ingevuld; voeg in de editor zelf een pakkende visual toe.
+              </p>
+            </div>
+
+            {selectionWarning && (
+              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+                {selectionWarning}
+              </div>
+            )}
+
+            {!selectedProducts.length ? (
+              <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 text-center text-gray-500">
+                <div className="text-4xl">🛍️</div>
+                <p className="mt-4 text-sm font-medium">Selecteer links tot {MAX_SELECTION} producten om een lijstartikel te bouwen.</p>
+                <p className="mt-2 text-xs text-gray-400">Na genereren kun je de intro, hero-afbeelding en SEO volledig aanpassen.</p>
+              </div>
+            ) : (
+              <>
+                <ol className="mb-4 space-y-2">
+                  {selectedProducts.map((product, index) => {
+                    const isFocused = focusedProduct?.id === product.id;
+                    return (
+                      <li key={product.id} className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white/80 px-3 py-2">
+                        <button
+                          type="button"
+                          onClick={() => setFocusedProductId(product.id)}
+                          className={`flex flex-1 items-center gap-3 text-left transition ${
+                            isFocused ? 'text-rose-600' : 'text-gray-700 hover:text-rose-500'
+                          }`}
+                        >
+                          <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+                            isFocused ? 'bg-rose-500 text-white' : 'bg-gray-200 text-gray-700'
+                          }`}>
+                            {index + 1}
+                          </span>
+                          <span className="flex-1 text-sm font-medium line-clamp-1">{product.name}</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggleProduct(product)}
+                          className="text-xs font-semibold text-gray-400 hover:text-red-500"
+                        >
+                          Verwijder
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ol>
+
+                {focusedProduct && (
+                  <div className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white/60 p-4">
+                    <div className="flex items-start gap-4">
+                      <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-2xl bg-gray-100">
+                        <ImageWithFallback
+                          src={focusedProduct.imageUrl || focusedProduct.image || '/images/amazon-placeholder.png'}
+                          alt={focusedProduct.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-base font-semibold text-gray-900">{focusedProduct.name}</h4>
+                        <p className="mt-1 text-sm text-gray-600">{focusedProduct.description ?? 'Geen productbeschrijving beschikbaar.'}</p>
+                        <div className="mt-3 flex flex-wrap gap-2 text-[11px] uppercase tracking-wide text-gray-400">
+                          {focusedProduct.category && <span className="rounded-full bg-rose-100 px-2 py-0.5 text-rose-600">{focusedProduct.category}</span>}
+                          {(focusedProduct.tags ?? []).map((tag) => (
+                            <span key={tag} className="rounded-full bg-gray-100 px-2 py-0.5">{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+                      <h5 className="mb-2 font-semibold text-gray-900">Kernpunten</h5>
+                      <ul className="list-disc pl-5">
+                        {(focusedProduct.shortDescription?.split('.') ?? [])
+                          .map((snippet) => snippet.trim())
+                          .filter(Boolean)
+                          .slice(0, 5)
+                          .map((snippet, index) => (
+                            <li key={index} className="mb-1">{snippet}</li>
+                          ))}
+                        {!focusedProduct.shortDescription && <li>Voeg later eigen bulletpoints toe in de editor.</li>}
+                      </ul>
+                    </div>
+
+                    <div className="mt-4 grid grid-cols-2 gap-3 text-sm text-gray-600">
+                      <div className="rounded-xl border border-gray-200 p-3">
+                        <p className="text-xs uppercase text-gray-400">Prijs</p>
+                        <p className="text-base font-semibold text-gray-900">€{focusedProduct.price.toFixed(2)}</p>
+                      </div>
+                      <div className="rounded-xl border border-gray-200 p-3">
+                        <p className="text-xs uppercase text-gray-400">Affiliate link</p>
+                        {focusedProduct.affiliateLink ? (
+                          <a href={focusedProduct.affiliateLink} className="break-all text-xs text-rose-500" target="_blank" rel="noreferrer">
+                            {focusedProduct.affiliateLink}
+                          </a>
+                        ) : (
+                          <p className="text-xs text-gray-400">Geen link gevonden</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
+              <div className="text-xs text-gray-400">
+                {selectedProducts.length > 1
+                  ? `We vullen automatisch een top ${selectedProducts.length} artikel met tussenkoppen en productsections.`
+                  : 'De gegenereerde post opent in de editor zodat je tekst en SEO kunt bijwerken.'}
+              </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedProducts([]);
+                    setFocusedProductId(null);
+                    setSelectionWarning(null);
+                  }}
+                  disabled={!selectedProducts.length}
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-600 shadow-sm transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Selectie wissen
+                </button>
+                <Button
+                  variant="accent"
+                  onClick={handleGenerate}
+                  disabled={!selectedProducts.length}
+                  className="px-6"
+                >
+                  {selectedProducts.length > 1 ? `Genereer top ${selectedProducts.length}` : 'Genereer blogpost'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProductPostWizard;

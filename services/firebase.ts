@@ -3,6 +3,7 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
+import { getStorage, type FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, isSupported, type Analytics } from 'firebase/analytics';
 
 const cfg = {
@@ -20,12 +21,14 @@ const hasRequired = Boolean(cfg.apiKey && cfg.projectId);
 let app: FirebaseApp | null = null;
 let authInst: Auth | null = null;
 let dbInst: Firestore | null = null;
+let storageInst: FirebaseStorage | null = null;
 let analyticsInst: Analytics | null = null;
 
 if (hasRequired) {
   app = getApps().length ? getApp() : initializeApp(cfg);
   authInst = getAuth(app);
   dbInst = getFirestore(app);
+  storageInst = getStorage(app);
 }
 
 // Function to initialize analytics with consent
@@ -68,5 +71,6 @@ if (hasRequired && checkStoredConsent()) {
 
 export const auth = authInst;
 export const db = dbInst;
+export const storage = storageInst;
 export const firebaseEnabled = hasRequired;
 export const analytics = analyticsInst;

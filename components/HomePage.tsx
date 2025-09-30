@@ -1,29 +1,25 @@
 
-import React, { useState, FormEvent, useEffect } from 'react';
+import React, { useState, FormEvent, useEffect, useMemo } from 'react';
 import { Container } from './layout/Container';
 import ImageWithFallback from './ImageWithFallback';
 import PlannerIllustration from './PlannerIllustration';
 import LazyViewport from './LazyViewport';
-import PictureImage from './PictureImage';
 import { topicImage, Topics } from '../services/images';
 import { Testimonial, NavigateTo } from '../types';
 import Button from './Button';
 import TestimonialCard from './TestimonialCard';
-import { blogPosts } from '../data/blogData';
-import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon } from './IconComponents';
+import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon, CalendarIcon } from './IconComponents';
 import AmazonTeaser from './AmazonTeaser';
 import QuizIllustration from './QuizIllustration';
 import { gaPageView } from '../services/googleAnalytics';
 import { pinterestPageVisit } from '../services/pinterestTracking';
+import { useBlogContext } from '../contexts/BlogContext';
 
 interface HomePageProps {
   navigateTo: NavigateTo;
 }
 
-const trendingGuides = [
-  { id: 1, title: 'Duurzame & Eco-vriendelijke Cadeaus', base: '/images/trending-eco', slug: 'duurzame-eco-vriendelijke-cadeaus' },
-  // Ervaringscadeaus gids verwijderd (content pruning September 2025)
-];
+const HERO_MASCOT_VERSION = 'v20250928-new';
 
 const curatedCollections = [
   {
@@ -49,9 +45,22 @@ const testimonials: Testimonial[] = [
 ];
 
 const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
-const latestPosts = blogPosts.slice(0, 3);
-
 const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
+  const { posts: blogPosts } = useBlogContext();
+
+  const trendingPosts = useMemo(() => blogPosts.slice(0, 3), [blogPosts]);
+
+  const latestPosts = useMemo(() => {
+    const trendingSlugs = new Set(trendingPosts.map((post) => post.slug));
+    const remaining = blogPosts.filter((post) => !trendingSlugs.has(post.slug));
+    return remaining.slice(0, 3);
+  }, [blogPosts, trendingPosts]);
+
+  const getReadingTimeMinutes = (text: string) => {
+    if (!text) return 1;
+    const words = text.split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+  };
   // Pinterest PageVisit tracking for homepage
   useEffect(() => {
     pinterestPageVisit('homepage', `home_${Date.now()}`);
@@ -102,44 +111,87 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
   return (
     <div className="space-y-24 pb-24">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,#10b98115,transparent_60%)]"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-emerald-50/40"></div>
-        <Container size="xl" className="py-24 md:py-32 relative z-10">
-          <div className="text-center max-w-5xl mx-auto">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-emerald-600/90 text-white rounded-2xl mb-10 shadow-xl ring-4 ring-emerald-600/20">
-              <span className="text-4xl" aria-hidden="true">🎁</span>
-              <span className="sr-only">Gifteez cadeau zoektocht</span>
+      <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-pink-50">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -left-24 h-80 w-80 rounded-full bg-orange-200/30 blur-3xl" aria-hidden="true" />
+          <div className="absolute -bottom-32 right-1/3 h-96 w-96 rounded-full bg-pink-200/20 blur-3xl" aria-hidden="true" />
+          <div className="absolute top-16 right-12 h-72 w-72 rounded-full bg-red-200/40 blur-3xl" aria-hidden="true" />
+        </div>
+        <Container size="xl" className="relative z-10 py-24 lg:py-32">
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            <div className="space-y-8 text-center lg:text-left">
+              <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2 text-sm font-semibold text-red-600 shadow-sm shadow-red-100 lg:mx-0">
+                <span className="text-lg">🎁</span>
+                AI GiftFinder met persoonlijke touch
+              </div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 leading-tight tracking-tight">
+                Vind het perfecte cadeau, <span className="text-red-500">moeiteloos</span>.
+              </h1>
+              <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Elke dag nieuwe inspiratie, afgestemd op jouw ontvanger. Laat onze slimme Cadeauzoeker het voorwerk doen terwijl jij geniet van het verrassingseffect.
+              </p>
+              <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-start">
+                <Button
+                  variant="accent"
+                  onClick={() => navigateTo('giftFinder')}
+                  className="bg-red-500 hover:bg-red-600 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white text-white px-10 sm:px-12 py-4 sm:py-5 rounded-2xl font-semibold text-lg md:text-xl shadow-lg shadow-red-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
+                >
+                  Start de Cadeauzoeker
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => navigateTo('quiz')}
+                  className="flex items-center gap-2 rounded-2xl border border-red-200 bg-white/90 px-5 py-3 text-sm font-semibold text-red-600 shadow-sm transition hover:border-red-300 hover:bg-white hover:shadow-md"
+                >
+                  🎯 Doe de Cadeau Quiz
+                </button>
+              </div>
+              <div className="hidden flex-wrap items-center justify-center gap-6 text-left lg:justify-start sm:flex">
+                <div className="rounded-2xl bg-white/90 px-5 py-4 shadow-sm shadow-red-100">
+                  <div className="text-3xl font-black text-red-500">1000+</div>
+                  <div className="text-sm font-semibold text-gray-500">Cadeau ideeën</div>
+                </div>
+                <div className="rounded-2xl bg-white/90 px-5 py-4 shadow-sm shadow-red-100">
+                  <div className="text-3xl font-black text-red-500">30</div>
+                  <div className="text-sm font-semibold text-gray-500">Seconden tot match</div>
+                </div>
+                <div className="rounded-2xl bg-white/90 px-5 py-4 shadow-sm shadow-red-100">
+                  <div className="flex items-center gap-2 text-3xl font-black text-red-500">
+                    4.8
+                    <span className="text-base">⭐</span>
+                  </div>
+                  <div className="text-sm font-semibold text-gray-500">Gebruikersscore</div>
+                </div>
+              </div>
             </div>
-            <h1 className="typo-h1 mb-8 tracking-tight">
-              Vind in <span className="text-emerald-600">30 seconden</span> het perfecte cadeau met AI
-            </h1>
-            <p className="typo-lead max-w-3xl mx-auto mb-12">
-              Geen keuzestress meer. Onze slimme GiftFinder geeft je direct persoonlijke inspiratie op basis van relatie, interesses en budget.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-              <Button
-                variant="accent"
-                onClick={() => navigateTo('giftFinder')}
-                className="px-10 py-5 text-lg font-semibold shadow-lg hover:shadow-emerald-600/40 hover:-translate-y-0.5 transition-all duration-300"
-              >
-                Start GiftFinder
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => navigateTo('quiz')}
-                className="px-10 py-5 text-lg font-semibold border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-all duration-300"
-              >
-                Doe de Quiz
-              </Button>
-            </div>
-            <div className="mt-12 flex flex-wrap justify-center gap-6 text-sm text-slate-500">
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Persoonlijk & snel</div>
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Geen account nodig om te starten</div>
-              <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-emerald-500"></span>Gratis te gebruiken</div>
+            <div className="relative flex justify-center lg:justify-center">
+              <div className="relative w-full max-w-[480px] -ml-4 lg:-ml-8">
+                {/* Floating decorative elements */}
+                <div className="hero-floating hero-floating--sparkle absolute -top-2 right-8 text-2xl" aria-hidden="true">✨</div>
+                <div className="hero-floating hero-floating--heart absolute top-6 right-10 text-xl" aria-hidden="true">❤️</div>
+                <div className="hero-floating hero-floating--star absolute bottom-16 -left-2 text-2xl" aria-hidden="true">🌟</div>
+                
+                <div className="hero-gift-container relative flex items-center justify-center">
+                  <div className="hero-aura absolute inset-0" aria-hidden="true"></div>
+                  <ImageWithFallback
+                    src={`/images/gifteez-mascotte-wavin.png?${HERO_MASCOT_VERSION}`}
+                    alt="Vrolijke Gifteez cadeaumascotte met rode strik"
+                    width={520}
+                    height={520}
+                    fit="contain"
+                    className="hero-gift-wave relative z-10 w-full max-w-[380px] drop-shadow-[0_25px_30px_rgba(229,57,53,0.25)] hover:scale-105 transition-transform duration-500 cursor-pointer"
+                    showSkeleton
+                  />
+                </div>
+                
+                {/* Animated shadow/podium */}
+                <div className="hero-podium relative flex w-full items-center justify-center">
+                  <div className="h-3 w-40 rounded-full bg-gradient-to-r from-rose-200 via-rose-100 to-amber-100 opacity-80 hero-shadow-pulse"></div>
+                </div>
+              </div>
             </div>
           </div>
-  </Container>
+        </Container>
       </section>
 
       {/* Trending Guides */}
@@ -149,57 +201,82 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
           <p className="typo-body text-slate-600 max-w-2xl mx-auto">Ontdek onze populairste gidsen voor cadeau-inspiratie</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {trendingGuides.map((guide, i) => (
-            <LazyViewport key={guide.id}>
-              {(visible) => (
-                <div
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden group cursor-pointer opacity-0 animate-fade-in-up transform hover:scale-105 transition-all duration-300 border border-gray-100"
-                  style={{ animationDelay: `${200 + i * 100}ms` }}
-                  onClick={() => guide.slug ? navigateTo('blogDetail', { slug: guide.slug }) : navigateTo('blog')}
-                >
-                  <div className="relative overflow-hidden">
-                    {visible && (
-                      <PictureImage
-                        alt={guide.title}
-                        width={400}
-                        height={300}
-                        fallback={`${guide.base}.jpg`}
-                        sources={[
-                          { src: `${guide.base}.avif`, type: 'image/avif' },
-                          { src: `${guide.base}.webp`, type: 'image/webp' },
-                          { src: `${guide.base}.png`, type: 'image/png' }
-                        ]}
-                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-emerald-600 transition-colors duration-300">{guide.title}</h3>
-                    <div className="mt-4 flex items-center text-sm text-gray-500">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                        Lees meer →
-                      </span>
+          {trendingPosts.length > 0 ? (
+            trendingPosts.map((post, i) => {
+              const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
+                month: 'short',
+                day: 'numeric'
+              });
+
+              return (
+                <LazyViewport key={post.slug}>
+                  {(visible) => (
+                    <div
+                      className="bg-white rounded-2xl shadow-lg hover:shadow-2xl overflow-hidden group cursor-pointer opacity-0 animate-fade-in-up transform hover:scale-105 transition-all duration-300 border border-gray-100"
+                      style={{ animationDelay: `${200 + i * 100}ms` }}
+                      onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+                    >
+                      <div className="relative overflow-hidden">
+                        {visible && (
+                          <ImageWithFallback
+                            src={post.imageUrl}
+                            alt={post.title}
+                            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="absolute top-4 left-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-primary text-xs font-semibold">
+                            {post.category}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-6 space-y-3">
+                        <h3 className="font-display text-xl font-bold text-primary group-hover:text-accent transition-colors duration-300">
+                          {post.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+                          {post.excerpt}
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <span className="inline-flex items-center gap-2">
+                            <CalendarIcon className="w-4 h-4" />
+                            {formattedDate}
+                          </span>
+                          <span className="inline-flex items-center gap-2">
+                            <BookOpenIcon className="w-4 h-4" />
+                            {getReadingTimeMinutes(post.excerpt)} min
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
-            </LazyViewport>
-          ))}
+                  )}
+                </LazyViewport>
+              );
+            })
+          ) : (
+            <div className="col-span-full rounded-2xl border border-dashed border-gray-200 bg-white/70 p-10 text-center shadow-inner">
+              <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <BookOpenIcon className="h-7 w-7" />
+              </div>
+              <h3 className="font-display text-xl font-semibold text-primary">Nog geen cadeaugidsen</h3>
+              <p className="mt-2 text-sm text-gray-600">Publiceer je eerste blogpost om deze sectie te vullen.</p>
+            </div>
+          )}
         </div>
   </Container>
 
       {/* GiftFinder Preview */}
-  <section className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50/30 py-24">
+  <section className="bg-gradient-to-br from-rose-50 via-white to-orange-50/40 py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             {/* Header Section */}
             <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-600 rounded-2xl mb-6 shadow-xl ring-4 ring-emerald-600/25">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-accent rounded-2xl mb-6 shadow-xl ring-4 ring-accent/25">
                 <span className="text-3xl">🎯</span>
               </div>
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-slate-900 mb-4 leading-tight">
-                Probeer de <span className="text-emerald-600">GiftFinder</span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight">
+                Probeer de <span className="text-accent">GiftFinder</span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
                 Kies voor wie je een cadeau zoekt en onze AI doet de rest. Ontvang direct gepersonaliseerde cadeau-ideeën!
@@ -209,7 +286,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             {/* Interactive Form Card */}
             <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl border border-gray-100/70 overflow-hidden transition-shadow">
               {/* Top gradient bar */}
-              <div className="h-2 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400"></div>
+              <div className="h-2 bg-gradient-to-r from-primary via-accent to-highlight"></div>
 
               <div className="p-8 md:p-12">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -223,7 +300,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         <select
                           value={previewRecipient}
                           onChange={(e) => setPreviewRecipient(e.target.value)}
-                          className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 bg-white shadow-sm transition-all duration-200 appearance-none"
+                          className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-highlight/40 focus:border-accent bg-white shadow-sm transition-all duration-200 appearance-none"
                           aria-label="Voor wie zoek je een cadeau?"
                         >
                           {recipients.map(r => <option key={r} value={r}>{r}</option>)}
@@ -239,7 +316,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     <Button
                       variant="accent"
                       onClick={() => navigateTo('giftFinder', { recipient: previewRecipient })}
-                      className="w-full px-8 py-4 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-emerald-600/40 transform hover:-translate-y-0.5 transition-all duration-300 rounded-xl"
+                      className="w-full px-8 py-4 text-lg font-bold bg-accent hover:bg-accent-hover text-white shadow-lg hover:shadow-accent/40 transform hover:-translate-y-0.5 transition-all duration-300 rounded-xl"
                     >
                       <span className="flex items-center justify-center gap-3">
                         <span>🔍</span>
@@ -252,8 +329,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                   {/* Features Section */}
                   <div className="space-y-6">
                     <div className="grid grid-cols-1 gap-4">
-                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100/40 rounded-xl border border-emerald-100">
-                        <div className="flex-shrink-0 w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-rose-50 to-orange-50/60 rounded-xl border border-muted-rose">
+                        <div className="flex-shrink-0 w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                           <span className="text-white text-lg">🤖</span>
                         </div>
                         <div>
@@ -262,8 +339,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-white rounded-xl border border-emerald-100/60">
-                        <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-rose-50 to-white rounded-xl border border-muted-rose/70">
+                        <div className="flex-shrink-0 w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                           <span className="text-white text-lg">⚡</span>
                         </div>
                         <div>
@@ -272,8 +349,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-emerald-50 to-emerald-100/30 rounded-xl border border-emerald-100">
-                        <div className="flex-shrink-0 w-10 h-10 bg-emerald-400 rounded-lg flex items-center justify-center">
+                      <div className="flex items-start gap-4 p-4 bg-gradient-to-r from-rose-50 to-orange-50/40 rounded-xl border border-muted-rose">
+                        <div className="flex-shrink-0 w-10 h-10 bg-highlight rounded-lg flex items-center justify-center text-primary">
                           <span className="text-white text-lg">🎯</span>
                         </div>
                         <div>
@@ -287,18 +364,18 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
                 {/* Bottom stats */}
                 <div className="mt-8 pt-8 border-t border-gray-100">
-                  <div className="flex flex-wrap justify-center gap-10 text-center">
+                  <div className="hidden flex-wrap justify-center gap-10 text-center sm:flex">
                     <div>
-                      <div className="text-2xl font-bold text-emerald-600">1000+</div>
-                      <div className="text-sm text-gray-500">Cadeau Ideeën</div>
+                      <div className="text-2xl font-bold text-accent">1000+</div>
+                      <div className="text-sm text-primary/60">Cadeau Ideeën</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-emerald-600">30</div>
-                      <div className="text-sm text-gray-500">Seconden</div>
+                      <div className="text-2xl font-bold text-accent">30</div>
+                      <div className="text-sm text-primary/60">Seconden</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-emerald-600">4.8/5</div>
-                      <div className="text-sm text-gray-500">Gebruikers Score</div>
+                      <div className="text-2xl font-bold text-accent">4.8/5</div>
+                      <div className="text-sm text-primary/60">Gebruikers Score</div>
                     </div>
                   </div>
                 </div>
@@ -509,7 +586,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">Blijf op de hoogte van de nieuwste cadeau-trends en tips</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {latestPosts.map((post, index) => (
+          {latestPosts.length > 0 ? latestPosts.map((post, index) => (
             <LazyViewport key={post.slug}>
               {(visible) => (
                 <div
@@ -533,7 +610,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-emerald-600 transition-colors duration-300 mb-3">
+                    <h3 className="font-display text-xl font-bold text-primary group-hover:text-accent transition-colors duration-300 mb-3">
                       {post.title}
                     </h3>
                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
@@ -541,13 +618,21 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-500">Lees meer</span>
-                      <span className="text-blue-600 font-medium text-sm">→</span>
+                      <span className="text-accent font-medium text-sm">→</span>
                     </div>
                   </div>
                 </div>
               )}
             </LazyViewport>
-          ))}
+          )) : (
+            <div className="col-span-full rounded-2xl border border-dashed border-gray-200 bg-white/70 p-10 text-center shadow-inner">
+              <div className="mx-auto mb-4 inline-flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <BookOpenIcon className="h-7 w-7" />
+              </div>
+              <h3 className="font-display text-xl font-semibold text-primary">Nog geen extra guides</h3>
+              <p className="mt-2 text-sm text-gray-600">Zodra er meerdere artikelen beschikbaar zijn, tonen we hier de nieuwste cadeaugidsen.</p>
+            </div>
+          )}
         </div>
       </section>
 

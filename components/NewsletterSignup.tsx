@@ -1,26 +1,41 @@
-import React, { useState } from 'react';
-import Button from './Button';
+import React, { useEffect, useState } from 'react';
 import { NewsletterService } from '../services/newsletterService';
 import { EmailNotificationService } from '../services/emailNotificationService';
 
 interface NewsletterSignupProps {
-  variant?: 'inline' | 'modal' | 'footer';
+  variant?: 'inline' | 'modal';
   className?: string;
   onSuccess?: () => void;
+  title?: string;
+  description?: string;
+  defaultCategories?: string[];
+  defaultFrequency?: 'immediate' | 'daily' | 'weekly';
 }
 
 export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
   variant = 'inline',
   className = '',
-  onSuccess
+  onSuccess,
+  title,
+  description,
+  defaultCategories,
+  defaultFrequency,
 }) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [frequency, setFrequency] = useState<'immediate' | 'daily' | 'weekly'>('weekly');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [frequency, setFrequency] = useState<'immediate' | 'daily' | 'weekly'>(defaultFrequency ?? 'weekly');
+  const [categories, setCategories] = useState<string[]>(defaultCategories ?? []);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  useEffect(() => {
+    setFrequency(defaultFrequency ?? 'weekly');
+  }, [defaultFrequency]);
+
+  useEffect(() => {
+    setCategories(defaultCategories ?? []);
+  }, [defaultCategories?.join(',')]);
 
   const showMessage = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text });
@@ -64,8 +79,8 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
       // Reset form
       setEmail('');
       setName('');
-      setFrequency('weekly');
-      setCategories([]);
+  setFrequency(defaultFrequency ?? 'weekly');
+  setCategories(defaultCategories ?? []);
       setIsExpanded(false);
 
       onSuccess?.();
@@ -90,66 +105,70 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
   };
 
   const containerClasses = {
-    inline: 'bg-gradient-to-r from-rose-50 to-pink-50 p-6 rounded-lg border border-rose-200',
-    modal: 'bg-white p-6 rounded-lg shadow-lg max-w-md w-full',
-    footer: 'bg-white p-4 rounded-lg border border-gray-200'
+    inline: 'relative overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-br from-white via-muted-rose/40 to-white p-6 shadow-[0_20px_45px_-28px_rgba(244,63,94,0.45)]',
+    modal: 'relative bg-white p-6 rounded-2xl shadow-lg max-w-md w-full',
   };
+
+  const isInline = variant === 'inline';
 
   return (
     <div className={`${containerClasses[variant]} ${className}`}>
+      {isInline && (
+        <div className="pointer-events-none absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_top,#fda4af22,transparent_55%)]"></div>
+      )}
       {/* Message display */}
       {message && (
-        <div className={`mb-4 p-3 rounded-lg text-sm ${
+        <div className={`relative z-10 mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
           message.type === 'success' 
-            ? 'bg-green-100 text-green-800 border border-green-200' 
-            : 'bg-red-100 text-red-800 border border-red-200'
+            ? 'border-accent/20 bg-accent/10 text-primary' 
+            : 'border-highlight/20 bg-highlight/10 text-primary'
         }`}>
           {message.text}
         </div>
       )}
 
-      <div className="text-center mb-4">
-        <h3 className="text-lg font-bold text-gray-900 mb-2">
-          📧 Blijf op de hoogte!
+      <div className="relative z-10 mb-4 text-center">
+            <h3 className="font-display text-lg font-semibold uppercase tracking-[0.15em] text-primary mb-2">
+              {title ?? '📧 Blijf op de hoogte!'}
         </h3>
-        <p className="text-gray-600 text-sm">
-          Ontvang de nieuwste cadeau-ideeën en blog posts direct in je inbox
+            <p className="mx-auto max-w-xs text-sm leading-relaxed text-primary/70">
+              {description ?? 'Ontvang de nieuwste cadeau-ideeën en blog posts direct in je inbox'}
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-2">
+      <form onSubmit={handleSubmit} className="relative z-10 space-y-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Je e-mailadres"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+            className="flex-1 rounded-xl border border-muted-rose/70 bg-white/80 px-4 py-3 text-primary placeholder:text-primary/40 outline-none transition-all focus:border-accent/40 focus:ring-2 focus:ring-accent/40"
             required
           />
-          <Button
+          <button
             type="submit"
-            loading={isLoading}
-            className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white font-medium rounded-lg hover:from-rose-700 hover:to-pink-700 transition-all duration-200"
+            disabled={isLoading}
+            className={`inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-accent to-accent-hover px-6 py-3 font-display text-sm font-semibold uppercase tracking-wide text-white shadow-[0_12px_25px_-12px_rgba(244,63,94,0.65)] transition-all hover:shadow-[0_16px_35px_-18px_rgba(244,63,94,0.75)] focus:outline-none focus:ring-2 focus:ring-accent/50 focus:ring-offset-2 focus:ring-offset-white ${isLoading ? 'cursor-not-allowed opacity-80' : ''}`}
           >
-            Aanmelden
-          </Button>
+            {isLoading ? 'Even geduld...' : 'Aanmelden'}
+          </button>
         </div>
 
         {/* Advanced preferences toggle */}
         <button
           type="button"
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-sm text-rose-600 hover:text-rose-700 font-medium"
+          className="flex items-center gap-1 text-sm font-medium text-accent hover:text-accent-hover"
         >
           {isExpanded ? '▼ Minder opties' : '▶ Meer opties'}
         </button>
 
         {isExpanded && (
-          <div className="space-y-4 border-t border-gray-200 pt-4">
+          <div className="space-y-4 border-t border-muted-rose/60 pt-4">
             {/* Name field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mb-1 block text-sm font-medium text-primary/80">
                 Naam (optioneel)
               </label>
               <input
@@ -157,13 +176,13 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Je naam"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                className="w-full rounded-xl border border-muted-rose/60 bg-white/80 px-3 py-2 text-primary placeholder:text-primary/40 focus:border-accent/40 focus:ring-2 focus:ring-accent/40"
               />
             </div>
 
             {/* Frequency selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-primary/80">
                 Hoe vaak wil je e-mails ontvangen?
               </label>
               <div className="space-y-2">
@@ -178,9 +197,9 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
                       value={option.value}
                       checked={frequency === option.value}
                       onChange={(e) => setFrequency(e.target.value as any)}
-                      className="mr-2 text-rose-600"
+                      className="mr-2 text-accent focus:ring-accent/40"
                     />
-                    <span className="text-sm text-gray-700">{option.label}</span>
+                    <span className="text-sm text-primary/80">{option.label}</span>
                   </label>
                 ))}
               </div>
@@ -188,7 +207,7 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
 
             {/* Category selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-primary/80">
                 Interessante categorieën (laat leeg voor alles)
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -198,9 +217,9 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
                       type="checkbox"
                       checked={categories.includes(category)}
                       onChange={() => handleCategoryToggle(category)}
-                      className="mr-2 text-rose-600"
+                      className="mr-2 text-accent focus:ring-accent/40"
                     />
-                    <span className="text-sm text-gray-700">{category}</span>
+                    <span className="text-sm text-primary/80">{category}</span>
                   </label>
                 ))}
               </div>
@@ -208,12 +227,9 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
           </div>
         )}
       </form>
-
-      {variant === 'footer' && (
-        <p className="text-xs text-gray-500 mt-3 text-center">
-          Je kunt je op elk moment uitschrijven via de link in onze e-mails
-        </p>
-      )}
+      <p className="relative z-10 mt-4 text-center text-xs text-primary/60">
+        Je kunt je op elk moment uitschrijven via de link in onze e-mails
+      </p>
     </div>
   );
 };

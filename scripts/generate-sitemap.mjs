@@ -25,38 +25,52 @@ function escapeXml(s) {
 }
 
 async function getPostUrls() {
+  const urls = [];
+  // 1. Probeer Markdown posts (optioneel toekomst)
   try {
-  const files = await fs.readdir(POSTS_DIR);
-    const urls = [];
+    const files = await fs.readdir(POSTS_DIR);
     for (const file of files) {
-      if (!file.endsWith(".md")) continue;
-      const slug = file.replace(/\.md$/, "");
+      if (!file.endsWith('.md')) continue;
+      const slug = file.replace(/\.md$/, '');
       const filePath = path.join(POSTS_DIR, file);
       const stat = await fs.stat(filePath);
-      const lastmod = stat.mtime.toISOString().split("T")[0];
-
+      const lastmod = stat.mtime.toISOString().split('T')[0];
       urls.push({
         loc: `${SITE}/blog/${encodeURIComponent(slug)}`,
         lastmod,
-        changefreq: "weekly",
-        priority: "0.6",
+        changefreq: 'weekly',
+        priority: '0.6'
       });
     }
-    return urls;
-  } catch (e) {
-    // Map bestaat (nog) niet—geen posts
-    // Fallback: parse slugs from data/blogData.ts
-    try {
-      const src = await fs.readFile(BLOG_DATA_FILE, "utf8");
-      const slugMatches = [...src.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
-      for (const slug of slugMatches) {
-        urls.push({ loc: `${SITE}/blog/${encodeURIComponent(slug)}`, changefreq: "weekly", priority: "0.7" });
-      }
-      return urls;
-    } catch (_) {
-      return [];
-    }
+  } catch (_) {
+    // Geen markdown directory – negeren
   }
+
+  // 2. Parse altijd blogData.ts voor actuele slugs (single source of truth)
+  try {
+    const src = await fs.readFile(BLOG_DATA_FILE, 'utf8');
+    // Match per blog object: slug + publishedDate (niet perfect parser maar voldoende)
+    const postRegex = /slug:\s*'([^']+)'[\s\S]*?publishedDate:\s*'([^']+)'/g;
+    const found = new Set(urls.map(u => u.loc.split('/blog/')[1]));
+    let m;
+    while ((m = postRegex.exec(src)) !== null) {
+      const slug = m[1];
+      const published = m[2];
+      if (found.has(slug)) continue; // al via markdown
+      // validate date format YYYY-MM-DD
+      const lastmod = /\d{4}-\d{2}-\d{2}/.test(published) ? published : undefined;
+      urls.push({
+        loc: `${SITE}/blog/${encodeURIComponent(slug)}`,
+        lastmod,
+        changefreq: 'weekly',
+        priority: '0.7'
+      });
+    }
+  } catch (err) {
+    console.warn('[sitemap] Kon blogData.ts niet parsen:', err.message);
+  }
+
+  return urls;
 }
 
 function buildXml(urls) {

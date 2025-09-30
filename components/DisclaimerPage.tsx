@@ -22,7 +22,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ navigateTo }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary via-blue-500 to-indigo-600 text-white overflow-hidden">
+  <section className="relative bg-gradient-to-r from-primary via-accent to-accent-hover text-white overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
@@ -118,7 +118,7 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ navigateTo }) => {
                 Wij respecteren uw privacy en hanteren een strikt privacybeleid. Lees ons
                 <button
                   onClick={() => navigateTo('privacy')}
-                  className="text-primary hover:text-blue-600 underline ml-1"
+                  className="text-primary hover:text-accent underline ml-1"
                 >
                   privacybeleid
                 </button>
@@ -136,16 +136,16 @@ const DisclaimerPage: React.FC<DisclaimerPageProps> = ({ navigateTo }) => {
                 Heeft u vragen over deze disclaimer of onze diensten? Neem dan
                 <button
                   onClick={() => navigateTo('contact')}
-                  className="text-primary hover:text-blue-600 underline ml-1"
+                  className="text-primary hover:text-accent underline ml-1"
                 >
                   contact
                 </button>
                 met ons op.
               </p>
 
-              <div className="mt-12 p-6 bg-emerald-50 rounded-2xl border border-emerald-200">
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">Belangrijke Opmerking</h3>
-                <p className="text-blue-800">
+              <div className="mt-12 p-6 bg-secondary rounded-2xl border border-muted-rose">
+                <h3 className="text-lg font-semibold text-primary mb-2">Belangrijke Opmerking</h3>
+                <p className="text-accent">
                   Deze disclaimer is bedoeld om onze rechten en plichten duidelijk te maken. Het gebruik van Gifteez.nl
                   blijft volledig op eigen risico. Bij twijfel over juridische zaken raden wij u aan professioneel
                   advies in te winnen.

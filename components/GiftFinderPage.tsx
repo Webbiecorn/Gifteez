@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext, ChangeEvent } from 'react';
+import GiftFinderHero from './GiftFinderHero';
 import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, AdvancedFilters, GiftSearchParams } from '../types';
 import { findGiftsWithFilters, sortGifts, enhanceGiftsWithMetadata } from '../services/giftFilterService';
 import { processGiftsForAffiliateOnly } from '../services/affiliateFilterService';
@@ -41,86 +42,62 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [budget, setBudget] = useState<number>(50);
   const [occasion, setOccasion] = useState<string>(occasions[0]);
   const [interests, setInterests] = useState<string>('');
-  
-  // Advanced filtering state
   const [filters, setFilters] = useState<Partial<AdvancedFilters>>({});
   const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<'relevance' | 'price' | 'rating' | 'popularity'>('relevance');
-  
   const [gifts, setGifts] = useState<Gift[]>([]);
-  const [allGifts, setAllGifts] = useState<Gift[]>([]); // Store unfiltered results
+  const [allGifts, setAllGifts] = useState<Gift[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [searchPerformed, setSearchPerformed] = useState<boolean>(false);
-  
   const auth = useContext(AuthContext);
 
   useEffect(() => {
-    if (initialData?.recipient) {
-      setRecipient(initialData.recipient);
-    }
+    if (initialData?.recipient) setRecipient(initialData.recipient);
     if (initialData?.occasion) {
       const validOccasion = occasions.find(o => o.toLowerCase() === initialData.occasion?.toLowerCase());
-      if (validOccasion) {
-        setOccasion(validOccasion);
-      }
+      if (validOccasion) setOccasion(validOccasion);
     }
-
-    // Pinterest PageVisit tracking for gift finder
     pinterestPageVisit('gift_finder', `finder_${Date.now()}`);
-    
-    // Google Analytics pageview tracking for gift finder
     gaPageView('/gift-finder', 'AI Gift Finder - Gifteez.nl');
   }, [initialData]);
 
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
     const profileId = e.target.value;
-    if (profileId) {
-        const selectedProfile = auth?.currentUser?.profiles.find(p => p.id === profileId);
-        if (selectedProfile) {
-            const validRecipient = recipients.find(r => r.toLowerCase() === selectedProfile.relationship.toLowerCase());
-            setRecipient(validRecipient || recipients[0]);
-            setInterests(selectedProfile.interests);
-            showToast(`Profiel '${selectedProfile.name}' geladen!`);
-        }
+    if (!profileId) return;
+    const selectedProfile = auth?.currentUser?.profiles.find(p => p.id === profileId);
+    if (selectedProfile) {
+      const validRecipient = recipients.find(r => r.toLowerCase() === selectedProfile.relationship.toLowerCase());
+      setRecipient(validRecipient || recipients[0]);
+      setInterests(selectedProfile.interests);
+      showToast(`Profiel '${selectedProfile.name}' geladen!`);
+    }
+  };
+
+  const handleInterestClick = (interest: string) => {
+    const currentInterests = interests.split(',').map(i => i.trim()).filter(Boolean);
+    if (!currentInterests.includes(interest)) {
+      setInterests(prev => prev ? `${prev}, ${interest}` : interest);
     }
   };
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    
     setIsLoading(true);
     setError(null);
     setGifts([]);
     setSearchPerformed(true);
-
-    // Pinterest Search tracking
     const searchQuery = `${recipient} ${occasion} ${interests} budget:€${budget}`;
     pinterestSearch(searchQuery, `search_${Date.now()}`);
-    
-    // Google Analytics Search tracking
     gaSearch(searchQuery);
-
     try {
-      const searchParams: GiftSearchParams = {
-        recipient,
-        budget,
-        occasion,
-        interests,
-        filters
-      };
-
+      const searchParams: GiftSearchParams = { recipient, budget, occasion, interests, filters };
       const results = await findGiftsWithFilters(searchParams);
       const enhancedResults = enhanceGiftsWithMetadata(results);
-      
-      // Filter to only show gifts with affiliate retailers (Amazon, Coolblue)
       const affiliateResults = processGiftsForAffiliateOnly(enhancedResults);
-      
       const sortedResults = sortGifts(affiliateResults, sortBy);
-      
       setAllGifts(affiliateResults);
       setGifts(sortedResults);
-      
       if (affiliateResults.length === 0) {
         setError('Geen cadeaus gevonden met affiliate partners. We tonen alleen producten van Amazon en Coolblue waar we commissie op verdienen.');
       }
@@ -130,44 +107,25 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       setIsLoading(false);
     }
   }, [recipient, budget, occasion, interests, filters, sortBy]);
-  
-  const handleInterestClick = (interest: string) => {
-    const currentInterests = interests.split(',').map(i => i.trim()).filter(Boolean);
-    if (!currentInterests.includes(interest)) {
-      setInterests(prev => prev ? `${prev}, ${interest}` : interest);
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary via-primary to-accent text-white overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
-          <div className="absolute top-1/4 right-20 w-24 h-24 bg-white rounded-full"></div>
-          <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-white rounded-full"></div>
-          <div className="absolute bottom-10 right-10 w-20 h-20 bg-white rounded-full"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-              <span className="text-4xl">🎯</span>
-            </div>
-            <h1 className="typo-h1 mb-6 leading-tight text-white">AI GiftFinder</h1>
-            <p className="typo-lead text-white/90 max-w-2xl mx-auto">
-              Vul de details in en laat onze AI het perfecte cadeau voor je vinden in slechts 30 seconden!
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-white">
+      {/* Hero achtergrond met nieuwe afbeelding giftfinder-hero.png */}
+      <GiftFinderHero
+        image="/images/giftfinder-hero.png"
+        alt="Twee vrolijke cadeaudoos mascottes op paarse achtergrond – start de GiftFinder"
+        onSelectBudget={() => {
+          setOccasion(occasions[0]);
+          document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        onSelectOccasion={() => document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' })}
+        onSelectPersonality={() => document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' })}
+        onStart={() => document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' })}
+      />
+      <div className="h-8 md:h-12" />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="giftfinder-form">
         <div className="max-w-4xl mx-auto">
-          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-100 space-y-8 -mt-16 relative z-20">
-
-            {/* Profile Quick Start */}
+          <form onSubmit={handleSubmit} className="bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-100 space-y-10 -mt-16 relative z-20">
             {auth && auth.currentUser && auth.currentUser.profiles.length > 0 && (
               <div className="p-6 bg-gradient-to-r from-secondary to-secondary/80 rounded-xl border border-secondary/20">
                 <div className="flex items-center gap-3 mb-4">
@@ -197,21 +155,17 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             {/* Recipient Selection */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <span className="text-2xl">👤</span>
-                </div>
+                <div className="p-2 bg-rose-500/10 rounded-lg"><span className="text-2xl">🎯</span></div>
                 <div>
-                  <label htmlFor="recipient" className="block font-display text-xl font-bold text-primary">
-                    Voor wie zoek je een cadeau?
-                  </label>
-                  <p className="text-sm text-gray-600">Selecteer de relatie met de ontvanger</p>
+                  <h3 className="font-display text-xl font-bold text-primary">Voor wie zoek je?</h3>
+                  <p className="text-sm text-gray-600">Kies de relatie tot de ontvanger</p>
                 </div>
               </div>
               <select
-                id="recipient"
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
-                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-gray-800 text-lg"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-gray-800"
+                aria-label="Relatie ontvanger"
               >
                 {recipients.map(r => <option key={r} value={r}>{r}</option>)}
               </select>
@@ -220,44 +174,34 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             {/* Budget Slider */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/10 rounded-lg">
-                  <span className="text-2xl">💰</span>
-                </div>
+                <div className="p-2 bg-blue-500/10 rounded-lg"><span className="text-2xl">💸</span></div>
                 <div className="flex-1">
-                  <label htmlFor="budget" className="block font-display text-xl font-bold text-primary mb-2">
-                    Wat is je budget?
-                  </label>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">€5</span>
-                    <span className="text-2xl font-bold text-blue-600">€{budget}</span>
-                    <span className="text-sm text-gray-600">€500</span>
-                  </div>
+                  <label htmlFor="budget" className="block font-display text-xl font-bold text-primary mb-2">Wat is je budget?</label>
+                  <p className="text-sm text-gray-600">Kies een indicatie van je uitgaven</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-2xl font-bold text-blue-600">€{budget}</span>
                 </div>
               </div>
-              <div className="relative">
-                <input
-                  id="budget"
-                  type="range"
-                  min="5"
-                  max="500"
-                  step="5"
-                  value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
-                  className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary slider"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-2">
-                  <span>Laag budget</span>
-                  <span>Premium</span>
-                </div>
+              <input
+                id="budget"
+                type="range"
+                min={5}
+                max={500}
+                step={5}
+                value={budget}
+                onChange={(e) => setBudget(Number(e.target.value))}
+                className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
+              />
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>Laag</span><span>Gemiddeld</span><span>Premium</span>
               </div>
             </div>
 
             {/* Occasion Selection */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-secondary/50 rounded-lg">
-                  <span className="text-2xl">🎉</span>
-                </div>
+                <div className="p-2 bg-secondary/50 rounded-lg"><span className="text-2xl">🎉</span></div>
                 <div>
                   <h3 className="font-display text-xl font-bold text-primary">Wat is de gelegenheid?</h3>
                   <p className="text-sm text-gray-600">Kies de speciale gelegenheid</p>
@@ -269,14 +213,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     key={o}
                     type="button"
                     onClick={() => setOccasion(o)}
-                    className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
-                      occasion === o
-                        ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'
-                    }`}
-                  >
-                    {o}
-                  </button>
+                    className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${occasion === o ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'}`}
+                  >{o}</button>
                 ))}
               </div>
             </div>
@@ -284,13 +222,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             {/* Interests Input */}
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/10 rounded-lg">
-                  <span className="text-2xl">🎨</span>
-                </div>
+                <div className="p-2 bg-blue-500/10 rounded-lg"><span className="text-2xl">🎨</span></div>
                 <div className="flex-1">
-                  <label htmlFor="interests" className="block font-display text-xl font-bold text-primary mb-2">
-                    Hobby's of interesses? (optioneel)
-                  </label>
+                  <label htmlFor="interests" className="block font-display text-xl font-bold text-primary mb-2">Hobby's of interesses? (optioneel)</label>
                   <p className="text-sm text-gray-600">Help ons betere suggesties te geven</p>
                 </div>
               </div>
@@ -310,14 +244,11 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     type="button"
                     onClick={() => handleInterestClick(interest)}
                     className="py-2 px-4 rounded-full text-sm font-semibold bg-secondary/50 text-primary hover:bg-secondary hover:shadow-md transition-all duration-300 transform hover:scale-105"
-                  >
-                    + {interest}
-                  </button>
+                  >+ {interest}</button>
                 ))}
               </div>
             </div>
 
-            {/* Advanced Filters */}
             <AdvancedFilterPanel
               filters={filters}
               onFiltersChange={setFilters}
@@ -325,7 +256,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               onToggle={() => setShowAdvancedFilters(!showAdvancedFilters)}
             />
 
-            {/* Submit Button */}
             <div className="pt-6 border-t border-gray-200">
               <Button
                 type="submit"
@@ -355,7 +285,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               </div>
             )}
             {error && <p className="text-center text-red-600 bg-red-100 p-4 rounded-md">{error}</p>}
-
             {!isLoading && !error && searchPerformed && gifts.length === 0 && (
               <div className="text-center py-12">
                 <EmptyBoxIcon className="w-24 h-24 text-gray-300 mx-auto" />
@@ -363,10 +292,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 <p className="mt-2 text-gray-600">Probeer je zoekopdracht wat breder te maken of andere interesses in te vullen.</p>
               </div>
             )}
-
             {gifts.length > 0 && (
               <div className="opacity-0 animate-fade-in">
-                {/* Results Summary and Sort Controls */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
                   <div className="mb-4 sm:mb-0">
                     <h2 className="font-display text-2xl font-bold text-primary">Hier zijn je AI-cadeautips!</h2>
@@ -375,7 +302,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       {Object.keys(filters).length > 0 && ` met ${Object.keys(filters).length} filter${Object.keys(filters).length > 1 ? 's' : ''}`}
                     </p>
                   </div>
-                  
                   <div className="flex items-center gap-4">
                     <label className="text-sm font-medium text-gray-700">Sorteren op:</label>
                     <select
@@ -394,11 +320,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     </select>
                   </div>
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {gifts.map((gift, index) => <GiftResultCard key={gift.productName} gift={gift} index={index} showToast={showToast} />)}
                 </div>
-
                 <div className="mt-12 text-center p-6 bg-secondary rounded-lg">
                   <h3 className="font-display text-xl font-bold text-primary">Tevreden met deze suggesties?</h3>
                   <div className="flex justify-center space-x-4 mt-4">

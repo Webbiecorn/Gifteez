@@ -258,7 +258,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                     <Button
                       type="submit"
                       disabled={formStatus === 'submitting'}
-                      className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      className="w-full bg-gradient-to-r from-primary via-accent to-accent-hover hover:from-primary/90 hover:via-accent/90 hover:to-accent-hover/90 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                     >
                       {formStatus === 'submitting' ? (
                         <div className="flex items-center justify-center gap-2">
@@ -288,12 +288,12 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                   <h3 className="font-display text-2xl font-bold text-primary mb-6">Direct Contact</h3>
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
                         <MailIcon className="w-6 h-6 text-white" />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">E-mail</h4>
-                        <a href="mailto:info@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">
+                        <a href="mailto:info@gifteez.nl" className="text-accent hover:text-accent-hover transition-colors duration-200 hover:underline">
                           info@gifteez.nl
                         </a>
                         <p className="text-sm text-gray-500 mt-1">Voor algemene vragen</p>
@@ -301,12 +301,12 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                     </div>
 
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-accent to-highlight rounded-xl flex items-center justify-center">
                         <QuestionMarkCircleIcon className="w-6 h-6 text-white" />
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-900 mb-1">Support</h4>
-                        <a href="mailto:support@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">
+                        <a href="mailto:support@gifteez.nl" className="text-accent hover:text-accent-hover transition-colors duration-200 hover:underline">
                           support@gifteez.nl
                         </a>
                         <p className="text-sm text-gray-500 mt-1">Voor technische ondersteuning</p>
@@ -314,7 +314,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
                     </div>
 
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-accent to-accent-hover rounded-xl flex items-center justify-center">
                         <CheckIcon className="w-6 h-6 text-white" />
                       </div>
                       <div>
@@ -369,7 +369,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
             </div>
             <h2 className="typo-h2 mb-6 text-primary">
               Veelgestelde
-              <span className="block bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent">
                 Vragen
               </span>
             </h2>
@@ -395,7 +395,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
 
                 <Accordion title="Hoe kan ik adverteren op Gifteez.nl?">
                   <div className="text-gray-600 leading-relaxed">
-                    Voor samenwerkingen of advertentiemogelijkheden kun je het beste contact met ons opnemen via het formulier hierboven of door een e-mail te sturen naar <a href="mailto:info@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">info@gifteez.nl</a>. We bespreken graag de mogelijkheden voor partnerships met merken, webshops of andere bedrijven in de cadeau-industrie.
+                    Voor samenwerkingen of advertentiemogelijkheden kun je het beste contact met ons opnemen via het formulier hierboven of door een e-mail te sturen naar <a href="mailto:info@gifteez.nl" className="text-accent hover:text-accent-hover transition-colors duration-200 hover:underline">info@gifteez.nl</a>. We bespreken graag de mogelijkheden voor partnerships met merken, webshops of andere bedrijven in de cadeau-industrie.
                   </div>
                 </Accordion>
 

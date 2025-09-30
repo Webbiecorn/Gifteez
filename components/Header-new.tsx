@@ -4,6 +4,7 @@ import { GiftIcon, HeartIcon, HeartIconFilled, MenuIcon, XIcon, UserCircleIcon, 
 import Button from './Button';
 import { AuthContext } from '../contexts/AuthContext';
 import { CartContext } from '../contexts/CartContext';
+import Logo from './Logo';
 
 interface HeaderProps {
   navigateTo: NavigateTo;
@@ -56,10 +57,10 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
             className="flex items-center cursor-pointer group flex-shrink-0"
             onClick={() => handleNavClick('home')}
           >
-            <img 
-              src="/images/gifteez-logo.svg" 
-              alt="Gifteez.nl - AI Gift Finder" 
+            <Logo
+              alt="Gifteez.nl - AI Gift Finder"
               className="h-14 lg:h-16 w-auto group-hover:scale-105 transition-transform duration-300"
+              priority
             />
           </div>
 
@@ -74,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                     currentPage === item.page
                       ? 'text-white bg-primary shadow-lg scale-105'
                       : 'text-gray-700 hover:text-primary hover:bg-primary/5 hover:scale-105'
-                  } ${item.page === 'quiz' || item.page === 'deals' ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50' : ''}`}
+                  } ${item.page === 'quiz' || item.page === 'deals' ? 'text-highlight hover:text-accent hover:bg-highlight/10' : ''}`}
                 >
                   {item.icon && <item.icon className={`w-4 h-4 transition-transform duration-300 ${currentPage === item.page ? 'scale-110' : 'group-hover:scale-110'}`} />}
                   {item.label}
@@ -88,13 +89,13 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
 
           {/* Desktop Action Buttons */}
           <div className="hidden lg:flex items-center space-x-2 flex-shrink-0">
-            <button
-              onClick={() => handleNavClick(auth?.currentUser ? 'favorites' : 'login')}
-              className={`relative p-3 rounded-xl transition-all duration-300 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group ${
-                isFavoritesPage
-                  ? 'bg-emerald-600 text-white shadow-lg scale-105'
-                  : 'text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 hover:scale-105'
-              }`}
+                <button
+                  onClick={() => handleNavClick(auth?.currentUser ? 'favorites' : 'login')}
+                  className={`relative p-3 rounded-xl transition-all duration-300 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group ${
+                    isFavoritesPage
+                      ? 'bg-accent text-white shadow-lg scale-105'
+                      : 'text-gray-700 hover:text-accent hover:bg-muted-rose hover:scale-105'
+                  }`}
               aria-label="Bekijk favorieten"
             >
               <div className="relative">
@@ -104,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                   <HeartIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                 )}
                 {auth?.currentUser?.favorites && auth.currentUser.favorites.length > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-white text-xs font-bold">
+                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white text-xs font-bold">
                     {auth.currentUser.favorites.length}
                   </span>
                 )}
@@ -113,12 +114,12 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
 
             <button
               onClick={() => handleNavClick('cart')}
-              className="relative p-3 text-gray-600 hover:text-primary rounded-xl hover:bg-primary/10 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group hover:scale-105"
+              className="relative p-3 text-gray-700 hover:text-primary rounded-xl hover:bg-highlight/20 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 group hover:scale-105"
               aria-label="Winkelwagen"
             >
               <ShoppingCartIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
               {cart && cart.itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white text-xs font-bold shadow-lg animate-pulse">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-white text-xs font-bold shadow-lg animate-pulse">
                   {cart.itemCount}
                 </span>
               )}
@@ -168,8 +169,8 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
               onClick={() => handleNavClick(auth?.currentUser ? 'favorites' : 'login')}
               className={`relative p-2 rounded-lg transition-all duration-300 ${
                 isFavoritesPage
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-gray-600 hover:text-emerald-600 hover:bg-emerald-50'
+                  ? 'bg-accent text-white'
+                  : 'text-gray-700 hover:text-accent hover:bg-muted-rose'
               }`}
               aria-label="Bekijk favorieten"
             >
@@ -179,7 +180,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                 <HeartIcon className="w-5 h-5" />
               )}
               {auth?.currentUser?.favorites && auth.currentUser.favorites.length > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-white text-xs font-bold">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white text-xs font-bold">
                   {auth.currentUser.favorites.length}
                 </span>
               )}
@@ -187,12 +188,12 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
 
             <button
               onClick={() => handleNavClick('cart')}
-              className="relative p-2 text-gray-600 hover:text-primary rounded-lg hover:bg-primary/10 transition-all duration-300"
+              className="relative p-2 text-gray-700 hover:text-primary rounded-lg hover:bg-highlight/20 transition-all duration-300"
               aria-label="Winkelwagen"
             >
               <ShoppingCartIcon className="w-5 h-5" />
               {cart && cart.itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-white text-xs font-bold">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-white text-xs font-bold">
                   {cart.itemCount}
                 </span>
               )}
@@ -216,10 +217,10 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
           <div className="fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white shadow-2xl animate-slide-in-left border-r border-gray-100">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <div className="flex items-center">
-                <img 
-                  src="/images/gifteez-logo.svg" 
-                  alt="Gifteez.nl - AI Gift Finder" 
+                <Logo
+                  alt="Gifteez.nl - AI Gift Finder"
                   className="h-12 w-auto"
+                  priority
                 />
               </div>
               <button
@@ -241,7 +242,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                       currentPage === item.page
                         ? 'text-white bg-gradient-to-r from-primary to-accent shadow-lg'
                         : 'text-gray-700 hover:text-primary hover:bg-primary/5'
-                    } ${item.page === 'quiz' || item.page === 'deals' ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50' : ''}`}
+                    } ${item.page === 'quiz' || item.page === 'deals' ? 'text-highlight hover:text-accent hover:bg-highlight/10' : ''}`}
                   >
                     {item.icon && <item.icon className="w-5 h-5" />}
                     {item.label}

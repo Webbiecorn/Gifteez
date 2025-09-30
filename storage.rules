@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules voor Gifteez
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Blog images - alleen geauthenticeerde gebruikers kunnen uploaden
+    match /blog-images/{allPaths=**} {
+      allow read: if true; // Iedereen kan blog afbeeldingen lezen
+      allow write: if request.auth != null && 
+                      request.auth.token.email in [
+                        'admin@gifteez.nl',
+                        'kevin@gifteez.nl', 
+                        'beheer@gifteez.nl',
+                        'test@gifteez.nl'
+                      ];
+    }
+    
+    // User avatars - gebruikers kunnen hun eigen avatar uploaden
+    match /avatars/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Algemene uploads voor admin
+    match /uploads/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                      request.auth.token.email in [
+                        'admin@gifteez.nl',
+                        'kevin@gifteez.nl',
+                        'beheer@gifteez.nl',
+                        'test@gifteez.nl'
+                      ];
+    }
+    
+    // Alle andere bestanden - alleen admin toegang
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                      request.auth.token.email in [
+                        'admin@gifteez.nl',
+                        'kevin@gifteez.nl',
+                        'beheer@gifteez.nl',
+                        'test@gifteez.nl'
+                      ];
+    }
+  }
+}

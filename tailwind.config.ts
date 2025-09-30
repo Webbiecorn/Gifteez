@@ -7,6 +7,15 @@ export default {
     './**/*.{ts,tsx}',
     '!./node_modules/**'
   ],
+  safelist: [
+    // Ensure new purple gradient utilities are preserved in production build
+    'bg-gradient-to-r',
+    'from-purple-900',
+    'via-purple-700',
+    'to-purple-600',
+    // Also keep solid fallback just in case
+    'bg-purple-800'
+  ],
   theme: {
     container: {
       center: true,
@@ -31,12 +40,14 @@ export default {
         '3xl': '1680px'
       },
       colors: {
-        // Calmer, higher-contrast palette
-        primary: '#0f172a', // slate-900 (for headings/text)
-        secondary: '#f8fafc', // slate-50 (background)
-        accent: '#059669', // emerald-600 (action buttons)
-        'accent-hover': '#047857', // emerald-700
-        'light-bg': '#f8fafc',
+        // Warm sunset palette inspired by homepage hero
+        primary: '#7f1d1d', // deep crimson for headings/text
+        secondary: '#fff7ed', // soft peach backdrop
+        accent: '#f43f5e', // vibrant rose for CTAs
+        'accent-hover': '#e11d48', // deeper rose on hover
+        highlight: '#fb923c', // amber accent for badges/details
+        'muted-rose': '#ffe4e6', // gentle rose background
+        'light-bg': '#fff4f7',
       },
       fontFamily: {
         sans: ['Open Sans', 'sans-serif'],

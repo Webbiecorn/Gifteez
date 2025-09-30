@@ -1,5 +1,5 @@
 import type React from 'react';
-export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | /* 'shop' | */ 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy';
+export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | /* 'shop' | */ 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy' | 'admin';
 
 export type NavigateTo = (page: Page, data?: any) => void;
 
@@ -98,13 +98,32 @@ export interface VerdictBlock {
   content: string;
 }
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+export interface FAQBlock {
+  type: 'faq';
+  items: FAQItem[];
+}
+
+export interface ImageBlock {
+  type: 'image';
+  src: string;
+  alt?: string;
+  caption?: string;
+  href?: string;
+}
+
 export type ContentBlock = 
   | { type: 'heading'; content: string }
   | { type: 'paragraph'; content: string }
   | { type: 'gift'; content: Gift }
+  | ImageBlock
   | ComparisonTableBlock
   | ProsConsBlock
-  | VerdictBlock;
+  | VerdictBlock
+  | FAQBlock;
 
 export interface BlogPost {
   slug: string;
@@ -187,22 +206,44 @@ export interface AuthContextType {
     importFavorites: (data: string) => Promise<void>;
 }
 
+export type QuizQuestionKind = 'persona' | 'budget' | 'relationship' | 'occasion';
+
+export type BudgetTier = 'budget-low' | 'budget-mid' | 'budget-high';
+export type RelationshipType = 'partner' | 'friend' | 'colleague' | 'family';
+export type OccasionType = 'birthday' | 'housewarming' | 'holidays' | 'anniversary';
+
 export interface QuizAnswer {
   text: string;
-  resultKey: string;
+  value: string;
+  resultKey?: string;
+  helperText?: string;
 }
 
 export interface QuizQuestion {
   id: number;
   text: string;
   answers: QuizAnswer[];
+  kind: QuizQuestionKind;
+  metaKey?: 'budget' | 'relationship' | 'occasion';
 }
+
+export interface ShoppingListItem {
+  title: string;
+  description: string;
+  url: string;
+}
+
+export type PersonaShoppingList = Partial<Record<BudgetTier, ShoppingListItem[]>>;
+
+export type PersonaOccasionCopy = Partial<Record<OccasionType, string>>;
 
 export interface QuizResult {
   title: string;
   description: string;
   recommendedInterests: string;
   relatedBlogSlugs: string[];
+  shoppingList?: PersonaShoppingList;
+  occasionHighlights?: PersonaOccasionCopy;
 }
 
 export interface Product {

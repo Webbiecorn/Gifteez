@@ -24,13 +24,14 @@ const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccess
 const DealsPage = ReactLazy(() => import('./components/DealsPage'));
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
+const AdminPage = ReactLazy(() => import('./components/AdminPage'));
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
 import ErrorBoundary from './components/ErrorBoundary';
 import { useSEO } from './hooks/useSEO';
 import { BlogCardSkeleton, TextSkeleton } from './components/SkeletonLoader';
 import { BlogNotificationService } from './services/blogNotificationService';
 import { Page, InitialGiftFinderData, Gift } from './types';
-import { blogPosts } from './data/blogData';
+import { BlogProvider } from './contexts/BlogContext';
 import { AuthContext } from './contexts/AuthContext';
 import { SpinnerIcon } from './components/IconComponents';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -79,6 +80,7 @@ const App: React.FC = () => {
       case 'deals': return '/deals';
       case 'disclaimer': return '/disclaimer';
       case 'privacy': return '/privacy';
+      case 'admin': return '/admin';
       default: return '/';
     }
   };
@@ -98,6 +100,7 @@ const App: React.FC = () => {
       case 'favorites': setCurrentPage('favorites'); break;
       case 'contact': setCurrentPage('contact'); break;
       case 'about': setCurrentPage('about'); break;
+      case 'admin': setCurrentPage('admin'); break;
       case 'login': setCurrentPage('login'); break;
       case 'signup': setCurrentPage('signup'); break;
       case 'account': setCurrentPage('account'); break;
@@ -218,12 +221,16 @@ const App: React.FC = () => {
       case 'blog':
         return <BlogPage navigateTo={navigateTo} />;
       case 'blogDetail':
-        const post = blogPosts.find(p => p.slug === currentPostSlug);
-        if (post) {
-            return <BlogDetailPage post={post} navigateTo={navigateTo} showToast={showToast} />;
+        if (!currentPostSlug) {
+          return <BlogPage navigateTo={navigateTo} />;
         }
-        // Fallback to blog overview if slug not found
-        return <BlogPage navigateTo={navigateTo} />;
+        return (
+          <BlogDetailPage
+            slug={currentPostSlug}
+            navigateTo={navigateTo}
+            showToast={showToast}
+          />
+        );
       case 'favorites':
         return <FavoritesPage navigateTo={navigateTo} showToast={showToast} />;
       case 'contact':
@@ -244,6 +251,8 @@ const App: React.FC = () => {
       //   return <ShopPage navigateTo={navigateTo} showToast={showToast} />; // Temporarily disabled
       case 'cart':
         return <CartPage navigateTo={navigateTo} showToast={showToast} />;
+      case 'admin':
+        return <AdminPage navigateTo={navigateTo} />;
       case 'checkoutSuccess':
         return <CheckoutSuccessPage navigateTo={navigateTo} />;
       case 'deals':
@@ -258,7 +267,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <ErrorBoundary onError={(error, errorInfo) => {
+    <BlogProvider>
+      <ErrorBoundary onError={(error, errorInfo) => {
       // Log error to analytics
       if (typeof window !== 'undefined' && (window as any).gtag) {
         (window as any).gtag('event', 'exception', {
@@ -308,7 +318,8 @@ const App: React.FC = () => {
           </React.Suspense>
         )}
       </div>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </BlogProvider>
   );
 };
 

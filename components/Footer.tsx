@@ -5,7 +5,7 @@ import { InstagramIcon, PinterestIcon, TargetIcon } from './IconComponents';
 import { socialLinks } from '../socialLinks';
 import CookiePreferencesManager from './CookiePreferencesManager';
 import { useCookieConsent } from '../hooks/useCookieConsent';
-import { NewsletterSignup } from './NewsletterSignup';
+import Logo from './Logo';
 
 interface FooterProps {
   navigateTo: NavigateTo;
@@ -16,17 +16,19 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
   const { preferences, updatePreferences } = useCookieConsent();
 
   return (
-    <footer className="relative border-t border-emerald-100 bg-gradient-to-b from-white via-emerald-50/40 to-white mt-24">
-      <div className="absolute inset-0 pointer-events-none opacity-[0.35] bg-[radial-gradient(circle_at_30%_30%,#10b98122,transparent_70%)]"></div>
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,transparent,rgba(16,185,129,0.05),transparent)]"></div>
+  <footer className="relative mt-24 overflow-hidden border-t border-muted-rose/70 bg-gradient-to-b from-secondary via-light-bg/60 to-white">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+      <div className="absolute inset-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_top_left,#f43f5e22,transparent_60%)]"></div>
+      <div className="absolute inset-y-0 right-[-20%] w-2/3 pointer-events-none opacity-70 bg-[radial-gradient(circle_at_top_right,#fb923c1c,transparent_65%)]"></div>
+      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(140deg,transparent_55%,rgba(148,27,40,0.1)_85%,transparent)]"></div>
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {/* Brand */}
           <div className="col-span-1 lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <img src="/images/gifteez-logo.svg" alt="Gifteez.nl" className="h-12 w-auto" />
+            <div className="inline-flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3 shadow-sm ring-1 ring-white/60 backdrop-blur">
+              <Logo alt="Gifteez.nl" className="h-12 w-auto" priority />
             </div>
-            <p className="text-slate-600 leading-relaxed mb-6 max-w-md">
+            <p className="mt-6 text-primary/75 leading-relaxed mb-6 max-w-md">
               Vind binnen seconden een persoonlijk cadeau-idee met AI. Minder zoeken, meer geven.
             </p>
             <div className="flex gap-3">
@@ -35,26 +37,26 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
                 aria-label="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-3 rounded-xl bg-white shadow-sm ring-1 ring-emerald-100 hover:ring-emerald-300 hover:shadow-md transition-all duration-300"
+                className="group p-3 rounded-xl bg-white/90 shadow-sm ring-1 ring-muted-rose hover:ring-accent/60 hover:bg-white transition-all duration-300"
               >
-                <InstagramIcon className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                <InstagramIcon className="w-5 h-5 text-accent group-hover:scale-110 transition-transform" />
               </a>
               <a
                 href={socialLinks.pinterest}
                 aria-label="Pinterest"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-3 rounded-xl bg-white shadow-sm ring-1 ring-emerald-100 hover:ring-emerald-300 hover:shadow-md transition-all duration-300"
+                className="group p-3 rounded-xl bg-white/90 shadow-sm ring-1 ring-muted-rose hover:ring-accent/60 hover:bg-white transition-all duration-300"
               >
-                <PinterestIcon className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                <PinterestIcon className="w-5 h-5 text-accent group-hover:scale-110 transition-transform" />
               </a>
             </div>
           </div>
 
           {/* Navigate */}
           <div>
-            <h4 className="font-semibold text-slate-900 mb-5 text-sm tracking-wide uppercase">Ontdek</h4>
-            <ul className="space-y-3 text-sm">
+            <h4 className="font-semibold text-primary mb-5 text-sm tracking-[0.2em] uppercase">Ontdek</h4>
+            <ul className="space-y-3 text-sm text-primary/75">
               {[
                 ['giftFinder','🎯','GiftFinder'],
                 ['quiz','❓','Cadeau Quiz'],
@@ -64,9 +66,9 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
                 ['contact','✉️','Contact']
               ].map(([page, icon, label]) => (
                 <li key={page}>
-                  <button onClick={() => navigateTo(page as any)} className="group flex items-center gap-2 text-slate-600 hover:text-emerald-700 transition-colors">
+                  <button onClick={() => navigateTo(page as any)} className="group flex items-center gap-2 hover:text-accent transition-colors">
                     <span className="text-xs" aria-hidden="true">{icon}</span>
-                    <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-emerald-600 group-hover:after:w-full after:transition-all">{label}</span>
+                    <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-accent group-hover:after:w-full after:transition-all">{label}</span>
                   </button>
                 </li>
               ))}
@@ -75,43 +77,35 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
 
           {/* Service */}
           <div>
-            <h4 className="font-semibold text-slate-900 mb-5 text-sm tracking-wide uppercase">Service</h4>
-            <ul className="space-y-3 text-sm">
+            <h4 className="font-semibold text-primary mb-5 text-sm tracking-[0.2em] uppercase">Service</h4>
+            <ul className="space-y-3 text-sm text-primary/75">
               <li>
-                <button onClick={() => navigateTo('disclaimer')} className="hover:text-emerald-700 text-slate-600 transition-colors flex items-center gap-2">
+                <button onClick={() => navigateTo('disclaimer')} className="hover:text-accent transition-colors flex items-center gap-2">
                   <span className="text-xs" aria-hidden="true">📄</span> Disclaimer
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('privacy')} className="hover:text-emerald-700 text-slate-600 transition-colors flex items-center gap-2">
+                <button onClick={() => navigateTo('privacy')} className="hover:text-accent transition-colors flex items-center gap-2">
                   <span className="text-xs" aria-hidden="true">🔒</span> Privacybeleid
                 </button>
               </li>
               <li>
-                <button onClick={() => setShowPreferences(true)} className="hover:text-emerald-700 text-slate-600 transition-colors flex items-center gap-2">
+                <button onClick={() => setShowPreferences(true)} className="hover:text-accent transition-colors flex items-center gap-2">
                   <TargetIcon className="w-4 h-4" /> Cookie Instellingen
                 </button>
               </li>
             </ul>
           </div>
-
-          {/* Newsletter */}
-          <div className="lg:col-span-1">
-            <h4 className="font-semibold text-slate-900 mb-4 text-sm tracking-wide uppercase">Blijf op de hoogte</h4>
-            <div className="rounded-2xl bg-white shadow-sm ring-1 ring-emerald-100 p-5">
-              <NewsletterSignup variant="footer" />
-            </div>
-          </div>
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-emerald-100 flex flex-col md:flex-row gap-8 md:items-center justify-between text-sm text-slate-500">
-          <p>&copy; {new Date().getFullYear()} Gifteez.nl — Alle rechten voorbehouden.</p>
-          <p className="max-w-xl leading-relaxed">
+  <div className="mt-12 pt-8 border-t border-muted-rose/60 grid gap-6 text-sm text-primary/70 md:grid-cols-[auto,1fr,auto] md:items-center">
+          <p className="order-1">&copy; {new Date().getFullYear()} Gifteez.nl — Alle rechten voorbehouden.</p>
+          <p className="order-3 md:order-2 max-w-2xl leading-relaxed md:justify-self-center text-primary/65">
             Als Amazon-partner en partner van andere webshops verdienen wij aan in aanmerking komende aankopen. Prijzen & beschikbaarheid kunnen wijzigen.
           </p>
-          <div className="flex items-center gap-2 text-emerald-600 font-medium">
-            <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" /></span>
+          <div className="order-2 md:order-3 flex items-center gap-3 justify-start md:justify-end text-accent font-medium">
+            <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent/70 opacity-75" /><span className="relative inline-flex rounded-full h-2 w-2 bg-accent" /></span>
             <span>Powered by AI</span>
           </div>
         </div>

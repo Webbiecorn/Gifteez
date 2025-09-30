@@ -5,19 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-  "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-favicons.mjs && node scripts/generate-pinned-tab.mjs && node scripts/generate-responsive-images.mjs --dry-run",
+    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-favicons.mjs && node scripts/generate-pinned-tab.mjs && node scripts/generate-responsive-images.mjs --dry-run",
     "build": "vite build",
     "preview": "vite preview",
     "check:images": "node scripts/check-image-integrity.mjs",
-  "predeploy": "node scripts/generate-responsive-images.mjs",
-  "deploy": "npm run check:images && npm run predeploy && npm run build && firebase deploy --only hosting"
+    "predeploy": "node scripts/generate-responsive-images.mjs",
+    "deploy": "npm run check:images && npm run predeploy && npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@google/genai": "^1.16.0",
+    "@tinymce/tinymce-react": "^6.3.0",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.2",
     "favicons": "^7.2.0",
     "firebase": "^11.2.0",
+  "html-to-image": "^1.11.11",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -26,6 +28,7 @@
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "playwright": "^1.55.1",
     "postcss": "^8.4.49",
     "potrace": "^2.1.0",
     "sharp": "^0.33.5",
