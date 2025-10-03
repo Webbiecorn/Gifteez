@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Meta from './Meta';
 import ImageWithFallback from './ImageWithFallback';
 import { BlogPost, NavigateTo, ContentBlock, ShowToast, ComparisonTableBlock, ProsConsBlock, VerdictBlock, FAQBlock, ImageBlock } from '../types';
@@ -9,7 +9,7 @@ import { blogPostDataToBlogPost } from '../services/blogMapper';
 import { CalendarIcon, ChevronRightIcon, FacebookIcon, TwitterIcon, WhatsAppIcon, CheckIcon, XCircleIcon, StarIcon, BookOpenIcon, SparklesIcon, TargetIcon, ShareIcon, MailIcon, UserIcon, TagIcon } from './IconComponents';
 import GiftResultCard from './GiftResultCard';
 import { pinterestPageVisit } from '../services/pinterestTracking';
-import { gaPageView } from '../services/googleAnalytics';
+import { gaDownloadResource, gaPageView } from '../services/googleAnalytics';
 import SocialShare from './SocialShare';
 
 // Print styles component
@@ -327,13 +327,54 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     }
   };
 
-  const socialLinks = [
+    const socialLinks = [
     { name: 'Facebook', icon: FacebookIcon, url: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}` },
     { name: 'Twitter', icon: TwitterIcon, url: `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}` },
     { name: 'WhatsApp', icon: WhatsAppIcon, url: `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}` }
   ];
   const headings = post.content.filter(block => block.type === 'heading') as {type: 'heading', content: string}[];
   const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+
+        const handleContentClick = useCallback(
+            (event: React.MouseEvent<HTMLElement>) => {
+            if (!post) {
+                return;
+            }
+
+            const target = event.target;
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            const anchor = target.closest('a');
+            if (!anchor) {
+                return;
+            }
+
+            const hrefValue = anchor.getAttribute('href') ?? '';
+            if (!hrefValue) {
+                return;
+            }
+
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const isInternalDownload = hrefValue.startsWith('/downloads/');
+            const isAbsoluteDownload = origin && hrefValue.startsWith(`${origin}/downloads/`);
+
+            if (!isInternalDownload && !isAbsoluteDownload) {
+                return;
+            }
+
+            const resourcePath = isAbsoluteDownload ? hrefValue.replace(origin, '') : hrefValue;
+            const label = anchor.textContent?.trim() || undefined;
+
+            gaDownloadResource(resourcePath, {
+                label,
+                slug: post.slug,
+                title: post.title,
+            });
+        },
+        [post]
+    );
     
     // Removed special-case preprocessing for legacy post 'vergelijking-draadloze-oordopjes'
     // (Content pruning September 2025)
@@ -358,11 +399,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                 case 'paragraph':
                         return (
                             <div
-                                key={index}
-                                className="content-paragraph mb-6"
-                                dangerouslySetInnerHTML={{ __html: block.content }}
-                            />
-                        );
+                                        key={index}
+                                        className="content-paragraph mb-6"
+                                        dangerouslySetInnerHTML={{ __html: block.content }}
+                                    />
+                                );
         case 'image': {
             const { src, alt, caption, href } = block as ImageBlock;
                         if (!src) {
@@ -757,7 +798,10 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                             </div>
 
                             {/* Article Content */}
-                            <article className="prose prose-lg lg:prose-xl max-w-none text-gray-700 prose-headings:font-display prose-headings:text-primary prose-headings:font-bold prose-headings:leading-tight prose-p:leading-relaxed prose-p:mb-6 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-primary prose-a:font-semibold hover:prose-a:text-accent prose-a:no-underline prose-a:underline-offset-4 prose-a:transition-colors prose-img:rounded-3xl prose-img:shadow-xl prose-img:border prose-img:border-gray-100 prose-img:bg-white prose-li:marker:text-accent">
+                            <article
+                                className="prose prose-lg lg:prose-xl max-w-none text-gray-700 prose-headings:font-display prose-headings:text-primary prose-headings:font-bold prose-headings:leading-tight prose-p:leading-relaxed prose-p:mb-6 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-primary prose-a:font-semibold hover:prose-a:text-accent prose-a:no-underline prose-a:underline-offset-4 prose-a:transition-colors prose-img:rounded-3xl prose-img:shadow-xl prose-img:border prose-img:border-gray-100 prose-img:bg-white prose-li:marker:text-accent"
+                                onClick={handleContentClick}
+                            >
                                 {post.content.map(renderContentBlock)}
                             </article>
 

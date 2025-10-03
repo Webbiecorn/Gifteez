@@ -356,6 +356,7 @@ export class CoolblueFeedService {
       content: sections.join('\n\n'),
       imageUrl: undefined,
       category,
+      tags: product.tags && product.tags.length ? product.tags.slice(0, 8) : undefined,
       author: DEFAULT_AUTHOR,
       publishedDate: now,
       isDraft: true,
@@ -452,6 +453,15 @@ export class CoolblueFeedService {
       content: sections.join('\n\n'),
       imageUrl: undefined,
       category: primaryCategory ?? fallbackCategory,
+      tags:
+        (() => {
+          const candidates = Array.from(
+            new Set(
+              limitedSelection.flatMap((product) => product.tags ?? []).concat(primaryCategory ? [primaryCategory] : [])
+            )
+          ).slice(0, 10);
+          return candidates.length ? candidates : undefined;
+        })(),
       author: DEFAULT_AUTHOR,
       publishedDate: now,
       isDraft: true,

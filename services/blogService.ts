@@ -95,6 +95,7 @@ const convertStaticPost = (post: BlogPost): LocalBlogPost => ({
   content: post.content?.map(convertBlockToText).filter(Boolean).join('\n\n') ?? '',
   imageUrl: post.imageUrl,
   category: post.category,
+  tags: post.tags,
   author: post.author,
   publishedDate: post.publishedDate,
   isDraft: false,
@@ -221,6 +222,7 @@ export interface BlogPostData {
   content: string;
   imageUrl?: string;
   category: string;
+  tags?: string[];
   author: {
     name: string;
     avatarUrl?: string;
@@ -478,6 +480,7 @@ class BlogService {
       content: data.content,
       imageUrl: data.imageUrl,
       category: data.category,
+  tags: data.tags,
       author: data.author,
       publishedDate: data.publishedDate,
       isDraft: data.isDraft || false,

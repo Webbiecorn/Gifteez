@@ -3,34 +3,98 @@ import { blogPosts } from '../data/blogData';
 import ImageUpload from './ImageUpload';
 import BlogService, { BlogPostData } from '../services/blogService';
 import { BlogPreview } from './BlogPreview';
-import RichTextEditor from './RichTextEditor';
 import SEOPanel from './SEOPanel';
 import { SEOData } from '../services/seoManager';
-import { contentStringToBlocks } from '../services/blogMapper';
 import CoolblueFeedService, { CoolblueProduct } from '../services/coolblueFeedService';
 import { AmazonProductLibrary, type AmazonProduct } from '../services/amazonProductLibrary';
-
-interface BlogEditorProps {
-  onClose: () => void;
-  postId?: string;
-  postSlug?: string;
-  initialPost?: BlogPostData | null;
-}
+import ContentBuilder, { ContentBlockDraft, GiftBlockDraft, ParagraphBlockDraft, RetailerDraft, generateId } from './ContentBuilder';
+import {
+  contentBlocksToDrafts,
+  draftsToContentBlocks,
+  draftsToHtml,
+  draftsToPlainText,
+  stringToDrafts,
+  normalizeDraftList,
+} from '../services/contentDraftMapper';
 
 type ProductSource = 'coolblue' | 'amazon';
 
-interface EditorProduct {
+type EditorProduct = {
   id: string;
   name: string;
-  description?: string;
-  shortDescription?: string;
-  imageUrl?: string;
-  price?: number;
-  originalPrice?: number;
-  affiliateLink?: string;
-  tags?: string[];
+  description?: string | null;
+  shortDescription?: string | null;
+  imageUrl?: string | null;
+  price?: number | null;
+  originalPrice?: number | null;
+  affiliateLink?: string | null;
+  tags?: string[] | null;
   source: ProductSource;
-}
+};
+
+type BlogEditorProps = {
+  onClose: () => void;
+  postId?: string | null;
+  postSlug?: string | null;
+  initialPost?: BlogPostData | null;
+};
+
+const DUTCH_STOPWORDS = new Set([
+  'de', 'het', 'een', 'en', 'maar', 'want', 'toch', 'ook', 'bij', 'op', 'met', 'van', 'voor', 'dat', 'die',
+  'dit', 'daar', 'hier', 'heb', 'hebt', 'heeft', 'hebben', 'zijn', 'ben', 'bent', 'is', 'was', 'waren', 'word',
+  'wordt', 'worden', 'kunnen', 'kan', 'kunt', 'kon', 'konnen', 'we', 'wij', 'jullie', 'je', 'jij', 'u', 'ik',
+  'ze', 'zij', 'hun', 'hen', 'als', 'dan', 'te', 'tot', 'niet', 'geen', 'wel', 'al', 'door', 'over', 'onder',
+  'tussen', 'waar', 'wanneer', 'hoe', 'wat', 'welke', 'er', 'hierdoor', 'daarom', 'daardoor', 'eens', 'toen',
+  'na', 'vooral', 'veel', 'meer', 'minder', 'zoals', 'via', 'onder', 'boven', 'tegen', 'binnen', 'buiten'
+]);
+
+const normalizeForTagExtraction = (raw: string): string => {
+  if (!raw) {
+    return '';
+  }
+  return raw
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+const toDisplayTag = (value: string): string => {
+  const normalized = value.trim();
+  if (!normalized) {
+    return '';
+  }
+  return normalized
+    .toLowerCase()
+    .split(/\s+|-/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ');
+};
+
+const mergeTagLists = (primary: string[], secondary: string[]): string[] => {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  for (const list of [primary, secondary]) {
+    for (const tag of list) {
+      const cleaned = tag.trim();
+      if (!cleaned) {
+        continue;
+      }
+      const key = cleaned.toLowerCase();
+      if (seen.has(key)) {
+        continue;
+      }
+      seen.add(key);
+      result.push(cleaned);
+    }
+  }
+
+  return result;
+};
 
 const countWords = (value?: string) => {
   if (!value) {
@@ -47,7 +111,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [title, setTitle] = useState('');
   const [excerpt, setExcerpt] = useState('');
-  const [content, setContent] = useState('');
+  const [contentDrafts, setContentDrafts] = useState<ContentBlockDraft[]>(() => normalizeDraftList([]));
   const [category, setCategory] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isDraft, setIsDraft] = useState(true);
@@ -59,9 +123,60 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
   const [amazonProducts, setAmazonProducts] = useState<EditorProduct[]>([]);
   const [productFilter, setProductFilter] = useState<'all' | ProductSource>('all');
   const [productSearch, setProductSearch] = useState('');
+  const [productTagFilter, setProductTagFilter] = useState<string | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const [slugValue, setSlugValue] = useState('');
+  const [hasCustomSlug, setHasCustomSlug] = useState(false);
+  const [tagsValue, setTagsValue] = useState('');
 
-  const wordCount = useMemo(() => countWords(content), [content]);
+  const plainTextContent = useMemo(() => draftsToPlainText(contentDrafts), [contentDrafts]);
+  const htmlContent = useMemo(() => draftsToHtml(contentDrafts), [contentDrafts]);
+  const structuredBlocks = useMemo(() => draftsToContentBlocks(contentDrafts), [contentDrafts]);
+  const parsedTags = useMemo(
+    () => tagsValue.split(',').map((tag) => tag.trim()).filter(Boolean),
+    [tagsValue]
+  );
+
+  const suggestedExcerpt = useMemo(() => {
+    const source = plainTextContent || title;
+    if (!source?.trim()) {
+      return '';
+    }
+    const normalized = source.replace(/\s+/g, ' ').trim();
+    if (!normalized) {
+      return '';
+    }
+    const words = normalized.split(' ');
+    const excerptCandidate = words.slice(0, 45).join(' ');
+    const trimmed = excerptCandidate.length > 220 ? `${excerptCandidate.slice(0, 217).trimEnd()}…` : excerptCandidate;
+    return trimmed.endsWith('.') || trimmed.endsWith('!') || trimmed.endsWith('?') ? trimmed : `${trimmed}…`;
+  }, [plainTextContent, title]);
+
+  const suggestedTags = useMemo(() => {
+    const textPool = normalizeForTagExtraction(`${category ?? ''} ${title ?? ''} ${plainTextContent ?? ''}`);
+    if (!textPool) {
+      return category ? [toDisplayTag(category)] : [];
+    }
+
+    const counts = new Map<string, number>();
+    textPool.split(' ').forEach((word) => {
+      if (!word || word.length < 4 || DUTCH_STOPWORDS.has(word)) {
+        return;
+      }
+      counts.set(word, (counts.get(word) ?? 0) + 1);
+    });
+
+    const sorted = Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([word]) => toDisplayTag(word));
+
+    const base = category ? [toDisplayTag(category)] : [];
+    return mergeTagLists(base, sorted).slice(0, 6);
+  }, [plainTextContent, category, title]);
+
+  const excerptCharCount = useMemo(() => excerpt.trim().length, [excerpt]);
+
+  const wordCount = useMemo(() => countWords(plainTextContent), [plainTextContent]);
   const readMinutes = useMemo(() => (wordCount ? Math.max(1, Math.round(wordCount / 220)) : 0), [wordCount]);
   const seoTitle = useMemo(() => (seoData?.metaTitle ?? title).trim(), [seoData, title]);
   const seoDescription = useMemo(() => (seoData?.metaDescription ?? excerpt).trim(), [seoData, excerpt]);
@@ -110,6 +225,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
     if (productFilter !== 'all') {
       pool = pool.filter((product) => product.source === productFilter);
     }
+    if (productTagFilter) {
+      const target = productTagFilter.toLowerCase();
+      pool = pool.filter((product) =>
+        (product.tags ?? []).some((tag) => tag.toLowerCase() === target)
+      );
+    }
     if (term) {
       pool = pool.filter((product) => {
         const haystack = `${product.name} ${product.description ?? ''} ${(product.tags ?? []).join(' ')}`.toLowerCase();
@@ -117,17 +238,58 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       });
     }
     return pool.slice(0, 12);
-  }, [combinedProducts, productFilter, productSearch]);
+  }, [combinedProducts, productFilter, productSearch, productTagFilter]);
+
+  const availableProductTags = useMemo(() => {
+    const counts = new Map<string, number>();
+    combinedProducts.forEach((product) => {
+      (product.tags ?? []).forEach((tag) => {
+        const key = tag.trim().toLowerCase();
+        if (!key) {
+          return;
+        }
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      });
+    });
+
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([key, count]) => ({ key, label: toDisplayTag(key), count }));
+  }, [combinedProducts]);
+
+  const generatedSlug = useMemo(() => BlogService.generateSlug(title || ''), [title]);
+  const slugPreview = useMemo(() => (slugValue.trim() || generatedSlug), [slugValue, generatedSlug]);
+  const categoryOptions = useMemo(() => {
+    const base = new Set<string>(['Home & Office', 'Tech', 'Duurzaam', 'Lifestyle', 'Reviews', 'Tips', 'Deals']);
+    blogPosts.forEach((postEntry) => {
+      if (postEntry.category?.trim()) {
+        base.add(postEntry.category.trim());
+      }
+    });
+    if (category?.trim()) {
+      base.add(category.trim());
+    }
+    return Array.from(base).filter(Boolean).sort((a, b) => a.localeCompare(b, 'nl-NL'));
+  }, [category]);
 
   const applyPostData = (existingPost: BlogPostData) => {
     setPost(existingPost);
     setTitle(existingPost.title || '');
     setExcerpt(existingPost.excerpt || '');
     setCategory(existingPost.category || '');
-    setContent(existingPost.content || '');
+    const drafts = normalizeDraftList(
+      existingPost.contentBlocks && existingPost.contentBlocks.length
+        ? contentBlocksToDrafts(existingPost.contentBlocks)
+        : stringToDrafts(existingPost.content || '')
+    );
+    setContentDrafts(drafts);
     setImageUrl(existingPost.imageUrl || '');
     setIsDraft(existingPost.isDraft ?? true);
     setSeoData(existingPost.seo ?? null);
+    setSlugValue(existingPost.slug || '');
+    setHasCustomSlug(Boolean(existingPost.slug));
+    setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '');
   };
 
   useEffect(() => {
@@ -158,19 +320,25 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
           setExcerpt(existingPost.excerpt);
           setCategory(existingPost.category);
           setImageUrl(existingPost.imageUrl || '');
+          setSlugValue(existingPost.slug || '');
+          setHasCustomSlug(Boolean(existingPost.slug));
           
           // Convert content blocks to simple text for now
-          const textContent = existingPost.content
-            .filter(block => block.type === 'paragraph' || block.type === 'heading')
-            .map(block => `${block.type === 'heading' ? '# ' : ''}${block.content}`)
-            .join('\n\n');
-          setContent(textContent);
+          const drafts = normalizeDraftList(contentBlocksToDrafts(existingPost.content));
+          setContentDrafts(drafts);
+          setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '');
         }
       }
     };
 
     loadPost();
   }, [postId, postSlug, initialPost]);
+
+  useEffect(() => {
+    if (!hasCustomSlug) {
+      setSlugValue(generatedSlug);
+    }
+  }, [generatedSlug, hasCustomSlug]);
 
   useEffect(() => {
     let cancelled = false;
@@ -237,44 +405,122 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
     };
   }, []);
 
-  const appendToContent = (snippet: string) => {
-    setContent((prev) => {
-      const trimmed = prev.trimEnd();
-      const spacer = trimmed.length ? '\n\n' : '';
-      return `${trimmed}${spacer}${snippet}`.trimStart();
+  const handleSlugInputChange = (value: string) => {
+    const sanitized = BlogService.generateSlug(value || '');
+    setSlugValue(sanitized);
+    setHasCustomSlug(Boolean(sanitized));
+  };
+
+  const handleSlugReset = () => {
+    setHasCustomSlug(false);
+    setSlugValue(generatedSlug);
+  };
+
+  const hasSuggestedExcerpt = useMemo(
+    () => Boolean(suggestedExcerpt && suggestedExcerpt.trim() !== excerpt.trim()),
+    [suggestedExcerpt, excerpt]
+  );
+
+  const canApplySmartMetadata = useMemo(() => {
+    const slugNeedsUpdate = slugValue !== generatedSlug;
+    const tagSet = new Set(parsedTags.map((tag) => tag.toLowerCase()));
+    const hasMissingTag = suggestedTags.some((tag) => !tagSet.has(tag.toLowerCase()));
+    return slugNeedsUpdate || hasMissingTag || hasSuggestedExcerpt;
+  }, [generatedSlug, slugValue, parsedTags, suggestedTags, hasSuggestedExcerpt]);
+
+  const handleApplySuggestedExcerpt = () => {
+    if (suggestedExcerpt) {
+      setExcerpt(suggestedExcerpt);
+    }
+  };
+
+  const handleApplySuggestedTags = () => {
+    if (!suggestedTags.length) {
+      return;
+    }
+    const merged = mergeTagLists(parsedTags, suggestedTags);
+    setTagsValue(merged.join(', '));
+  };
+
+  const handleTagSuggestionClick = (tag: string) => {
+    const merged = mergeTagLists(parsedTags, [tag]);
+    setTagsValue(merged.join(', '));
+  };
+
+  const handleApplySmartMetadata = () => {
+    if (generatedSlug) {
+      setHasCustomSlug(false);
+      setSlugValue(generatedSlug);
+    }
+    if (suggestedTags.length) {
+      handleApplySuggestedTags();
+    }
+    if (hasSuggestedExcerpt) {
+      handleApplySuggestedExcerpt();
+    }
+  };
+
+  const addDraftBlocks = (incoming: ContentBlockDraft | ContentBlockDraft[]) => {
+    const additions = Array.isArray(incoming) ? incoming : [incoming];
+    setContentDrafts((prev) => {
+      const hasOnlyEmptyPlaceholder = prev.length === 1 && prev[0].type === 'paragraph' && !(prev[0] as ParagraphBlockDraft).text.trim();
+      const base = hasOnlyEmptyPlaceholder ? [] : prev;
+      return [...base, ...additions];
     });
   };
 
+  const escapeHtml = (value: string) =>
+    value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
   const handleInsertProduct = (product: EditorProduct, variant: 'image+link' | 'link-only') => {
-    const imageSrc = product.imageUrl;
-    const pieces: string[] = [];
+    const retailerLabel = product.source === 'amazon' ? 'Amazon.nl' : 'Coolblue';
+    const baseRetailer: RetailerDraft = {
+      id: generateId(),
+      name: retailerLabel,
+      affiliateLink: product.affiliateLink || '',
+    };
 
     if (variant === 'image+link') {
-      if (imageSrc) {
-        pieces.push(`![${product.name}](${imageSrc})`);
-      }
-
-      const description = product.shortDescription || product.description;
-      if (description) {
-        pieces.push(description);
-      }
-    }
-
-    if (!product.affiliateLink) {
-      if (!pieces.length) {
-        return;
-      }
-      appendToContent(pieces.join('\n\n'));
+      const giftDraft: GiftBlockDraft = {
+        id: generateId(),
+        type: 'gift',
+        gift: {
+          productName: product.name,
+          description: product.shortDescription || product.description || '',
+          priceRange: product.price ? `€${product.price.toFixed(2)}` : product.originalPrice ? `€${product.originalPrice.toFixed(2)}` : '',
+          imageUrl: product.imageUrl || '',
+          retailers: [baseRetailer],
+          tags: (product.tags ?? []).join(', '),
+        },
+      };
+      addDraftBlocks(giftDraft);
       return;
     }
 
-    const retailerLabel = product.source === 'amazon' ? 'Amazon' : 'Coolblue';
-    const linkLabel = variant === 'link-only'
-      ? `👉 Bekijk ${product.name} bij ${retailerLabel}`
-      : `Bekijk ${product.name} bij ${retailerLabel}`;
-    pieces.push(`[${linkLabel}](${product.affiliateLink})`);
+    if (!product.affiliateLink) {
+      const paragraphDraft: ParagraphBlockDraft = {
+        id: generateId(),
+        type: 'paragraph',
+        style: 'paragraph',
+        text: product.shortDescription || product.description || product.name,
+      };
+      addDraftBlocks(paragraphDraft);
+      return;
+    }
 
-    appendToContent(pieces.join('\n\n'));
+    const ctaHtml = `<p class="text-base font-semibold text-rose-600">👉 <a href="${product.affiliateLink}" target="_blank" rel="noopener noreferrer">Bekijk ${escapeHtml(product.name)} bij ${retailerLabel}</a></p>`;
+    const paragraphDraft: ParagraphBlockDraft = {
+      id: generateId(),
+      type: 'paragraph',
+      style: 'html',
+      text: ctaHtml,
+    };
+    addDraftBlocks(paragraphDraft);
   };
 
   const handleSave = async (publish = false) => {
@@ -283,29 +529,36 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       return;
     }
 
+    if (!structuredBlocks.length || !htmlContent.trim()) {
+      alert('Voeg contentblokken toe voordat je opslaat.');
+      return;
+    }
+
     setIsSaving(true);
     
     try {
-      const slug = post?.slug || BlogService.generateSlug(title);
-      const contentBlocks = contentStringToBlocks(content);
+      const finalSlug = slugPreview.trim();
+      const sanitizedCategory = category.trim() || 'Algemeen';
+      const seoKeywords = parsedTags.length ? parsedTags : [sanitizedCategory];
       const postData: Omit<BlogPostData, 'id' | 'createdAt' | 'updatedAt'> = {
-        slug,
+        slug: finalSlug,
         title: title.trim(),
         excerpt: excerpt.trim(),
-        content: content.trim(),
+        content: htmlContent,
         imageUrl: imageUrl || undefined,
-        category: category || 'Algemeen',
+        category: sanitizedCategory,
+        tags: parsedTags.length ? parsedTags : undefined,
         author: {
           name: 'Admin',
           avatarUrl: 'https://i.pravatar.cc/150?u=admin'
         },
         publishedDate: publish ? new Date().toISOString() : (post?.publishedDate || new Date().toISOString()),
         isDraft: publish ? false : isDraft,
-        contentBlocks: contentBlocks.length ? contentBlocks : undefined,
+        contentBlocks: structuredBlocks.length ? structuredBlocks : undefined,
         seo: seoData ? {
           metaTitle: seoData.metaTitle,
           metaDescription: seoData.metaDescription,
-          keywords: seoData.keywords,
+          keywords: seoData.keywords && seoData.keywords.length ? seoData.keywords : seoKeywords,
           ogTitle: seoData.ogTitle,
           ogDescription: seoData.ogDescription,
           ogImage: seoData.ogImage,
@@ -313,7 +566,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
         } : {
           metaTitle: title.trim(),
           metaDescription: excerpt.trim(),
-          keywords: [category]
+          keywords: seoKeywords
         }
       };
 
@@ -431,18 +684,58 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               </div>
             </div>
 
-            {/* Title */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Titel
-              </label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
-                placeholder="Geef je blog post een titel..."
-              />
+            {/* Title & slug */}
+            <div className="grid gap-4 lg:grid-cols-[3fr,2fr]">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Titel
+                </label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                  placeholder="Geef je blog post een titel..."
+                />
+              </div>
+
+              <div>
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Slug (URL)
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleApplySmartMetadata}
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-600 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-60"
+                      disabled={!canApplySmartMetadata}
+                    >
+                      Slim aanvullen
+                    </button>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <input
+                    type="text"
+                    value={slugValue}
+                    onChange={(e) => handleSlugInputChange(e.target.value)}
+                    className="w-full sm:flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                    placeholder="Wordt automatisch gebaseerd op de titel, maar je kunt hem hier aanpassen"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSlugReset}
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
+                    disabled={!hasCustomSlug && slugValue === generatedSlug}
+                  >
+                    Slug opnieuw genereren
+                  </button>
+                </div>
+                <p className="mt-1 text-xs text-gray-500">
+                  Definitieve URL: <span className="font-mono text-gray-600">https://gifteez.nl/blog/{slugPreview || 'nieuwe-post'}</span>
+                </p>
+              </div>
             </div>
 
             {/* Category */}
@@ -450,24 +743,82 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Categorie
               </label>
-              <select
+              <input
+                list="blog-category-options"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
-              >
-                <option value="">Selecteer categorie...</option>
-                <option value="Tech">Tech</option>
-                <option value="Duurzaam">Duurzaam</option>
-                <option value="Lifestyle">Lifestyle</option>
-                <option value="Reviews">Reviews</option>
-              </select>
+                placeholder="Bijv. Home & Office, Duurzaam, Cadeau Tips"
+              />
+              <datalist id="blog-category-options">
+                {categoryOptions.map((option) => (
+                  <option key={option} value={option} />
+                ))}
+              </datalist>
+              <p className="mt-1 text-xs text-gray-500">Kies een bestaande categorie of typ een nieuwe naam om toe te voegen.</p>
+            </div>
+
+            <div>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Tags
+                </label>
+                <button
+                  type="button"
+                  onClick={handleApplySuggestedTags}
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!suggestedTags.length}
+                >
+                  Voeg suggesties toe
+                </button>
+              </div>
+              <input
+                type="text"
+                value={tagsValue}
+                onChange={(e) => setTagsValue(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
+                placeholder="Bijv. productiviteit, bureau, papier"
+              />
+              <p className="mt-1 text-xs text-gray-500">Scheiding met komma’s. Tags helpen bij zoekfilters en tonen onderaan je artikel.</p>
+              {suggestedTags.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {suggestedTags.map((tag) => {
+                    const tagActive = parsedTags.some((current) => current.toLowerCase() === tag.toLowerCase());
+                    return (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => handleTagSuggestionClick(tag)}
+                        className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition ${
+                          tagActive
+                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                            : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                        }`}
+                        disabled={tagActive}
+                      >
+                        {tag}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Excerpt */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Samenvatting
-              </label>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Samenvatting
+                </label>
+                <button
+                  type="button"
+                  onClick={handleApplySuggestedExcerpt}
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!hasSuggestedExcerpt}
+                >
+                  Gebruik voorstel
+                </button>
+              </div>
               <textarea
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
@@ -475,6 +826,9 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                 placeholder="Korte samenvatting voor op de blog overzichtspagina..."
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Aanbevolen lengte: 140–180 tekens. Huidig: {excerptCharCount} tekens.
+              </p>
             </div>
 
             {/* Featured Image */}
@@ -499,14 +853,10 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Content
               </label>
-              <div className="border border-gray-300 rounded-lg overflow-hidden">
-                <RichTextEditor
-                  value={content}
-                  onChange={setContent}
-                  placeholder="Schrijf je blog post content hier..."
-                  height={500}
-                />
-              </div>
+              <ContentBuilder
+                value={contentDrafts}
+                onChange={(drafts) => setContentDrafts(normalizeDraftList(drafts))}
+              />
             </div>
 
             {/* Product media helper */}
@@ -549,6 +899,40 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                 <p className="text-xs text-gray-500">
                   Voeg eenvoudig productafbeeldingen toe aan je artikel. Klik op <strong>Afbeelding + link</strong> om meteen een mooie afbeelding inclusief affiliate link in de tekst te plakken, of kies <strong>Alleen link</strong> voor een snelle call-to-action.
                 </p>
+                {availableProductTags.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">
+                      Populaire tags:
+                    </span>
+                    {availableProductTags.map(({ key, label, count }) => {
+                      const active = productTagFilter === key;
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setProductTagFilter(active ? null : key)}
+                          className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium transition ${
+                            active
+                              ? 'border-rose-200 bg-rose-500 text-white shadow-sm'
+                              : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-100'
+                          }`}
+                        >
+                          <span>{label}</span>
+                          <span className="text-[10px] opacity-70">{count}</span>
+                        </button>
+                      );
+                    })}
+                    {productTagFilter && (
+                      <button
+                        type="button"
+                        onClick={() => setProductTagFilter(null)}
+                        className="inline-flex items-center gap-1 rounded-full border border-transparent bg-gray-100 px-3 py-1 text-[11px] font-medium text-gray-600 transition hover:bg-gray-200"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                )}
                 {isLoadingProducts ? (
                   <div className="flex items-center gap-3 text-sm text-gray-600">
                     <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin" />
@@ -609,14 +993,14 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             </div>
 
             {/* SEO Optimization */}
-            {(title || content) && (
+            {(title || structuredBlocks.length) && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   SEO & Social Media
                 </label>
                 <SEOPanel
                   title={title}
-                  content={content}
+                  content={htmlContent}
                   excerpt={excerpt}
                   imageUrl={imageUrl}
                   slug={post?.slug}
@@ -626,20 +1010,13 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             )}
 
             {/* Preview */}
-            {content && (
+            {structuredBlocks.length > 0 && htmlContent && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Live Preview
                 </label>
                 <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 max-h-60 overflow-y-auto">
-                  <div className="prose prose-sm max-w-none">
-                    {content.split('\n\n').map((block, idx) => {
-                      if (block.startsWith('# ')) {
-                        return <h3 key={idx} className="text-lg font-semibold mb-2">{block.substring(2)}</h3>;
-                      }
-                      return <p key={idx} className="mb-3 text-gray-700">{block}</p>;
-                    })}
-                  </div>
+                  <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
                 </div>
               </div>
             )}
@@ -663,7 +1040,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
           <div className="flex space-x-3">
             <button
               onClick={() => setShowPreview(true)}
-              disabled={!title.trim() || !content.trim()}
+              disabled={!title.trim() || !structuredBlocks.length}
               className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -709,16 +1086,16 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             id: post?.id || 'new',
             title,
             excerpt,
-            content,
+              content: htmlContent,
             category,
             imageUrl: imageUrl || undefined,
-            slug: post?.slug || '',
+              slug: post?.slug || slugPreview,
             published: !isDraft,
             isDraft,
             publishedAt: post?.publishedAt || new Date().toISOString(),
             createdAt: post?.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            tags: []
+              tags: parsedTags
           }}
           isOpen={showPreview}
           onClose={() => setShowPreview(false)}

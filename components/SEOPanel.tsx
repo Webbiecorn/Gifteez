@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import SEOManager, { SEOData, SEOAnalysis } from '../services/seoManager';
 
 interface SEOPanelProps {
@@ -25,17 +25,34 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
 
   const seoManager = SEOManager.getInstance();
 
+  const regenerateSEO = useCallback(() => {
+    if (!title && !content) {
+      return;
+    }
+    const generatedSEO = seoManager.generateSEOData(title, content, excerpt, imageUrl, slug);
+    setSeoData(generatedSEO);
+
+    const seoAnalysis = seoManager.analyzeSEO(generatedSEO, content);
+    setAnalysis(seoAnalysis);
+
+    onSEOChange(generatedSEO);
+    setCustomSEO(false);
+  }, [content, excerpt, imageUrl, onSEOChange, seoManager, slug, title]);
+
   useEffect(() => {
+    if (customSEO) {
+      return;
+    }
     if (title || content) {
       const generatedSEO = seoManager.generateSEOData(title, content, excerpt, imageUrl, slug);
       setSeoData(generatedSEO);
-      
+
       const seoAnalysis = seoManager.analyzeSEO(generatedSEO, content);
       setAnalysis(seoAnalysis);
-      
+
       onSEOChange(generatedSEO);
     }
-  }, [title, content, excerpt, imageUrl, slug, onSEOChange]);
+  }, [title, content, excerpt, imageUrl, slug, onSEOChange, customSEO, seoManager]);
 
   const handleSEOFieldChange = (field: keyof SEOData, value: string) => {
     if (!seoData) return;
@@ -106,6 +123,15 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           </div>
         </div>
         <div className="flex items-center space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              regenerateSEO();
+            }}
+            className="px-3 py-1 text-xs rounded-full border border-gray-200 font-medium text-gray-600 hover:bg-gray-100"
+          >
+            Herbereken
+          </button>
           <button
             onClick={(e) => {
               e.stopPropagation();

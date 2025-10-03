@@ -159,7 +159,7 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-6">
-      <div className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
+      <div className="relative flex w-full max-w-5xl flex-col rounded-3xl bg-white shadow-2xl md:max-h-[90vh] md:overflow-hidden">
         <div className="border-b px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -181,8 +181,9 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
           </div>
         </div>
 
-        <div className="grid flex-1 grid-cols-1 gap-0 overflow-hidden md:grid-cols-[2fr_3fr]">
-          <div className="border-r p-6">
+        <div className="flex-1 overflow-y-auto">
+          <div className="grid flex-1 grid-cols-1 gap-0 md:grid-cols-[2fr_3fr]">
+            <div className="border-r p-6">
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Zoek in feed</label>
               <input
@@ -194,7 +195,7 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
               />
             </div>
 
-            <div className="space-y-3 overflow-y-auto pr-2" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+              <div className="space-y-3 overflow-y-auto pr-2" style={{ maxHeight: 'calc(90vh - 200px)' }}>
               {state.loading && (
                 <div className="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-gray-50 py-12 text-gray-500">
                   <div className="mb-3 h-8 w-8 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
@@ -265,10 +266,10 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
                   </button>
                 );
               })}
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col p-6">
+            <div className="flex flex-col p-6">
             <div className="mb-4 flex flex-col gap-1 border-b border-gray-200 pb-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">
@@ -287,6 +288,7 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
                     Reset selectie
                   </button>
                 )}
+          </div>
               </div>
               <p className="text-xs text-gray-500">
                 Hero-afbeelding wordt bewust niet ingevuld; voeg in de editor zelf een pakkende visual toe.

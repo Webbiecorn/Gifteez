@@ -180,7 +180,8 @@ export const blogPostDataToBlogPost = (data: BlogPostData): BlogPost => {
     category: data.category || 'Algemeen',
     author,
     publishedDate: data.publishedDate,
-    content: contentBlocks
+    content: contentBlocks,
+    tags: data.tags && data.tags.length ? data.tags : data.seo?.keywords
   };
 };
 

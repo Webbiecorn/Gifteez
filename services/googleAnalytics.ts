@@ -1,7 +1,7 @@
 // Google Analytics Utility
 declare global {
   interface Window {
-    gtag: (...args: any[]) => void;
+    gtag?: (...args: any[]) => void;
     dataLayer: any[];
   }
 }
@@ -47,4 +47,32 @@ export const gaPurchase = (transactionId: string, value: number, currency: strin
     value: value,
     currency: currency
   });
+};
+
+interface DownloadMetadata {
+  label?: string;
+  slug?: string;
+  title?: string;
+}
+
+export const gaDownloadResource = (resourcePath: string, metadata?: DownloadMetadata) => {
+  if (!resourcePath) {
+    return;
+  }
+
+  const params: Record<string, string> = {
+    resource_path: resourcePath
+  };
+
+  if (metadata?.label) {
+    params.resource_label = metadata.label;
+  }
+  if (metadata?.slug) {
+    params.page_slug = metadata.slug;
+  }
+  if (metadata?.title) {
+    params.page_title = metadata.title;
+  }
+
+  gaEvent('download_resource', params);
 };

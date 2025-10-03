@@ -1,0 +1,64 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1084 >>
+stream
+BT
+/F1 18 Tf
+72 760 Td
+(Blog editor handleiding) Tj
+/F1 12 Tf
+0 -24 Td
+(Laatst bijgewerkt: maart 2024) Tj
+0 -36 Td
+(1. Klik op 'Nieuwe post' om een lege blog te starten.) Tj
+0 -18 Td
+(2. Vul titel, hero-afbeelding, categorie en tags in.) Tj
+0 -18 Td
+(3. Voeg contentblokken toe via de + knop en vul per blok de velden in.) Tj
+0 -18 Td
+(4. Gebruik 'Productpost genereren' om automatisch productsecties toe te voegen.) Tj
+0 -18 Td
+(5. Sleep blokken om de volgorde te wijzigen of gebruik de instellingen per blok.) Tj
+0 -18 Td
+(6. Controleer rechts de SEO-instellingen en vul meta title en description in.) Tj
+0 -18 Td
+(7. Sla op als concept en ga verder; concepten blijven lokaal beschikbaar.) Tj
+0 -18 Td
+(8. Publiceer wanneer je tevreden bent en de Firebase-koppeling actief is.) Tj
+0 -18 Td
+(Extra tips:) Tj
+0 -18 Td
+(- Gebruik de filters bovenaan om snel specifieke posts te vinden.) Tj
+0 -18 Td
+(- Bekijk de Analytics-kaart om ontbrekende hero's of SEO te ontdekken.) Tj
+0 -18 Td
+(- Werk productfeeds bij via de Coolblue/Amazon sectie voordat je producten invoegt.) Tj
+0 -18 Td
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000001376 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1446
+%%EOF

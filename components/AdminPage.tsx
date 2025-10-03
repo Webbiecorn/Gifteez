@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { NavigateTo, DealItem, DealCategory } from '../types';
+import { NavigateTo, DealItem, DealCategory, QuizQuestion, QuizResult, BudgetTier, OccasionType, RelationshipType } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import BlogEditor from './BlogEditor';
 import BlogService, { BlogPostData } from '../services/blogService';
@@ -12,6 +12,7 @@ import AmazonProductManager from './AmazonProductManager';
 import { DynamicProductService } from '../services/dynamicProductService';
 import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
+import { quizQuestions, quizResults } from '../data/quizData';
 import {
   SparklesIcon,
   TagIcon,
@@ -24,8 +25,73 @@ import {
   SpinnerIcon,
   DownloadIcon,
   BookmarkIcon,
-  BookmarkFilledIcon
+  BookmarkFilledIcon,
+  QuestionMarkCircleIcon,
+  CheckCircleIcon,
+  XCircleIcon
 } from './IconComponents';
+
+const budgetLabels: Record<BudgetTier, string> = {
+  'budget-low': 'Tot €25',
+  'budget-mid': '€25 - €75',
+  'budget-high': '€75+',
+};
+
+const relationshipLabels: Record<RelationshipType, string> = {
+  partner: 'Partner',
+  friend: 'Vriend(in)',
+  colleague: 'Collega',
+  family: 'Familie',
+};
+
+const occasionLabels: Record<OccasionType, string> = {
+  birthday: 'Verjaardag',
+  housewarming: 'Housewarming',
+  holidays: 'Feestdagen',
+  anniversary: 'Jubileum',
+};
+
+const personaOrder = ['homebody', 'adventurer', 'foodie', 'creative'] as const;
+const budgetOrder: BudgetTier[] = ['budget-low', 'budget-mid', 'budget-high'];
+const relationshipOrder: RelationshipType[] = ['partner', 'friend', 'colleague', 'family'];
+const occasionOrder: OccasionType[] = ['birthday', 'housewarming', 'holidays', 'anniversary'];
+const QUIZ_REMINDER_STORAGE_KEY = 'gifteez.quizAdmin.reminders.v1';
+const ADMIN_PREFERENCES_STORAGE_KEY = 'gifteez.admin.preferences.v1';
+
+type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings';
+
+interface QuizReminderPreferences {
+  showAlerts: boolean;
+  email: string;
+}
+
+interface AdminPreferences {
+  defaultTab: AdminTab;
+}
+
+const defaultAdminPreferences: AdminPreferences = {
+  defaultTab: 'blog',
+};
+
+const getStoredAdminPreferences = (): AdminPreferences => {
+  if (typeof window === 'undefined') {
+    return defaultAdminPreferences;
+  }
+
+  try {
+    const stored = window.localStorage.getItem(ADMIN_PREFERENCES_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored) as Partial<AdminPreferences>;
+      return {
+        defaultTab: (parsed.defaultTab as AdminTab) ?? defaultAdminPreferences.defaultTab,
+      };
+    }
+  } catch (error) {
+    console.warn('Kon admin voorkeuren niet laden', error);
+  }
+
+  return defaultAdminPreferences;
+};
 
 interface AdminPageProps {
   navigateTo: NavigateTo;
@@ -33,8 +99,27 @@ interface AdminPageProps {
 
 const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
   const auth = useAuth();
-  const [activeTab, setActiveTab] = useState<'blog' | 'deals' | 'quiz' | 'shop' | 'settings'>('blog');
+  const [adminPreferences, setAdminPreferences] = useState<AdminPreferences>(() => getStoredAdminPreferences());
+  const [activeTab, setActiveTab] = useState<AdminTab>(adminPreferences.defaultTab);
   const [isAuthorized, setIsAuthorized] = useState(false);
+
+  const updateAdminPreferences = useCallback((patch: Partial<AdminPreferences>) => {
+    setAdminPreferences((previous) => {
+      const next = { ...previous, ...patch };
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem(ADMIN_PREFERENCES_STORAGE_KEY, JSON.stringify(next));
+        } catch (error) {
+          console.warn('Kon admin voorkeuren niet opslaan', error);
+        }
+      }
+      return next;
+    });
+
+    if (patch.defaultTab) {
+      setActiveTab(patch.defaultTab);
+    }
+  }, []);
 
   // List of authorized admin emails (in production, store this in Firebase)
   const adminEmails = [
@@ -137,7 +222,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
             ].map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveTab(tab.key as any)}
+                onClick={() => setActiveTab(tab.key as AdminTab)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.key
                     ? 'border-rose-500 text-rose-600'
@@ -156,9 +241,18 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   {activeTab === 'blog' && <BlogAdmin isCloudConnected={firebaseEnabled} />}
         {activeTab === 'deals' && <DealsAdmin />}
-        {activeTab === 'quiz' && <QuizAdmin />}
+  {activeTab === 'quiz' && <QuizAdmin navigateTo={navigateTo} />}
         {activeTab === 'shop' && <ShopAdmin />}
-        {activeTab === 'settings' && <SettingsAdmin />}
+        {activeTab === 'settings' && (
+          <SettingsAdmin
+            adminEmails={adminEmails}
+            firebaseEnabled={firebaseEnabled}
+            navigateTo={navigateTo}
+            onSelectTab={(tab) => setActiveTab(tab)}
+            onUpdatePreferences={updateAdminPreferences}
+            preferences={adminPreferences}
+          />
+        )}
       </div>
     </div>
   );
@@ -379,6 +473,14 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
+              <a
+                href="/blog-editor-instructies.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-lg border border-rose-200 bg-white px-4 py-2 text-sm font-semibold text-rose-500 shadow-sm transition hover:border-rose-300 hover:bg-rose-50"
+              >
+                Handleiding (PDF)
+              </a>
               <button
                 onClick={() => setShowProductWizard(true)}
                 className="inline-flex items-center rounded-lg border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-100"
@@ -1699,17 +1801,787 @@ const DealsAdmin: React.FC = () => {
   );
 };
 
-// Placeholder components for other tabs
+interface QuizAdminProps {
+  navigateTo: NavigateTo;
+}
 
-const QuizAdmin: React.FC = () => (
-  <div className="bg-white rounded-lg shadow-sm p-6">
-    <h2 className="text-xl font-semibold text-gray-900 mb-4">Quiz Beheren</h2>
-    <div className="text-center py-12 text-gray-500">
-      <div className="text-4xl mb-4">❓</div>
-      <p>Quiz beheer interface komt binnenkort...</p>
+const QuizAdmin: React.FC<QuizAdminProps> = ({ navigateTo }) => {
+  const personaEntries = useMemo(() => {
+    const ordered = personaOrder
+      .map((key) => {
+        const persona = quizResults[key];
+        return persona ? ([key, persona] as [string, QuizResult]) : null;
+      })
+      .filter((entry): entry is [string, QuizResult] => Boolean(entry));
+
+    const additional = Object.entries(quizResults).filter(
+      ([key]) => !(personaOrder as readonly string[]).includes(key as any)
+    );
+
+    return [...ordered, ...additional];
+  }, []);
+
+  const [selectedPersonaKey, setSelectedPersonaKey] = useState<string>(() => personaEntries[0]?.[0] ?? '');
+  const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [reminderPrefs, setReminderPrefs] = useState<QuizReminderPreferences>(() => {
+    if (typeof window === 'undefined') {
+      return { showAlerts: true, email: '' };
+    }
+    try {
+      const stored = window.localStorage.getItem(QUIZ_REMINDER_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Partial<QuizReminderPreferences>;
+        return {
+          showAlerts: parsed.showAlerts ?? true,
+          email: parsed.email ?? '',
+        };
+      }
+    } catch (error) {
+      console.warn('Kon quiz herinneringsinstellingen niet laden', error);
+    }
+    return { showAlerts: true, email: '' };
+  });
+
+  useEffect(() => {
+    if (!selectedPersonaKey && personaEntries.length) {
+      setSelectedPersonaKey(personaEntries[0][0]);
+    }
+  }, [personaEntries, selectedPersonaKey]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    try {
+      window.localStorage.setItem(QUIZ_REMINDER_STORAGE_KEY, JSON.stringify(reminderPrefs));
+    } catch (error) {
+      console.warn('Kon quiz herinneringsinstellingen niet opslaan', error);
+    }
+  }, [reminderPrefs]);
+
+  useEffect(() => {
+    if (!status) {
+      return;
+    }
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const timer = window.setTimeout(() => setStatus(null), 4000);
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
+  const personaQuestions = useMemo(() => quizQuestions.filter((question) => question.kind === 'persona'), []);
+  const metaQuestions = useMemo(() => quizQuestions.filter((question) => question.kind !== 'persona'), []);
+
+  const personaAnswerIssues = useMemo(
+    () =>
+      personaQuestions.filter((question) =>
+        question.answers.some((answer) => !answer.resultKey)
+      ),
+    [personaQuestions]
+  );
+
+  const personaCoverage = useMemo(
+    () =>
+      personaEntries.map(([key, result]) => {
+        const shopping = result.shoppingList ?? {};
+        const occasionHighlights = result.occasionHighlights ?? {};
+        const missingBudgets = budgetOrder.filter((tier) => !(shopping?.[tier]?.length));
+        const missingOccasions = occasionOrder.filter((occ) => !occasionHighlights?.[occ]);
+        const blogCount = result.relatedBlogSlugs?.length ?? 0;
+        const interests = result.recommendedInterests
+          ? result.recommendedInterests.split(',').map((part) => part.trim()).filter(Boolean)
+          : [];
+        return {
+          key,
+          result,
+          missingBudgets,
+          missingOccasions,
+          blogCount,
+          interests,
+        };
+      }),
+    [personaEntries]
+  );
+
+  const totalBudgetSlots = personaEntries.length * budgetOrder.length;
+  const missingBudgetSlots = personaCoverage.reduce((sum, persona) => sum + persona.missingBudgets.length, 0);
+  const budgetCoverage = totalBudgetSlots
+    ? Math.round(((totalBudgetSlots - missingBudgetSlots) / totalBudgetSlots) * 100)
+    : 0;
+
+  const totalOccasionSlots = personaEntries.length * occasionOrder.length;
+  const missingOccasionSlots = personaCoverage.reduce((sum, persona) => sum + persona.missingOccasions.length, 0);
+  const occasionCoverage = totalOccasionSlots
+    ? Math.round(((totalOccasionSlots - missingOccasionSlots) / totalOccasionSlots) * 100)
+    : 0;
+
+  const personaAnswerCount = personaQuestions.reduce((sum, question) => sum + question.answers.length, 0);
+
+  const metaCoverage = useMemo(() => {
+    const budgetQuestion = metaQuestions.find((question) => question.metaKey === 'budget');
+    const relationshipQuestion = metaQuestions.find((question) => question.metaKey === 'relationship');
+    const occasionQuestion = metaQuestions.find((question) => question.metaKey === 'occasion');
+
+    const coveredBudgets = new Set((budgetQuestion?.answers ?? []).map((answer) => answer.value as BudgetTier));
+    const coveredRelationships = new Set(
+      (relationshipQuestion?.answers ?? []).map((answer) => answer.value as RelationshipType)
+    );
+    const coveredOccasions = new Set(
+      (occasionQuestion?.answers ?? []).map((answer) => answer.value as OccasionType)
+    );
+
+    return {
+      missingBudgetAnswers: budgetOrder.filter((tier) => !coveredBudgets.has(tier)),
+      missingRelationshipAnswers: relationshipOrder.filter((relation) => !coveredRelationships.has(relation)),
+      missingOccasionAnswers: occasionOrder.filter((occ) => !coveredOccasions.has(occ)),
+    };
+  }, [metaQuestions]);
+
+  const selectedPersonaCoverage = personaCoverage.find((persona) => persona.key === selectedPersonaKey);
+  const selectedPersona = selectedPersonaCoverage?.result;
+
+  const hasReminderActions =
+    personaAnswerIssues.length > 0 ||
+    missingBudgetSlots > 0 ||
+    missingOccasionSlots > 0 ||
+    personaCoverage.some((persona) => persona.blogCount < 2);
+
+  const reminderSummaryLines = useMemo(() => {
+    const lines: string[] = [];
+
+    if (personaAnswerIssues.length) {
+      lines.push(`${personaAnswerIssues.length} vraag/vraagstukken zonder gekoppelde persona`);
+    }
+
+    personaCoverage.forEach((persona) => {
+      const personaLines: string[] = [];
+      if (persona.missingBudgets.length) {
+        personaLines.push(`budget: ${persona.missingBudgets.map((tier) => budgetLabels[tier]).join(', ')}`);
+      }
+      if (persona.missingOccasions.length) {
+        personaLines.push(
+          `gelegenheden: ${persona.missingOccasions.map((occasion) => occasionLabels[occasion]).join(', ')}`
+        );
+      }
+      if (persona.blogCount < 2) {
+        personaLines.push(`bloglinks: ${persona.blogCount}/2`);
+      }
+      if (personaLines.length) {
+        lines.push(`${persona.result.title}: ${personaLines.join(' • ')}`);
+      }
+    });
+
+    if (!lines.length) {
+      lines.push('Alles is up-to-date ✅');
+    }
+
+    return lines;
+  }, [personaAnswerIssues, personaCoverage]);
+
+  const reminderSummaryText = useMemo(() => {
+    const greeting = 'Hoi team,\n\nDit is de huidige quiz checklist:';
+    const body = reminderSummaryLines.map((line) => `- ${line}`).join('\n');
+    const closing = hasReminderActions
+      ? '\n\nPlan follow-up acties zodra het past.\n\nGroet,\nGifteez Admin'
+      : '\n\nGeen actie nodig op dit moment.\n\nGroet,\nGifteez Admin';
+
+    return `${greeting}\n${body}${closing}`;
+  }, [hasReminderActions, reminderSummaryLines]);
+
+  const reminderMailSubject = hasReminderActions
+    ? 'Quiz actiepunten & herinnering'
+    : 'Quiz status: alles up-to-date';
+
+  const readinessChecks = useMemo(
+    () => [
+      {
+        label: 'Alle persona-antwoorden gekoppeld',
+        status: personaAnswerIssues.length === 0,
+        detail:
+          personaAnswerIssues.length === 0
+            ? 'Geen ontbrekende resultKey gevonden.'
+            : `${personaAnswerIssues.length} vraag/vraagstukken missen een resultKey.`,
+      },
+      {
+        label: 'Budgetshoppinglijsten volledig',
+        status: missingBudgetSlots === 0,
+        detail:
+          missingBudgetSlots === 0
+            ? 'Alle persona’s hebben cadeaus voor elk budget.'
+            : `${missingBudgetSlots} budgetten missen nog cadeaus.`,
+      },
+      {
+        label: 'Occasionteksten ingevuld',
+        status: missingOccasionSlots === 0,
+        detail:
+          missingOccasionSlots === 0
+            ? 'Elke persona heeft occasioncopy.'
+            : `${missingOccasionSlots} occasion-velden zijn nog leeg.`,
+      },
+      {
+        label: 'Meta-vragen dekken alle opties',
+        status:
+          metaCoverage.missingBudgetAnswers.length === 0 &&
+          metaCoverage.missingRelationshipAnswers.length === 0 &&
+          metaCoverage.missingOccasionAnswers.length === 0,
+        detail: [
+          metaCoverage.missingBudgetAnswers.length
+            ? `Budget: ${metaCoverage.missingBudgetAnswers.map((tier) => budgetLabels[tier]).join(', ')}`
+            : null,
+          metaCoverage.missingRelationshipAnswers.length
+            ? `Relatie: ${metaCoverage.missingRelationshipAnswers.map((relation) => relationshipLabels[relation]).join(', ')}`
+            : null,
+          metaCoverage.missingOccasionAnswers.length
+            ? `Gelegenheid: ${metaCoverage.missingOccasionAnswers.map((occ) => occasionLabels[occ]).join(', ')}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(' · ') || 'Volledig.',
+      },
+      {
+        label: 'Minimaal 2 bloglinks per persona',
+        status: personaCoverage.every((persona) => persona.blogCount >= 2),
+        detail: personaCoverage
+          .filter((persona) => persona.blogCount < 2)
+          .map((persona) => `${persona.result.title}: ${persona.blogCount}/2`)
+          .join(' · ') || 'Elke persona heeft voldoende kruislinks.',
+      },
+    ],
+    [metaCoverage, missingBudgetSlots, missingOccasionSlots, personaAnswerIssues.length, personaCoverage]
+  );
+
+  const handleToggleReminderAlerts = useCallback(() => {
+    setReminderPrefs((prev) => ({ ...prev, showAlerts: !prev.showAlerts }));
+  }, []);
+
+  const handleReminderEmailChange = useCallback((email: string) => {
+    setReminderPrefs((prev) => ({ ...prev, email }));
+  }, []);
+
+  const handleSendReminder = useCallback(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (!hasReminderActions) {
+      setStatus({ type: 'success', message: 'Er zijn momenteel geen actiepunten voor de quiz.' });
+      return;
+    }
+
+    const to = reminderPrefs.email.trim();
+    const subject = encodeURIComponent(reminderMailSubject);
+    const body = encodeURIComponent(reminderSummaryText);
+    const mailto = `mailto:${encodeURIComponent(to)}?subject=${subject}&body=${body}`;
+    window.location.href = mailto;
+    setStatus({ type: 'success', message: 'E-mailconcept geopend met quizactiepunten.' });
+  }, [hasReminderActions, reminderMailSubject, reminderPrefs.email, reminderSummaryText]);
+
+  const writeToClipboard = useCallback(
+    async (payload: string, successMessage: string) => {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(payload);
+          setStatus({ type: 'success', message: successMessage });
+        } else {
+          throw new Error('Clipboard API niet beschikbaar');
+        }
+      } catch (error) {
+        console.error('Clipboard copy failed', error);
+        setStatus({ type: 'error', message: 'Kopiëren mislukt. Controleer de console voor details.' });
+      }
+    },
+    []
+  );
+
+  const handleCopyQuestions = useCallback(
+    () => writeToClipboard(JSON.stringify(quizQuestions, null, 2), 'Quizvragen gekopieerd naar klembord.'),
+    [writeToClipboard]
+  );
+
+  const handleCopyResults = useCallback(
+    () => writeToClipboard(JSON.stringify(quizResults, null, 2), 'Quizresultaten gekopieerd naar klembord.'),
+    [writeToClipboard]
+  );
+
+  const handleCopyPersona = useCallback(
+    (personaKey: string) => {
+      const persona = quizResults[personaKey];
+      if (!persona) {
+        return;
+      }
+      void writeToClipboard(
+        JSON.stringify({ key: personaKey, ...persona }, null, 2),
+        `${persona.title} gekopieerd naar klembord.`
+      );
+    },
+    [writeToClipboard]
+  );
+
+  const selectedPersonaInterests = selectedPersonaCoverage?.interests ?? [];
+  const relatedBlogSlugs = selectedPersona?.relatedBlogSlugs ?? [];
+  const showReminderBanner = reminderPrefs.showAlerts && hasReminderActions;
+  const reminderBannerHeadline = reminderSummaryLines[0];
+  const reminderBannerDetails = reminderSummaryLines.slice(1, 3).join(' · ');
+
+  return (
+    <div className="space-y-8">
+      <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">Quiz beheren</h2>
+            <p className="text-sm text-gray-500">
+              Monitor vragen, persona-profielen en actiepunten voor de Gifteez Cadeau Quiz.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => navigateTo('quiz')}
+              className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-100"
+            >
+              <SparklesIcon className="h-4 w-4" aria-hidden="true" />
+              Quiz bekijken
+            </button>
+            <button
+              type="button"
+              onClick={handleCopyQuestions}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
+            >
+              <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+              Exporteer vragen
+            </button>
+            <button
+              type="button"
+              onClick={handleCopyResults}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
+            >
+              <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+              Exporteer resultaten
+            </button>
+            <button
+              type="button"
+              onClick={() => selectedPersonaKey && handleCopyPersona(selectedPersonaKey)}
+              disabled={!selectedPersona}
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:border-emerald-300 hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
+              Kopieer persona
+            </button>
+          </div>
+        </div>
+
+        {status && (
+          <div
+            className={`mt-4 rounded-xl border p-4 text-sm ${
+              status.type === 'success'
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                : 'border-red-200 bg-red-50 text-red-700'
+            }`}
+          >
+            {status.message}
+          </div>
+        )}
+
+        {showReminderBanner && (
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-800 shadow-sm">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <QuestionMarkCircleIcon className="mt-0.5 h-5 w-5 text-amber-500" aria-hidden="true" />
+                <div>
+                  <p className="font-semibold">Actie aanbevolen: {reminderBannerHeadline}</p>
+                  {reminderBannerDetails && (
+                    <p className="mt-1 text-xs leading-relaxed text-amber-700">{reminderBannerDetails}</p>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleSendReminder}
+                  className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-white px-4 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-100"
+                >
+                  Herinner per e-mail
+                </button>
+                <button
+                  type="button"
+                  onClick={handleToggleReminderAlerts}
+                  className="inline-flex items-center gap-2 rounded-full border border-transparent bg-amber-500 px-4 py-2 text-xs font-semibold text-white transition hover:bg-amber-600"
+                >
+                  Alerts {reminderPrefs.showAlerts ? 'uitschakelen' : 'inschakelen'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <div className="flex items-center justify-between">
+              <QuestionMarkCircleIcon className="h-9 w-9 text-rose-500" aria-hidden="true" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Persona vragen</span>
+            </div>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{personaQuestions.length}</p>
+            <p className="text-xs text-gray-500">{personaAnswerCount} mogelijke antwoorden</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <div className="flex items-center justify-between">
+              <TargetIcon className="h-9 w-9 text-rose-500" aria-hidden="true" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Meta vragen</span>
+            </div>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{metaQuestions.length}</p>
+            <p className="text-xs text-gray-500">Budget, relatie & gelegenheden</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <div className="flex items-center justify-between">
+              <SparklesIcon className="h-9 w-9 text-rose-500" aria-hidden="true" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Persona profielen</span>
+            </div>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{personaEntries.length}</p>
+            <p className="text-xs text-gray-500">{personaCoverage.reduce((sum, persona) => sum + persona.interests.length, 0)} interesses in totaal</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <div className="flex items-center justify-between">
+              <CheckCircleIcon className="h-9 w-9 text-emerald-500" aria-hidden="true" />
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Dekking</span>
+            </div>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{budgetCoverage}% budget · {occasionCoverage}% occasions</p>
+            <p className="text-xs text-gray-500">{totalBudgetSlots - missingBudgetSlots}/{totalBudgetSlots} budget slots gevuld</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Snelle acties</h3>
+            <div className="mt-4 space-y-4 text-sm text-gray-600">
+              <button
+                type="button"
+                onClick={() => navigateTo('quiz')}
+                className="flex w-full items-center justify-between rounded-xl border border-rose-100 bg-rose-50/60 px-4 py-3 font-semibold text-rose-600 transition hover:bg-rose-100"
+              >
+                <span>Doorloop quiz in preview</span>
+                <SparklesIcon className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={handleCopyQuestions}
+                className="flex w-full items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 font-semibold text-gray-600 transition hover:bg-gray-100"
+              >
+                <span>Copy quizvragen JSON</span>
+                <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={handleCopyResults}
+                className="flex w-full items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 font-semibold text-gray-600 transition hover:bg-gray-100"
+              >
+                <span>Copy persona resultaten JSON</span>
+                <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => selectedPersonaKey && handleCopyPersona(selectedPersonaKey)}
+                disabled={!selectedPersona}
+                className="flex w-full items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 font-semibold text-emerald-600 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span>Kopieer geselecteerde persona</span>
+                <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Herinneringen</h3>
+                <p className="text-xs text-gray-500">Bewaar een e-mail en blijf alerts ontvangen over openstaande actiepunten.</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleToggleReminderAlerts}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
+                  reminderPrefs.showAlerts ? 'bg-emerald-500 text-white hover:bg-emerald-600' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                }`}
+              >
+                Alerts {reminderPrefs.showAlerts ? 'aan' : 'uit'}
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-4 text-sm text-gray-600">
+              <label className="flex flex-col gap-1 text-xs text-gray-500">
+                Notificatie e-mail (optioneel)
+                <input
+                  type="email"
+                  value={reminderPrefs.email}
+                  onChange={(event) => handleReminderEmailChange(event.target.value)}
+                  placeholder="naam@bedrijf.nl"
+                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 shadow-sm outline-none transition focus:border-rose-300 focus:bg-white focus:ring-2 focus:ring-rose-200"
+                />
+              </label>
+
+              <div className="rounded-xl border border-gray-100 bg-gray-50/80 p-4 text-xs text-gray-600">
+                <p className="font-semibold text-gray-700">Actuele actiepunten</p>
+                <ul className="mt-2 list-disc space-y-1 pl-4">
+                  {reminderSummaryLines.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleSendReminder}
+                disabled={!hasReminderActions}
+                className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  hasReminderActions
+                    ? 'bg-rose-500 text-white hover:bg-rose-600'
+                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                Stuur e-mail herinnering
+              </button>
+              {!hasReminderActions && (
+                <p className="text-xs text-gray-400">Alles is rond – er zijn geen openstaande actiepunten om te mailen.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Kwaliteitschecks</h3>
+            <div className="mt-4 space-y-3 text-sm">
+              {readinessChecks.map((check) => (
+                <div
+                  key={check.label}
+                  className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${
+                    check.status
+                      ? 'border-emerald-100 bg-emerald-50/60 text-emerald-700'
+                      : 'border-amber-100 bg-amber-50/60 text-amber-700'
+                  }`}
+                >
+                  {check.status ? (
+                    <CheckCircleIcon className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                  ) : (
+                    <XCircleIcon className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                  )}
+                  <div>
+                    <p className="font-semibold">{check.label}</p>
+                    <p className="mt-1 text-xs leading-relaxed">{check.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">Quiz flow</h3>
+              <span className="text-xs uppercase tracking-wide text-gray-400">Persona vragen</span>
+            </div>
+            <div className="mt-4 space-y-5">
+              {personaQuestions.map((question) => (
+                <div key={question.id} className="rounded-xl border border-gray-100 bg-gray-50/60 p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">{question.text}</p>
+                      <div className="mt-1 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                        <span className="rounded-full bg-white px-2 py-1">Vraag #{question.id}</span>
+                        <span className="rounded-full bg-white px-2 py-1">{question.answers.length} opties</span>
+                      </div>
+                    </div>
+                    {personaAnswerIssues.some((issue) => issue.id === question.id) && (
+                      <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">Let op: ontbrekende persona</span>
+                    )}
+                  </div>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {question.answers.map((answer) => {
+                      const targetPersona = answer.resultKey ? quizResults[answer.resultKey] : undefined;
+                      return (
+                        <div
+                          key={answer.value}
+                          className="flex flex-col gap-1 rounded-lg border border-white bg-white/80 p-3 text-xs text-gray-600"
+                        >
+                          <span className="font-semibold text-gray-800">{answer.text}</span>
+                          {answer.helperText && <span className="text-[11px] text-gray-500">{answer.helperText}</span>}
+                          <div className="flex flex-wrap items-center gap-2">
+                            {answer.resultKey ? (
+                              <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-600">
+                                → {targetPersona?.title ?? answer.resultKey}
+                              </span>
+                            ) : (
+                              <span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-700">Geen persona gekoppeld</span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 border-t border-gray-100 pt-6">
+              <div className="flex items-center justify-between">
+                <h4 className="text-sm font-semibold text-gray-900">Meta vragen</h4>
+                <span className="text-xs uppercase tracking-wide text-gray-400">{metaQuestions.length} stuks</span>
+              </div>
+              <div className="mt-4 space-y-4">
+                {metaQuestions.map((question) => (
+                  <div key={question.id} className="rounded-xl border border-gray-100 bg-white/70 p-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-sm font-semibold text-gray-900">{question.text}</p>
+                      {question.metaKey && (
+                        <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">{question.metaKey}</span>
+                      )}
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-2 text-xs">
+                      {question.answers.map((answer) => (
+                        <span
+                          key={answer.value}
+                          className="rounded-full bg-gray-50 px-3 py-1 font-semibold text-gray-600"
+                        >
+                          {answer.text}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Persona detail</h3>
+                <p className="text-sm text-gray-500">Selecteer een persona om copy, shopping lists en links te controleren.</p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {personaEntries.map(([key, result]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setSelectedPersonaKey(key)}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                      selectedPersonaKey === key
+                        ? 'bg-rose-500 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {result.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {selectedPersona ? (
+              <div className="mt-5 space-y-6">
+                <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-5">
+                  <h4 className="text-sm font-semibold text-gray-900">Positionering</h4>
+                  <p className="mt-2 text-sm leading-relaxed text-gray-600">{selectedPersona.description}</p>
+                  {selectedPersonaInterests.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+                      {selectedPersonaInterests.map((interest) => (
+                        <span key={interest} className="rounded-full bg-white px-3 py-1">
+                          #{interest.replace(/\s+/g, '')}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-sm font-semibold text-gray-900">Shoppinglijsten per budget</h4>
+                  <div className="grid gap-3 lg:grid-cols-3">
+                    {budgetOrder.map((tier) => {
+                      const items = selectedPersona.shoppingList?.[tier];
+                      return (
+                        <div
+                          key={tier}
+                          className={`flex h-full flex-col gap-2 rounded-xl border p-4 ${
+                            items && items.length
+                              ? 'border-emerald-100 bg-emerald-50/40'
+                              : 'border-amber-100 bg-amber-50/40'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide">
+                            <span className="text-gray-600">{budgetLabels[tier]}</span>
+                            <span className="text-gray-400">{items?.length ?? 0} items</span>
+                          </div>
+                          <div className="space-y-2 text-xs text-gray-600">
+                            {items && items.length ? (
+                              items.map((item) => (
+                                <div key={item.title} className="rounded-lg bg-white/80 p-3">
+                                  <p className="font-semibold text-gray-900">{item.title}</p>
+                                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">{item.description}</p>
+                                  <p className="mt-2 text-[11px] font-semibold text-rose-500">{item.url}</p>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-[11px] font-semibold text-amber-700">Nog geen items toegevoegd.</p>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-5">
+                    <h4 className="text-sm font-semibold text-gray-900">Gelegenheid copy</h4>
+                    <div className="mt-3 space-y-3 text-xs text-gray-600">
+                      {occasionOrder.map((occasion) => (
+                        <div key={occasion} className="rounded-lg border border-white bg-white/90 p-3">
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold text-gray-800">{occasionLabels[occasion]}</span>
+                            {selectedPersona.occasionHighlights?.[occasion] ? (
+                              <CheckCircleIcon className="h-4 w-4 text-emerald-500" aria-hidden="true" />
+                            ) : (
+                              <XCircleIcon className="h-4 w-4 text-amber-500" aria-hidden="true" />
+                            )}
+                          </div>
+                          <p className="mt-2 text-[11px] leading-relaxed">
+                            {selectedPersona.occasionHighlights?.[occasion] ?? 'Nog geen tekst toegevoegd.'}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-5">
+                    <h4 className="text-sm font-semibold text-gray-900">Gerelateerde content</h4>
+                    <div className="mt-3 space-y-2 text-xs text-gray-600">
+                      <p className="font-semibold text-gray-700">Blogposts</p>
+                      <div className="flex flex-wrap gap-2">
+                        {relatedBlogSlugs.length ? (
+                          relatedBlogSlugs.map((slug) => (
+                            <span key={slug} className="rounded-full bg-white px-3 py-1 font-semibold text-gray-600">
+                              {slug}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-700">Nog niets gelinkt</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-6 rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
+                Selecteer een persona om details te bekijken.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ShopAdmin: React.FC = () => {
   const [meta, setMeta] = useState<CoolblueFeedMeta>(CoolblueFeedService.getMeta());
@@ -1925,40 +2797,337 @@ const ShopAdmin: React.FC = () => {
   );
 };
 
-const SettingsAdmin: React.FC = () => (
-  <div className="bg-white rounded-lg shadow-sm p-6">
-    <h2 className="text-xl font-semibold text-gray-900 mb-4">Admin Instellingen</h2>
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Geautoriseerde Admins</h3>
-        <p className="text-sm text-gray-600 mb-4">
-          Momenteel zijn deze email adressen geautoriseerd voor admin toegang:
-        </p>
-        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-          <li>admin@gifteez.nl</li>
-          <li>kevin@gifteez.nl</li>
-          <li>beheer@gifteez.nl</li>
-        </ul>
-        <p className="text-xs text-gray-500 mt-2">
-          Tip: In productie kun je dit in Firestore opslaan voor flexibele beheer.
-        </p>
-      </div>
-      
-      <div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Content Status</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="border rounded-lg p-4">
-            <div className="text-2xl font-bold text-blue-600">3</div>
-            <div className="text-sm text-gray-600">Actieve Blog Posts</div>
+interface SettingsAdminProps {
+  adminEmails: string[];
+  firebaseEnabled: boolean;
+  preferences: AdminPreferences;
+  onUpdatePreferences: (patch: Partial<AdminPreferences>) => void;
+  onSelectTab: (tab: AdminTab) => void;
+  navigateTo: NavigateTo;
+}
+
+const tabLabels: Record<AdminTab, string> = {
+  blog: 'Blogbeheer',
+  deals: 'Deals',
+  quiz: 'Quiz',
+  shop: 'Shop items',
+  settings: 'Instellingen',
+};
+
+const SettingsAdmin: React.FC<SettingsAdminProps> = ({
+  adminEmails,
+  firebaseEnabled,
+  preferences,
+  onUpdatePreferences,
+  onSelectTab,
+  navigateTo,
+}) => {
+  const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  useEffect(() => {
+    if (!status || typeof window === 'undefined') {
+      return;
+    }
+    const timer = window.setTimeout(() => setStatus(null), 4000);
+    return () => window.clearTimeout(timer);
+  }, [status]);
+
+  const environmentMode = import.meta.env?.MODE ?? 'production';
+  const isProduction = environmentMode === 'production';
+  const timezone = useMemo(() => Intl.DateTimeFormat().resolvedOptions().timeZone, []);
+  const localeTimestamp = useMemo(
+    () => new Date().toLocaleString('nl-NL', { dateStyle: 'full', timeStyle: 'medium' }),
+    []
+  );
+  const isClient = typeof navigator !== 'undefined';
+  const isOnline = isClient ? navigator.onLine : true;
+  const userAgent = isClient ? navigator.userAgent : 'Onbekend';
+  const adminEmailList = useMemo(() => adminEmails.join(', '), [adminEmails]);
+
+  const handleDefaultTabChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      const selectedTab = event.target.value as AdminTab;
+      onUpdatePreferences({ defaultTab: selectedTab });
+      setStatus({ type: 'success', message: `Standaardtab ingesteld op ${tabLabels[selectedTab]}.` });
+    },
+    [onUpdatePreferences]
+  );
+
+  const handleResetPreferences = useCallback(() => {
+    onUpdatePreferences({ defaultTab: defaultAdminPreferences.defaultTab });
+    setStatus({ type: 'success', message: 'Voorkeuren teruggezet naar standaard (Blog).' });
+  }, [onUpdatePreferences]);
+
+  const handleCopyAdminEmails = useCallback(async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(adminEmailList);
+        setStatus({ type: 'success', message: 'Admin e-mailadressen gekopieerd naar klembord.' });
+      } else {
+        throw new Error('Clipboard API niet beschikbaar');
+      }
+    } catch (error) {
+      console.error('Kopiëren mislukt', error);
+      setStatus({ type: 'error', message: 'Kopiëren mislukt. Controleer browser permissies.' });
+    }
+  }, [adminEmailList]);
+
+  const handleOpenDocs = useCallback((url: string) => {
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  }, []);
+
+  const quickLinks = useMemo(
+    () => [
+      {
+        label: 'Quiz dashboard',
+        description: 'Controleer persona reminders en deelbare kaarten.',
+        action: () => onSelectTab('quiz'),
+      },
+      {
+        label: 'Deals overzicht',
+        description: 'Werk pins bij en controleer affiliate links.',
+        action: () => onSelectTab('deals'),
+      },
+      {
+        label: 'Blogbeheer',
+        description: 'Open editor, analytics en productwizard.',
+        action: () => onSelectTab('blog'),
+      },
+      {
+        label: 'Shop feed',
+        description: 'Sync de Coolblue feed en Amazon bibliotheek.',
+        action: () => onSelectTab('shop'),
+      },
+    ],
+    [onSelectTab]
+  );
+
+  const resourceLinks = useMemo(
+    () => [
+      {
+        label: 'Deployment handleiding',
+        href: 'https://github.com/Webbiecorn/Gifteez/blob/main/DEPLOYMENT.md',
+      },
+      {
+        label: 'Performance checklist',
+        href: 'https://github.com/Webbiecorn/Gifteez/blob/main/PERFORMANCE.md',
+      },
+      {
+        label: 'Beveiligingsoverzicht',
+        href: 'https://github.com/Webbiecorn/Gifteez/blob/main/SECURITY.md',
+      },
+      {
+        label: 'Firebase console',
+        href: 'https://console.firebase.google.com/project/gifteez-7533b/overview',
+      },
+    ],
+    []
+  );
+
+  const adminCount = adminEmails.length;
+
+  return (
+    <div className="space-y-8">
+      <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">Admin instellingen</h2>
+            <p className="text-sm text-gray-500">
+              Beheer persoonlijke voorkeuren en bewaak de platformstatus voor het Gifteez team.
+            </p>
           </div>
-          <div className="border rounded-lg p-4">
-            <div className="text-2xl font-bold text-green-600">12</div>
-            <div className="text-sm text-gray-600">Actieve Deals</div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => navigateTo('home')}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
+            >
+              <SparklesIcon className="h-4 w-4" aria-hidden="true" />
+              Bekijk site
+            </button>
+            <button
+              type="button"
+              onClick={() => onSelectTab('quiz')}
+              className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-100"
+            >
+              Naar quiz tab
+            </button>
+          </div>
+        </div>
+
+        {status && (
+          <div
+            className={`mt-4 rounded-xl border p-4 text-sm ${
+              status.type === 'success'
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                : 'border-red-200 bg-red-50 text-red-700'
+            }`}
+          >
+            {status.message}
+          </div>
+        )}
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Omgeving</span>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{isProduction ? 'Productie' : 'Test'}</p>
+            <p className="text-xs text-gray-500">Mode: {environmentMode}</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Firebase</span>
+              {firebaseEnabled ? (
+                <CheckCircleIcon className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+              ) : (
+                <XCircleIcon className="h-5 w-5 text-amber-500" aria-hidden="true" />
+              )}
+            </div>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">
+              {firebaseEnabled ? 'Verbonden' : 'Niet actief'}
+            </p>
+            <p className="text-xs text-gray-500">Realtime data via Firestore</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Verbinding</span>
+              {isOnline ? (
+                <CheckCircleIcon className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+              ) : (
+                <XCircleIcon className="h-5 w-5 text-amber-500" aria-hidden="true" />
+              )}
+            </div>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{isOnline ? 'Online' : 'Offline'}</p>
+            <p className="text-xs text-gray-500">Browser: {isClient ? 'Actief' : 'Onbekend'}</p>
+          </div>
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">Datum & tijd</span>
+            <p className="mt-3 text-2xl font-semibold text-gray-900">{timezone}</p>
+            <p className="text-xs text-gray-500">{localeTimestamp}</p>
           </div>
         </div>
       </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900">Persoonlijke voorkeuren</h3>
+          <p className="text-sm text-gray-500">
+            Kies met welk tabblad het admin dashboard standaard opent op jouw device.
+          </p>
+          <label className="flex flex-col gap-1 text-sm text-gray-600">
+            Standaard tabblad
+            <select
+              value={preferences.defaultTab}
+              onChange={handleDefaultTabChange}
+              className="mt-1 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 shadow-sm outline-none transition focus:border-rose-300 focus:bg-white focus:ring-2 focus:ring-rose-200"
+            >
+              {Object.entries(tabLabels).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={handleResetPreferences}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
+            >
+              Reset naar standaard
+            </button>
+          </div>
+          <div className="rounded-xl border border-gray-100 bg-gray-50/70 p-4 text-xs text-gray-500">
+            <p className="font-semibold text-gray-700">Context</p>
+            <ul className="mt-2 space-y-1">
+              <li>Gekozen standaardtab: {tabLabels[preferences.defaultTab]}</li>
+              <li>Browser: <span className="break-all text-gray-600">{userAgent}</span></li>
+              <li>Laadmoment: {localeTimestamp}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900">Admin team</h3>
+          <p className="text-sm text-gray-500">
+            {adminCount} geautoriseerde accounts hebben toegang tot dit dashboard.
+          </p>
+          <div className="flex flex-wrap gap-2 text-xs">
+            {adminEmails.map((email) => (
+              <span
+                key={email}
+                className="rounded-full bg-rose-50 px-3 py-1 font-semibold text-rose-600"
+              >
+                {email}
+              </span>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={handleCopyAdminEmails}
+              className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-100"
+            >
+              Kopieer e-mails
+            </button>
+            <button
+              type="button"
+              onClick={() => handleOpenDocs('mailto:beheer@gifteez.nl?subject=Admin%20toegang%20aanvragen')}
+              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
+            >
+              Stuur uitnodiging
+            </button>
+          </div>
+          <p className="text-xs text-gray-400">
+            Tip: verhuis op termijn deze lijst naar Firestore voor dynamisch beheer en audit logging.
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900">Snelkoppelingen</h3>
+          <p className="text-sm text-gray-500">Spring direct naar veelgebruikte dashboards.</p>
+          <div className="space-y-3">
+            {quickLinks.map((link) => (
+              <button
+                key={link.label}
+                type="button"
+                onClick={link.action}
+                className="w-full rounded-2xl border border-gray-100 bg-gray-50/60 p-4 text-left text-sm text-gray-700 transition hover:border-rose-200 hover:bg-rose-50"
+              >
+                <div className="flex items-center justify-between text-sm font-semibold text-gray-900">
+                  <span>{link.label}</span>
+                  <SparklesIcon className="h-4 w-4 text-rose-500" aria-hidden="true" />
+                </div>
+                <p className="mt-2 text-xs text-gray-500">{link.description}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900">Documentatie & hulpmiddelen</h3>
+          <p className="text-sm text-gray-500">Handige resources voor uitrol, performance en beveiliging.</p>
+          <ul className="space-y-3 text-sm text-gray-600">
+            {resourceLinks.map((link) => (
+              <li key={link.href}>
+                <button
+                  type="button"
+                  onClick={() => handleOpenDocs(link.href)}
+                  className="inline-flex items-center gap-2 font-semibold text-rose-600 transition hover:text-rose-700"
+                >
+                  <LinkIcon className="h-4 w-4" aria-hidden="true" />
+                  {link.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default AdminPage;

@@ -71,6 +71,21 @@ export interface Author {
   avatarUrl: string;
 }
 
+export interface BlogSeoMetadata {
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogType?: string;
+  twitterCard?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+  canonicalUrl?: string;
+}
+
 // New specialized content block interfaces
 export interface ComparisonTableRow {
   feature: string;
@@ -134,6 +149,8 @@ export interface BlogPost {
   author: Author;
   publishedDate: string;
   content: ContentBlock[];
+  seo?: BlogSeoMetadata;
+  tags?: string[];
 }
 
 export interface Category {

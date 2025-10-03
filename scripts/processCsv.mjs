@@ -50,36 +50,45 @@ class ProductFeedService {
   /**
    * Parse CSV line into product object
    */
-  static parseCsvLine(line) {
+  static parseCsvLine(line, headers) {
     try {
       const fields = this.parseCSVLine(line);
       
-      if (fields.length < 23) return null;
+      if (!headers || fields.length < headers.length) return null;
+
+      const record = {};
+      headers.forEach((header, index) => {
+        record[header] = (fields[index] || '').trim();
+      });
 
       return {
-        aw_deep_link: fields[0] || '',
-        product_name: fields[1] || '',
-        aw_product_id: fields[2] || '',
-        merchant_product_id: fields[3] || '',
-        merchant_image_url: fields[4] || '',
-        description: fields[5] || '',
-        merchant_category: fields[6] || '',
-        search_price: parseFloat(fields[7]) || 0,
-        merchant_name: fields[8] || '',
-        merchant_id: fields[9] || '',
-        category_name: fields[10] || '',
-        category_id: fields[11] || '',
-        aw_image_url: fields[12] || '',
-        currency: fields[13] || 'EUR',
-        store_price: parseFloat(fields[14]) || 0,
-        delivery_cost: parseFloat(fields[15]) || 0,
-        merchant_deep_link: fields[16] || '',
-        language: fields[17] || 'nl',
-        last_updated: fields[18] || '',
-        display_price: fields[19] || '',
-        data_feed_id: fields[20] || '',
-        product_short_description: fields[21] || '',
-        promotional_text: fields[22] || ''
+        aw_deep_link: record['aw_deep_link'] || '',
+        product_name: record['product_name'] || '',
+        aw_product_id: record['aw_product_id'] || '',
+        merchant_product_id: record['merchant_product_id'] || '',
+        merchant_image_url: record['merchant_image_url'] || '',
+        description: record['description'] || '',
+        merchant_category: record['merchant_category'] || '',
+        merchant_product_category_path: record['merchant_product_category_path'] || '',
+        category_name: record['category_name'] || '',
+        category_id: record['category_id'] || '',
+        search_price: parseFloat(record['search_price']) || 0,
+        store_price: parseFloat(record['store_price']) || 0,
+        delivery_cost: parseFloat(record['delivery_cost']) || 0,
+        merchant_name: record['merchant_name'] || '',
+        merchant_id: record['merchant_id'] || '',
+        aw_image_url: record['aw_image_url'] || '',
+        merchant_deep_link: record['merchant_deep_link'] || '',
+        currency: record['currency'] || 'EUR',
+        language: record['language'] || 'nl',
+        last_updated: record['last_updated'] || '',
+        display_price: record['display_price'] || '',
+        data_feed_id: record['data_feed_id'] || '',
+        product_short_description: record['product_short_description'] || '',
+        promotional_text: record['promotional_text'] || '',
+        brand_name: record['brand_name'] || '',
+        keywords: record['keywords'] || '',
+        product_type: record['product_type'] || ''
       };
     } catch (error) {
       console.error('Error parsing CSV line:', error);
@@ -92,7 +101,15 @@ class ProductFeedService {
    */
   static convertToGiftProduct(product) {
     const giftScore = this.calculateGiftScore(product);
-    
+
+    const category = product.merchant_category
+      || product.category_name
+      || product.product_type
+      || (product.merchant_product_category_path
+        ? product.merchant_product_category_path.split('>').pop().trim()
+        : '')
+      || 'Overig';
+
     return {
       id: product.aw_product_id,
       name: product.product_name,
@@ -101,7 +118,7 @@ class ProductFeedService {
       image: product.merchant_image_url || product.aw_image_url,
       description: product.description,
       shortDescription: product.product_short_description,
-      category: product.merchant_category || product.category_name,
+      category,
       affiliateLink: product.aw_deep_link,
       isOnSale: product.store_price > product.search_price,
       lastUpdated: new Date(product.last_updated || Date.now()),
@@ -155,8 +172,8 @@ class ProductFeedService {
    * Extract relevant tags from product data
    */
   static extractTags(product) {
-    const tags = [];
-    const text = `${product.product_name} ${product.description} ${product.merchant_category}`.toLowerCase();
+  const tags = [];
+  const text = `${product.product_name} ${product.description} ${product.merchant_category} ${product.category_name} ${product.merchant_product_category_path} ${product.product_type}`.toLowerCase();
     
     // Add category tags
     if (product.merchant_category) {
@@ -225,6 +242,7 @@ class CsvProcessor {
       console.log('📄 Reading CSV file...');
       const csvContent = readFileSync(this.INPUT_FILE, 'utf-8');
       const lines = csvContent.split('\n');
+      const headers = ProductFeedService.parseCSVLine(lines[0]);
       
       console.log(`📊 Found ${lines.length} lines in CSV`);
       
@@ -239,7 +257,7 @@ class CsvProcessor {
       // Process each line
       for (const line of dataLines) {
         try {
-          const coolblueProduct = ProductFeedService.parseCsvLine(line);
+          const coolblueProduct = ProductFeedService.parseCsvLine(line, headers);
           if (coolblueProduct) {
             const giftProduct = ProductFeedService.convertToGiftProduct(coolblueProduct);
             products.push(giftProduct);

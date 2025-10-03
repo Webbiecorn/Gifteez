@@ -86,7 +86,7 @@ async function run() {
   }
   const started = Date.now();
   const files = fs.readdirSync(imagesDir);
-  const whitelistPrefixes = ['trending-', 'collection-', 'planner', 'about-', 'og-tech-gifts', 'quiz-illustration'];
+  const whitelistPrefixes = ['trending-', 'collection-', 'planner', 'about-', 'og-tech-gifts', 'quiz-illustration', 'gifteez-over-ons'];
   const candidateFiles = files.filter(f => {
     const ext = path.extname(f).toLowerCase();
     return SUPPORTED_INPUTS.includes(ext) && whitelistPrefixes.some(p => f.startsWith(p));

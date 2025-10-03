@@ -63,7 +63,142 @@ const gift_duurzaam_beker: Gift = {
 
 const gift_duurzaam_smartplug: Gift = gift_ai_smartplug; // reuse
 
+const gift_double_a_paper: Gift = {
+  productName: 'Double A Premium 500 Vel (A4)',
+  description: 'Hoogwaardig, extra glad 80 g/m² papier voor haarscherpe prints, dubbelzijdig gebruik en professioneel ogende documenten.',
+  priceRange: '€19 - €24',
+  retailers: [
+    { name: 'Coolblue', affiliateLink: 'https://www.awin1.com/pclick.php?p=40126857117&a=2566111&m=85161' },
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/dp/B01LW6ATQ8?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://coolblue.bynder.com/transform/ef091a22-547f-4ae2-bc91-d7c76ad724c5/102424?io=transform:fit,height:800,width:800&format=png&quality=100',
+  tags: ['kantoor', 'creatief', 'duo-cadeau'],
+  giftType: 'physical',
+  popularity: 6
+};
+
+const gift_workspace_labelprinter: Gift = {
+  productName: 'DYMO LabelManager 210D+',
+  description: 'Desktop labelprinter – maakt kantoor, kabels, gereedschap & voorraad strak georganiseerd.',
+  priceRange: '€55 - €70',
+  retailers: [
+    { name: 'Coolblue', affiliateLink: 'https://www.awin1.com/pclick.php?p=41775819330&a=2566111&m=85161' }
+  ],
+  imageUrl: 'https://coolblue.bynder.com/transform/a114dc04-e17d-46dd-8019-b55fe5244efc/113732?io=transform:fit,height:800,width:800&format=png&quality=100',
+  tags: ['organisatie', 'workspace'],
+  giftType: 'physical',
+  popularity: 7
+};
+
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'double-a-premium-500-vel-a4-cadeau-review',
+    title: 'Double A Premium 500 Vel (A4) Cadeau Review: Papier dat indruk maakt',
+    excerpt: 'Op zoek naar een betaalbaar maar verrassend cadeau dat je direct kunt upgraden tot een complete home-office kit? Double A Premium papier is praktischer én luxueuzer dan je denkt.',
+    imageUrl: 'https://coolblue.bynder.com/transform/ef091a22-547f-4ae2-bc91-d7c76ad724c5/102424?io=transform:fit,height:800,width:800&format=png&quality=100',
+    category: 'Home & Office',
+    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=gifteezpapier' },
+    publishedDate: '2025-10-02',
+    content: [
+      {
+        type: 'paragraph',
+        content: `<div class="rounded-2xl border border-rose-100 bg-rose-50/80 p-4 md:p-5">
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-rose-500">Waarom dit cadeau werkt</p>
+  <p class="mb-3 text-sm text-gray-700">Double A Premium papier voelt als een mini office-upgrade: luxe uitstraling, duurzaam geproduceerd en direct klaar voor creatieve projecten.</p>
+  <div class="flex flex-wrap gap-2">
+    <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-rose-600 shadow-sm">✔️ Dubbelzijdig zonder doorschijnen</span>
+    <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-rose-600 shadow-sm">✔️ FSC-gecertificeerd</span>
+    <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-rose-600 shadow-sm">✔️ Ready voor creatieve plannen</span>
+  </div>
+</div>`
+      },
+      {
+        type: 'paragraph',
+        content: 'Papier als cadeau? Het klinkt misschien alledaags, maar Double A Premium 500 Vel (A4) bewijst het tegendeel. Deze ream voelt luxe, print vlekkeloos en geeft creatievelingen, studenten én thuiswerkers een voorsprong. Voeg er een persoonlijke noot, een inspirerende quote of een print-sjabloon bij en je hebt een verrassend persoonlijk cadeau.'
+      },
+      { type: 'heading', content: 'Voor wie is Double A Premium papier geschikt?' },
+      {
+        type: 'paragraph',
+        content: '<ul class="list-disc pl-5 space-y-1"><li><strong>Creatieve makers</strong> die hand-outs, moodboards of portfolio’s willen printen zonder doordruk.</li><li><strong>Thuiswerkers en studenten</strong> die professionele dossiers, offertes of college-aantekeningen verzamelen.</li><li><strong>DIY-ers en fotoliefhebbers</strong> die graag printable kalenderbladen, planners of line-art posten.</li></ul>'
+      },
+  { type: 'heading', content: 'Wat maakt Double A Premium het verschil?' },
+      {
+        type: 'paragraph',
+        content: 'Double A gebruikt zogenoemde “farmers’ trees”: snelgroeiende bomen die tussen rijstvelden worden geplant. Het resultaat is een vezelstructuur die dicht, glad en gelijkmatig is. In de praktijk betekent dit: printerrollen die niet vastlopen, inkt die niet uitloopt en dubbelzijdig printen zonder doorschijnen. Het papier is zuurvrij, dus belangrijke documenten verkleuren minder snel.'
+      },
+      { type: 'gift', content: gift_double_a_paper },
+      { type: 'heading', content: 'Maak het pakket compleet' },
+      {
+        type: 'paragraph',
+        content: 'Maak van het papier een volwaardige productivity-kit door er een duurzame beker en slimme labelprinter naast te leggen. Zo geef je een cadeau dat direct gebruikt én herinnerd wordt.'
+      },
+      { type: 'gift', content: gift_duurzaam_beker },
+      { type: 'gift', content: gift_workspace_labelprinter },
+      { type: 'heading', content: 'Pluspunten & minpunten in het kort' },
+      {
+        type: 'paragraph',
+        content: '<p class="mb-2 text-emerald-700 font-semibold">Pluspunten</p><ul class="list-disc pl-5 space-y-1 text-gray-700"><li>Extra glad oppervlak zorgt voor scherpe tekst en heldere grafieken.</li><li>Dubbelzijdig printen zonder doorschijnen dankzij 80 g/m² gramgewicht.</li><li>Zuurvrij en FSC-gecertificeerd: duurzaam én archiefwaardig.</li></ul><p class="mt-4 mb-2 text-rose-700 font-semibold">Hou rekening met</p><ul class="list-disc pl-5 space-y-1 text-gray-700"><li>Iets duurder dan standaardprintpapier (maar nog steeds een budgetvriendelijk cadeau).</li><li>Wordt geleverd als losse ream: combineer met een map, planner of pennenetui voor een completer gebaar.</li></ul>'
+      },
+      { type: 'heading', content: 'Cadeau-idee: maak er een schrijf- of studiekit van' },
+      {
+        type: 'paragraph',
+        content: 'Wil je het papier laten opvallen? Stel een mini “work smarter”-pakket samen met de HuskeeCup voor koffiepauzes, de DYMO labelprinter voor structuur en een premium pen of planner. Voeg een gepersonaliseerde cover toe (print hem op het papier!) en een motiverende boodschap voor de ontvanger. Zo voelt het cadeau functioneel én attent.'
+      },
+      {
+        type: 'paragraph',
+        content: `<div class="mt-4 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4">
+  <p class="text-sm font-semibold text-emerald-700">Bonusmateriaal om direct te printen</p>
+  <p class="text-sm text-emerald-600">Download de <a href="/downloads/double-a-productivity-checklist.html" target="_blank" rel="noopener">printbare Productivity Kickstart checklist</a> en de <a href="/downloads/double-a-productivity-handleiding.html" target="_blank" rel="noopener">cadeau-handleiding</a>. Print ze op hetzelfde papier voor een kant-en-klaar startpakket en help de ontvanger meteen op weg.</p>
+</div>`
+      },
+      { type: 'heading', content: 'Alternatieven als je iets anders zoekt' },
+      {
+        type: 'paragraph',
+        content: '<ul class="list-disc pl-5 space-y-1"><li><strong>Fotopapier</strong> voor creatieve projecten waarbij kleur en glans centraal staan.</li><li><strong>Een premium notitieboek</strong> (bijvoorbeeld Leuchtturm1917) voor wie liever schrijft dan print.</li><li><strong>Een duurzame herbruikbare schrijfplaat</strong> als papierverbruik minimaliseren prioriteit heeft.</li></ul>'
+      },
+      { type: 'heading', content: 'Veelgestelde vragen' },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Loopt dit papier vast in standaard printers of multifunctionals?',
+            answer: 'Double A Premium is juist ontworpen voor probleemloos gebruik in laser- en inkjetprinters. Het gladde oppervlak en de consistente dikte zorgen voor soepel doorvoeren.'
+          },
+          {
+            question: 'Is het geschikt voor certificaten of presentaties?',
+            answer: 'Ja. Door de strakke, witte afwerking oogt het professioneel. Voor extra stevige certificaten kun je het combineren met een iets hoger gramgewicht (100 g/m²) voor de eerste pagina.'
+          },
+          {
+            question: 'Hoe presenteer ik dit als cadeau zonder dat het “saai” voelt?',
+            answer: 'Pak de ream in met kraftpapier, voeg een kleurrijke bellyband toe en stop er een geprinte “kickstart het nieuwe studiejaar” of “pak je creatieve kwartaal” checklist bij. Zo maak je er een inspirerend pakket van.'
+          }
+        ]
+      },
+      {
+        type: 'verdict',
+        title: 'Betaalbaar, bruikbaar en verrassend persoonlijk',
+        content: 'Double A Premium 500 Vel (A4) is een onverwacht leuk cadeau voor iedereen die graag creëert, plant of professionele documenten print. Het voelt luxe, blijft praktisch en is eenvoudig uit te breiden tot een complete home-office upgrade. Voeg een persoonlijke noot toe en je cadeau wordt méér dan “alleen papier”.'
+      },
+      {
+        type: 'paragraph',
+        content: '👉 Klaar om iemand een productieve boost te geven? <a href="https://www.awin1.com/pclick.php?p=40126857117&a=2566111&m=85161" target="_blank" rel="noopener noreferrer">Bestel Double A Premium bij Coolblue</a>, download de <a href="/downloads/double-a-productivity-checklist.html" target="_blank" rel="noopener">Productivity Kickstart checklist</a>, combineer eventueel met de HuskeeCup of DYMO labelprinter en bekijk meer ideeën via onze <a href="/giftfinder">AI GiftFinder</a>.'
+      }
+    ],
+    seo: {
+      metaTitle: 'Double A Premium 500 Vel Cadeau Review | Beste printpapier als cadeau',
+      metaDescription: 'Lees waarom Double A Premium 500 vel (A4) een verrassend goed cadeau is voor studenten, creatievelingen en thuiswerkers. Inclusief tips om het persoonlijk te maken.',
+      keywords: ['cadeau papier', 'Double A Premium review', 'bureau cadeau', 'studie cadeau idee', 'thuiswerken essentials'],
+      ogTitle: 'Double A Premium 500 Vel Cadeau Review',
+      ogDescription: 'Extra glad papier, dubbelzijdig zonder doorschijnen en perfect als onderdeel van een productieve cadeaukit.',
+      ogImage: 'https://coolblue.bynder.com/transform/ef091a22-547f-4ae2-bc91-d7c76ad724c5/102424?io=transform:fit,height:1200,width:1200&format=jpg&quality=90',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Double A Premium 500 Vel Cadeau Review',
+      twitterDescription: 'Waarom dit premium printpapier een slim cadeau is voor creatieve planners en thuiswerkers.',
+      twitterImage: 'https://coolblue.bynder.com/transform/ef091a22-547f-4ae2-bc91-d7c76ad724c5/102424?io=transform:fit,height:1200,width:1200&format=jpg&quality=90',
+      canonicalUrl: 'https://gifteez.nl/blog/double-a-premium-500-vel-a4-cadeau-review'
+    }
+  },
   {
     slug: 'ai-smart-home-gadgets-2025',
     title: 'AI & Smart Home Gadgets (2025): Innovatieve Apparaten voor een Slimmere Woning',
