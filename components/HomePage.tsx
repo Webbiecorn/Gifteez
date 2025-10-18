@@ -37,8 +37,20 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
   const [previewRecipient, setPreviewRecipient] = useState<string>(recipients[0]);
   const [newsletterEmail, setNewsletterEmail] = useState('');
 
-  const trendingPosts = useMemo(() => blogPosts.slice(0, 3), [blogPosts]);
-  const latestPosts = useMemo(() => blogPosts.slice(0, 3), [blogPosts]);
+  // Trending: Most recent posts (simulates popularity - could track views in future)
+  const trendingPosts = useMemo(() => {
+    // Sort by published date descending and take top 3 most recent
+    return [...blogPosts]
+      .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
+      .slice(0, 3);
+  }, [blogPosts]);
+
+  // Latest: Same as trending for now, but separated for future differentiation
+  const latestPosts = useMemo(() => {
+    return [...blogPosts]
+      .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
+      .slice(0, 3);
+  }, [blogPosts]);
 
   useEffect(() => {
     document.title = 'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI';
@@ -96,8 +108,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
     <div className="space-y-20 pb-20">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#fdf2ff] via-[#f3efff] to-[#eef7ff]">
-        <div className="pointer-events-none absolute -left-20 top-20 h-64 w-64 rounded-full bg-pink-200/30 blur-3xl"></div>
-        <div className="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-purple-200/30 blur-3xl"></div>
+        <div className="pointer-events-none absolute -left-20 top-20 h-64 w-64 rounded-full bg-pink-200/30 blur-3xl hidden md:block"></div>
+        <div className="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-purple-200/30 blur-3xl hidden md:block"></div>
         
         {/* Decorative floor with confetti pattern */}
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-64 overflow-hidden">
@@ -247,9 +259,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative w-full max-w-[500px] sm:max-w-[560px] lg:max-w-[620px] xl:max-w-[680px]">
-                {/* Animated glow effects */}
-                <div className="pointer-events-none absolute -inset-12 rounded-full bg-gradient-to-br from-rose-300/60 via-purple-300/50 to-amber-300/40 blur-3xl animate-pulse"></div>
-                <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-pink-200/50 via-purple-200/40 to-sky-200/30 blur-2xl"></div>
+                {/* Animated glow effects - hidden on mobile for performance */}
+                <div className="pointer-events-none absolute -inset-12 rounded-full bg-gradient-to-br from-rose-300/60 via-purple-300/50 to-amber-300/40 blur-3xl animate-pulse hidden md:block"></div>
+                <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-pink-200/50 via-purple-200/40 to-sky-200/30 blur-2xl hidden md:block"></div>
                 
                 {/* Mascotte image with float animation */}
                 <div className="relative z-10 animate-float">
@@ -331,6 +343,24 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                             <BookOpenIcon className="w-4 h-4" />
                             {getReadingTimeMinutes(post.excerpt)} min
                           </span>
+                        </div>
+                        {/* Pinterest Share Button */}
+                        <div className="pt-3 border-t border-gray-100">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const url = `${window.location.origin}/blog/${post.slug}`;
+                              const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(window.location.origin + post.imageUrl)}&description=${encodeURIComponent(post.title)}`;
+                              window.open(pinterestUrl, '_blank', 'width=750,height=550');
+                            }}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#E60023] hover:bg-[#c5001d] text-white text-xs font-semibold rounded-lg transition-colors duration-200"
+                            aria-label={`Deel ${post.title} op Pinterest`}
+                          >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+                            </svg>
+                            Pin op Pinterest
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -471,8 +501,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
       {/* Interactive Quiz CTA - Modern Redesign */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-24 opacity-0 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
-        {/* Decorative blur elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        {/* Decorative blur elements - hidden on mobile for performance */}
+        <div className="absolute inset-0 overflow-hidden hidden md:block">
           <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-gradient-to-br from-blue-500/10 to-indigo-500/10 blur-3xl" />
           <div className="absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 blur-3xl" />
           <div className="absolute top-1/3 left-1/3 h-[32rem] w-[32rem] rounded-full bg-gradient-to-br from-indigo-500/5 to-blue-500/5 blur-3xl" />
@@ -591,8 +621,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
       {/* Deals CTA Section - Modern Redesign */}
       <section className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 py-24 opacity-0 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
-        {/* Decorative blur elements */}
-        <div className="absolute inset-0 overflow-hidden">
+        {/* Decorative blur elements - hidden on mobile for performance */}
+        <div className="absolute inset-0 overflow-hidden hidden md:block">
           <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-primary/10 to-rose-500/10 blur-3xl" />
           <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-gradient-to-br from-orange-500/10 to-amber-500/10 blur-3xl" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[32rem] w-[32rem] rounded-full bg-gradient-to-br from-pink-500/5 to-orange-500/5 blur-3xl" />
@@ -621,7 +651,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             <div className="mb-12 grid gap-6 md:grid-cols-3">
               {/* Card 1 - Beste Prijzen */}
               <div className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-green-500/10 to-emerald-500/10 blur-2xl transition-opacity group-hover:opacity-70" />
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-green-500/10 to-emerald-500/10 blur-2xl transition-opacity group-hover:opacity-70 hidden md:block" />
                 
                 <div className="relative">
                   <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg transition-transform group-hover:scale-110">
@@ -639,7 +669,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
               {/* Card 2 - Top Kwaliteit */}
               <div className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-amber-500/10 to-yellow-500/10 blur-2xl transition-opacity group-hover:opacity-70" />
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-amber-500/10 to-yellow-500/10 blur-2xl transition-opacity group-hover:opacity-70 hidden md:block" />
                 
                 <div className="relative">
                   <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 shadow-lg transition-transform group-hover:scale-110">
@@ -657,7 +687,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
               {/* Card 3 - Expert Selectie */}
               <div className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 transition-all hover:-translate-y-1 hover:shadow-xl">
-                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-purple-500/10 to-indigo-500/10 blur-2xl transition-opacity group-hover:opacity-70" />
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-purple-500/10 to-indigo-500/10 blur-2xl transition-opacity group-hover:opacity-70 hidden md:block" />
                 
                 <div className="relative">
                   <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg transition-transform group-hover:scale-110">
@@ -759,10 +789,26 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">
                       {post.excerpt}
                     </p>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-4">
                       <span className="text-sm text-gray-500">Lees meer</span>
                       <span className="text-accent font-medium text-sm">→</span>
                     </div>
+                    {/* Pinterest Share Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const url = `${window.location.origin}/blog/${post.slug}`;
+                        const pinterestUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&media=${encodeURIComponent(window.location.origin + post.imageUrl)}&description=${encodeURIComponent(post.title)}`;
+                        window.open(pinterestUrl, '_blank', 'width=750,height=550');
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#E60023] hover:bg-[#c5001d] text-white text-xs font-semibold rounded-lg transition-colors duration-200"
+                      aria-label={`Deel ${post.title} op Pinterest`}
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/>
+                      </svg>
+                      Pin op Pinterest
+                    </button>
                   </div>
                 </div>
               )}
