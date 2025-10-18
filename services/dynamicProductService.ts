@@ -1,6 +1,7 @@
 import { DealItem, DealCategory } from '../types';
 import CoolblueFeedService, { CoolblueProduct } from './coolblueFeedService';
 import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary';
+import { ShopLikeYouGiveADamnService, type SLYGADProduct } from './shopLikeYouGiveADamnService';
 import { DealCategoryConfigService, type DealCategoryConfig } from './dealCategoryConfigService';
 import { PinnedDealsService } from './pinnedDealsService';
 
@@ -8,11 +9,12 @@ const DEFAULT_PRODUCT_PLACEHOLDER = '/images/amazon-placeholder.png';
 
 /**
  * Dynamic Product Service for Gifteez
- * Loads and manages products from multiple feeds (Coolblue + Amazon)
+ * Loads and manages products from multiple feeds (Coolblue + Amazon + Shop Like You Give A Damn)
  */
 export class DynamicProductService {
   private static coolblueProducts: CoolblueProduct[] = [];
   private static amazonProducts: any[] = [];
+  private static slygadProducts: SLYGADProduct[] = [];
   private static lastUpdated: Date | null = null;
   private static isLoading = false;
 
@@ -53,10 +55,20 @@ export class DynamicProductService {
         this.amazonProducts = [];
       }
       
+      // Load Shop Like You Give A Damn products (sustainable/vegan)
+      try {
+        const slygadData = await ShopLikeYouGiveADamnService.loadProducts();
+        this.slygadProducts = slygadData;
+        console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`);
+      } catch (error) {
+        console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error);
+        this.slygadProducts = [];
+      }
+      
       this.lastUpdated = new Date();
       
-      const totalProducts = this.coolblueProducts.length + this.amazonProducts.length;
-      console.log(`📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon)`);
+      const totalProducts = this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length;
+      console.log(`📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD)`);
 
       try {
         await PinnedDealsService.load();
@@ -90,9 +102,11 @@ export class DynamicProductService {
   static clearCache(): void {
     this.coolblueProducts = [];
     this.amazonProducts = [];
+    this.slygadProducts = [];
     this.lastUpdated = null;
     this.isLoading = false;
     PinnedDealsService.clearCache();
+    ShopLikeYouGiveADamnService.clearCache();
     console.log('🗑️  DynamicProductService cache cleared');
   }
 
@@ -107,18 +121,20 @@ export class DynamicProductService {
    * Get all products from both sources (internal method)
    */
   private static getAllProducts(): any[] {
-    return [...this.coolblueProducts, ...this.amazonProducts];
+    return [...this.coolblueProducts, ...this.amazonProducts, ...this.slygadProducts];
   }
 
   /**
    * Get products by source
    */
-  static getProductsBySource(source: 'coolblue' | 'amazon' | 'all' = 'all'): any[] {
+  static getProductsBySource(source: 'coolblue' | 'amazon' | 'slygad' | 'all' = 'all'): any[] {
     switch (source) {
       case 'coolblue':
         return this.coolblueProducts;
       case 'amazon':
         return this.amazonProducts;
+      case 'slygad':
+        return this.slygadProducts;
       case 'all':
       default:
         return this.getAllProducts();
