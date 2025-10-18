@@ -725,9 +725,24 @@ export const blogPosts: BlogPost[] = [
       },
       { type: 'heading', content: 'Ons Eindoordeel: Geschenksets = Gouden Formule' },
       { 
-        type: 'verdict', 
-        title: 'Amazon Geschenksets: Bewezen Winnaar', 
-        content: 'Geschenksets zijn de meest stress-vrije manier om indruk te maken. Ze combineren variëteit, value en presentatie in één pakket. Onze top 3 all-round winners:<br><br><strong>🥇 Beste Algemeen:</strong> Rituals Sakura Set (€24,90) – universeel geliefd, luxe uitstraling, betaalbaar<br><strong>🥈 Beste Luxe:</strong> L\'Occitane Shea Butter Set (€35) – premium merk, alle leeftijden, unisex<br><strong>🥉 Beste Budget:</strong> The Body Shop British Rose (€20) – beste prijs/kwaliteit, herkenbaar merk<br><br>Vergeet niet: een geschenkset is zo goed als de gedachte erachter. Match de geur, stijl en prijs met de ontvanger en je scoort gegarandeerd. En als je twijfelt tussen twee sets? Kies degene met de mooiste verpakking – first impressions tellen bij cadeaus.' 
+        type: 'paragraph',
+        content: 'Geschenksets zijn de meest stress-vrije manier om indruk te maken. Ze combineren variëteit, value en presentatie in één pakket. Onze top 3 all-round winners:'
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>🥇 Beste Algemeen:</strong> Rituals Sakura Set (€24,90) – universeel geliefd, luxe uitstraling, betaalbaar'
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>🥈 Beste Luxe:</strong> L\'Occitane Shea Butter Set (€35) – premium merk, alle leeftijden, unisex'
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>🥉 Beste Budget:</strong> The Body Shop British Rose (€20) – beste prijs/kwaliteit, herkenbaar merk'
+      },
+      {
+        type: 'paragraph',
+        content: 'Vergeet niet: een geschenkset is zo goed als de gedachte erachter. Match de geur, stijl en prijs met de ontvanger en je scoort gegarandeerd. En als je twijfelt tussen twee sets? Kies degene met de mooiste verpakking – first impressions tellen bij cadeaus.'
       },
       {
         type: 'paragraph',
