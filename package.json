@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-favicons.mjs && node scripts/generate-pinned-tab.mjs && node scripts/generate-responsive-images.mjs --dry-run",
+    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/generate-favicons.mjs && node scripts/generate-pinned-tab.mjs && node scripts/generate-rss-feed.mjs && node scripts/generate-responsive-images.mjs --dry-run",
     "build": "vite build",
     "preview": "vite preview",
     "check:images": "node scripts/check-image-integrity.mjs",

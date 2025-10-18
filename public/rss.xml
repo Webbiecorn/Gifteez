@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" 
+     xmlns:media="http://search.yahoo.com/mrss/"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gifteez</title>
+    <link>https://gifteez-7533b.web.app</link>
+    <description>Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.</description>
+    <language>nl-NL</language>
+    <lastBuildDate>Fri, 20 Dec 2024 10:00:00 GMT</lastBuildDate>
+    <atom:link href="https://gifteez-7533b.web.app/rss.xml" rel="self" type="application/rss+xml" />
+    <image>
+      <url>https://gifteez-7533b.web.app/logo.png</url>
+      <title>Gifteez</title>
+      <link>https://gifteez-7533b.web.app</link>
+    </image>
+    <item>
+      <title>AI-Powered Smart Home Cadeaus: De Toekomst is Nu</title>
+      <link>https://gifteez-7533b.web.app/blog/ai-smart-home-gifts</link>
+      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/ai-smart-home-gifts</guid>
+      <description>Transformeer elk huis met slimme technologie die écht verschil maakt. Van stemgestuurde assistenten tot automatische verlichting.</description>
+      <pubDate>Fri, 20 Dec 2024 10:00:00 GMT</pubDate>
+      <category>Technologie</category>
+      <enclosure url="https://gifteez-7533b.web.app/images/og-tech-gifts-2025.png" type="image/jpeg" />
+      <media:content url="https://gifteez-7533b.web.app/images/og-tech-gifts-2025.png" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez-7533b.web.app/images/og-tech-gifts-2025.png" />
+    </item>
+    <item>
+      <title>Top 10 Duurzame Cadeaus voor 2025</title>
+      <link>https://gifteez-7533b.web.app/blog/duurzame-cadeaus-2025</link>
+      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/duurzame-cadeaus-2025</guid>
+      <description>Ontdek de mooiste duurzame en milieuvriendelijke cadeaus die écht verschil maken.</description>
+      <pubDate>Sun, 15 Dec 2024 10:00:00 GMT</pubDate>
+      <category>Duurzaamheid</category>
+      <enclosure url="https://gifteez-7533b.web.app/images/trending-eco.jpg" type="image/jpeg" />
+      <media:content url="https://gifteez-7533b.web.app/images/trending-eco.jpg" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez-7533b.web.app/images/trending-eco.jpg" />
+    </item>
+    <item>
+      <title>De Beste Tech Cadeaus van 2025</title>
+      <link>https://gifteez-7533b.web.app/blog/tech-gifts-2025</link>
+      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/tech-gifts-2025</guid>
+      <description>Van smart home gadgets tot wearables - dit zijn de tech cadeaus die iedereen wil hebben.</description>
+      <pubDate>Tue, 10 Dec 2024 10:00:00 GMT</pubDate>
+      <category>Technologie</category>
+      <enclosure url="https://gifteez-7533b.web.app/images/trending-tech.jpg" type="image/jpeg" />
+      <media:content url="https://gifteez-7533b.web.app/images/trending-tech.jpg" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez-7533b.web.app/images/trending-tech.jpg" />
+    </item>
+    <item>
+      <title>Waarom Ervaringscadeaus de Beste Keuze Zijn</title>
+      <link>https://gifteez-7533b.web.app/blog/ervaring-cadeaus</link>
+      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/ervaring-cadeaus</guid>
+      <description>Geef herinneringen die een leven lang meegaan met deze geweldige ervaringscadeaus.</description>
+      <pubDate>Thu, 05 Dec 2024 10:00:00 GMT</pubDate>
+      <category>Ervaringen</category>
+      <enclosure url="https://gifteez-7533b.web.app/images/trending-experience.jpg" type="image/jpeg" />
+      <media:content url="https://gifteez-7533b.web.app/images/trending-experience.jpg" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez-7533b.web.app/images/trending-experience.jpg" />
+    </item>
+  </channel>
+</rss>
