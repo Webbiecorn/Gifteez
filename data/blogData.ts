@@ -120,81 +120,81 @@ const gift_workspace_labelprinter: Gift = {
 const gift_rituals_sakura: Gift = {
   productName: 'Rituals The Ritual of Sakura Geschenkset',
   description: 'Luxe geschenkset met doucheschuim (200ml), bodycrème (70ml), body mist (50ml) en geurkaars. Kersenbloesem geur met rijstmelk. Vegan formules.',
-  priceRange: '€24,90',
+  priceRange: '€44,99',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/RITUALS-Geschenkset-Renewing-Treat-Small/dp/B07MDHTY3C?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Cadeauset-kersenbloesem-huidverzorgende-vernieuwende-eigenschappen/dp/B0B88MY4FJ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2K4AGQAHDN3BQ&dib=eyJ2IjoiMSJ9.8qbEh4LLikN9gm1M3veHV20BLD-8PSxJ9HCVG7uUjJytN7LS4zSQBJ_2ZUWHJHBsVpHF8atrxlL0LAarhi_HghH0sWZx2pxH8ZBoTLjbRBQENZsJEdDI_w_DIYvdE9ve0rVn58IyzIpa5s-2mDzVbaNjoS0cjfQ35swpiKs0On31RRnaOX8__UYTt2PzcEqnMGCrTP_mgVki8wwS-TRGbg07y7oSK_FumKGWrLrIqW9QcyP2D6E7mAkGeDkwJfCbfM2D-8YAtikTvte52L6MLUGCd6nDaZgjN3IXiycl8eE.KgaljpejGjcmfxfOr6mZmsNXEZmpOYq98peZQDUmJR4&dib_tag=se&keywords=Rituals+The+Ritual+of+Sakura+Geschenkset&qid=1760804098&sprefix=rituals+the+ritual+of+sakura+geschenkset%2Caps%2C130&sr=8-2&linkCode=ll1&tag=gifteez77-21&linkId=c531421babb0bec0fcbf97be73b4449a&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71YQ+hcEYPL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/51alCigMozL._AC_SL1500_.jpg'
 };
 
 const gift_loccitane_shea: Gift = {
   productName: 'L\'Occitane Shea Butter Discovery Set',
   description: 'Franse luxe set met handcrème (30ml), bodylotion (75ml), doucheolie (75ml), ultra rich cream sample (8ml) en zeep (50g). 20% sheaboter concentratie.',
-  priceRange: '€35,00',
+  priceRange: '€18,95',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/LOccitane-Shea-Discovery-Collection-stuks/dp/B0856WFGZR?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/LOCCITANE-kerstcrackers-Kersenbloesem-Geproduceerd-Frankrijk/dp/B0FDG796GK?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=ICW2ZBH4V0FG&dib=eyJ2IjoiMSJ9.TRylfYnbMwUmFuCum3SV7i_5J9eA3DyR0SINamzyzccbZ_YPiygiGwDBbgnD4HGfTq1L1fOAbmQCTX4GS3g4zhaDh1vZ_E2OCKqCHRq4AN_dIJQur86VBCOiXxhZIGRoo_jTxwGHUd0zdvv4d_D2dTVLqiN17JVAr_KJ5O3Eij0PuGBq8z8xRgf_hlUX6CoqiPTdkxh2Ub1IeMrZ5vcY8O9EWdO-LDQguECMZ-hQhqGwA5UtUMHFxipensFR_Lu2gGhf6O0EIe1zrvhq-3YGRJLYwbF3NMHSKMopD2OnwYo.S-9TIhB_nzHlW2f5-FSsko0JmEM_D68WfRI-MW4DPP0&dib_tag=se&keywords=L%27Occitane+Shea+Butter+geschenkset&qid=1760804278&sprefix=l%27occitane+shea+butter+geschenkset%2Caps%2C85&sr=8-2&linkCode=ll1&tag=gifteez77-21&linkId=52d5c23c1f7d7fc1e872b0d03e89c534&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71M-hf8uaOL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/712M1eslIXL._AC_SL1500_.jpg'
 };
 
 const gift_kusmi_tea: Gift = {
   productName: 'Kusmi Tea Wellness Thee Geschenkset',
   description: 'Premium Parijse thee collectie met 5 blikjes (25g): Detox, Sweet Love, BB Detox, Boost en AquaExotica. Biologische thee met functionele benefits.',
-  priceRange: '€29,90',
+  priceRange: '€22,90',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Kusmi-Tea-Wellness-geschenkset-biologisch/dp/B07ZYNQX9R?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Kusmi-Tea-Geschenkset-Assortiment-biologische/dp/B0BT54JWRQ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3JSA77XO7OOAE&dib=eyJ2IjoiMSJ9.VxuBSc7h5yoPipHuw_ftffdqrcGW-yzx2kWkOJwVPX_dC8lRbMJ2ZrLUmty-IGz83Fz4Znlcy5VvOFl5fM4rfXkky2Xz4jLSr39dYVWbADjwMIDirwa7Cr1qFxZMX7zJe5ZXzSkC2eHwSkMPaq4PX2goZNet2x7Lkie04Dm1KvvWGIx8QTWoziaNjA02pWcqh2QylAOQZRjtEbEFKHZcscNnhhmqKWtbizX2oWDTddRN--f-hGWaPnaVSG7QaWsUXXKgQOWzK7usCBzp0ohzeMKxbQmD2HqmXFtlCexAktA.fjee4-I8J5k3-P-y2iuryw0ZR5lAFptkoh0ecft-02A&dib_tag=se&keywords=kusmi+tea+wellness+set+%27of%27+kusmi+tea+geschenkset&qid=1760804380&sprefix=kusmi+tea+wellness+set%22+of+%22kusmi+tea+geschenkset%2Caps%2C102&sr=8-7&linkCode=ll1&tag=gifteez77-21&linkId=0fd9b8f65bf63681c1823c910e866eb7&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/81L9vqhGQyL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/61WDc5GW1XL._AC_SL1000_.jpg'
 };
 
 const gift_bodyshop_rose: Gift = {
   productName: 'The Body Shop British Rose Geschenkset',
   description: 'Budget luxe set met showergel (250ml), body butter (200ml), body mist (100ml) en handcrème (30ml). Cult-favoriet rozengeur. Cruelty-free en vegan.',
-  priceRange: '€20,00',
+  priceRange: '€27,00',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Body-Shop-British-Festive-Picks/dp/B0BNKXGTMK?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/cadeauset-veganistische-hydraterende-verjongende-huidverzorging/dp/B09BWPX3H2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1F3BURIC9KIMJ&dib=eyJ2IjoiMSJ9.1D2AUWByZ-Gc93gbkDEsqC45NFzPp3rvoLjQRHaNoQvld0MqtPRU1G-X77zyCLadssg94yI2IoRwQxFrgRWyzlRwLSBr9-oDmdc2zI6elRqSXKnnlNMJ60soemzEb66ONDFswsAKT-JUPH5sWTkT0sTYx4QA32ovwGsQPVJWeLYXJZeHctpKNuiPaBoj_4k6AL3yvzvvsyZrpqQl0mq2hGcTJTI_mrznw8mOBYr8UlHlbyJbuRI4Z0oRkmlc-3Hz1ibenoidtLNzRCo2vx1S1UDkwA4MEUN9wrOcJHCYeUE.Lb5X_kjpebR8-BQvpIouUH7g5GthliGkL-QjdX5R4JA&dib_tag=se&keywords=Body+Shop+British+Rose+geschenkset&qid=1760804560&sprefix=body+shop+british+rose+geschenkset%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=df5e2e1bacd733e11c66ccbbe242a8b4&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71t5pqIkWcL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/7156fRHvKJL._AC_SL1500_.jpg'
 };
 
 const gift_baylis_harding: Gift = {
   productName: 'Baylis & Harding Midnight Fig & Pomegranate Spa Set',
   description: 'Luxe spa set met 6 producten: badschuim, bodywash, bodylotion, bath crystals, body scrub en badspons. Kruidige fig-pomegranaat geur. Herbruikbare mand.',
-  priceRange: '€27,50',
+  priceRange: '€22,72',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Baylis-Harding-Midnight-Pomegranate-Basket/dp/B08KHQ4JQ9?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Baylis-Harding-Wonderland-Candlelit-Badtijd/dp/B0B7NB1G5R?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=IFIR183TOE0S&dib=eyJ2IjoiMSJ9.f5OcjNVzsTQsxvKVP3OSBSd05jkpzktIJYOEnWCvwMnuGQr4_P6ar3yf3kX9LQAxKstIFdtoqoPs-pc6J4_I3tYQGhfOhno6kS-BgUR_QQ3MRiWD0Jb591eY6y2BnwI2OWWR-ZCHWbZTCLVfENq6Bv65crC5vkQqcN89kSMIttG1XpF9ANeDD3hPY_uaC0Tk0yf_JHiA0yOL7jt3sEvGwZT-nAEQRBHzx-3xcMIBdFdxeBYCUsSNCaSoifrfw49bzwxj2Gbo_VtYI4J9nnDTA-sUhfAcq4MPspBdVBzHtkc.Jags5exny-7Wj9BAFsAg1s-bnCIhs3950r5d4DE3amQ&dib_tag=se&keywords=Baylis+%26+Harding+Spa+Luxe+Geschenkset&qid=1760804675&sprefix=baylis+%26+harding+spa+luxe+geschenkset%2Caps%2C104&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=f1ee1c6bbe9d8766ec0882f9738767cd&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/91BXzK8MFRL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/711n9M53QtL._AC_SL1000_.jpg'
 };
 
 const gift_nivea_men: Gift = {
   productName: 'Nivea Men Verwenpakket',
   description: 'Complete verzorging voor mannen: douchegel (250ml), deodorant (50ml), aftershave balsem (100ml) en gezichtscrème (75ml). No-nonsense verpakking, frisse geur.',
-  priceRange: '€18,90',
+  priceRange: '€17,15',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/NIVEA-MEN-Cadeauset-Sensitive-producten/dp/B0BN84LKZS?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/NIVEA-MEN-cadeauset-geschenkdoos-gezichtscr%C3%A8me/dp/B0DDKGHRHQ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=AUNQMI08ZXOR&dib=eyJ2IjoiMSJ9.dLZKX3DNJ_QLE0xGk13ZhDUczH3UzOTNNfC0tiiMXHtr8P3yUBX3msAUT_TZgivQ3loDraJYxMw98gCT0s_IGU1FYZxyGwmBRCNTHnaU_GL3z-DOMoTpmanVHM-zYgr5cxS1mAH9Ow7KrsQ7jf8M-IcvN6chpx1ryGHedKKqcv-6z48vouHjHZ_qK-ml8h24E0ONfIq9cIuci_AhkdVxA8o1-BsUPQ3c_PBzIrfFltlk5qkW5BVSJz0i-PMrhhNA35HSdpM7lXVscYL9y6MXX0BMuEyn_SFC7DPvT64gIpU.z4bThynK5nhlY1cBQglZoGn39juV0MTeuznsH5T7Agg&dib_tag=se&keywords=Nivea+Men+Active+Clean+Geschenkset&qid=1760804786&sprefix=nivea+men+active+clean+geschenkset%2Caps%2C103&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=3de720c31f2a8f9dcc34d3259ac3a6fc&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71ipGhEy4cL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/71u0Xf5D15L._AC_SL1500_.jpg'
 };
 
 const gift_molton_brown: Gift = {
   productName: 'Molton Brown Orange & Bergamot Luxury Set',
   description: 'Ultra premium Brits luxemerk uit vijfsterrenhotels. Handwash (300ml), hand lotion (300ml) en mini crème (40ml). Citrus-bergamot geur, unisex. Gouden details.',
-  priceRange: '€48,00',
+  priceRange: '€32,77',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Molton-Brown-Orange-Bergamot-Collection/dp/B0BY3DLSKN?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Molton-Brown-Spicy-Citrus-Lichaamsverzorgingscollectie/dp/B0C6TSWWVJ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=BTN8FAAWJGPE&dib=eyJ2IjoiMSJ9.bFCqB3SXYp6YdVtIphfNmPLICWFB1fGAhcSKdh4oe6ajNK-y8EpgmQKzLot0w-gvHCT10YoziQN5jWXuCvwlMvIxB89bhFw0El9AXz5iq1AfEZS8guteP7QeLfzfR0yJgWERA_d3X7WF7W-IOb9KJECqM2O1LEScOBDJbkANSVnoX9TEnno5GIhotcJEx7cndhdOnKFeLGFLqIAiF78nVQ_XoL1KYt3amtRJZF5YBgHhvwFKKGanmZUGpdulWGSf8nOLUo4rnaWJWg97NpkCiy8l7oLEX21TYPDHZ-lu1AQ.YHRdL7nHOM-f2yg_SiJd0QKZgT3tVkT3lfQgZA90t58&dib_tag=se&keywords=Molton+Brown+Orange+%26+Bergamot+Set&qid=1760804988&sprefix=molton+brown+orange+%26+bergamot+set%2Caps%2C101&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=ffaa2a836bd6096b6a90f9f9d7ff2328&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/61EhO6vwVfL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/611-pGlmxpL._AC_SL1500_.jpg'
 };
 
 const gift_nyx_makeup: Gift = {
   productName: 'NYX Professional Makeup Geschenkset',
   description: 'Affordable-luxe makeup set met lipstick, mascara, eyeliner, oogschaduw palette en brushes. Full-size producten, cruelty-free formules. Trend-proof neutrals.',
-  priceRange: '€32,90',
+  priceRange: '€54,73',
   retailers: [
-    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/NYX-Professional-Makeup-Ultimate-Shadow/dp/B07L5Q6XYR?tag=gifteez77-21' }
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/NYX-Professional-Vallende-Cadeaus-Make-up/dp/B0D7QRYC6Q?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1VORMZK83VMFH&dib=eyJ2IjoiMSJ9.HGkIOqwXGDPlbSsgtyCNL02fmT5ACz3K4TWrLkIw84Sqa06tr5wRJcuzZ-M7diiOlTx2lVqHkFI0hJu5jbzbkj-64HW5zT6mducL9yRU0FhmUbnTydc8PeL1co1tFz2aWt4likrZbxfklczc0jw6P7iRJc9nWy_rU-oSvpBRohdXm7Otonvzb29GigEeHhoqHf3F-UnYU3mNGUKrenabSltDzIlNIdXC29OS3gYxZpqLOpaa00_BDC-ls0RKwNq3wT0ptW3YkGIGGPzJGEE9wJScA40Qkzuqa7KuE9siQRw.UNVKWm45Vbi7UnPqu3THNglkywGnhFo9v-JQgmTnugc&dib_tag=se&keywords=NYX+Professional+Makeup+Geschenkset&qid=1760805132&sprefix=nyx+professional+makeup+geschenkset%2Caps%2C100&sr=8-1&linkCode=ll1&tag=gifteez77-21&linkId=494c920f5e18e3b88734cafbd16c19ce&language=nl_NL&ref_=as_li_ss_tl' }
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71tSxHWEWzL._AC_SL1500_.jpg'
+  imageUrl: 'https://m.media-amazon.com/images/I/91XmiZfNJnL._AC_SL1500_.jpg'
 };
 
 export const blogPosts: BlogPost[] = [
