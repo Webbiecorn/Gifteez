@@ -515,4 +515,131 @@ export const blogPosts: BlogPost[] = [
     tags: ['duurzaam', 'eco-vriendelijk', 'herbruikbaar', 'zero waste', 'groen', 'milieu', 'bewust']
   }
   
+  ,
+  {
+    slug: 'amazon-geschenksets-2025-ultieme-gids',
+    title: 'Amazon Geschenksets 2025: De Ultieme Gids voor Luxe Cadeauboxen',
+    excerpt: 'Ontdek de mooiste geschenksets op Amazon: van verzorging tot gourmet thee, van wellness spa-sets tot beauty pakketten. Complete cadeauboxen die direct indruk maken en klaar zijn om te geven.',
+    imageUrl: '/images/amazon-giftsets-2025.png',
+    category: 'Cadeaugids',
+    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=giftsets' },
+    publishedDate: '2025-10-18',
+    content: [
+      {
+        type: 'paragraph',
+        content: 'Een geschenkset is het ultieme cadeau: mooi verpakt, doordacht samengesteld en direct klaar om te geven. Amazon heeft duizenden cadeausets, maar welke zijn écht de moeite waard? In deze gids selecteren we 8 toppers die indruk maken zonder je portemonnee leeg te halen. Van luxe verzorgingssets tot wellness pakketten – er zit voor elk budget en elke ontvanger iets bij.'
+      },
+      { type: 'heading', content: 'Waarom Een Geschenkset Het Perfecte Cadeau Is' },
+      {
+        type: 'paragraph',
+        content: 'Geschenksets nemen de denkwerk uit geven. Je hoeft niet te puzzelen met losse items, verpakking en lint – alles zit al perfect in elkaar. Bovendien krijg je vaak betere value for money: sets bevatten meerdere producten voor de prijs van één of twee losse items. En laten we eerlijk zijn: de "unboxing experience" van een mooie geschenkset is onverslaanbaar. De ontvanger voelt direct dat je moeite hebt gedaan.<br><br><strong>Voordelen van geschenksets:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><strong>Kant-en-klaar:</strong> Mooi verpakt en direct inpakklaar – bespaart je uren zoeken</li><li><strong>Gevarieerd:</strong> Meerdere producten om uit te proberen i.p.v. één enkel item</li><li><strong>Voordelig:</strong> Sets zijn vaak 20-40% goedkoper dan losse producten samen</li><li><strong>Premium uitstraling:</strong> Luxe verpakking maakt elke set direct cadeau-waardig</li><li><strong>Risico-arm:</strong> Gerenommeerde merken en bestsellers minimaliseren teleurstellingen</li></ul>'
+      },
+      { type: 'heading', content: '1. Rituals The Ritual of Sakura Geschenkset – Bloesempraal' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €24,90 | <strong>Perfect voor:</strong> Vrouwen 25-65 jaar, wellness liefhebbers<br><br>De Ritual of Sakura-serie van Rituals is een klassieker die nooit teleurstelt. Deze geschenkset bevat een doucheschuim (200ml), bodycrème (70ml), body mist (50ml) en geurkaars (25 uur). De zachte kersenbloesem-geur met rijstmelk is verfijnde zonder opdringerig te zijn – perfect voor dagelijks gebruik.<br><br><strong>Waarom deze set werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Luxe verpakking in iconische Rituals-doos – geen extra inpakken nodig</li><li>Volledige verzorgingsroutine: douchen, verzorgen, geuren</li><li>Bestseller op Amazon met 4,7/5 sterren (8.500+ reviews)</li><li>Vegan formules en biologische ingrediënten</li><li>Ideaal formaat voor reizen of uitproberen</li></ul><br><strong>Best voor:</strong> Moederdag, verjaardagen, als dankjewel-cadeau. Werkt ook perfect als "ik denk aan je"-attentie. De neutrale geur maakt het geschikt voor bijna elke vrouw.'
+      },
+      { type: 'heading', content: '2. L\'Occitane Shea Butter Discovery Set – Franse Elegantie' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €35,00 | <strong>Perfect voor:</strong> Luxe cadeau-zoekers, droge huid<br><br>L\'Occitane staat synoniem voor Franse luxe, en deze Shea Butter-set bewijst waarom. Je krijgt handcrème (30ml), bodylotion (75ml), doucheolie (75ml), ultra rich body cream (8ml sample) en zeep (50g). De sheaboter uit Burkina Faso is ultiem hydraterend en geeft een subtiele, warme geur.<br><br><strong>Waarom deze set top is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Premium merk met heritage sinds 1976 – name recognition</li><li>Intense hydratatie voor wintermaanden of droge huid</li><li>Compacte formaten perfect voor reizen of testen</li><li>Gouden gift box met lint – meteen cadeau-klaar</li><li>Sheaboter 20% concentratie (hoger dan de meeste concurrenten)</li></ul><br><strong>Best voor:</strong> Business cadeaus, schoonouders, belangrijke momenten. Deze set straalt klasse uit en wordt altijd gewaardeerd. Geschikt voor heren én dames (neutra gender geur).'
+      },
+      { type: 'heading', content: '3. Kusmi Tea Wellness Thee Geschenkset – Voor Theeliefhebbers' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €29,90 | <strong>Perfect voor:</strong> Thee-fanaten, wellness enthousiastelingen<br><br>Kusmi Tea is het Parijse theemerk dat design en smaak combineert. Deze Wellness Collection bevat 5 premium theeblikjes (25g elk): Detox, Sweet Love, BB Detox, Boost en AquaExotica. De blikjes zijn kleurrijk, stapelbaar en herbruikbaar – perfect voor op het aanrecht.<br><br><strong>Waarom deze set uniek is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Biologische thee met functionele benefits (detox, boost, beauty)</li><li>5 verschillende smaken om uit te proberen – geen saai cadeau</li><li>Design blikken die je wilt bewaren (niet weggooien na gebruik)</li><li>Frans merk met 150+ jaar traditie</li><li>Geen cafeïne in meeste blends – ook voor avond</li></ul><br><strong>Best voor:</strong> Collegacadeaus, wellness-focused vrienden, iedereen die dagelijks thee drinkt. Werkt ook perfect als hostess gift bij een etentje. De set ziet er zo mooi uit dat mensen hem vaak als decoratie houden.'
+      },
+      { type: 'heading', content: '4. The Body Shop British Rose Geschenkset – Budget Luxe' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €20,00 | <strong>Perfect voor:</strong> Budget-bewuste gevers, tieners/studenten<br><br>The Body Shop combineert betaalbaar met kwalitatief in deze British Rose-set. Je krijgt showergel (250ml), body butter (200ml), body mist (100ml) en handcrème (30ml). De rozencrème is cult-favoriet en de body butter is intens hydraterend zonder vet aanvoelen.<br><br><strong>Waarom deze set populair is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Beste prijs-kwaliteit verhouding: 4 full-size producten onder €20</li><li>Herkenbaar merk dat iedereen vertrouwt</li><li>Cruelty-free en vegan – ethisch verantwoord</li><li>Romantische rozengeur die universeel geliefd is</li><li>Mooi doosje met lint – geen extra verpakking nodig</li></ul><br><strong>Best voor:</strong> Tieners, studenten, secret santa (€15-25 budget), als tussendoor-cadeau. Ook geweldig om jezelf te trakteren zonder schuldgevoel. De British Rose-lijn is de bestseller van The Body Shop voor een reden.'
+      },
+      { type: 'heading', content: '5. Baylis & Harding Midnight Fig & Pomegranate Spa Set – Spa Thuis' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €27,50 | <strong>Perfect voor:</strong> Ontspannings-zoekers, spa-liefhebbers<br><br>Breng de spa naar huis met deze luxe Baylis & Harding-set. De Midnight Fig & Pomegranate-collectie bevat badschuim, bodywash, bodylotion, bath crystals, body scrub en badspons – alles voor een complete spa-ervaring. De kruidige fig-pomegranaat geur is verfijnd en niet te zoet.<br><br><strong>Waarom deze set onderscheidt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>6 producten voor een complete spa-ritual thuis</li><li>Luxe mand/doos verpakking die herbruikbaar is</li><li>Unieke geur: geen standaard lavendel of roos</li><li>Bath crystals & scrub (niet in elke set aanwezig)</li><li>Baylis & Harding = British heritage merk sinds 1970</li></ul><br><strong>Best voor:</strong> Moeder/schoonmoeder, vriendin die het druk heeft, iedereen met badkuip. Perfect voor na een stressvolle periode of als "pamper yourself" cadeau. De mand kan daarna gebruikt worden voor handdoeken of tijdschriften.'
+      },
+      { type: 'heading', content: '6. Nivea Verwenpakket – Voor Mannen' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €18,90 | <strong>Perfect voor:</strong> Mannen 18-50, low-maintenance types<br><br>Eindelijk een geschenkset die mannen écht gebruiken. Deze Nivea Men-set bevat douchegel (250ml), deodorant (50ml), aftershave balsem (100ml) en gezichtscrème (75ml). De no-nonsense verpakking en frisse geur maken het een veilige keuze voor elk type man.<br><br><strong>Waarom deze set voor mannen werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Nivea = trusted brand die mannen al kennen (geen scary nieuwe producten)</li><li>Complete verzorging: douchen, scheren, gezicht, geur</li><li>Geen overdreven parfum – subtiele mannelijke geur</li><li>Betaalbaar maar niet cheap – goede middenweg</li><li>Makkelijk te gebruiken (geen 10-step routine)</li></ul><br><strong>Best voor:</strong> Vader, broer, collega, schoonzoon. Perfect voor Vadderdag, verjaardag of als "bedankt voor je hulp" cadeau. Mannen vinden het vaak lastig om dit soort producten zelf te kopen, dus een set neemt die drempel weg.'
+      },
+      { type: 'heading', content: '7. Molton Brown Orange & Bergamot Luxury Set – Ultra Premium' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €48,00 | <strong>Perfect voor:</strong> High-end cadeaus, speciale gelegenheden<br><br>Molton Brown is het Britse luxemerk dat je in vijfsterrrenhotels tegenkomt. Deze Orange & Bergamot-set bevat handwash (300ml), hand lotion (300ml) en mini hand crème (40ml). De citrus-bergamot geur is fris, sophisticated en unisex.<br><br><strong>Waarom deze set de investering waard is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Molton Brown = ultiem luxury merk (gebruikt in Ritz, Savoy)</li><li>Signature geur die mensen herkennen en associëren met luxe</li><li>Large formaten (300ml) – geen stingy sample sizes</li><li>Premium packaging met gouden details</li><li>Geschikt voor mannen én vrouwen (unisex geur)</li></ul><br><strong>Best voor:</strong> Baas/leidinggevende, belangrijke client, housewarming voor luxe woning, 50+ verjaardag. Dit is het cadeau als je echt indruk wilt maken. De ontvanger plaatst het direct op de meest zichtbare plek in de badkamer.'
+      },
+      { type: 'heading', content: '8. NYX Professional Makeup Geschenkset – Voor Beauty Fans' },
+      {
+        type: 'paragraph',
+        content: '<strong>Prijs:</strong> €32,90 | <strong>Perfect voor:</strong> Tieners, makeup-liefhebbers, beauty beginners<br><br>NYX is het affordable-luxe makeup merk met cult following. Deze geschenkset bevat lipstick, mascara, eyeliner, oogschaduw palette en makeup brushes. De producten zijn full-size (geen samples!) en de kleuren zijn trend-proof: neutrals en rosy tones.<br><br><strong>Waarom deze makeup set scoort:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>NYX = professional quality voor betaalbare prijs</li><li>Complete makeup look mogelijk met één set</li><li>Cruelty-free en vaak vegan formules</li><li>Trendy merk dat tieners/20-ers herkennen van YouTube/Instagram</li><li>Goede pigmentatie en long-lasting formulas</li></ul><br><strong>Best voor:</strong> Dochter 14-25 jaar, nichtje, vriendin die net begint met makeup. Perfect voor Sinterklaas, verjaardag of als "je bent geslaagd" cadeau. De set bevat alles om een natural makeup look te creëren zonder overwhelmend te zijn.'
+      },
+      { type: 'heading', content: 'Hoe Kies Je De Juiste Geschenkset?' },
+      {
+        type: 'paragraph',
+        content: 'Met duizenden opties op Amazon kan kiezen overweldigend zijn. Volg deze checklist om de perfecte set te vinden:<br><br><strong>Budget bepalen:</strong><br>€15-25: The Body Shop, budget Rituals-sets, Nivea<br>€25-35: Rituals, Kusmi Tea, Baylis & Harding, NYX<br>€35-50: L\'Occitane, premium Rituals, Molton Brown<br>€50+: High-end sets (Diptyque, Jo Malone, Aesop)<br><br><strong>Ontvanger profiel:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Vrouw 25-45, wellness fan:</strong> Rituals, Baylis & Harding spa</li><li><strong>Vrouw 45+, klassiek:</strong> L\'Occitane, Molton Brown</li><li><strong>Man low-maintenance:</strong> Nivea Men, The Body Shop for Men</li><li><strong>Tiener/student:</strong> The Body Shop, NYX makeup, budget sets</li><li><strong>Theeliefhebber:</strong> Kusmi Tea, TWG Tea, speciality thee sets</li><li><strong>Unisex/onbekende voorkeur:</strong> Molton Brown, neutrale Rituals (niet te bloemig)</li></ul><br><br><strong>Gelegenheid check:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Verjaardag:</strong> Iets persoonlijks – match met hobby/interest</li><li><strong>Moederdag/Vaderdag:</strong> Klassiek en safe – Rituals, L\'Occitane, Nivea</li><li><strong>Sinterklaas/Kerst:</strong> Feestelijke verpakking, winter geuren (kaneel, vanille)</li><li><strong>Bedankje/hostess gift:</strong> Mid-range (€20-30), niet te persoonlijk</li><li><strong>Business cadeau:</strong> Premium merk, neutrale geur, luxe uitstraling</li></ul>'
+      },
+      { type: 'heading', content: 'Amazon Geschenkset Tips: Maximaliseer Je Cadeau' },
+      {
+        type: 'paragraph',
+        content: '<strong>1. Timing is alles:</strong> Bestel minimaal 3-5 dagen voor je het cadeau nodig hebt. Sommige sets komen uit UK/Frankrijk en levering kan 3-7 dagen duren. Check "Op voorraad" status en levertijd op productpagina.<br><br><strong>2. Reviews checken is cruciaal:</strong> Filter op "Geverifieerde aankoop" en sorteer op "Meest recente eerst". Let op:<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Klachten over geur (te sterk, te zwak, anders dan verwacht)</li><li>Verpakkingsschade tijdens verzending</li><li>Kleine verpakking (sommige "geschenksets" zijn sample size)</li><li>Houdbaarheidsdatum (vooral bij sets in sale)</li></ul><br><strong>3. Upgrade je presentatie:</strong><br>Ook al zijn geschenksets al mooi verpakt, een klein extra touch maakt het speciaal:<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Voeg een handgeschreven kaartje toe (niet de Amazon kwitantie!)</li><li>Pak de Amazon doos opnieuw in met mooi papier</li><li>Combineer met een kleine extra: bloemen, chocolade, wenskaart</li><li>Presenteer in een herbruikbare mand of gift bag</li></ul><br><strong>4. Budget hack – Bestel sets tijdens Prime Day:</strong><br>Geschenksets zijn vaak 30-50% goedkoper tijdens Amazon Prime Day (juli) en Black Friday (november). Koop dan je voorraad voor het hele jaar: moederdag, verjaardagen, Kerst. Sla op in kast en je bent altijd voorbereid.'
+      },
+      { type: 'heading', content: 'Veelgestelde Vragen over Amazon Geschenksets' },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Zijn Amazon geschenksets goedkoper dan in de winkel?',
+            answer: 'Meestal wel, maar niet altijd. Amazon heeft vaak betere deals (10-20% goedkoper), vooral tijdens Prime Day en Black Friday. Check altijd de winkelprijs (bijv. Etos, Douglas) en vergelijk. Let op: sommige "deals" op Amazon zijn kunstmatig verhoogde prijzen met fake korting. Check de prijsgeschiedenis op camelcamelcamel.com om echte deals te herkennen.'
+          },
+          {
+            question: 'Kan ik een geschenkset direct laten verzenden naar de ontvanger?',
+            answer: 'Ja! Amazon heeft "Gift options" bij checkout. Je kunt een cadeau-bericht toevoegen (max 240 tekens) en de prijs wordt niet getoond op de pakbon. Let op: sommige sets komen in Amazon-branding, niet altijd in luxe gift wrap. Bestel naar jezelf als je zeker wilt zijn van de presentatie.'
+          },
+          {
+            question: 'Wat als de ontvanger allergisch is voor bepaalde ingrediënten?',
+            answer: 'Check altijd de ingrediëntenlijst op de productpagina (scroll naar beneden naar "Productinformatie"). Veelvoorkomende allergenen: noten, parfum, alcohol, lanoline. Safe bet: hypoallergene sets (Dermalogica, La Roche-Posay) of parfumvrije sets (Eucerin, CeraVe). Bij twijfel: kies een thee-set of non-beauty alternatief.'
+          },
+          {
+            question: 'Hoe weet ik of een set full-size of sample size producten bevat?',
+            answer: 'Lees de productbeschrijving zorgvuldig – het moet de ML/G per product vermelden. Vuistregel: onder 50ml = sample size, 100ml+ = full size. Check foto\'s van klanten (niet alleen merk-foto\'s) om échte grootte te zien. Reviews vermelden vaak "kleiner dan verwacht" als het sample sizes zijn.'
+          },
+          {
+            question: 'Zijn limited edition geschenksets beter dan standaard sets?',
+            answer: 'Niet per se beter, maar wel specialer. Limited edition sets (Kerst, Valentijn) hebben vaak exclusieve geuren of verpakking die niet jaar-rond verkrijgbaar zijn. Ze creëren FOMO ("fear of missing out") en voelen speciaal. Nadeel: als de ontvanger de geur liefde heeft, kan hij/zij niet bijbestellen. Voor safe gift: kies standaard bestseller-sets die altijd verkrijgbaar zijn.'
+          }
+        ]
+      },
+      { type: 'heading', content: 'Ons Eindoordeel: Geschenksets = Gouden Formule' },
+      { 
+        type: 'verdict', 
+        title: 'Amazon Geschenksets: Bewezen Winnaar', 
+        content: 'Geschenksets zijn de meest stress-vrije manier om indruk te maken. Ze combineren variëteit, value en presentatie in één pakket. Onze top 3 all-round winners:<br><br><strong>🥇 Beste Algemeen:</strong> Rituals Sakura Set (€24,90) – universeel geliefd, luxe uitstraling, betaalbaar<br><strong>🥈 Beste Luxe:</strong> L\'Occitane Shea Butter Set (€35) – premium merk, alle leeftijden, unisex<br><strong>🥉 Beste Budget:</strong> The Body Shop British Rose (€20) – beste prijs/kwaliteit, herkenbaar merk<br><br>Vergeet niet: een geschenkset is zo goed als de gedachte erachter. Match de geur, stijl en prijs met de ontvanger en je scoort gegarandeerd. En als je twijfelt tussen twee sets? Kies degene met de mooiste verpakking – first impressions tellen bij cadeaus.' 
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>Onze 5 Gouden Regels voor Geschenkset Success:</strong><ol class="list-decimal space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><strong>Budget = €25-35 sweet spot:</strong> Luxe genoeg om indruk te maken, betaalbaar genoeg voor meerdere cadeaus</li><li><strong>Reviews > Merknaam:</strong> 4,5+ sterren met 1000+ reviews = betrouwbare keuze, ongeacht het merk</li><li><strong>Verpakking telt 50%:</strong> Een mooie doos verhoogt de waarde-perceptie met factor 2</li><li><strong>Match geur aan persoonlijkheid:</strong> Sportief = citrus, Rustig = lavendel, Elegant = roos/orchidee, Modern = fig/pomegranaat</li><li><strong>Bestel 5 dagen vooraf:</strong> Murphy\'s law geldt voor leveringen – buffer is essentieel</li></ol>'
+      },
+      {
+        type: 'paragraph',
+        content: 'Klaar om de perfecte geschenkset te vinden? Gebruik onze <a href="/giftfinder" class="text-accent hover:underline">AI GiftFinder</a> en vul "geschenkset" in bij interesses. Of browse door onze <a href="/deals" class="text-accent hover:underline">Deals-pagina</a> waar we dagelijks de beste Amazon gift set kortingen cureren. Happy gifting! 🎁✨'
+      }
+    ],
+    seo: {
+      metaTitle: 'Amazon Geschenksets 2025: Top 8 Luxe Cadeauboxen + Koopgids',
+      metaDescription: 'Ontdek de mooiste Amazon geschenksets: van Rituals tot L\'Occitane, van €18 tot €48. Complete gids met reviews, tips en welke set voor welke gelegenheid werkt.',
+      keywords: ['amazon geschenksets', 'cadeauboxen', 'gift sets', 'verzorgingssets', 'cadeau sets amazon', 'rituals geschenkset', 'beauty geschenkset', 'wellness cadeaupakket', 'spa geschenkset'],
+      ogTitle: 'Amazon Geschenksets 2025: 8 Toppers die Altijd Scoren',
+      ogDescription: 'Van budget tot luxe: ontdek welke Amazon geschenksets écht indruk maken. Met prijzen, reviews en tips voor elke gelegenheid.',
+      ogImage: 'https://gifteez.nl/images/amazon-giftsets-2025.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Amazon Geschenksets: Ultieme Gids 2025',
+      twitterDescription: 'Rituals, L\'Occitane, Kusmi Tea & meer – de 8 beste geschenksets op Amazon met expert tips.',
+      twitterImage: 'https://gifteez.nl/images/amazon-giftsets-2025.png',
+      canonicalUrl: 'https://gifteez.nl/blog/amazon-geschenksets-2025-ultieme-gids'
+    },
+    tags: ['geschenksets', 'amazon', 'cadeaubox', 'verzorging', 'beauty', 'wellness', 'luxe cadeaus', 'rituals', 'spa']
+  }
 ];
+
