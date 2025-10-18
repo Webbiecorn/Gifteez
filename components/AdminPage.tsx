@@ -34,6 +34,7 @@ import AdminDashboard from './AdminDashboard';
 import ActivityLog from './ActivityLog';
 import PerformanceInsights from './PerformanceInsights';
 import { BulkProductImporter } from './BulkProductImporter';
+import ImageValidator from './ImageValidator';
 import { DynamicProductService } from '../services/dynamicProductService';
 import { PinnedDealsService, type PinnedDealEntry, clearAllPinnedDeals } from '../services/pinnedDealsService';
 import Button from './Button';
@@ -84,7 +85,7 @@ const occasionOrder: OccasionType[] = ['birthday', 'housewarming', 'holidays', '
 const QUIZ_REMINDER_STORAGE_KEY = 'gifteez.quizAdmin.reminders.v1';
 const ADMIN_PREFERENCES_STORAGE_KEY = 'gifteez.admin.preferences.v1';
 
-type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings' | 'activity' | 'performance' | 'import';
+type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings' | 'activity' | 'performance' | 'import' | 'images';
 
 interface QuizReminderPreferences {
   showAlerts: boolean;
@@ -278,6 +279,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
   {activeTab === 'quiz' && <QuizAdmin navigateTo={navigateTo} />}
         {activeTab === 'shop' && <ShopAdmin />}
         {activeTab === 'import' && <BulkProductImporter />}
+        {activeTab === 'images' && <ImageValidator />}
         {activeTab === 'activity' && <ActivityLog />}
         {activeTab === 'performance' && <PerformanceInsights />}
         {activeTab === 'settings' && (
@@ -2922,6 +2924,7 @@ const tabLabels: Record<AdminTab, string> = {
   quiz: 'Quiz',
   shop: 'Shop items',
   import: 'Bulk Import',
+  images: 'Image Validator',
   settings: 'Instellingen',
   activity: 'Activiteiten',
   performance: 'Performance',
