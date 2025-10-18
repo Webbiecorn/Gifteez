@@ -1040,12 +1040,9 @@ const SortableCategory: React.FC<SortableCategoryProps> = ({
       {...listeners}
     >
       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-        <button
-          onClick={onSelect}
-          className="flex-1 text-left"
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">☰</span>
+        <div className="flex-1">
+          <div className="flex items-center gap-2" onClick={onSelect}>
+            <span className="text-gray-400 cursor-move">☰</span>
             <input
               type="text"
               value={category.title}
@@ -1054,13 +1051,20 @@ const SortableCategory: React.FC<SortableCategoryProps> = ({
                 onUpdateTitle(e.target.value);
               }}
               onClick={(e) => e.stopPropagation()}
-              className="flex-1 font-medium text-gray-900 bg-transparent border-none focus:outline-none"
+              onKeyDown={(e) => {
+                e.stopPropagation();
+                // Prevent drag handlers from interfering with typing
+                if (e.key === ' ') {
+                  e.stopPropagation();
+                }
+              }}
+              className="flex-1 font-medium text-gray-900 bg-transparent border-none focus:outline-none cursor-text"
             />
           </div>
           <p className="text-xs text-gray-500 mt-1 ml-6">
             {category.itemIds.length} product{category.itemIds.length !== 1 ? 'en' : ''}
           </p>
-        </button>
+        </div>
         <button
           onClick={(e) => {
             e.stopPropagation();
