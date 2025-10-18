@@ -210,6 +210,7 @@ export const DealCategoryConfigService = {
     if (hasWindow) {
       try {
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        console.log('🗑️  DealCategoryConfig cache and localStorage cleared');
       } catch (error) {
         console.warn('Kon lokale cache niet wissen:', error);
       }

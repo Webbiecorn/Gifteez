@@ -30,15 +30,32 @@ export class DynamicProductService {
       console.log('📦 Loading products from multiple sources...');
       
       // Check if we need to force refresh (e.g., after deployment)
-      const CACHE_VERSION = '2025-10-18-v2'; // Update this after each deployment
+      const CACHE_VERSION = '2025-10-18-v3'; // Update this after each deployment
       const lastCacheVersion = localStorage.getItem('gifteez_cache_version');
       
       if (lastCacheVersion !== CACHE_VERSION) {
-        console.log('🔄 New deployment detected, clearing caches...');
+        console.log('🔄 New deployment detected (v3), clearing ALL caches...');
         this.clearCache();
         CoolblueFeedService.clearCache();
         DealCategoryConfigService.clearCache();
+        
+        // Clear all category-related localStorage keys
+        const keysToRemove = [
+          'gifteez_manual_deal_categories_v1',
+          'gifteez_deal_categories_cache',
+          'coolblue_feed_cache',
+        ];
+        keysToRemove.forEach(key => {
+          try {
+            localStorage.removeItem(key);
+            console.log(`🗑️  Cleared: ${key}`);
+          } catch (e) {
+            console.warn(`Could not clear ${key}:`, e);
+          }
+        });
+        
         localStorage.setItem('gifteez_cache_version', CACHE_VERSION);
+        console.log('✅ All caches cleared for v3 deployment');
       }
       
       // Load Coolblue products (managed feed)
