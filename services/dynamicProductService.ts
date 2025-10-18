@@ -29,6 +29,18 @@ export class DynamicProductService {
     try {
       console.log('📦 Loading products from multiple sources...');
       
+      // Check if we need to force refresh (e.g., after deployment)
+      const CACHE_VERSION = '2025-10-18-v2'; // Update this after each deployment
+      const lastCacheVersion = localStorage.getItem('gifteez_cache_version');
+      
+      if (lastCacheVersion !== CACHE_VERSION) {
+        console.log('🔄 New deployment detected, clearing caches...');
+        this.clearCache();
+        CoolblueFeedService.clearCache();
+        DealCategoryConfigService.clearCache();
+        localStorage.setItem('gifteez_cache_version', CACHE_VERSION);
+      }
+      
       // Load Coolblue products (managed feed)
       try {
         const coolblueData = await CoolblueFeedService.loadProducts();

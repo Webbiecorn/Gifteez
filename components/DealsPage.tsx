@@ -239,10 +239,15 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     impressionTrackedRef.current = new Set();
 
     try {
-      if (forceRefresh) {
+      // Always force refresh on first load to ensure fresh data
+      const shouldForceRefresh = forceRefresh || !sessionStorage.getItem('deals_loaded_this_session');
+      
+      if (shouldForceRefresh) {
         // Only invalidate caches when explicitly requested to avoid unnecessary cold starts
         CoolblueFeedService.clearCache();
         DealCategoryConfigService.clearCache();
+        console.log('🔄 Forcing fresh data load...');
+        sessionStorage.setItem('deals_loaded_this_session', 'true');
       }
       
       const [dealOfWeek, topDeals, categories, config, pinnedEntries] = await Promise.all([
@@ -297,7 +302,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   }, []);
 
   useEffect(() => {
-    void loadDeals();
+    // Force fresh data load on mount to prevent stale cache issues
+    void loadDeals({ forceRefresh: true });
   }, [loadDeals]);
 
   // Function to rotate to the next premium deal
