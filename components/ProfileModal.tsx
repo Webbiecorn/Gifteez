@@ -10,7 +10,7 @@ interface ProfileModalProps {
   onSave: (profileData: Omit<GiftProfile, 'id'> | GiftProfile) => void;
 }
 
-const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind", "Anders"];
+const recipients = ["Partner", "Man", "Vrouw", "Vriend(in)", "Familielid", "Collega", "Kind", "Anders"];
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ profileToEdit, onClose, onSave }) => {
   const [profile, setProfile] = useState({

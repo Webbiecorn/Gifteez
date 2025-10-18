@@ -2,88 +2,302 @@ import { Gift, GiftSearchParams, AdvancedFilters } from '../types';
 import { ProductBasedGiftService } from './productBasedGiftService';
 import { findGifts as originalFindGifts } from './geminiService';
 
+const MAX_RESULT_COUNT = 6;
+const MIN_PARTNER_RESULTS = 3;
+
+const normalizeRetailerName = (name?: string): string => (name ? name.toLowerCase() : '');
+
+const parseRelevanceScore = (gift: Gift): number => {
+  if (typeof gift.relevanceScore === 'number' && Number.isFinite(gift.relevanceScore)) {
+    return gift.relevanceScore;
+  }
+
+  const tagScore = gift.tags?.length ? parseFloat(gift.tags[0]) : NaN;
+  return Number.isFinite(tagScore) ? tagScore : 0;
+};
+
+const computePartnerScore = (gift: Gift): number => {
+  let score = parseRelevanceScore(gift);
+
+  if (gift.availability === 'in-stock') {
+    score += 1.5;
+  }
+
+  if (gift.sustainability) {
+    score += 1;
+  }
+
+  if (gift.personalization) {
+    score += 0.5;
+  }
+
+  if ((gift.rating || 0) >= 4.5) {
+    score += 0.5;
+  }
+
+  if (gift.popularity) {
+    score += Math.min(gift.popularity, 5) * 0.1;
+  }
+
+  return score;
+};
+
+type PartnerGroups = {
+  coolblue: Gift[];
+  slygad: Gift[];
+  other: Gift[];
+};
+
+const buildPartnerGroups = (gifts: Gift[], usedNames: Set<string>): PartnerGroups => {
+  const groups: PartnerGroups = {
+    coolblue: [],
+    slygad: [],
+    other: []
+  };
+  const seen = new Set<string>();
+
+  gifts.forEach(gift => {
+    if (!gift?.productName || !gift.retailers || gift.retailers.length === 0) {
+      return;
+    }
+
+    if (usedNames.has(gift.productName)) {
+      return;
+    }
+
+    const primaryRetailer = normalizeRetailerName(gift.retailers[0]?.name);
+    if (!primaryRetailer || primaryRetailer.includes('amazon')) {
+      return;
+    }
+
+    const uniqueKey = `${primaryRetailer}|${gift.productName}`;
+    if (seen.has(uniqueKey)) {
+      return;
+    }
+    seen.add(uniqueKey);
+
+    if (primaryRetailer.includes('shop like you give a damn') || primaryRetailer.includes('slygad')) {
+      groups.slygad.push(gift);
+      return;
+    }
+
+    if (primaryRetailer.includes('coolblue')) {
+      groups.coolblue.push(gift);
+      return;
+    }
+
+    groups.other.push(gift);
+  });
+
+  return groups;
+};
+
+interface PartnerGroupState {
+  id: 'coolblue' | 'slygad' | 'other';
+  weight: number;
+  base: number;
+  items: { gift: Gift; score: number }[];
+  index: number;
+}
+
+const initialiseGroupStates = (
+  groups: PartnerGroups,
+  preferredPartner: AdvancedFilters['preferredPartner']
+): PartnerGroupState[] => {
+  const states: PartnerGroupState[] = [];
+
+  const createState = (
+    id: PartnerGroupState['id'],
+    items: Gift[],
+    base: number,
+    weight: number
+  ) => {
+    if (!items.length) {
+      return;
+    }
+
+    states.push({
+      id,
+      base,
+      weight,
+      index: 0,
+      items: items
+        .map(gift => ({ gift, score: computePartnerScore(gift) }))
+        .sort((a, b) => b.score - a.score)
+    });
+  };
+
+  createState(
+    'slygad',
+    groups.slygad,
+    preferredPartner === 'sustainable' ? 2 : 1,
+    preferredPartner === 'sustainable' ? 1.8 : 1.3
+  );
+
+  createState('coolblue', groups.coolblue, 1, 1.2);
+  createState('other', groups.other, 0, 1);
+
+  return states;
+};
+
+const selectPartnerGifts = (
+  groups: PartnerGroups,
+  desiredCount: number,
+  preferredPartner: AdvancedFilters['preferredPartner'],
+  usedNames: Set<string>
+): Gift[] => {
+  const selected: Gift[] = [];
+  let remaining = Math.max(desiredCount, 0);
+
+  if (remaining === 0) {
+    return selected;
+  }
+
+  const states = initialiseGroupStates(groups, preferredPartner);
+
+  const consumeFromState = (state: PartnerGroupState) => {
+    const entry = state.items[state.index];
+    if (!entry) {
+      return false;
+    }
+
+    state.index += 1;
+    selected.push(entry.gift);
+    usedNames.add(entry.gift.productName);
+    remaining -= 1;
+    return true;
+  };
+
+  states.forEach(state => {
+    const baseTake = Math.min(state.base, state.items.length, remaining);
+    for (let i = 0; i < baseTake; i += 1) {
+      consumeFromState(state);
+    }
+  });
+
+  while (remaining > 0) {
+    const candidates = states
+      .map(state => {
+        const next = state.items[state.index];
+        if (!next) {
+          return null;
+        }
+        return {
+          state,
+          weightedScore: next.score * state.weight
+        };
+      })
+      .filter(Boolean) as { state: PartnerGroupState; weightedScore: number }[];
+
+    if (candidates.length === 0) {
+      break;
+    }
+
+    candidates.sort((a, b) => b.weightedScore - a.weightedScore);
+    consumeFromState(candidates[0].state);
+  }
+
+  if (remaining > 0) {
+    const leftovers = [...groups.slygad, ...groups.coolblue, ...groups.other]
+      .filter(gift => !usedNames.has(gift.productName))
+      .map(gift => ({ gift, score: computePartnerScore(gift) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, remaining);
+
+    leftovers.forEach(entry => {
+      selected.push(entry.gift);
+      usedNames.add(entry.gift.productName);
+      remaining -= 1;
+    });
+  }
+
+  return selected;
+};
+
 export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Promise<Gift[]> => {
-  console.log('🎁 Clean separation: 3 Amazon AI + 3 Pure Coolblue products');
-  
+  console.log('🎁 GiftFinder zoekt cadeaus met dynamische partnerbalans', searchParams);
+
   try {
-    // Get 3 AI-generated Amazon gifts (original working approach)
-    console.log('🤖 Getting 3 Amazon AI gifts...');
+    console.log('🤖 Haal Amazon AI suggesties op...');
     const amazonGifts = await originalFindGifts(
       searchParams.recipient,
       searchParams.budget,
       searchParams.occasion,
       searchParams.interests
     );
-    
-    // Filter Amazon gifts to ONLY have Amazon retailers (remove Coolblue retailers)
-    const pureAmazonGifts = amazonGifts.map(gift => ({
-      ...gift,
-      retailers: gift.retailers ? gift.retailers.filter(retailer => 
-        retailer.name.toLowerCase().includes('amazon') && 
-        !retailer.name.toLowerCase().includes('coolblue')
-      ) : []
-    })).filter(gift => gift.retailers && gift.retailers.length > 0);
-    
-    // Take only first 3 pure Amazon results
+
+    const pureAmazonGifts = amazonGifts
+      .map(gift => ({
+        ...gift,
+        retailers: gift.retailers
+          ? gift.retailers.filter(retailer => {
+              const name = normalizeRetailerName(retailer.name);
+              return name.includes('amazon') && !name.includes('coolblue');
+            })
+          : []
+      }))
+      .filter(gift => gift.retailers && gift.retailers.length > 0);
+
     const limitedAmazonGifts = pureAmazonGifts.slice(0, 3);
-    console.log(`✅ Got ${limitedAmazonGifts.length} PURE Amazon AI gifts (no Coolblue retailers)`);
-    
-    // Get 3 Coolblue products from feed (filter out Amazon products)
-    console.log('🔵 Getting 3 Coolblue products...');
+    console.log(`✅ Amazon AI cadeaus: ${limitedAmazonGifts.length}`);
+
+    console.log('🤝 Verzamel partnercadeaus (Coolblue, Shop Like You Give A Damn, ... )');
     const allProductBasedGifts = await ProductBasedGiftService.findGifts(searchParams);
-    
-    // Filter to only get Coolblue products (exclude Amazon products)
-    const coolblueOnlyGifts = allProductBasedGifts.filter(gift => {
-      // Check if it's a Coolblue product by looking at retailers
-      return gift.retailers && gift.retailers.some(retailer => 
-        retailer.name.toLowerCase().includes('coolblue') && 
-        !retailer.name.toLowerCase().includes('amazon')
-      );
-    });
-    
-    // Take only first 3 Coolblue results
-    const limitedCoolblueGifts = coolblueOnlyGifts.slice(0, 3);
-    console.log(`✅ Got ${limitedCoolblueGifts.length} pure Coolblue products`);
-    
-    // Combine: 3 Amazon AI + 3 Pure Coolblue = 6 total
-    const allGifts = [...limitedAmazonGifts, ...limitedCoolblueGifts];
-    console.log(`🎯 Total gifts: ${allGifts.length} (${limitedAmazonGifts.length} Amazon AI + ${limitedCoolblueGifts.length} Pure Coolblue)`);
-    
-    // Remove images from all gifts for cleaner display
-    const giftsWithoutImages = allGifts.map(gift => ({
+
+    const usedProductNames = new Set(limitedAmazonGifts.map(gift => gift.productName));
+    const partnerGroups = buildPartnerGroups(allProductBasedGifts, usedProductNames);
+
+    const preferredPartner = searchParams.filters?.preferredPartner;
+    const partnerTarget = Math.max(MAX_RESULT_COUNT - limitedAmazonGifts.length, MIN_PARTNER_RESULTS);
+    const partnerSelections = selectPartnerGifts(partnerGroups, partnerTarget, preferredPartner, usedProductNames);
+
+    const coolblueSelectedCount = partnerSelections.filter(gift =>
+      gift.retailers?.some(retailer => normalizeRetailerName(retailer.name).includes('coolblue'))
+    ).length;
+
+    const slygadSelectedCount = partnerSelections.filter(gift =>
+      gift.retailers?.some(retailer => {
+        const name = normalizeRetailerName(retailer.name);
+        return name.includes('shop like you give a damn') || name.includes('slygad');
+      })
+    ).length;
+
+    const combinedResults = [...limitedAmazonGifts, ...partnerSelections].slice(0, MAX_RESULT_COUNT);
+
+    console.log(
+      `🎯 Resultaat mix: ${combinedResults.length} totaal -> Amazon: ${limitedAmazonGifts.length}, Coolblue: ${coolblueSelectedCount}, SLYGAD: ${slygadSelectedCount}`
+    );
+
+    const sanitizedResults = combinedResults.map(gift => ({
       ...gift,
-      imageUrl: '' // Remove all images
+      imageUrl: ''
     }));
-    
-    // Apply advanced filters if provided
+
     if (searchParams.filters) {
-      return applyAdvancedFilters(giftsWithoutImages, searchParams.filters);
+      return applyAdvancedFilters(sanitizedResults, searchParams.filters);
     }
 
-    return giftsWithoutImages;
-    
+    return sanitizedResults;
   } catch (error) {
-    console.error('Error in simple hybrid approach:', error);
-    
-    // Fallback to Amazon AI gifts only
-    console.log('⚠️  Falling back to Amazon AI gifts only');
+    console.error('Error in hybrid partner selectie:', error);
+    console.log('⚠️  Vang terug naar pure Amazon AI cadeaus');
+
     const fallbackGifts = await originalFindGifts(
       searchParams.recipient,
       searchParams.budget,
       searchParams.occasion,
       searchParams.interests
     );
-    
-    // Remove images and limit to 6
-    const cleanedFallbackGifts = fallbackGifts.slice(0, 6).map(gift => ({
+
+    const cleanedFallbackGifts = fallbackGifts.slice(0, MAX_RESULT_COUNT).map(gift => ({
       ...gift,
       imageUrl: ''
     }));
-    
+
     if (searchParams.filters) {
       return applyAdvancedFilters(cleanedFallbackGifts, searchParams.filters);
     }
-    
+
     return cleanedFallbackGifts;
   }
 };

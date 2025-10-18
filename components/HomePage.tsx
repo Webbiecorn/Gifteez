@@ -23,7 +23,7 @@ const testimonials: Testimonial[] = [
   { quote: "Als je niet weet wat te geven, moet je hier zijn. Simpel, snel en effectief.", author: "Ruben Visser" },
 ];
 
-const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
+const recipients = ["Partner", "Man", "Vrouw", "Vriend(in)", "Familielid", "Collega", "Kind"];
 
 const getReadingTimeMinutes = (text: string): number => {
   const words = text ? text.trim().split(/\s+/).length : 0;

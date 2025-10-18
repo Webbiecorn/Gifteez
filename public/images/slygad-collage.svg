@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Shop Like You Give A Damn duurzame cadeaus collage</title>
+  <desc id="desc">Collage met categorieën wellness, fair fashion, zero waste, conscious home en kids gifts uit de Shop Like You Give A Damn collectie</desc>
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f5f1" />
+      <stop offset="100%" stop-color="#f5f0ff" />
+    </linearGradient>
+    <style>
+      .panel { fill: #ffffff; stroke: #e2d8ff; stroke-width: 3; }
+      .header { fill: #1f2933; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 40px; }
+      .subhead { fill: #9333ea; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 600; font-size: 24px; }
+      .copy { fill: #1f2933; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 400; font-size: 20px; }
+      .badge { fill: #ec4899; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1200" height="675" fill="url(#bgGradient)" />
+  <text x="80" y="110" class="badge">Nieuw bij Gifteez</text>
+  <text x="80" y="170" class="header">Shop Like You Give A Damn</text>
+  <text x="80" y="215" class="copy">Vegan & duurzame cadeaus met impact</text>
+
+  <g transform="translate(80,260)">
+    <rect width="320" height="340" rx="28" class="panel" />
+    <text x="28" y="60" class="subhead">Wellness</text>
+    <text x="28" y="110" class="copy">Yoga peshtemal set</text>
+    <text x="28" y="150" class="copy">Witlof skincare duo</text>
+    <text x="28" y="190" class="copy">Circular waterfles</text>
+    <text x="28" y="250" class="copy">100% vegan · plasticvrij</text>
+  </g>
+
+  <g transform="translate(440,260)">
+    <rect width="320" height="340" rx="28" class="panel" />
+    <text x="28" y="60" class="subhead">Fair Fashion</text>
+    <text x="28" y="110" class="copy">Rotholz knit</text>
+    <text x="28" y="150" class="copy">Plant Faced hoodie</text>
+    <text x="28" y="190" class="copy">Nouare ringenset</text>
+    <text x="28" y="250" class="copy">Gerecycled zilver · GOTS katoen</text>
+  </g>
+
+  <g transform="translate(800,260)">
+    <rect width="320" height="340" rx="28" class="panel" />
+    <text x="28" y="60" class="subhead">Zero Waste & Kids</text>
+    <text x="28" y="110" class="copy">AppleSkin placemat</text>
+    <text x="28" y="150" class="copy">Upcycled denim kussen</text>
+    <text x="28" y="190" class="copy">Kinder rugzakken van PET</text>
+    <text x="28" y="250" class="copy">Circular design · EU productie</text>
+  </g>
+</svg>

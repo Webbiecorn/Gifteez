@@ -17,112 +17,121 @@ export class DynamicProductService {
   private static slygadProducts: SLYGADProduct[] = [];
   private static lastUpdated: Date | null = null;
   private static isLoading = false;
+  private static loadingPromise: Promise<void> | null = null;
 
   /**
    * Load products from multiple sources
    */
   static async loadProducts(): Promise<void> {
-    if (this.isLoading) return;
-    
-    this.isLoading = true;
-    
-    try {
-      console.log('📦 Loading products from multiple sources...');
-      
-      // Check if we need to force refresh (e.g., after deployment)
-      const CACHE_VERSION = '2025-10-18-v3'; // Update this after each deployment
-      const lastCacheVersion = localStorage.getItem('gifteez_cache_version');
-      
-      if (lastCacheVersion !== CACHE_VERSION) {
-        console.log('🔄 New deployment detected (v3), clearing ALL caches...');
-        this.clearCache();
-        CoolblueFeedService.clearCache();
-        DealCategoryConfigService.clearCache();
-        
-        // Clear all category-related localStorage keys
-        const keysToRemove = [
-          'gifteez_manual_deal_categories_v1',
-          'gifteez_deal_categories_cache',
-          'coolblue_feed_cache',
-        ];
-        keysToRemove.forEach(key => {
-          try {
-            localStorage.removeItem(key);
-            console.log(`🗑️  Cleared: ${key}`);
-          } catch (e) {
-            console.warn(`Could not clear ${key}:`, e);
-          }
-        });
-        
-        localStorage.setItem('gifteez_cache_version', CACHE_VERSION);
-        console.log('✅ All caches cleared for v3 deployment');
-      }
-      
-      // Load Coolblue products (managed feed)
-      try {
-        const coolblueData = await CoolblueFeedService.loadProducts();
-        this.coolblueProducts = coolblueData;
-        console.log(`🔵 Loaded ${this.coolblueProducts.length} Coolblue products via feed service`);
-      } catch (error) {
-        console.warn('⚠️  Could not load Coolblue products:', error);
-        this.coolblueProducts = [];
-      }
-      
-      // Load Amazon products (manual feed)
-      try {
-        const amazonData = await AmazonProductLibrary.loadProducts();
-        this.amazonProducts = amazonData.map((product: AmazonProduct) => ({
-          ...product,
-          id: product.id ?? product.asin,
-          image: product.image ?? product.imageLarge,
-          imageUrl: product.imageLarge ?? product.image,
-          shortDescription: product.shortDescription ?? product.description,
-        }));
-        console.log(`🟠 Loaded ${this.amazonProducts.length} Amazon products`);
-      } catch (error) {
-        console.warn('⚠️  Could not load Amazon products:', error);
-        this.amazonProducts = [];
-      }
-      
-      // Load Shop Like You Give A Damn products (sustainable/vegan)
-      try {
-        const slygadData = await ShopLikeYouGiveADamnService.loadProducts();
-        this.slygadProducts = slygadData;
-        console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`);
-      } catch (error) {
-        console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error);
-        this.slygadProducts = [];
-      }
-      
-      this.lastUpdated = new Date();
-      
-      const totalProducts = this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length;
-      console.log(`📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD)`);
+    if (this.loadingPromise) {
+      await this.loadingPromise;
+      return;
+    }
+
+    this.loadingPromise = (async () => {
+      this.isLoading = true;
 
       try {
-        await PinnedDealsService.load();
-      } catch (error) {
-        console.warn('⚠️  Kon vastgezette deals niet synchroniseren tijdens laden:', error);
-      }
-      
-    } catch (error) {
-      console.warn('⚠️  Error loading products:', error);
-      
-      // Load fallback data
-      try {
-        const { default: sampleData } = await import('../data/sampleProducts.json');
-        this.coolblueProducts = sampleData;
-        this.amazonProducts = [];
+        console.log('📦 Loading products from multiple sources...');
+
+        // Check if we need to force refresh (e.g., after deployment)
+        const CACHE_VERSION = '2025-10-18-v3'; // Update this after each deployment
+        const lastCacheVersion = localStorage.getItem('gifteez_cache_version');
+
+        if (lastCacheVersion !== CACHE_VERSION) {
+          console.log('🔄 New deployment detected (v3), clearing ALL caches...');
+          this.clearCache();
+          CoolblueFeedService.clearCache();
+          DealCategoryConfigService.clearCache();
+
+          // Clear all category-related localStorage keys
+          const keysToRemove = [
+            'gifteez_manual_deal_categories_v1',
+            'gifteez_deal_categories_cache',
+            'coolblue_feed_cache',
+            'gifteez_coolblue_feed_v1',
+          ];
+          keysToRemove.forEach((key) => {
+            try {
+              localStorage.removeItem(key);
+              console.log(`🗑️  Cleared: ${key}`);
+            } catch (e) {
+              console.warn(`Could not clear ${key}:`, e);
+            }
+          });
+
+          localStorage.setItem('gifteez_cache_version', CACHE_VERSION);
+          console.log('✅ All caches cleared for v3 deployment');
+        }
+
+        // Load Coolblue products (managed feed)
+        try {
+          const coolblueData = await CoolblueFeedService.loadProducts();
+          this.coolblueProducts = coolblueData;
+          console.log(`🔵 Loaded ${this.coolblueProducts.length} Coolblue products via feed service`);
+        } catch (error) {
+          console.warn('⚠️  Could not load Coolblue products:', error);
+          this.coolblueProducts = [];
+        }
+
+        // Load Amazon products (manual feed)
+        try {
+          const amazonData = await AmazonProductLibrary.loadProducts();
+          this.amazonProducts = amazonData.map((product: AmazonProduct) => ({
+            ...product,
+            id: product.id ?? product.asin,
+            image: product.image ?? product.imageLarge,
+            imageUrl: product.imageLarge ?? product.image,
+            shortDescription: product.shortDescription ?? product.description,
+          }));
+          console.log(`🟠 Loaded ${this.amazonProducts.length} Amazon products`);
+        } catch (error) {
+          console.warn('⚠️  Could not load Amazon products:', error);
+          this.amazonProducts = [];
+        }
+
+        // Load Shop Like You Give A Damn products (sustainable/vegan)
+        try {
+          const slygadData = await ShopLikeYouGiveADamnService.loadProducts();
+          this.slygadProducts = slygadData;
+          console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`);
+        } catch (error) {
+          console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error);
+          this.slygadProducts = [];
+        }
+
         this.lastUpdated = new Date();
-        console.log(`📦 Loaded ${this.coolblueProducts.length} products from fallback data`);
-      } catch (importError) {
-        console.error('❌ Failed to load any product data:', importError);
-        this.coolblueProducts = [];
-        this.amazonProducts = [];
+
+        const totalProducts = this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length;
+        console.log(`📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD)`);
+
+        try {
+          await PinnedDealsService.load();
+        } catch (error) {
+          console.warn('⚠️  Kon vastgezette deals niet synchroniseren tijdens laden:', error);
+        }
+      } catch (error) {
+        console.warn('⚠️  Error loading products:', error);
+
+        // Load fallback data
+        try {
+          const { default: sampleData } = await import('../data/sampleProducts.json');
+          this.coolblueProducts = sampleData;
+          this.amazonProducts = [];
+          this.lastUpdated = new Date();
+          console.log(`📦 Loaded ${this.coolblueProducts.length} products from fallback data`);
+        } catch (importError) {
+          console.error('❌ Failed to load any product data:', importError);
+          this.coolblueProducts = [];
+          this.amazonProducts = [];
+        }
+      } finally {
+        this.isLoading = false;
+        this.loadingPromise = null;
       }
-    } finally {
-      this.isLoading = false;
-    }
+    })();
+
+    await this.loadingPromise;
   }
 
   /**
@@ -134,6 +143,7 @@ export class DynamicProductService {
     this.slygadProducts = [];
     this.lastUpdated = null;
     this.isLoading = false;
+    this.loadingPromise = null;
     PinnedDealsService.clearCache();
     ShopLikeYouGiveADamnService.clearCache();
     console.log('🗑️  DynamicProductService cache cleared');

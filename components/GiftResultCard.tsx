@@ -8,6 +8,14 @@ import { AuthContext } from '../contexts/AuthContext';
 import ImageWithFallback from './ImageWithFallback';
 import SocialShare from './SocialShare';
 
+const badgeToneClasses: Record<string, string> = {
+  primary: 'bg-[#232F3E] text-white',
+  accent: 'bg-blue-100 text-blue-700',
+  success: 'bg-emerald-100 text-emerald-700',
+  warning: 'bg-amber-100 text-amber-700',
+  neutral: 'bg-gray-100 text-gray-700'
+};
+
 interface GiftResultCardProps {
   gift: Gift;
   index: number;
@@ -261,8 +269,31 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
             </div>
           </div>
         )}
+
+        {gift.retailerBadges && gift.retailerBadges.length > 0 && (
+          <div className={`mt-3 flex flex-wrap gap-2 ${candidateVariant ? 'justify-center' : ''}`}>
+            {gift.retailerBadges.map((badge, badgeIndex) => {
+              const toneClass = badgeToneClasses[badge.tone] || badgeToneClasses.neutral;
+              return (
+                <span
+                  key={`${badge.label}-${badgeIndex}`}
+                  className={`text-xs font-semibold px-3 py-1 rounded-full shadow-sm border border-white/40 ${toneClass}`}
+                  title={badge.description}
+                >
+                  {badge.label}
+                </span>
+              );
+            })}
+          </div>
+        )}
         
         <p className={`mt-2 text-gray-600 ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>{gift.description}</p>
+
+        {gift.story && (
+          <p className={`mt-3 text-sm text-gray-500 italic ${candidateVariant ? 'text-center' : ''}`}>
+            {gift.story}
+          </p>
+        )}
         
     {gift.retailers && gift.retailers.length > 0 && (
       <div className={`mt-6 space-y-2 ${candidateVariant ? 'w-full mt-auto' : ''}`}>

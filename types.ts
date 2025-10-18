@@ -1,5 +1,5 @@
 import type React from 'react';
-export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | /* 'shop' | */ 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy' | 'admin' | 'adminDealsPreview';
+export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | /* 'shop' | */ 'cart' | 'checkoutSuccess' | 'deals' | 'categoryDetail' | 'disclaimer' | 'privacy' | 'admin' | 'adminDealsPreview';
 
 export type NavigateTo = (page: Page, data?: any) => void;
 
@@ -25,6 +25,7 @@ export interface AdvancedFilters {
   personalization: boolean;
   ageGroup: string;
   gender: 'male' | 'female' | 'unisex';
+  preferredPartner?: 'all' | 'sustainable';
 }
 
 export interface GiftSearchParams {
@@ -38,6 +39,12 @@ export interface GiftSearchParams {
 export interface Retailer {
   name: string;
   affiliateLink: string;
+}
+
+export interface RetailerBadge {
+  label: string;
+  tone: 'primary' | 'accent' | 'success' | 'warning' | 'neutral';
+  description?: string;
 }
 
 export interface Gift {
@@ -61,6 +68,9 @@ export interface Gift {
   availability?: 'in-stock' | 'pre-order' | 'out-of-stock';
   matchReason?: string; // Why this gift matches the search criteria
   trendingBadge?: 'trending' | 'hot-deal' | 'seasonal' | 'top-rated' | null; // Badge type
+  relevanceScore?: number;
+  story?: string;
+  retailerBadges?: RetailerBadge[];
 }
 
 export interface Testimonial {

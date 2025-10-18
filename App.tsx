@@ -22,6 +22,7 @@ const DownloadPage = ReactLazy(() => import('./components/DownloadPage'));
 const CartPage = ReactLazy(() => import('./components/CartPage'));
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'));
 const DealsPage = ReactLazy(() => import('./components/DealsPage'));
+const CategoryDetailPage = ReactLazy(() => import('./components/CategoryDetailPage'));
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
 const AdminPage = ReactLazy(() => import('./components/AdminPage'));
@@ -58,6 +59,7 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [currentPostSlug, setCurrentPostSlug] = useState<string | null>(null);
   const [initialGiftFinderData, setInitialGiftFinderData] = useState<InitialGiftFinderData>({});
+  const [categoryDetailData, setCategoryDetailData] = useState<any>(null);
   const [toastMessage, setToastMessage] = useState('');
 
   const pathFor = (page: Page, data?: any) => {
@@ -79,6 +81,7 @@ const App: React.FC = () => {
       case 'cart': return '/cart';
       case 'checkoutSuccess': return '/checkout-success';
       case 'deals': return '/deals';
+      case 'categoryDetail': return `/deals/category/${data?.categoryId ?? ''}`;
       case 'disclaimer': return '/disclaimer';
       case 'privacy': return '/privacy';
   case 'admin': return '/admin';
@@ -91,7 +94,7 @@ const App: React.FC = () => {
     const { pathname } = window.location;
     const parts = pathname.replace(/\/+$/, '').split('/').filter(Boolean);
     if (parts.length === 0) { setCurrentPage('home'); setCurrentPostSlug(null); return; }
-    const [first, second] = parts;
+    const [first, second, third] = parts;
     switch (first) {
       case 'giftfinder': setCurrentPage('giftFinder'); break;
       case 'categories': setCurrentPage('categories'); break;
@@ -120,7 +123,14 @@ const App: React.FC = () => {
       // case 'shop': setCurrentPage('shop'); break; // Temporarily disabled
       case 'cart': setCurrentPage('cart'); break;
       case 'checkout-success': setCurrentPage('checkoutSuccess'); break;
-      case 'deals': setCurrentPage('deals'); break;
+      case 'deals': 
+        if (second === 'category' && third) {
+          setCurrentPage('categoryDetail');
+          // Category data will be fetched by CategoryDetailPage component
+        } else {
+          setCurrentPage('deals');
+        }
+        break;
       case 'disclaimer': setCurrentPage('disclaimer'); break;
       case 'privacy': setCurrentPage('privacy'); break;
       default: setCurrentPage('home'); setCurrentPostSlug(null); break;
@@ -144,11 +154,14 @@ const App: React.FC = () => {
   const navigateTo = useCallback((page: Page, data?: any) => {
     setInitialGiftFinderData({});
     setCurrentPostSlug(null);
+    setCategoryDetailData(null);
 
     if (page === 'giftFinder' && data) {
         setInitialGiftFinderData(data);
     } else if (page === 'blogDetail' && data?.slug) {
         setCurrentPostSlug(data.slug);
+    } else if (page === 'categoryDetail' && data) {
+        setCategoryDetailData(data);
     }
     setCurrentPage(page);
     const newPath = pathFor(page, data);
@@ -183,6 +196,7 @@ const App: React.FC = () => {
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Deals & Aanbiedingen',
+        categoryDetail: data?.categoryTitle ? `${data.categoryTitle} — Deals` : 'Categorie — Deals',
         adminDealsPreview: 'Admin deals preview',
         disclaimer: 'Disclaimer — Gifteez.nl',
         privacy: 'Privacybeleid — Gifteez.nl'
@@ -199,6 +213,7 @@ const App: React.FC = () => {
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
         shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
         deals: 'Pak de beste actuele cadeau deals en aanbiedingen.',
+        categoryDetail: data?.categoryDescription || 'Bekijk alle producten in deze categorie.',
         adminDealsPreview: 'Controleer als admin de live deals-selectie van Gifteez.'
       };
       const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
@@ -272,6 +287,32 @@ const App: React.FC = () => {
         return <CheckoutSuccessPage navigateTo={navigateTo} />;
       case 'deals':
         return <DealsPage navigateTo={navigateTo} />;
+      case 'categoryDetail':
+        return <CategoryDetailPage 
+          navigateTo={navigateTo} 
+          categoryId={categoryDetailData?.categoryId ?? ''}
+          categoryTitle={categoryDetailData?.categoryTitle ?? ''}
+          categoryDescription={categoryDetailData?.categoryDescription ?? ''}
+          products={categoryDetailData?.products ?? []}
+          renderProductCard={(product, index) => (
+            // Simple product card renderer - will use the same design as deals page
+            <div key={product.id} className="h-full">
+              {/* Placeholder for product card - the actual component will be imported */}
+              <div className="bg-white rounded-lg shadow-sm p-4 h-full flex flex-col">
+                <h3 className="font-semibold text-lg">{product.title}</h3>
+                <p className="text-accent font-bold mt-2">{product.price}</p>
+                <a 
+                  href={product.affiliateLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto inline-block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors text-center"
+                >
+                  Bekijk deal
+                </a>
+              </div>
+            </div>
+          )}
+        />;
       case 'disclaimer':
         return <DisclaimerPage navigateTo={navigateTo} />;
       case 'privacy':

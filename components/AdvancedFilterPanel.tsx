@@ -243,6 +243,25 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                 />
                 <span className="text-sm text-gray-700">Personaliseerbaar</span>
               </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={filters.preferredPartner === 'sustainable'}
+                  onChange={(e) => {
+                    const nextFilters = { ...filters };
+                    if (e.target.checked) {
+                      nextFilters.preferredPartner = 'sustainable';
+                    } else {
+                      delete nextFilters.preferredPartner;
+                    }
+                    onFiltersChange(nextFilters);
+                  }}
+                  className="rounded border-gray-300 text-primary focus:ring-primary/20"
+                />
+                <span className="text-sm text-gray-700">
+                  Voorkeur voor duurzame partner (Shop Like You Give A Damn)
+                </span>
+              </label>
             </div>
           </div>
 

@@ -2,7 +2,7 @@
 import { Gift } from '../types';
 
 // List of retailers we have affiliate partnerships with
-const AFFILIATE_RETAILERS = ['amazon', 'coolblue'];
+const AFFILIATE_RETAILERS = ['amazon', 'coolblue', 'shop like you give a damn', 'slygad'];
 
 /**
  * Check if a retailer name matches our affiliate partners
@@ -40,6 +40,16 @@ function validateAndFixRetailerUrl(retailer: { name: string; affiliateLink: stri
       return {
         name: 'Amazon',
         affiliateLink: `https://www.amazon.nl/s?k=${searchKeywords}`
+      };
+    }
+  }
+
+  // Fix Shop Like You Give A Damn URLs
+  if (name.includes('shop like you give a damn') || name.includes('slygad')) {
+    if (!retailer.affiliateLink.includes('shoplikeyougiveadamn')) {
+      return {
+        name: 'Shop Like You Give A Damn',
+        affiliateLink: `https://www.shoplikeyougiveadamn.com/search?q=${searchKeywords}`
       };
     }
   }
@@ -102,6 +112,10 @@ function addFallbackRetailers(gift: Gift): Gift {
     {
       name: 'Coolblue',
       affiliateLink: `https://www.coolblue.nl/zoeken?query=${searchKeywords}`
+    },
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: `https://www.shoplikeyougiveadamn.com/search?q=${searchKeywords}`
     }
   ];
 

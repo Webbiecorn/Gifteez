@@ -197,7 +197,387 @@ const gift_nyx_makeup: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/91XmiZfNJnL._AC_SL1500_.jpg'
 };
 
+const gift_slygad_yoga_set: Gift = {
+  productName: 'Luks Vegan Yoga Cadeauset',
+  description: 'Handgeweven peshtemal van GOTS-gecertificeerd katoen met circulaire waterfles – ideaal voor bewuste yogi’s en wellnessliefhebbers.',
+  priceRange: '€87,50',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=36931242085&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_179673782_cropped.jpg&feedId=65481&k=78cf8434385491396b5e6ad17aca595cabef2638',
+  tags: ['duurzaam', 'wellness', 'vegan'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Combineert biologisch katoen met gerecyclede materialen en wordt plasticvrij verpakt.'
+};
+
+const gift_slygad_ring_set: Gift = {
+  productName: 'Nouare Jewelry 4-delige Ringenset',
+  description: 'Handgemaakte vegan sieraden van gerecycled zilver en goudtint, geproduceerd onder eerlijke arbeidsvoorwaarden in Europa.',
+  priceRange: '€76',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=34458240405&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_36930332_cropped.png&feedId=65481&k=c9ba498c081ef91cf8a5798527641ea117c05bb7',
+  tags: ['fair fashion', 'vegan', 'sieraden'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Gemaakt van gerecyclede edelmetalen en geleverd in FSC-gecertificeerde verpakking.'
+};
+
+const gift_slygad_heuptasje: Gift = {
+  productName: 'MAHLA Phoenix Vegan Heuptasje',
+  description: 'Compacte, denim-look heuptas van upcycled materialen met verstelbare riem – praktischer alternatief voor fast-fashion fanny packs.',
+  priceRange: '€60,50',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=34458243063&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_45772_cropped.jpg&feedId=65481&k=7a691594ce0e25afbc1afbcf34e84828c8df6fbb',
+  tags: ['duurzaam', 'accessoires', 'upcycled'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Gemaakt van textieloverschotten en afgewerkt in een sociale atelierketen in Duitsland.'
+};
+
+const gift_slygad_rotholz_trui: Gift = {
+  productName: 'Rotholz Oversized Knit',
+  description: 'Zachte knit van biologisch katoen met relaxed fit – tijdloos en gender-inclusive, ontworpen in Duitsland en fairtrade geproduceerd.',
+  priceRange: '€79',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=41853206333&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_253675529%281%29_cropped.jpg&feedId=59157&k=d7975ca2192693061068dfb5bb2d6e0ae23a2831',
+  tags: ['fair fashion', 'casual', 'biologisch katoen'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Gemaakt van GOTS-gecertificeerd katoen en geverfd in een gesloten watercircuit.'
+};
+
+const gift_slygad_linen_apron: Gift = {
+  productName: 'AmourLinen Linnen Keukenschort',
+  description: 'Luxe linnen schort in zachte crèmekleur, geweven in Litouwen met OEKO-TEX-gecertificeerd vlas voor slow living cadeaus.',
+  priceRange: '€69',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=36392426096&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_167798945.jpg&feedId=59157&k=8c052719a02b69bc0a7e2e5b6b623ecc40b0abb2',
+  tags: ['duurzaam', 'keuken', 'slow living'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Linnen verbruikt weinig water, is volledig biologisch afbreekbaar en gaat jarenlang mee.'
+};
+
+const gift_slygad_skincare_set: Gift = {
+  productName: 'Witlof Skincare Calm Duo',
+  description: 'Kalmerende vegan skincare set met reinigingsmousse en rijke crème voor gevoelige huid, geformuleerd met korenbloemwater en frangipani.',
+  priceRange: '€58,41',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=36640831652&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_79288_cropped.jpg&feedId=65481&k=acde9b34015000b525bc1e284365cd10c7c40451',
+  tags: ['vegan skincare', 'selfcare'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Bevat refillbare glazen flessen en biologische ingrediënten, geproduceerd in Nederland in kleine batches.'
+};
+
+const gift_slygad_placemat_set: Gift = {
+  productName: 'nuuwai AppleSkin Placemat Set van 4',
+  description: 'Omkeerbare placemats van appel-leer en gerecycled PET-vilt – stijlvol, afwasbaar en volledig vegan.',
+  priceRange: '€50,40',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=34458244923&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_97055173_cropped.jpg&feedId=65481&k=f08353979303b2a61c21010b4673a7fcf68fde20',
+  tags: ['zero waste', 'keuken', 'appelleer'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'AppleSkin vervangt dierlijk leer en reduceert voedselverspilling; gerecycled PET-vilt verlengt de levensduur van gebruikte materialen.'
+};
+
+const gift_slygad_denim_cushion: Gift = {
+  productName: 'Infinitdenim Gerecycled Denim Kussen',
+  description: 'Patchwork kussen ontworpen uit post-consumer denim, met de hand afgewerkt in Spaanse circular design studio Back To Eco.',
+  priceRange: '€50,50',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=36167791916&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_68295.jpg&feedId=65481&k=eae26a0943e2c7e180ce40c079d43c9c87b3ef4e',
+  tags: ['circular design', 'home', 'gerecycled'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Transformeert afgedankte jeans tot een nieuw interieurstuk en ondersteunt sociale werkplaatsen in Barcelona.'
+};
+
+const gift_slygad_kids_backpack: Gift = {
+  productName: 'LaLu Dhonu Kinderrugzak',
+  description: 'Stoere kids rugzak van duurzame stoffen met verstelbare banden en vrolijk kleurblokdesign, gemaakt voor kleine klimaatactivisten.',
+  priceRange: '€55',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=37072421428&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_80164%281%29.jpg&feedId=65481&k=a7a8cd9e3f782e6cc7f3d4439f19d802ee57045d',
+  tags: ['kids', 'recycled', 'school'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Gemaakt van restmaterialen en ontwikkeld in samenwerking met een sociale coöperatie in Portugal.'
+};
+
+const gift_slygad_colorblock_pack: Gift = {
+  productName: 'Sticky Lemon Colourblock Rugtas',
+  description: 'Vrolijke rugtas van gerecyclede PET-flessen met waterdichte coating – perfect voor school, logeerpartijen en duurzame uitstapjes.',
+  priceRange: '€59,95',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=34458243195&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_47358_cropped.jpg&feedId=65481&k=570342842766c82f61981c075361e86a06787ece',
+  tags: ['kids', 'recycled PET', 'outdoor'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Elke tas upcyclet 12 gebruikte petflessen en is vrij van PFC-coatings.'
+};
+
+const gift_slygad_fluffy_slippers: Gift = {
+  productName: 'thies Gerecyclede Fluffy Pantoffels',
+  description: 'Ultrazachte vegan pantoffels gemaakt van gerecycled polyester en EVA, ideaal voor slow living momenten thuis.',
+  priceRange: '€59,95',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=41853203942&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_100274_cropped.jpg&feedId=59157&k=a2aee931566d2986392b494cf41bebf71a432ee2',
+  tags: ['wellness', 'comfort', 'recycled'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'female',
+  matchReason: 'Bestaat uit 90% gerecyclede vezels en wordt geproduceerd in een familieatelier dat groene energie inzet.'
+};
+
+const gift_slygad_hoodie: Gift = {
+  productName: 'Plant Faced Classics Hoodie',
+  description: 'Plantaardig geproduceerde hoodie met subtiele branding, gemaakt van GOTS-gecertificeerd katoen en gerecycled polyester.',
+  priceRange: '€59,50',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=36051518680&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_22199257%281%29_cropped.jpg&feedId=65481&k=f8364fbd178854653f24f3a7c2f36497dc6b81a0',
+  tags: ['fair fashion', 'casual', 'gots katoen'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Gemaakt in een Fair Wear-gecertificeerde fabriek met gebruik van duurzame verfprocessen.'
+};
+
+const gift_slygad_placemat_green: Gift = {
+  productName: 'nuuwai AppleSkin Placemat Set Smaragd',
+  description: 'Set van vier smaragdgroene placemats uit appel-leer met gerecyclede vilten onderlaag – voegt kleur toe zonder plastic.',
+  priceRange: '€50,40',
+  retailers: [
+    { name: 'Shop Like You Give A Damn', affiliateLink: 'https://www.awin1.com/pclick.php?p=34458244977&a=2566111&m=24072' }
+  ],
+  imageUrl: 'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_51431_cropped.jpg&feedId=65481&k=70d5d6e0b1aadd246b03ec88286667d54d697852',
+  tags: ['zero waste', 'keuken', 'appelleer'],
+  giftType: 'physical',
+  sustainability: true,
+  gender: 'unisex',
+  matchReason: 'Herbruikt fruitafval en gerecyclede vezels en wordt geleverd in een plasticvrije verpakking.'
+};
+
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'shop-like-you-give-a-damn-duurzame-cadeaus',
+    title: 'Shop Like You Give A Damn: Duurzame Cadeaus Met Impact',
+  excerpt: 'Onze AI GiftFinder koppelt nu rechtstreeks naar Shop Like You Give A Damn. Ontdek vegan, eerlijke en duurzame cadeaus met affiliate links en tips van de Gifteez redactie.',
+  imageUrl: '/images/Blog-afbeelding- shop like you give a damn.png',
+    category: 'Partner Spotlight',
+    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-partner-slygad' },
+    publishedDate: '2025-10-18',
+    content: [
+      {
+        type: 'paragraph',
+        content: 'Shop Like You Give A Damn is vanaf vandaag officieel partner van Gifteez. Dit Europese fair fashion platform bundelt honderden vegan, cruelty-free en inclusieve merken, zodat jij duurzame cadeaus kunt vinden zonder eindeloos te scrollen. Onze AI GiftFinder toont nu automatisch de sterkste Shop Like You Give A Damn suggesties voor iedereen die bewust wil geven.'
+      },
+      {
+        type: 'image',
+  src: '/images/Blog-afbeelding- shop like you give a damn.png',
+        alt: 'Shop Like You Give A Damn cadeaus met natuurlijke verzorgingsproducten en Gifteez mascotte',
+        caption: 'Partner spotlight: Shop Like You Give A Damn brengt vegan verzorging, plasticvrije tools en vrolijke cadeaus samen.'
+      },
+      { type: 'heading', content: 'Waarom Shop Like You Give A Damn perfect bij Gifteez past' },
+      {
+        type: 'paragraph',
+        content: 'Shop Like You Give A Damn (SLYGAD) selecteert merken op strenge criteria: vegan materialen, eerlijke lonen, genderinclusive pasvormen en radicale transparantie in de keten. Dat sluit naadloos aan bij de Gifteez belofte om cadeaus te cureren die zowel persoonlijk als verantwoord zijn.'
+      },
+      {
+        type: 'paragraph',
+        content: '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Duurzame cadeausets</strong>: van wellnessboxen tot keukentools met een lage footprint.</li><li><strong>Vegan mode en accessoires</strong>: leerlook zonder dierenleed, geproduceerd in gecertificeerde ateliers.</li><li><strong>Zero waste essentials</strong>: linnen, gerecyclede vezels en refill-concepten voor mindful huishoudens.</li><li><strong>Social impact merken</strong>: labels die samenwerken met sociale werkplaatsen of doneren aan klimaatprojecten.</li></ul>'
+      },
+      { type: 'heading', content: 'Maak kennis met de makers achter SLYGAD' },
+      {
+        type: 'paragraph',
+        content: 'SLYGAD is meer dan een marktplaats: het is een community van impactmakers. We lichten drie favorieten uit die nu in onze GiftFinder terugkomen.'
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>Nouare Jewelry</strong> smelt gerecyclede edelmetalen om tot nieuwe designs en werkt uitsluitend met Europese ateliers die 100% transparant zijn over hun lonen. <blockquote class="border-l-4 border-rose-400 pl-4 italic text-sm text-gray-700">“We geloven dat sieraden je verhaal moeten vertellen zónder verborgen kosten voor planeet of mens.” – Nouare oprichter Léa</blockquote>'
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>MAHLA</strong> redt textieloverschotten van de afvalberg en transformeert ze in genderneutrale fanny packs. De productie gebeurt in een Duits atelier met re-integratieprogramma. <blockquote class="border-l-4 border-emerald-400 pl-4 italic text-sm text-gray-700">“Iedere tas draagt de handtekening van het team dat eraan werkte – we labelen zelfs de maker.” – MAHLA studiolead Jana</blockquote>'
+      },
+      {
+        type: 'paragraph',
+        content: '<strong>LaLu Products</strong> ontwerpt kleurrijke kinderaccessoires met respect voor de oceaan. Een deel van de winst gaat naar zeeschildpad-projecten in Sri Lanka. <blockquote class="border-l-4 border-sky-400 pl-4 italic text-sm text-gray-700">“We willen dat kids met trots vertellen dat hun rugzak plastic uit de zee redt.” – LaLu co-founder Maria</blockquote>'
+      },
+      { type: 'heading', content: 'Zo kies je het perfecte duurzame cadeau' },
+      {
+        type: 'paragraph',
+        content: '<ol class="list-decimal space-y-2 pl-6 text-sm text-gray-700"><li><strong>Bepaal het budget</strong>: stel een bandbreedte in binnen de GiftFinder (bijv. €30-€70) zodat je direct relevante matches krijgt.</li><li><strong>Kies materialen</strong>: filter op linnen, AppleSkin, gerecycled denim of GOTS katoen voor maximale impact.</li><li><strong>Check certificeringen</strong>: kijk naar GOTS, PETA-Approved Vegan of Fair Wear om greenwashing te vermijden.</li><li><strong>Plan verzending</strong>: bundel bestellingen, kies voor EU-leveranciers en vraag om een cadeaubericht om extra verpakkingen te skippen.</li></ol>'
+      },
+      { type: 'heading', content: 'Zo werkt onze duurzame partnerfeed' },
+      {
+        type: 'paragraph',
+        content: 'Elke nacht halen we de nieuwste Shop Like You Give A Damn productfeed op, verrijken we de data met duurzaamheidslabels en koppelen we het resultaat aan de voorkeuren in jouw Gifteez-profiel. Kies je voor de duurzame partnerfilter in de GiftFinder? Dan zie je voortaan automatisch SLYGAD-aanbevelingen met heldere badges en verhalen.'
+      },
+      {
+        type: 'paragraph',
+        content: 'Klik je door naar Shop Like You Give A Damn via onze <a href="https://www.awin1.com/cread.php?awinmid=24072&awinaffid=2566111&ued=https%3A%2F%2Fwww.shoplikeyougiveadamn.com%2Fgifts" rel="nofollow sponsored">affiliate link</a>? Dan steun je Gifteez met een kleine commissie zonder extra kosten voor jou. Die bijdrage investeren we direct in betere matching, duurzame content en nieuwe partnerintegraties.'
+      },
+      {
+        type: 'paragraph',
+        content: 'Meer eco-inspiratie? Lees ook onze gids <a href="/blog/duurzame-eco-vriendelijke-cadeaus" class="text-rose-600 underline">Duurzame &amp; Eco-vriendelijke Cadeaus</a> en combineer de inzichten met de SLYGAD feed voor een nog nauwkeuriger shortlist.'
+      },
+      { type: 'heading', content: 'Wellness essentials met impact' },
+      {
+        type: 'paragraph',
+        content: 'Voor mindful gevers selecteerden we circulaire selfcare favorieten die comfort en duurzaamheid combineren.'
+      },
+      { type: 'gift', content: gift_slygad_yoga_set },
+      { type: 'gift', content: gift_slygad_skincare_set },
+      { type: 'gift', content: gift_slygad_fluffy_slippers },
+      {
+        type: 'paragraph',
+        content: 'Tip: bundel yoga set + skincare en voeg een handgeschreven intentiekaart toe. Zo creëer je een complete wellness retreat in één pakket.'
+      },
+      { type: 'heading', content: 'Fair fashion & sieraden die lang meegaan' },
+      {
+        type: 'paragraph',
+        content: 'Deze stijlvolle keuzes bewijzen dat modieuze cadeaus prima vegan én circulair kunnen zijn.'
+      },
+      { type: 'gift', content: gift_slygad_rotholz_trui },
+      { type: 'gift', content: gift_slygad_hoodie },
+      { type: 'gift', content: gift_slygad_ring_set },
+      {
+        type: 'paragraph',
+        content: 'Combineer knitwear met een gerecyclede ringenset voor een genderneutrale outfit. Via de GiftFinder kun je direct filteren op maat, warmte en stijlvoorkeur.'
+      },
+      { type: 'heading', content: 'Conscious home upgrades' },
+      {
+        type: 'paragraph',
+        content: 'Maak elk interieur eco-chic met gifts die afvalstromen hergebruiken en lang meegaan.'
+      },
+      { type: 'gift', content: gift_slygad_linen_apron },
+      { type: 'gift', content: gift_slygad_placemat_set },
+      { type: 'gift', content: gift_slygad_denim_cushion },
+      {
+        type: 'paragraph',
+        content: 'Deze trio past perfect in een keukenkastje of op de bank. Voeg er een lokale kookworkshop bij en je hebt een duurzaam experience cadeau.'
+      },
+      { type: 'heading', content: 'Zero waste & circulaire cadeaupakketten' },
+      {
+        type: 'paragraph',
+        content: 'Leg de nadruk op hergebruik en impact minimalisatie met deze circulaire picks.'
+      },
+      { type: 'gift', content: gift_slygad_heuptasje },
+      { type: 'gift', content: gift_slygad_placemat_green },
+      {
+        type: 'paragraph',
+        content: 'Verpak het heuptasje met de AppleSkin placemat set in een herbruikbare tote en voeg een kaart toe met tips voor plasticvrije routines.'
+      },
+      { type: 'heading', content: 'Kids & family proof cadeaus' },
+      {
+        type: 'paragraph',
+        content: 'Van schoolplein tot logeerpartij: deze cadeaus zijn getest op duurzaamheid én fun.'
+      },
+      { type: 'gift', content: gift_slygad_kids_backpack },
+      { type: 'gift', content: gift_slygad_colorblock_pack },
+      {
+        type: 'paragraph',
+        content: 'Beide rugzakken zijn makkelijk schoon te maken en hebben een verstelbare pasvorm. Voeg er een plantbaar notitieboek aan toe voor een compleet green back-to-school pakket.'
+      },
+      { type: 'heading', content: 'Storytelling & social proof' },
+      {
+        type: 'paragraph',
+        content: '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Vegan foodie date</strong>: Nathalie verraste haar partner met de AppleSkin placemats en een zero waste kookworkshop. <a class="text-rose-600 underline" href="/giftfinder">Laat de GiftFinder jouw duurzame diner-match kiezen.</a></li><li><strong>Green office swap</strong>: Thomas bedankte zijn team met de Witlof skincare set en ontving binnen 24 uur complimenten over de verpakking. <a class="text-rose-600 underline" href="https://www.awin1.com/pclick.php?p=36640831652&a=2566111&m=24072" rel="nofollow sponsored">Shop dezelfde set</a>.</li><li><strong>Kids climate club</strong>: De familie Van Dijk kocht Sticky Lemon rugzakken voor de kinderen en kreeg de buurt mee in een schoolplein-clean-up. <a class="text-rose-600 underline" href="/profiles">Maak een mini-profiel voor de ontvanger</a> en krijg direct kleuraccenten op maat.</li></ul>'
+      },
+      {
+        type: 'paragraph',
+        content: 'Gebruik binnen Gifteez de bewaarlijst of feedbackknoppen om aan te geven welke Shop Like You Give A Damn cadeaus je het meest aanspreken. Die signalen verfijnen onze scoring, waardoor volgende bezoekers nóg betere duurzame suggesties krijgen.'
+      },
+      {
+        type: 'comparisonTable',
+        headers: ['Product', 'Prijs', 'Materiaal', 'Levertijd', 'Certificering'],
+        rows: [
+          { feature: 'Luks Vegan Yoga Cadeauset', values: ['€87,50', 'GOTS katoen & Circular & Co fles', '2-4 werkdagen', 'GOTS, Climate Neutral verzending'] },
+          { feature: 'Nouare 4-delige Ringenset', values: ['€76', 'Gerecycled zilver/goud plating', '3-5 werkdagen', 'Handgemaakt in EU, gerecycled edelmetaal'] },
+          { feature: 'AmourLinen Linnen Keukenschort', values: ['€69', 'OEKO-TEX Europees linnen', '2-3 werkdagen', 'OEKO-TEX, plasticvrije verpakking'] },
+          { feature: 'LaLu Dhonu Kinderrugzak', values: ['€55', 'Recycled canvas & vegan leer', '3-5 werkdagen', 'Social coöperatie, donatie wildlife fonds'] }
+        ]
+      },
+  { type: 'heading', content: 'Zo maak je impact met elke aankoop' },
+      {
+        type: 'paragraph',
+        content: 'Bestel je via onze partnerlink, kies dan voor klimaatneutrale verzending bij de checkout, bundel meerdere cadeaus in één order en schrijf een persoonlijke boodschap zodat jouw pakket direct cadeau-klaar is. Zo vermijd je extra verpakkingsmateriaal en maximaliseer je de waarde van één zending.'
+      },
+  { type: 'heading', content: 'Veelgestelde vragen over Shop Like You Give A Damn' },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Verdient Gifteez commissie als ik via jullie link koop?',
+            answer: 'Ja. Wanneer je een aankoop doet via onze affiliate link ontvangen wij een kleine commissie van Shop Like You Give A Damn. Jij betaalt hetzelfde bedrag, wij investeren de opbrengst in nieuwe functies en redactionele verdieping.'
+          },
+          {
+            question: 'Zijn alle producten bij Shop Like You Give A Damn 100% vegan?',
+            answer: 'Absoluut. Het platform accepteert uitsluitend merken die vegan materialen gebruiken, geen dierproeven toelaten en voldoen aan een ethische gedragscode. Bovendien vind je er aanvullende duurzaamheidslabels per product.'
+          },
+          {
+            question: 'Hoe snel wordt mijn bestelling geleverd en kan ik retourneren?',
+            answer: 'Levertijden verschillen per merk, maar de meeste partners verzenden binnen 1-3 werkdagen vanuit de EU. Retourneren kan doorgaans binnen 14 dagen; de exacte voorwaarden staan altijd vermeld op de productpagina bij Shop Like You Give A Damn.'
+          }
+        ]
+      },
+      {
+        type: 'verdict',
+        title: 'Shop met impact, geef met betekenis',
+        content: 'Met Shop Like You Give A Damn haal je cadeaus in huis die goed voelen voor de ontvanger én de planeet. Activeer de duurzame partnerfilter in onze GiftFinder, kies jouw favorieten en bestel via de affiliate links om bewuste merken en onafhankelijke makers te steunen.'
+      }
+    ],
+    seo: {
+      metaTitle: 'Shop Like You Give A Damn x Gifteez: Duurzame Cadeaus Met Impact',
+      metaDescription: 'Lees alles over onze samenwerking met Shop Like You Give A Damn en ontdek vegan, eerlijke cadeaus met affiliate links, tips en AI-advies van Gifteez.',
+      keywords: ['shop like you give a damn', 'duurzame cadeaus', 'vegan cadeaus', 'fair fashion', 'gifteez partner'],
+      ogTitle: 'Shop Like You Give A Damn: Duurzame Cadeaus met Impact | Gifteez',
+      ogDescription: 'Ontdek hoe onze AI GiftFinder de beste Shop Like You Give A Damn cadeaus selecteert en shop direct via affiliate links.',
+  ogImage: 'https://gifteez.nl/images/Blog-afbeelding-%20shop%20like%20you%20give%20a%20damn.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Nieuwe partner: Shop Like You Give A Damn',
+      twitterDescription: 'Vind vegan, eerlijke cadeaus dankzij onze samenwerking met Shop Like You Give A Damn.',
+  twitterImage: 'https://gifteez.nl/images/Blog-afbeelding-%20shop%20like%20you%20give%20a%20damn.png',
+      canonicalUrl: 'https://gifteez.nl/blog/shop-like-you-give-a-damn-duurzame-cadeaus'
+    },
+    tags: ['partner', 'duurzaam', 'vegan', 'fair fashion']
+  },
   {
     slug: 'gifteez-nl-is-open',
     title: 'Gifteez.nl is open: jouw nieuwe startplek voor cadeaus met betekenis',

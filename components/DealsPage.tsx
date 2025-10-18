@@ -8,6 +8,7 @@ import ImageWithFallback from './ImageWithFallback';
 import InternalLinkCTA from './InternalLinkCTA';
 import Breadcrumbs from './Breadcrumbs';
 import { Container } from './layout/Container';
+import ProductCarousel from './ProductCarousel';
 import { withAffiliate } from '../services/affiliate';
 import { DynamicProductService } from '../services/dynamicProductService';
 import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
@@ -776,7 +777,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     return `Onze redactie selecteerde ${count} cadeaus binnen ${displayTitle}. Geen eindeloze scroll, maar direct inspiratie.`;
   }, []);
 
-  const CategorySection: React.FC<{ category: DealCategory; index: number }> = ({ category, index }) => {
+  const CategorySection: React.FC<{ category: DealCategory; index: number; navigateTo: NavigateTo }> = ({ category, index, navigateTo }) => {
     const items = category.items;
 
     if (!items.length) {
@@ -818,6 +819,15 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       return `${formatCurrency(min)} – ${formatCurrency(max)}`;
     }, [items]);
 
+    const renderProductCard = (deal: DealItem, dealIndex: number) => (
+      <DealCard 
+        key={deal.id}
+        deal={deal} 
+        index={dealIndex} 
+        variant="grid"
+      />
+    );
+
     return (
       <article
         className="space-y-6 animate-fade-in-up"
@@ -828,11 +838,25 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             <GiftIcon className="h-4 w-4" />
             Curated selectie
           </div>
-          <div>
-            <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
-              {displayTitle}
-            </h3>
-            <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
+                {displayTitle}
+              </h3>
+              <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
+            </div>
+            <Button
+              onClick={() => navigateTo('categoryDetail', { 
+                categoryId: category.id,
+                categoryTitle: displayTitle,
+                categoryDescription: description,
+                products: items
+              })}
+              variant="secondary"
+              className="shrink-0"
+            >
+              Bekijk alles
+            </Button>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
@@ -851,16 +875,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </header>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {items.map((deal, dealIndex) => (
-            <div
-              key={deal.id}
-              className={dealIndex === 0 ? 'md:col-span-2 xl:col-span-2' : ''}
-            >
-              <DealCard deal={deal} index={dealIndex} variant={dealIndex === 0 ? 'feature' : 'grid'} />
-            </div>
-          ))}
-        </div>
+        <ProductCarousel 
+          products={items}
+          renderProduct={renderProductCard}
+        />
       </article>
     );
   };
@@ -1153,7 +1171,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   </div>
                   <div className="space-y-16">
                     {state.categories.map((category, index) => (
-                      <CategorySection key={`${category.title}-${index}`} category={category} index={index} />
+                      <CategorySection key={`${category.title}-${index}`} category={category} index={index} navigateTo={navigateTo} />
                     ))}
                   </div>
                 </section>

@@ -622,14 +622,14 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                                 <img
                                     src={heroDisplaySrc}
                                     alt={post.title}
-                                    className="max-h-[420px] w-full sm:w-auto object-contain"
+                                    className="w-full h-auto max-h-[520px] object-contain mx-auto"
                                     loading="lazy"
                                     decoding="async"
                                     onError={() => heroImage && handleImageError(heroImage)}
                                 />
                             </div>
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent pointer-events-none"></div>
+                        <div className={`absolute inset-0 pointer-events-none ${heroFitMode === 'cover' ? 'bg-gradient-to-t from-black/45 via-black/15 to-transparent' : 'bg-gradient-to-t from-black/20 via-black/5 to-transparent'}`}></div>
                         <div className="absolute top-6 left-6 flex flex-wrap items-center gap-3 text-sm font-semibold">
                             <span className="bg-white/85 text-primary px-4 py-1.5 rounded-full shadow-lg backdrop-blur-sm">{post.category}</span>
                             <span className="bg-white/75 text-gray-700 px-4 py-1.5 rounded-full shadow-md backdrop-blur-sm">{formattedDate}</span>

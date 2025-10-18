@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect, useContext, ChangeEvent, useMemo } from 'react';
 import GiftFinderHero from './GiftFinderHero';
-import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, AdvancedFilters, GiftSearchParams } from '../types';
+import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, AdvancedFilters, GiftSearchParams, RetailerBadge } from '../types';
 import { findGiftsWithFilters, sortGifts, enhanceGiftsWithMetadata } from '../services/giftFilterService';
 import { processGiftsForAffiliateOnly } from '../services/affiliateFilterService';
 import Button from './Button';
@@ -16,10 +16,11 @@ import Meta from './Meta';
 import rateLimitService from '../services/rateLimitService';
 import { withAffiliate } from '../services/affiliate';
 import CoolblueAffiliateService from '../services/coolblueAffiliateService';
+import { submitRelevanceFeedback } from '../services/scoringFeedbackService';
 
 const occasions = ["Verjaardag", "Kerstmis", "Valentijnsdag", "Jubileum", "Zomaar"];
-const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
-const suggestedInterests = [
+const recipients = ["Partner", "Man", "Vrouw", "Vriend(in)", "Familielid", "Collega", "Kind"];
+const baseSuggestedInterests = [
   { name: "Koken", icon: "🍳" },
   { name: "Tech", icon: "💻" },
   { name: "Boeken", icon: "📚" },
@@ -31,6 +32,116 @@ const suggestedInterests = [
   { name: "Mode", icon: "👗" },
   { name: "Muziek", icon: "🎵" }
 ];
+
+const maleInterestBoosts = [
+  { name: "Grooming", icon: "🪒" },
+  { name: "BBQ", icon: "🔥" },
+  { name: "Gadgets", icon: "🛠️" }
+];
+
+const femaleInterestBoosts = [
+  { name: "Sieraden", icon: "💍" },
+  { name: "Selfcare", icon: "💆" },
+  { name: "Creatief", icon: "🎨" }
+];
+
+const getRecipientNarrative = (recipient: string) => {
+  const lower = recipient.toLowerCase();
+  switch (lower) {
+    case 'partner':
+      return { noun: 'partner', objectPronoun: 'hen' };
+    case 'man':
+      return { noun: 'man', objectPronoun: 'hem' };
+    case 'vrouw':
+      return { noun: 'vrouw', objectPronoun: 'haar' };
+    case 'vriend(in)':
+      return { noun: 'vriend(in)', objectPronoun: 'hen' };
+    case 'familielid':
+      return { noun: 'familielid', objectPronoun: 'hen' };
+    case 'collega':
+      return { noun: 'collega', objectPronoun: 'hen' };
+    case 'kind':
+      return { noun: 'kind', objectPronoun: 'ze' };
+    default:
+      return { noun: lower, objectPronoun: 'hen' };
+  }
+};
+
+const buildRetailerBadges = (gift: Gift): RetailerBadge[] => {
+  const badges: RetailerBadge[] = [];
+  const retailers = gift.retailers || [];
+
+  retailers.forEach(retailer => {
+    const name = retailer.name.toLowerCase();
+    if (name.includes('amazon')) {
+      badges.push({
+        label: 'Amazon Prime',
+        tone: 'primary',
+        description: 'Supersnelle levering via Amazon'
+      });
+    } else if (name.includes('coolblue')) {
+      badges.push({
+        label: 'Coolblue VandaagBezorgd',
+        tone: 'accent',
+        description: 'Vandaag besteld, morgen in huis'
+      });
+    } else if (name.includes('shop like you give a damn') || name.includes('slygad')) {
+      badges.push({
+        label: 'SLYGAD Vegan',
+        tone: 'success',
+        description: '100% vegan & eerlijk geproduceerd'
+      });
+    }
+  });
+
+  if (gift.sustainability) {
+    badges.push({
+      label: 'Duurzame keuze',
+      tone: 'success',
+      description: 'Gemaakt met oog voor het milieu'
+    });
+  }
+
+  return badges.filter((badge, index, array) =>
+    array.findIndex(item => item.label === badge.label) === index
+  );
+};
+
+const createGiftStory = (
+  gift: Gift,
+  context: {
+    recipient: string;
+    occasion: string;
+    matchingInterests: string[];
+    badges: RetailerBadge[];
+  }
+): string => {
+  const { recipient, occasion, matchingInterests, badges } = context;
+  const { noun } = getRecipientNarrative(recipient);
+
+  const interestPhrase = matchingInterests.length > 0
+    ? `die ${matchingInterests[0].toLowerCase()} geweldig vindt`
+    : '';
+
+  const opening = `Voor je ${noun}${interestPhrase ? ` ${interestPhrase}` : ''} is ${gift.productName} een ${gift.sustainability ? 'bewuste' : 'verrassende'} match.`;
+
+  const badgeSentence = badges.length > 0
+    ? `Met ${badges[0].label.toLowerCase()} heb je het ${gift.deliverySpeed === 'fast' ? 'supersnel' : 'zorgeloos'} in huis.`
+    : gift.deliverySpeed === 'fast'
+      ? 'Je hebt het morgen al in huis.'
+      : '';
+
+  const sustainabilitySentence = gift.sustainability ? 'Gemaakt met aandacht voor duurzaamheid.' : '';
+
+  const occasionSentence = occasion
+    ? `Perfect voor ${occasion.toLowerCase()}.`
+    : '';
+
+  return [opening, badgeSentence, sustainabilitySentence, occasionSentence]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+};
 
 const GiftResultCardSkeleton: React.FC = () => (
   <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col animate-pulse">
@@ -73,7 +184,23 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [compareList, setCompareList] = useState<Gift[]>([]);
   const [showCompareView, setShowCompareView] = useState<boolean>(false);
   const [noAffiliateResults, setNoAffiliateResults] = useState<boolean>(false);
+  const [relevanceFeedback, setRelevanceFeedback] = useState<string>('');
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState<boolean>(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState<boolean>(false);
   const auth = useContext(AuthContext);
+
+  const suggestedInterests = useMemo(() => {
+    const combined = [...baseSuggestedInterests];
+    if (recipient === 'Man') {
+      combined.push(...maleInterestBoosts);
+    }
+    if (recipient === 'Vrouw') {
+      combined.push(...femaleInterestBoosts);
+    }
+    return combined.filter((interest, index, array) =>
+      array.findIndex(item => item.name === interest.name) === index
+    );
+  }, [recipient]);
 
   const fallbackSearchQuery = useMemo(() => {
     const base = [recipient, occasion].filter(Boolean).join(' ');
@@ -223,6 +350,35 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     showToast('📧 Email wordt geopend...');
   };
 
+  const handleRelevanceFeedbackSubmit = useCallback(async () => {
+    if (!relevanceFeedback.trim()) {
+      showToast('Laat ons weten wat je mist, dan kunnen we het verbeteren.');
+      return;
+    }
+
+    setFeedbackSubmitting(true);
+
+    try {
+      await submitRelevanceFeedback({
+        comment: relevanceFeedback.trim(),
+        recipient,
+        budget,
+        occasion,
+        interests,
+        filters,
+        sampleResults: gifts.slice(0, 3)
+      });
+      setFeedbackSubmitted(true);
+      setRelevanceFeedback('');
+      showToast('Bedankt! We sturen dit direct door naar onze scoring-engine.');
+    } catch (error) {
+      console.error('Failed to submit relevance feedback', error);
+      showToast('Oeps, feedback versturen lukte niet. Probeer het later opnieuw.');
+    } finally {
+      setFeedbackSubmitting(false);
+    }
+  }, [relevanceFeedback, recipient, budget, occasion, interests, filters, gifts, showToast]);
+
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -243,6 +399,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     setSearchPerformed(true);
   setNoAffiliateResults(false);
   setPersonalizedIntro('');
+  setFeedbackSubmitted(false);
+  setRelevanceFeedback('');
+  setFeedbackSubmitting(false);
     const searchQuery = `${recipient} ${occasion} ${interests} budget:€${budget}`;
     pinterestSearch(searchQuery, `search_${Date.now()}`);
     gaSearch(searchQuery);
@@ -254,6 +413,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       // Add match reasons to each gift
       const resultsWithReasons = enhancedResults.map(gift => {
         const reasons: string[] = [];
+        let matchingInterests: string[] = [];
         
         // Determine trending badge
         let trendingBadge: 'trending' | 'hot-deal' | 'seasonal' | 'top-rated' | null = null;
@@ -289,8 +449,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         
         // Check interest match
         if (interests) {
-          const interestList = interests.toLowerCase().split(',').map(i => i.trim());
-          const matchingInterests = interestList.filter(interest => 
+          const interestList = interests.toLowerCase().split(',').map(i => i.trim()).filter(Boolean);
+          matchingInterests = interestList.filter(interest => 
             gift.description?.toLowerCase().includes(interest) || 
             gift.category?.toLowerCase().includes(interest) ||
             gift.tags?.some(tag => tag.toLowerCase().includes(interest))
@@ -328,11 +488,21 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         if (reasons.length === 0) {
           reasons.push(`Geselecteerd voor ${recipient.toLowerCase()}`);
         }
+
+        const retailerBadges = buildRetailerBadges(gift);
+        const story = createGiftStory(gift, {
+          recipient,
+          occasion,
+          matchingInterests,
+          badges: retailerBadges
+        });
         
         return {
           ...gift,
           matchReason: reasons.join(' • '),
-          trendingBadge
+          trendingBadge,
+          retailerBadges,
+          story
         };
       });
       
@@ -739,6 +909,48 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     </Button>
                   </div>
                 )}
+
+                <div className="mt-12 bg-white border border-gray-200 rounded-2xl p-6 shadow-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-primary/10 rounded-xl">
+                      <span className="text-2xl">💬</span>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-display text-xl font-bold text-primary">Mis je iets in deze lijst?</h3>
+                      <p className="text-sm text-gray-600">
+                        Vertel het ons en we sturen het meteen door naar onze scoring-service zodat de volgende zoekopdracht nog beter scoort.
+                      </p>
+                    </div>
+                  </div>
+                  {feedbackSubmitted ? (
+                    <div className="mt-4 bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl px-4 py-3">
+                      Dank je wel! Je feedback is ontvangen en wordt meegenomen in onze tuning.
+                    </div>
+                  ) : (
+                    <>
+                      <textarea
+                        value={relevanceFeedback}
+                        onChange={(e) => setRelevanceFeedback(e.target.value)}
+                        placeholder="Bijvoorbeeld: Ik zoek iets duurzaams voor mannen, of iets rond 25 euro."
+                        className="mt-4 w-full min-h-[120px] p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-800"
+                      />
+                      <div className="mt-4 flex items-center gap-3 flex-wrap">
+                        <Button
+                          type="button"
+                          onClick={handleRelevanceFeedbackSubmit}
+                          disabled={feedbackSubmitting}
+                          variant="accent"
+                          className="px-6 py-3"
+                        >
+                          {feedbackSubmitting ? 'Versturen...' : 'Stuur naar AI-team'}
+                        </Button>
+                        <span className="text-xs text-gray-500">
+                          We bewaren alleen de laatste 50 feedbacks om de AI te trainen. Geen e-mail nodig.
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
                 
                 <div className="mt-12 text-center p-6 bg-secondary rounded-lg">
                   <h3 className="font-display text-xl font-bold text-primary">Tevreden met deze suggesties?</h3>

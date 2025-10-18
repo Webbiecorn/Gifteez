@@ -6,6 +6,32 @@ import { DynamicProductService } from './dynamicProductService';
  * Uses real Coolblue and Amazon product feeds to find gifts
  */
 export class ProductBasedGiftService {
+  private static feedbackSignals: Array<{
+    comment: string;
+    interests?: string;
+    recipient?: string;
+    occasion?: string;
+    createdAt: number;
+  }> = [];
+
+  private static feedbackKeywordWeights: Record<string, number> = {};
+
+  private static readonly FEEDBACK_KEYWORD_WHITELIST = [
+    'duurzaam',
+    'vegan',
+    'man',
+    'vrouw',
+    'grooming',
+    'sieraden',
+    'budget',
+    'eco',
+    'sport',
+    'tech',
+    'kids',
+    'kind',
+    'wellness',
+    'gaming'
+  ];
   
   /**
    * Find gifts from real product feeds based on search criteria
@@ -36,6 +62,56 @@ export class ProductBasedGiftService {
     
     // Return top 8 results
     return gifts.slice(0, 8);
+  }
+
+  static registerFeedback(feedback: {
+    comment: string;
+    interests?: string;
+    recipient?: string;
+    occasion?: string;
+    createdAt: number;
+  }): void {
+    if (!feedback?.comment) {
+      return;
+    }
+
+    this.feedbackSignals.push(feedback);
+    if (this.feedbackSignals.length > 100) {
+      this.feedbackSignals = this.feedbackSignals.slice(-100);
+    }
+
+    this.rebuildFeedbackKeywordWeights();
+  }
+
+  private static rebuildFeedbackKeywordWeights(): void {
+    const weights: Record<string, number> = {};
+
+    this.feedbackSignals.forEach(entry => {
+      const text = [entry.comment, entry.interests, entry.recipient, entry.occasion]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      this.FEEDBACK_KEYWORD_WHITELIST.forEach(keyword => {
+        if (text.includes(keyword)) {
+          weights[keyword] = (weights[keyword] || 0) + 1;
+        }
+      });
+    });
+
+    this.feedbackKeywordWeights = weights;
+  }
+
+  private static getFeedbackBoost(productText: string): number {
+    let boost = 0;
+
+    Object.entries(this.feedbackKeywordWeights).forEach(([keyword, weight]) => {
+      if (productText.includes(keyword)) {
+        boost += Math.min(weight, 5) * 0.3;
+      }
+    });
+
+    return boost;
   }
   
   /**
@@ -74,6 +150,11 @@ export class ProductBasedGiftService {
       const isCoolblueProduct = product.source === 'coolblue' || 
                                (product.url && product.url.includes('coolblue')) ||
                                (product.affiliateLink && product.affiliateLink.includes('coolblue'));
+
+      const isSustainablePartner = product.source === 'shop-like-you-give-a-damn' ||
+        (product.url && product.url.includes('shoplikeyougiveadamn')) ||
+        (product.affiliateLink && product.affiliateLink.includes('shoplikeyougiveadamn')) ||
+        (product.merchant && product.merchant.toLowerCase().includes('shop like you give a damn'));
       
       // Basic relevance check - make more lenient for Coolblue products
       const searchTerms = [
@@ -107,6 +188,11 @@ export class ProductBasedGiftService {
         if (isCoolblueProduct && (hasDirectMatch || hasRelevanceMatch || !searchTerms.length)) {
           return true;
         }
+
+        // Sustainable partner preference: include SLYGAD products even bij beperkte matches
+        if (filters?.preferredPartner === 'sustainable' && isSustainablePartner) {
+          return true;
+        }
         
         // For other products, require a match
         if (!hasDirectMatch && !hasRelevanceMatch && searchTerms.length > 0) {
@@ -114,6 +200,10 @@ export class ProductBasedGiftService {
         }
       }
       
+      if (filters?.preferredPartner === 'sustainable' && isSustainablePartner) {
+        return true;
+      }
+
       return true;
     });
     
@@ -129,8 +219,8 @@ export class ProductBasedGiftService {
    * Calculate relevance score for a product
    */
   private static calculateRelevanceScore(product: any, searchParams: GiftSearchParams): number {
-    let score = 0;
-    const { recipient, budget, occasion, interests } = searchParams;
+  let score = 0;
+  const { recipient, budget, occasion, interests, filters } = searchParams;
     
     const productText = [
       product.name,
@@ -183,6 +273,21 @@ export class ProductBasedGiftService {
     if (product.giftScore && product.giftScore >= 7) {
       score += 3;
     }
+
+    const isSlygadProduct = product.source === 'shop-like-you-give-a-damn' ||
+      (product.url && product.url.toLowerCase().includes('shoplikeyougiveadamn')) ||
+      (product.affiliateLink && product.affiliateLink.toLowerCase().includes('shoplikeyougiveadamn')) ||
+      (product.merchant && product.merchant.toLowerCase().includes('shop like you give a damn'));
+
+    if (filters?.preferredPartner === 'sustainable') {
+      if (isSlygadProduct) {
+        score += 4;
+      } else if (!product.sustainability) {
+        score -= 1;
+      }
+    }
+
+    score += this.getFeedbackBoost(productText);
     
     return score;
   }
@@ -196,7 +301,9 @@ export class ProductBasedGiftService {
       'vriend(in)': ['fun', 'social', 'friend', 'party', 'trendy', 'leuk', 'gezellig', 'vrienden', 'feest', 'hip'],
       'familielid': ['family', 'traditional', 'practical', 'home', 'familie', 'praktisch', 'thuis', 'huis'],
       'collega': ['professional', 'office', 'business', 'practical', 'professioneel', 'kantoor', 'werk', 'zakelijk'],
-      'kind': ['kids', 'children', 'toy', 'educational', 'fun', 'game', 'kinderen', 'speelgoed', 'educatief', 'spel', 'junior']
+      'kind': ['kids', 'children', 'toy', 'educational', 'fun', 'game', 'kinderen', 'speelgoed', 'educatief', 'spel', 'junior'],
+      'man': ['man', 'men', 'male', 'heren', 'gentlemen', 'jongens', 'boys', 'mannelijk'],
+      'vrouw': ['vrouw', 'women', 'female', 'dames', 'ladies', 'meisjes', 'girls', 'vrouwelijk']
     };
     
     const keywords = recipientMap[recipient.toLowerCase()] || [];
@@ -253,10 +360,8 @@ export class ProductBasedGiftService {
    */
   private static convertProductsToGifts(products: any[], searchParams: GiftSearchParams): Gift[] {
     return products.map(product => {
-      // Determine source and create retailer
-      const isAmazon = product.source === 'amazon' || product.affiliateLink?.includes('amazon');
-      const retailerName = isAmazon ? 'Amazon.nl' : 'Coolblue.nl';
-      
+      const retailerName = this.resolveRetailerName(product);
+
       const retailer: Retailer = {
         name: retailerName,
         affiliateLink: product.affiliateLink || this.generateRetailerUrl(product, retailerName)
@@ -269,19 +374,47 @@ export class ProductBasedGiftService {
         retailers: [retailer],
         imageUrl: product.image || product.imageUrl || '',
         category: product.category || product.productCategory || 'Algemeen',
-        tags: [product.relevanceScore?.toString() || '0', ...(product.tags || [])],
+        tags: [
+          (typeof product.relevanceScore === 'number' ? product.relevanceScore : 0).toString(),
+          ...(product.tags || [])
+        ],
         rating: product.rating || 4.0,
         reviews: product.reviewCount || 0,
-        deliverySpeed: isAmazon ? 'fast' : 'standard',
+        deliverySpeed: retailerName === 'Amazon.nl' ? 'fast' : 'standard',
         giftType: this.determineGiftType(product),
         sustainability: product.sustainability || false,
         personalization: product.personalization || false,
         ageGroup: product.ageGroup || this.inferAgeGroup(searchParams.recipient),
         gender: 'unisex',
         popularity: product.giftScore || 5,
-        availability: product.inStock !== false ? 'in-stock' : 'out-of-stock'
+        availability: product.inStock !== false ? 'in-stock' : 'out-of-stock',
+        relevanceScore: typeof product.relevanceScore === 'number' ? product.relevanceScore : undefined
       } as Gift;
     });
+  }
+
+  private static resolveRetailerName(product: any): string {
+    const source = (product.source || '').toString().toLowerCase();
+    const merchant = (product.merchant || '').toString().toLowerCase();
+    const link = (product.affiliateLink || product.url || '').toString().toLowerCase();
+
+    if (source === 'amazon' || link.includes('amazon')) {
+      return 'Amazon.nl';
+    }
+
+    if (source === 'coolblue' || link.includes('coolblue')) {
+      return 'Coolblue.nl';
+    }
+
+    if (source === 'shop-like-you-give-a-damn' || merchant.includes('shop like you give a damn') || link.includes('shoplikeyougiveadamn')) {
+      return 'Shop Like You Give A Damn';
+    }
+
+    if (merchant) {
+      return merchant;
+    }
+
+    return 'Gifteez Partner';
   }
   
   /**
@@ -317,7 +450,9 @@ export class ProductBasedGiftService {
       'vriend(in)': 'een vriend(in)',
       'familielid': 'een familielid',
       'collega': 'een collega',
-      'kind': 'kinderen'
+      'kind': 'kinderen',
+      'man': 'een man',
+      'vrouw': 'een vrouw'
     };
     
     return translations[recipient.toLowerCase()] || recipient;
@@ -360,9 +495,17 @@ export class ProductBasedGiftService {
     const searchTerm = encodeURIComponent(product.name || product.title || '');
     if (retailer === 'Amazon.nl') {
       return `https://www.amazon.nl/s?k=${searchTerm}`;
-    } else {
+    }
+
+    if (retailer === 'Coolblue.nl') {
       return `https://www.coolblue.nl/zoeken?query=${searchTerm}`;
     }
+
+    if (retailer === 'Shop Like You Give A Damn') {
+      return `https://www.shoplikeyougiveadamn.com/search?q=${searchTerm}`;
+    }
+
+    return `https://www.google.com/search?q=${searchTerm}`;
   }
   
   /**
