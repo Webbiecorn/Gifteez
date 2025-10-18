@@ -601,7 +601,7 @@ export const blogPosts: BlogPost[] = [
     slug: 'amazon-geschenksets-2025-ultieme-gids',
     title: 'Amazon Geschenksets 2025: De Ultieme Gids voor Luxe Cadeauboxen',
     excerpt: 'Ontdek de mooiste geschenksets op Amazon: van verzorging tot gourmet thee, van wellness spa-sets tot beauty pakketten. Complete cadeauboxen die direct indruk maken en klaar zijn om te geven.',
-    imageUrl: '/images/amazon-giftsets-2025.png',
+    imageUrl: '/images/Blog-afbeelding-Amazon Geschenksets 2025.png',
     category: 'Cadeaugids',
     author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=giftsets' },
     publishedDate: '2025-10-18',
