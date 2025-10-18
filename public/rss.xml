@@ -4,48 +4,48 @@
      xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gifteez</title>
-    <link>https://gifteez-7533b.web.app</link>
+    <link>https://gifteez.nl</link>
     <description>Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.</description>
     <language>nl-NL</language>
     <lastBuildDate>Tue, 14 Oct 2025 10:00:00 GMT</lastBuildDate>
-    <atom:link href="https://gifteez-7533b.web.app/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://gifteez.nl/rss.xml" rel="self" type="application/rss+xml" />
     <image>
-      <url>https://gifteez-7533b.web.app/logo.png</url>
+      <url>https://gifteez.nl/logo.png</url>
       <title>Gifteez</title>
-      <link>https://gifteez-7533b.web.app</link>
+      <link>https://gifteez.nl</link>
     </image>
     <item>
       <title>Gifteez.nl is open: jouw nieuwe startplek voor cadeaus met betekenis</title>
-      <link>https://gifteez-7533b.web.app/blog/gifteez-nl-is-open</link>
-      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/gifteez-nl-is-open</guid>
+      <link>https://gifteez.nl/blog/gifteez-nl-is-open</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/gifteez-nl-is-open</guid>
       <description>We knallen de confetti los: Gifteez.nl is live! Ontdek onze AI GiftFinder, deals die dagelijks worden ververst en inspiratieverhalen die je helpen het perfecte cadeau te kiezen.</description>
       <pubDate>Tue, 14 Oct 2025 10:00:00 GMT</pubDate>
       <category>Nieuws</category>
-      <enclosure url="https://gifteez-7533b.web.app/images/Blog-afb-opening2.png" type="image/jpeg" />
-      <media:content url="https://gifteez-7533b.web.app/images/Blog-afb-opening2.png" type="image/jpeg" medium="image" />
-      <media:thumbnail url="https://gifteez-7533b.web.app/images/Blog-afb-opening2.png" />
+      <enclosure url="https://gifteez.nl/images/Blog-afb-opening2.png" type="image/jpeg" />
+      <media:content url="https://gifteez.nl/images/Blog-afb-opening2.png" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez.nl/images/Blog-afb-opening2.png" />
     </item>
     <item>
       <title>AI &amp; Smart Home Gadgets (2025): Innovatieve Apparaten voor een Slimmere Woning</title>
-      <link>https://gifteez-7533b.web.app/blog/ai-smart-home-gadgets-2025</link>
-      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/ai-smart-home-gadgets-2025</guid>
+      <link>https://gifteez.nl/blog/ai-smart-home-gadgets-2025</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/ai-smart-home-gadgets-2025</guid>
       <description>Ontdek de nieuwste AI-gadgets en smart home apparaten die je leven makkelijker maken. Van slimme speakers tot beveiligingscamera\</description>
       <pubDate>Mon, 08 Sep 2025 10:00:00 GMT</pubDate>
       <category>Tech</category>
-      <enclosure url="https://gifteez-7533b.web.app/images/ai-smart-home-gadgets-2025-cover.png" type="image/jpeg" />
-      <media:content url="https://gifteez-7533b.web.app/images/ai-smart-home-gadgets-2025-cover.png" type="image/jpeg" medium="image" />
-      <media:thumbnail url="https://gifteez-7533b.web.app/images/ai-smart-home-gadgets-2025-cover.png" />
+      <enclosure url="https://gifteez.nl/images/ai-smart-home-gadgets-2025-cover.png" type="image/jpeg" />
+      <media:content url="https://gifteez.nl/images/ai-smart-home-gadgets-2025-cover.png" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez.nl/images/ai-smart-home-gadgets-2025-cover.png" />
     </item>
     <item>
       <title>Duurzame &amp; Eco‑vriendelijke Cadeaus: Ideeën die Echt Verschil Maken (2025)</title>
-      <link>https://gifteez-7533b.web.app/blog/duurzame-eco-vriendelijke-cadeaus</link>
-      <guid isPermaLink="true">https://gifteez-7533b.web.app/blog/duurzame-eco-vriendelijke-cadeaus</guid>
+      <link>https://gifteez.nl/blog/duurzame-eco-vriendelijke-cadeaus</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/duurzame-eco-vriendelijke-cadeaus</guid>
       <description>Bewust geven? Ontdek duurzame cadeaus die niet alleen mooi zijn, maar ook écht impact maken. Van herbruikbare producten tot energie-besparende gadgets: kies voor een cadeau met betekenis.</description>
       <pubDate>Sun, 07 Sep 2025 10:00:00 GMT</pubDate>
       <category>Duurzaam</category>
-      <enclosure url="https://gifteez-7533b.web.app/images/trending-eco.png" type="image/jpeg" />
-      <media:content url="https://gifteez-7533b.web.app/images/trending-eco.png" type="image/jpeg" medium="image" />
-      <media:thumbnail url="https://gifteez-7533b.web.app/images/trending-eco.png" />
+      <enclosure url="https://gifteez.nl/images/trending-eco.png" type="image/jpeg" />
+      <media:content url="https://gifteez.nl/images/trending-eco.png" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez.nl/images/trending-eco.png" />
     </item>
   </channel>
 </rss>

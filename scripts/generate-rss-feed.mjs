@@ -13,7 +13,7 @@ const projectRoot = join(__dirname, '..');
  * Based on Pinterest specs: https://help.pinterest.com/nl/business/article/auto-publish-pins-from-your-rss-feed
  */
 
-const SITE_URL = 'https://gifteez-7533b.web.app';
+const SITE_URL = 'https://gifteez.nl';
 const SITE_NAME = 'Gifteez';
 const SITE_DESCRIPTION = 'Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.';
 const SITE_LANGUAGE = 'nl-NL';
