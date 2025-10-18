@@ -16,6 +16,145 @@ import {
 } from 'firebase/firestore';
 import { withAffiliate } from './affiliate';
 
+const ASIN_REGEX = /^[A-Z0-9]{10}$/;
+
+const slugToTitle = (value?: string): string | undefined => {
+  if (!value) return undefined;
+  const cleaned = decodeURIComponent(value)
+    .replace(/\.html?$/i, '')
+    .replace(/[^a-z0-9\s\-+_]/gi, ' ')
+    .replace(/[+_]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!cleaned) {
+    return undefined;
+  }
+
+  return cleaned
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => {
+      if (word.length <= 2) {
+        return word.toLowerCase();
+      }
+      return `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
+    })
+    .join(' ');
+};
+
+const hashString = (input: string): string => {
+  let hash = 0;
+  if (!input) {
+    return 'amazon-temp';
+  }
+  for (let index = 0; index < input.length; index += 1) {
+    hash = (hash * 31 + input.charCodeAt(index)) >>> 0;
+  }
+  return `amazon-${hash.toString(36).padStart(6, '0')}`;
+};
+
+export interface ParsedAmazonLink {
+  asin?: string;
+  title?: string;
+  canonical?: string;
+  host?: string;
+  fallbackId: string;
+}
+
+export const parseAmazonAffiliateLink = (rawLink: string): ParsedAmazonLink => {
+  const fallbackId = hashString(rawLink || String(Date.now()));
+
+  if (!rawLink) {
+    return { fallbackId };
+  }
+
+  let url: URL;
+  try {
+    url = new URL(rawLink);
+  } catch (error) {
+    try {
+      url = new URL(`https://${rawLink}`);
+    } catch {
+      return { fallbackId };
+    }
+  }
+
+  const segments = url.pathname.split('/').filter(Boolean);
+  let asin: string | undefined;
+
+  for (const segment of segments) {
+    const candidate = segment.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+    if (ASIN_REGEX.test(candidate)) {
+      asin = candidate;
+      break;
+    }
+  }
+
+  if (!asin) {
+    const paramAsin = url.searchParams.get('asin') || url.searchParams.get('ASIN');
+    if (paramAsin && ASIN_REGEX.test(paramAsin.toUpperCase())) {
+      asin = paramAsin.toUpperCase();
+    }
+  }
+
+  let title: string | undefined;
+  const lowerSegments = segments.map((segment) => segment.toLowerCase());
+  const dpIndex = lowerSegments.indexOf('dp');
+
+  if (dpIndex >= 0) {
+    if (!asin && dpIndex + 1 < segments.length) {
+      const candidate = segments[dpIndex + 1].replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      if (ASIN_REGEX.test(candidate)) {
+        asin = candidate;
+      }
+    }
+    if (dpIndex > 0) {
+      title = slugToTitle(segments[dpIndex - 1]);
+    }
+  }
+
+  if (!title) {
+    const gpIndex = lowerSegments.indexOf('gp');
+    if (gpIndex >= 0) {
+      if (!asin && gpIndex + 2 < segments.length && lowerSegments[gpIndex + 1] === 'product') {
+        const candidate = segments[gpIndex + 2].replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+        if (ASIN_REGEX.test(candidate)) {
+          asin = candidate;
+        }
+      }
+      if (gpIndex > 0) {
+        title = slugToTitle(segments[gpIndex - 1]);
+      }
+    }
+  }
+
+  if (!title) {
+    const fallbackSegment = segments.find((segment) => {
+      const lower = segment.toLowerCase();
+      if (lower === 'dp' || lower === 'gp' || lower === 'product') {
+        return false;
+      }
+      const candidate = segment.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      if (ASIN_REGEX.test(candidate)) {
+        return false;
+      }
+      return true;
+    });
+    title = slugToTitle(fallbackSegment ?? '');
+  }
+
+  const canonical = asin ? `https://${url.host}/dp/${asin}` : undefined;
+
+  return {
+    asin,
+    title,
+    canonical,
+    host: url.host,
+    fallbackId,
+  };
+};
+
 type AmazonProductSource = 'firestore' | 'local';
 
 export interface AmazonProductInput {
@@ -73,6 +212,16 @@ const ensureArray = (value: unknown): string[] | undefined => {
   return cleaned.length ? cleaned : undefined;
 };
 
+const compactFirestoreData = (input: Record<string, unknown>): Record<string, unknown> => {
+  const output: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(input)) {
+    if (value !== undefined) {
+      output[key] = value;
+    }
+  }
+  return output;
+};
+
 const toNumber = (value: unknown): number | undefined => {
   if (typeof value === 'number' && Number.isFinite(value)) {
     return value;
@@ -97,20 +246,33 @@ const normaliseProduct = (
   id?: string,
   source: AmazonProductSource = 'local'
 ): AmazonProduct => {
-  const asin = String(data.asin ?? data.id ?? '').trim();
-  const name = String(data.name ?? '').trim();
-  const affiliateLink = normaliseAffiliateLink(String(data.affiliateLink ?? '').trim());
+  const rawAffiliate = String(data.affiliateLink ?? '').trim();
+  const affiliateLink = normaliseAffiliateLink(rawAffiliate);
+  const parsed = parseAmazonAffiliateLink(affiliateLink);
 
-  if (!asin || !name || !affiliateLink) {
-    throw new Error('Ongeldige Amazon productdata: ASIN, naam en affiliate link zijn verplicht.');
+  const providedAsin = String(data.asin ?? data.id ?? '').trim();
+  const resolvedAsin = (providedAsin || parsed.asin || parsed.fallbackId).toUpperCase();
+  const providedName = String(data.name ?? '').trim();
+  const resolvedName = providedName || parsed.title || `Amazon product ${resolvedAsin}`;
+
+  if (!affiliateLink) {
+    throw new Error('Ongeldige Amazon productdata: Affiliate link is verplicht.');
+  }
+
+  if (!resolvedAsin) {
+    throw new Error('Kon geen unieke identifier voor het Amazon product bepalen. Voeg een ASIN of geldige link toe.');
+  }
+
+  if (!resolvedName) {
+    throw new Error('Kon geen productnaam afleiden. Vul handmatig een naam in.');
   }
 
   const tags = ensureArray(data.tags);
 
   return {
-    id: id ?? asin,
-    asin,
-    name,
+    id: id ?? resolvedAsin,
+    asin: resolvedAsin,
+    name: resolvedName,
     affiliateLink,
     description: data.description?.trim() || undefined,
     shortDescription: data.shortDescription?.trim() || undefined,
@@ -282,13 +444,13 @@ export const AmazonProductLibrary = {
     const normalised = normaliseProduct(product, product.asin, firebaseEnabled && db ? 'firestore' : 'local');
 
     if (firebaseEnabled && db) {
-      const payload: Record<string, unknown> = {
-        ...normalised,
+      const { id: _id, source: _source, createdAt: _createdAt, updatedAt: _updatedAt, ...rest } = normalised;
+      const payload = compactFirestoreData({
+        ...rest,
         source: 'firestore',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      };
-      delete payload.id;
+      });
       await addDoc(collection(db, COLLECTION), payload);
       return;
     }
@@ -339,23 +501,48 @@ export const AmazonProductLibrary = {
 
     if (firebaseEnabled && db) {
       const ref = doc(db, COLLECTION, id);
-      const payload: Record<string, unknown> = {
-        ...normalised,
+      const { id: _id, source: _source, createdAt: _createdAt, updatedAt: _updatedAt, ...rest } = normalised;
+      const payload = compactFirestoreData({
+        ...rest,
         source: 'firestore',
         updatedAt: serverTimestamp(),
-      };
-      delete payload.id;
+      });
       await updateDoc(ref, payload);
       return;
     }
 
     const now = new Date().toISOString();
     const local = readLocal();
-    const merged: AmazonProduct[] = local.map((item) =>
-      item.id === id ? { ...item, ...normalised, source: 'local', updatedAt: now } : item
-    );
-    cachedProducts = merged;
-    writeLocal(merged);
+    const base = (local.length ? local : cachedProducts).slice();
+
+    let updated = false;
+    const merged = base.map((item) => {
+      if (item.id !== id) {
+        return item;
+      }
+      updated = true;
+      return {
+        ...item,
+        ...normalised,
+        createdAt: item.createdAt ?? now,
+        updatedAt: now,
+      } satisfies AmazonProduct;
+    });
+
+    const finalItems = updated
+      ? merged
+      : [
+          ...merged,
+          {
+            ...normalised,
+            source: 'local',
+            createdAt: now,
+            updatedAt: now,
+          } satisfies AmazonProduct,
+        ];
+
+    cachedProducts = finalItems;
+    writeLocal(finalItems);
     emitChange();
   },
 

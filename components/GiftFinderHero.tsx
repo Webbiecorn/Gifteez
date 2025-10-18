@@ -7,8 +7,6 @@ interface GiftFinderHeroProps {
   heading?: string;
   tagline?: string;
   subheading?: string;
-  onSelectBudget?: () => void;
-  onSelectOccasion?: () => void;
   onSelectPersonality?: () => void;
   onStart?: () => void;
   className?: string;
@@ -25,14 +23,20 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
   alt,
   heading = 'Vind het perfecte cadeau',
   tagline = 'Zoek • Kies • Vieren',
-  subheading = 'Zoek op budget, gelegenheid of persoonlijkheid – start nu en krijg direct slimme AI suggesties.',
-  onSelectBudget,
-  onSelectOccasion,
+  subheading,
   onSelectPersonality,
   onStart,
   className = '',
   heightAspect = 'aspect-[16/9]'
 }) => {
+  const defaultHeading = 'Vind het perfecte cadeau';
+  const headingLines = heading.includes('\n')
+    ? heading.split('\n')
+    : heading === defaultHeading
+      ? ['Vind het', 'perfecte cadeau']
+      : [heading];
+  const accessibleHeading = headingLines.join(' ');
+
   return (
     <section className={`relative w-full ${heightAspect} max-h-[760px] overflow-hidden bg-black ${className}`.trim()}>
       <picture>
@@ -49,50 +53,50 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
         />
       </picture>
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/0" />
-      <h1 className="sr-only">{heading}</h1>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <div className="space-y-6 max-w-4xl">
+        <div className="space-y-4 sm:space-y-6 max-w-4xl">
           <p className="text-sm sm:text-base font-semibold tracking-wider text-white/80">{tagline}</p>
-          <p className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight text-white drop-shadow-xl">
-            {heading}
-          </p>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+          <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold leading-tight text-white drop-shadow-xl">
+            {headingLines.map((line, index) => (
+              <React.Fragment key={index}>
+                <span className={headingLines.length > 1 ? 'block sm:inline' : undefined}>
+                  {line}
+                </span>
+                {headingLines.length > 1 && index < headingLines.length - 1 && (
+                  <span className="hidden sm:inline">&nbsp;</span>
+                )}
+              </React.Fragment>
+            ))}
+          </h1>
+          {subheading && (
+            <p className="hidden sm:block text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
               {subheading}
             </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <button
-              type="button"
-              onClick={onSelectBudget}
-              className="px-6 py-3 rounded-full font-semibold bg-white/15 hover:bg-white/25 text-white backdrop-blur-sm border border-white/20 shadow transition"
-              aria-label="Scroll naar formulier en focus op budget"
-            >
-              Budget
-            </button>
-            <button
-              type="button"
-              onClick={onSelectOccasion}
-              className="px-6 py-3 rounded-full font-semibold bg-white/30 hover:bg-white/40 text-white border border-white/30 shadow-lg transition"
-              aria-label="Scroll naar formulier voor gelegenheid"
-            >
-              Gelegenheid
-            </button>
-            <button
-              type="button"
-              onClick={onSelectPersonality}
-              className="px-6 py-3 rounded-full font-semibold bg-white/30 hover:bg-white/40 text-white border border-white/30 shadow-lg transition"
-              aria-label="Scroll naar formulier voor persoonlijkheid / interesses"
-            >
-              Persoonlijkheid
-            </button>
-            <button
-              type="button"
-              onClick={onStart}
-              className="px-8 py-3 rounded-full font-semibold bg-rose-500 hover:bg-rose-600 text-white shadow-lg hover:shadow-xl transition focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-300"
-              aria-label="Start de GiftFinder"
-            >
-              Start GiftFinder
-            </button>
-          </div>
+          )}
+          {(onSelectPersonality || onStart) && (
+            <div className="hidden sm:flex sm:flex-wrap items-center justify-center gap-3 sm:gap-4 pt-6 w-full max-w-2xl mx-auto">
+              {onSelectPersonality && (
+                <button
+                  type="button"
+                  onClick={onSelectPersonality}
+                  className="px-6 py-3 rounded-full font-semibold bg-white/30 hover:bg-white/40 text-white border border-white/30 shadow-lg transition"
+                  aria-label="Scroll naar formulier voor persoonlijkheid of interesses"
+                >
+                  Persoonlijkheid kiezen
+                </button>
+              )}
+              {onStart && (
+                <button
+                  type="button"
+                  onClick={onStart}
+                  className="px-8 py-3 rounded-full font-semibold bg-rose-500 hover:bg-rose-600 text-white shadow-lg hover:shadow-xl transition focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-300"
+                  aria-label="Start de GiftFinder"
+                >
+                  Start GiftFinder
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>

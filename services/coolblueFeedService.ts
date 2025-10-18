@@ -225,6 +225,13 @@ export class CoolblueFeedService {
     return { ...this.cachedMeta, total: this.cachedProducts?.length ?? this.cachedMeta.total };
   }
 
+  /**
+   * Clear the cached products to force reload from source
+   */
+  static clearCache(): void {
+    this.cachedProducts = null;
+  }
+
   static async loadProducts(): Promise<CoolblueProduct[]> {
     if (this.cachedProducts) {
       return this.cachedProducts;

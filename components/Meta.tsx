@@ -5,10 +5,11 @@ interface MetaProps {
   description: string;
   canonical?: string;
   ogImage?: string;
+  type?: 'website' | 'article';
 }
 
 // Lightweight meta tag manager without extra dependency
-export const Meta: React.FC<MetaProps> = ({ title, description, canonical, ogImage }) => {
+export const Meta: React.FC<MetaProps> = ({ title, description, canonical, ogImage, type = 'website' }) => {
   useEffect(() => {
     document.title = title;
 
@@ -40,7 +41,8 @@ export const Meta: React.FC<MetaProps> = ({ title, description, canonical, ogIma
 
     const ogPairs: Array<[string, string]> = [
       ['og:title', title],
-      ['og:description', description]
+      ['og:description', description],
+      ['og:type', type]
     ];
     if (ogImage) ogPairs.push(['og:image', ogImage]);
     if (canonical) ogPairs.push(['og:url', canonical]);
@@ -59,7 +61,7 @@ export const Meta: React.FC<MetaProps> = ({ title, description, canonical, ogIma
       return m;
     });
     twitterCard.setAttribute('content', 'summary_large_image');
-  }, [title, description, canonical, ogImage]);
+  }, [title, description, canonical, ogImage, type]);
 
   return null; // Head side-effects only
 };

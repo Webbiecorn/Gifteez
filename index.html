@@ -2,6 +2,9 @@
 <html lang="nl">
   <head>
     <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+    <!-- Preload critical hero images for better LCP -->
+    <link rel="preload" as="image" href="/images/homepage-hero-afb.png" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/giftfinder-hero-afb.webp" fetchpriority="high">
     <!-- Critical hero style (minimal) -->
     <style>
       .hero-title{font-weight:700;line-height:1.1}
@@ -9,6 +12,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gifteez.nl - AI Gift Finder</title>
+  
+  <!-- Google Search Console Verification -->
+  <!-- TODO: Replace with your actual verification code from Google Search Console -->
+  <!-- Get code from: https://search.google.com/search-console -->
+  <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" /> -->
   
   <!-- Primary SEO -->
   <meta name="description" content="Vind razendsnel het perfecte cadeau met AI. Filter op interesses, budget en gelegenheid en ontvang persoonlijke cadeau-ideeën. Deel favorieten en shop direct." />
@@ -57,12 +65,12 @@
   <!-- end Pinterest Tag -->
   
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P63273J3JE"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y697MJEN2H"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-P63273J3JE');
+    gtag('config', 'G-Y697MJEN2H');
   </script>
   <!-- end Google Analytics -->
   
@@ -116,6 +124,21 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
+    
+    <!-- Unregister old service workers -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister().then(function(success) {
+              if (success) {
+                console.log('Old service worker unregistered successfully');
+              }
+            });
+          }
+        });
+      }
+    </script>
     
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GT-MKPDMXNQ"

@@ -12,6 +12,10 @@ export const usePerformanceMonitor = () => {
   const metricsRef = useRef<Partial<PerformanceMetrics>>({});
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof performance === 'undefined') {
+      return undefined;
+    }
+
     // Track page load time
     const loadTime = performance.now();
     metricsRef.current.loadTime = loadTime;
@@ -22,24 +26,35 @@ export const usePerformanceMonitor = () => {
     };
 
     // Track First Paint and First Contentful Paint
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (entry.name === 'first-paint') {
-          metricsRef.current.firstPaint = entry.startTime;
-        } else if (entry.name === 'first-contentful-paint') {
-          metricsRef.current.firstContentfulPaint = entry.startTime;
-        } else if (entry.entryType === 'largest-contentful-paint') {
-          metricsRef.current.largestContentfulPaint = entry.startTime;
-        }
-      }
-    });
+    const observerSupported = typeof PerformanceObserver !== 'undefined';
+    const observer = observerSupported
+      ? new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.name === 'first-paint') {
+              metricsRef.current.firstPaint = entry.startTime;
+            } else if (entry.name === 'first-contentful-paint') {
+              metricsRef.current.firstContentfulPaint = entry.startTime;
+            } else if (entry.entryType === 'largest-contentful-paint') {
+              metricsRef.current.largestContentfulPaint = entry.startTime;
+            }
+          }
+        })
+      : null;
 
-    observer.observe({ entryTypes: ['paint', 'largest-contentful-paint'] });
+    if (observer) {
+      try {
+        observer.observe({ entryTypes: ['paint', 'largest-contentful-paint'] });
+      } catch (error) {
+        console.warn('PerformanceObserver not fully supported:', error);
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
 
     return () => {
-      observer.disconnect();
+      if (observer) {
+        observer.disconnect();
+      }
       document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
     };
   }, []);

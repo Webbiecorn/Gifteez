@@ -19,7 +19,23 @@ interface GiftResultCardProps {
   imageFit?: 'cover' | 'contain';
   hideAmazonBadge?: boolean;
   candidateVariant?: boolean; // special compact alignment variant for comparison sections
+  onCompareToggle?: (gift: Gift) => void; // Callback for compare toggle
+  isInCompareList?: boolean; // Whether this gift is in compare list
 }
+
+// Helper to extract min/max price from price range string
+const extractPriceRange = (priceRange?: string): { min: number; max: number } | null => {
+  if (!priceRange) return null;
+  
+  // Match patterns like "€19 - €24" or "€50"
+  const match = priceRange.match(/€(\d+)(?:\s*-\s*€(\d+))?/);
+  if (!match) return null;
+  
+  const min = parseInt(match[1], 10);
+  const max = match[2] ? parseInt(match[2], 10) : min;
+  
+  return { min, max };
+};
 
 const GiftResultCard: React.FC<GiftResultCardProps> = ({
   gift,
@@ -32,9 +48,56 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
   imageFit = 'cover',
   hideAmazonBadge = false,
   candidateVariant = false,
+  onCompareToggle,
+  isInCompareList = false,
 }) => {
   const auth = useContext(AuthContext);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  // Add Product Schema for SEO
+  useEffect(() => {
+    if (isEmbedded || !gift.productName) return;
+    
+    const priceRange = extractPriceRange(gift.priceRange);
+    const productSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: gift.productName,
+      description: gift.description,
+      ...(gift.imageUrl && { image: gift.imageUrl }),
+      ...(priceRange && {
+        offers: {
+          '@type': 'AggregateOffer',
+          priceCurrency: 'EUR',
+          lowPrice: priceRange.min.toString(),
+          highPrice: priceRange.max.toString(),
+          availability: 'https://schema.org/InStock',
+          ...(gift.retailers && gift.retailers.length > 0 && {
+            url: gift.retailers[0].affiliateLink
+          })
+        }
+      })
+    };
+
+    const scriptId = `product-schema-${gift.productName.replace(/\s+/g, '-').toLowerCase()}`;
+    let script = document.head.querySelector(`#${scriptId}`) as HTMLScriptElement | null;
+    
+    if (!script) {
+      script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.id = scriptId;
+      document.head.appendChild(script);
+    }
+    
+    script.textContent = JSON.stringify(productSchema);
+
+    return () => {
+      // Clean up on unmount
+      if (script && script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, [gift, isEmbedded]);
 
   useEffect(() => {
     if (isReadOnly) return;
@@ -110,8 +173,30 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           ) : (
             <ImageWithFallback src={gift.imageUrl} alt={gift.productName} className="w-full h-full bg-white" fit={imageFit} />
           )}
+          
+          {/* Trending Badge */}
+          {gift.trendingBadge && (
+            <span className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 ${
+              gift.trendingBadge === 'trending' ? 'bg-gradient-to-r from-orange-500 to-red-500' :
+              gift.trendingBadge === 'hot-deal' ? 'bg-gradient-to-r from-red-600 to-pink-600' :
+              gift.trendingBadge === 'seasonal' ? 'bg-gradient-to-r from-purple-600 to-indigo-600' :
+              'bg-gradient-to-r from-yellow-500 to-amber-500'
+            }`}>
+              <span className="text-base">
+                {gift.trendingBadge === 'trending' ? '🔥' :
+                 gift.trendingBadge === 'hot-deal' ? '💥' :
+                 gift.trendingBadge === 'seasonal' ? '🎃' :
+                 '⭐'}
+              </span>
+              {gift.trendingBadge === 'trending' ? 'TRENDING' :
+               gift.trendingBadge === 'hot-deal' ? 'HOT DEAL' :
+               gift.trendingBadge === 'seasonal' ? 'SEIZOEN' :
+               'TOP RATED'}
+            </span>
+          )}
+          
           {(!hideAmazonBadge) && gift.retailers && gift.retailers.length > 0 && gift.retailers.every(r => r.name.toLowerCase().includes('amazon')) && (
-            <span className="absolute top-3 left-3 bg-[#232F3E] text-white text-xs font-semibold px-2 py-1 rounded shadow-md tracking-wide">
+            <span className={`absolute top-3 bg-[#232F3E] text-white text-xs font-semibold px-2 py-1 rounded shadow-md tracking-wide ${gift.trendingBadge ? 'right-3' : 'left-3'}`}>
               Alleen Amazon
             </span>
           )}
@@ -141,10 +226,37 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
       )}
 
       <div className={`p-6 flex flex-col flex-grow ${candidateVariant ? 'items-center text-center' : ''}`}>
+        {/* Compare Checkbox */}
+        {onCompareToggle && !isReadOnly && !isEmbedded && (
+          <div className="mb-3 flex items-center gap-2">
+            <input
+              type="checkbox"
+              id={`compare-${gift.productName}`}
+              checked={isInCompareList}
+              onChange={() => onCompareToggle(gift)}
+              className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
+            />
+            <label htmlFor={`compare-${gift.productName}`} className="text-sm text-gray-600 cursor-pointer">
+              Vergelijk dit cadeau
+            </label>
+          </div>
+        )}
+        
         <h3 className={`font-display text-xl font-bold text-primary ${candidateVariant ? 'text-center' : ''}`}>{gift.productName}</h3>
         {gift.priceRange && (
             <p className={`mt-1 font-bold text-primary text-lg ${candidateVariant ? 'text-center' : ''}`}>{gift.priceRange}</p>
         )}
+        
+        {/* Match Reason Badge */}
+        {gift.matchReason && (
+          <div className="mt-3 mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-secondary to-secondary/70 rounded-full border border-primary/10">
+              <span className="text-lg">✨</span>
+              <span className="text-xs font-semibold text-primary">{gift.matchReason}</span>
+            </div>
+          </div>
+        )}
+        
         <p className={`mt-2 text-gray-600 ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>{gift.description}</p>
         
     {gift.retailers && gift.retailers.length > 0 && (

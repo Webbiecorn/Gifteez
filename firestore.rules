@@ -1,6 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+
+    // Pinned deals - publiek lezen, beheerders schrijven
+    match /pinnedDeals/{configId} {
+      allow read: if true;
+      allow write: if isGifteezAdmin();
+    }
+    function isGifteezAdmin() {
+      return request.auth != null &&
+             request.auth.token.email != null &&
+             request.auth.token.email.matches('(?i)^(admin|kevin|beheer|test)@gifteez\\.nl$');
+    }
+
     // Each authenticated user can read/write their own user document
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
@@ -12,36 +25,24 @@ service cloud.firestore {
       allow read: if true;
       
       // Alleen admins kunnen blog posts maken/bewerken/verwijderen
-      allow write: if request.auth != null && 
-                      request.auth.token.email in [
-                        'admin@gifteez.nl',
-                        'kevin@gifteez.nl',
-                        'beheer@gifteez.nl',
-                        'test@gifteez.nl'
-                      ];
+      allow create, update, delete: if isGifteezAdmin();
     }
 
     // Amazon productbibliotheek - publieke leesrechten, admin write
     match /amazonProducts/{productId} {
       allow read: if true;
-      allow write: if request.auth != null &&
-                      request.auth.token.email in [
-                        'admin@gifteez.nl',
-                        'kevin@gifteez.nl',
-                        'beheer@gifteez.nl',
-                        'test@gifteez.nl'
-                      ];
+      allow write: if isGifteezAdmin();
+    }
+
+    // Deal categorieblokken - publiek lezen, beheerders schrijven
+    match /dealCategoryBlocks/{configId} {
+      allow read: if true;
+      allow write: if isGifteezAdmin();
     }
     
     // Analytics en andere admin data
     match /admin/{document=**} {
-      allow read, write: if request.auth != null && 
-                            request.auth.token.email in [
-                              'admin@gifteez.nl',
-                              'kevin@gifteez.nl',
-                              'beheer@gifteez.nl',
-                              'test@gifteez.nl'
-                            ];
+      allow read, write: if isGifteezAdmin();
     }
   }
 }

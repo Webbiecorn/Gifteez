@@ -37,10 +37,19 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
         {cart.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-lg shadow-md">
             <ShoppingCartIcon className="w-24 h-24 text-gray-300 mx-auto" />
-            <p className="mt-4 text-lg text-gray-600">Je winkelwagen is leeg.</p>
-            <div className="mt-6">
-              <Button variant="accent" onClick={() => navigateTo('home')}>
-                Ga naar Home
+            <h3 className="mt-4 font-display text-2xl font-bold text-primary">Je winkelwagen is leeg</h3>
+            <p className="mt-2 text-gray-600 max-w-md mx-auto">
+              Begin met shoppen en ontdek de beste cadeau-deals en inspiratie!
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+              <Button variant="primary" onClick={() => navigateTo('deals')}>
+                🔥 Bekijk Deals
+              </Button>
+              <Button variant="accent" onClick={() => navigateTo('giftFinder')}>
+                🎁 Start GiftFinder
+              </Button>
+              <Button variant="secondary" onClick={() => navigateTo('home')}>
+                🏠 Ga naar Home
               </Button>
             </div>
           </div>

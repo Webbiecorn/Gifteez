@@ -6,6 +6,10 @@ export type AmazonItem = {
   price?: { value: number; currency: string; display: string };
   prime?: boolean;
   savings?: { amount?: number; percent?: number };
+  rating?: number;
+  reviewCount?: number;
+  features?: string[];
+  description?: string;
 };
 
 const API_BASE = '';
@@ -22,8 +26,15 @@ export async function amazonSearch(q: string, opts?: { page?: number; minPrice?:
   return res.json() as Promise<{ items: AmazonItem[]; fetchedAtISO: string; cached?: boolean }>;
 }
 
-export async function amazonGetItem(asin: string) {
+export type AmazonItemResponse = {
+  item: AmazonItem | null;
+  fetchedAtISO: string;
+  cached?: boolean;
+  disabled?: boolean;
+};
+
+export async function amazonGetItem(asin: string): Promise<AmazonItemResponse> {
   const res = await fetch(`${API_BASE}/api/amazon-item/${encodeURIComponent(asin)}`);
   if (!res.ok) throw new Error(`Amazon get item failed: ${res.status}`);
-  return res.json() as Promise<{ item: AmazonItem | null; fetchedAtISO: string; cached?: boolean }>;
+  return res.json() as Promise<AmazonItemResponse>;
 }

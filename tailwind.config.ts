@@ -8,13 +8,55 @@ export default {
     '!./node_modules/**'
   ],
   safelist: [
-    // Ensure new purple gradient utilities are preserved in production build
+    // Background gradients
+    'bg-gradient-to-br',
     'bg-gradient-to-r',
+    'from-pink-100',
+    'from-pink-200',
+    'from-pink-400',
+    'from-purple-50',
+    'from-purple-100',
+    'from-purple-400',
+    'from-purple-600',
     'from-purple-900',
+    'from-rose-500',
+    'from-rose-600',
+    'from-orange-500',
+    'from-yellow-500',
+    'via-purple-50',
+    'via-purple-100',
+    'via-purple-400',
     'via-purple-700',
+    'to-blue-100',
+    'to-blue-200',
+    'to-blue-400',
+    'to-purple-400',
     'to-purple-600',
-    // Also keep solid fallback just in case
-    'bg-purple-800'
+    'to-purple-700',
+    'to-pink-400',
+    'to-pink-600',
+    'to-red-500',
+    'to-orange-500',
+    // Text gradients
+    'text-transparent',
+    'bg-clip-text',
+    // Solid fallbacks
+    'bg-purple-800',
+    'bg-white',
+    // Border colors
+    'border-purple-100',
+    'border-purple-200',
+    'border-purple-300',
+    'border-purple-400',
+    'border-orange-100',
+    'border-yellow-100',
+    'border-green-200',
+    'border-white',
+    // Hover states
+    'hover:from-rose-600',
+    'hover:to-purple-700',
+    'hover:border-purple-400',
+    'hover:scale-105',
   ],
   theme: {
     container: {
@@ -79,11 +121,46 @@ export default {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(0)' },
         },
+        'slide-in-right': {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        'gradient-xy': {
+          '0%, 100%': {
+            'background-size': '400% 400%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        },
+        'shimmer': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' }
+        },
+        'bounce-subtle': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        'scale-in': {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.5s ease-out forwards',
         'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
         'slide-in-left': 'slide-in-left 0.3s ease-out forwards',
+        'slide-in-right': 'slide-in-right 0.3s ease-out forwards',
+        'gradient-xy': 'gradient-xy 3s ease infinite',
+        'shimmer': 'shimmer 2s infinite',
+        'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
+        'scale-in': 'scale-in 0.3s ease-out forwards',
+      },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
       },
     },
   },

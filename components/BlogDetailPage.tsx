@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Meta from './Meta';
 import ImageWithFallback from './ImageWithFallback';
+import InternalLinkCTA from './InternalLinkCTA';
 import { BlogPost, NavigateTo, ContentBlock, ShowToast, ComparisonTableBlock, ProsConsBlock, VerdictBlock, FAQBlock, ImageBlock } from '../types';
 import { useBlogContext } from '../contexts/BlogContext';
 import BlogService from '../services/blogService';
@@ -225,6 +226,47 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
         [posts, post]
     );
 
+    const handleContentClick = useCallback(
+        (event: React.MouseEvent<HTMLElement>) => {
+            if (!post) {
+                return;
+            }
+
+            const target = event.target;
+            if (!(target instanceof Element)) {
+                return;
+            }
+
+            const anchor = target.closest('a');
+            if (!anchor) {
+                return;
+            }
+
+            const hrefValue = anchor.getAttribute('href') ?? '';
+            if (!hrefValue) {
+                return;
+            }
+
+            const origin = typeof window !== 'undefined' ? window.location.origin : '';
+            const isInternalDownload = hrefValue.startsWith('/downloads/');
+            const isAbsoluteDownload = origin && hrefValue.startsWith(`${origin}/downloads/`);
+
+            if (!isInternalDownload && !isAbsoluteDownload) {
+                return;
+            }
+
+            const resourcePath = isAbsoluteDownload ? hrefValue.replace(origin, '') : hrefValue;
+            const label = anchor.textContent?.trim() || undefined;
+
+            gaDownloadResource(resourcePath, {
+                label,
+                slug: post.slug,
+                title: post.title,
+            });
+        },
+        [post]
+    );
+
     if (postsLoading || isFetching) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-muted-rose/30 to-white">
@@ -327,54 +369,13 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     }
   };
 
-    const socialLinks = [
-    { name: 'Facebook', icon: FacebookIcon, url: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}` },
-    { name: 'Twitter', icon: TwitterIcon, url: `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}` },
-    { name: 'WhatsApp', icon: WhatsAppIcon, url: `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}` }
-  ];
-  const headings = post.content.filter(block => block.type === 'heading') as {type: 'heading', content: string}[];
-  const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-
-        const handleContentClick = useCallback(
-            (event: React.MouseEvent<HTMLElement>) => {
-            if (!post) {
-                return;
-            }
-
-            const target = event.target;
-            if (!(target instanceof Element)) {
-                return;
-            }
-
-            const anchor = target.closest('a');
-            if (!anchor) {
-                return;
-            }
-
-            const hrefValue = anchor.getAttribute('href') ?? '';
-            if (!hrefValue) {
-                return;
-            }
-
-            const origin = typeof window !== 'undefined' ? window.location.origin : '';
-            const isInternalDownload = hrefValue.startsWith('/downloads/');
-            const isAbsoluteDownload = origin && hrefValue.startsWith(`${origin}/downloads/`);
-
-            if (!isInternalDownload && !isAbsoluteDownload) {
-                return;
-            }
-
-            const resourcePath = isAbsoluteDownload ? hrefValue.replace(origin, '') : hrefValue;
-            const label = anchor.textContent?.trim() || undefined;
-
-            gaDownloadResource(resourcePath, {
-                label,
-                slug: post.slug,
-                title: post.title,
-            });
-        },
-        [post]
-    );
+        const socialLinks = [
+            { name: 'Facebook', icon: FacebookIcon, url: `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}` },
+            { name: 'Twitter', icon: TwitterIcon, url: `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}` },
+            { name: 'WhatsApp', icon: WhatsAppIcon, url: `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}` }
+        ];
+        const headings = post.content.filter(block => block.type === 'heading') as {type: 'heading', content: string}[];
+        const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
     
     // Removed special-case preprocessing for legacy post 'vergelijking-draadloze-oordopjes'
     // (Content pruning September 2025)
@@ -561,10 +562,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     return (
         <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
                 <Meta 
-                    title={`${post.title} — Gifteez.nl`}
+                    title={`${post.title} | Gifteez Blog`}
                     description={post.excerpt}
                     canonical={`https://gifteez.nl/blog/${post.slug}`}
                     ogImage={post.imageUrl.startsWith('http') ? post.imageUrl : `https://gifteez.nl${post.imageUrl}`}
+                    type="article"
                 />
         {/* Print Styles */}
         <PrintStyles />
@@ -937,6 +939,29 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                         </div>
                     </div>
 
+                    {/* Internal Links - Related Content */}
+                    <div className="mt-16 mb-8">
+                        <h3 className="font-display text-2xl font-bold text-primary mb-6 text-center">
+                            📌 Ontdek meer op Gifteez
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <InternalLinkCTA
+                                to="/giftfinder"
+                                title="🎁 AI GiftFinder"
+                                description="Vind binnen 30 seconden het perfecte cadeau met onze slimme AI tool. Vul je budget, gelegenheid en interesses in voor gepersonaliseerde suggesties."
+                                icon="🤖"
+                                variant="primary"
+                            />
+                            <InternalLinkCTA
+                                to="/deals"
+                                title="🔥 Beste Deals"
+                                description="Bekijk dagelijks de beste cadeau deals van Coolblue en Amazon. Van tech gadgets tot lifestyle producten met de hoogste korting."
+                                icon="💰"
+                                variant="accent"
+                            />
+                        </div>
+                    </div>
+
                     {/* Newsletter Signup Section */}
                     <div className="mt-16 relative overflow-hidden rounded-3xl shadow-2xl bg-purple-800" data-newsletter-section>
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-900 via-purple-700 to-purple-600 opacity-95"></div>
@@ -1075,58 +1100,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                             </div>
                         </div>
                     </aside>
-                )}                <aside className="lg:col-span-4 mt-12 lg:mt-0">
-                    <div className="space-y-8 sticky top-28">
-                        {/* Share Section */}
-                        <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 bg-gradient-to-r from-accent to-accent-hover rounded-full flex items-center justify-center">
-                                    <ShareIcon className="w-5 h-5 text-white" />
-                                </div>
-                                <h3 className="font-display text-xl font-bold text-primary">Deel deze gids</h3>
-                            </div>
-                            <SocialShare 
-                                item={post} 
-                                type="blog" 
-                                variant="full"
-                            />
-                            
-                            {/* Share Statistics */}
-                            <div className="bg-gradient-to-r from-secondary to-muted-rose rounded-2xl p-4 border border-muted-rose/60">
-                                <div className="flex items-center justify-between mb-3">
-                                    <span className="text-sm font-medium text-gray-600">Totale shares</span>
-                                    <span className="text-lg font-bold text-accent">{Math.floor(Math.random() * 500) + 100}</span>
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 text-center">
-                                    <div className="bg-white rounded-lg p-2">
-                                        <div className="text-xs text-gray-500">Facebook</div>
-                                        <div className="font-bold text-accent">{Math.floor(Math.random() * 200) + 50}</div>
-                                    </div>
-                                    <div className="bg-white rounded-lg p-2">
-                                        <div className="text-xs text-gray-500">Twitter</div>
-                                        <div className="font-bold text-highlight">{Math.floor(Math.random() * 100) + 20}</div>
-                                    </div>
-                                    <div className="bg-white rounded-lg p-2">
-                                        <div className="text-xs text-gray-500">Pinterest</div>
-                                        <div className="font-bold text-primary">{Math.floor(Math.random() * 150) + 30}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            {/* Copy Link Button */}
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(window.location.href);
-                                    // You could add a toast notification here
-                                }}
-                                className="w-full mt-4 flex items-center justify-center gap-2 p-3 bg-gray-100 hover:bg-gray-200 rounded-2xl text-gray-700 hover:text-gray-900 transition-all duration-300 group"
-                            >
-                                <ShareIcon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                                <span className="text-sm font-semibold">Kopieer link</span>
-                            </button>
-                        </div>
-                    </div>
-                </aside>
+                )}
             </div>
 
             {/* Jump to Top Button */}
@@ -1150,7 +1124,11 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {posts.filter(p => p.slug !== post.slug).slice(0,2).map(rel => (
-                            <div key={rel.slug} className="bg-white rounded-2xl shadow-lg overflow-hidden group border border-gray-100 hover:shadow-xl transition-all duration-300">
+                            <div 
+                                key={rel.slug} 
+                                onClick={() => navigateTo('blogDetail', { slug: rel.slug })}
+                                className="bg-white rounded-2xl shadow-lg overflow-hidden group border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+                            >
                                 <div className="overflow-hidden h-40">
                                     <ImageWithFallback src={rel.imageUrl} alt={rel.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                 </div>
@@ -1158,9 +1136,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                                     <span className="inline-block text-[11px] font-semibold tracking-wide px-2 py-1 bg-muted-rose text-accent rounded-full mb-3 uppercase">{rel.category}</span>
                                     <h4 className="font-display text-lg font-bold text-primary leading-snug line-clamp-2 mb-3">{rel.title}</h4>
                                     <p className="text-sm text-gray-600 line-clamp-3 mb-4">{rel.excerpt}</p>
-                                    <button onClick={() => navigateTo('blogDetail', { slug: rel.slug })} className="mt-auto inline-flex items-center gap-2 text-accent font-semibold text-sm hover:underline underline-offset-4">
+                                    <div className="mt-auto inline-flex items-center gap-2 text-accent font-semibold text-sm group-hover:underline underline-offset-4">
                                         Lees meer <ChevronRightIcon className="w-4 h-4" />
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

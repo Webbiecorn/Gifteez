@@ -9,6 +9,9 @@ export interface AmazonItem {
   prime?: boolean;
   savings?: { amount?: number; percent?: number };
   rating?: number;
+  reviewCount?: number;
+  features?: string[];
+  description?: string;
 }
 
 export function isPaapiConfigured() {
@@ -80,6 +83,10 @@ export async function searchItems(params: { keywords: string; page?: number; min
       'Images.Primary.Large',
       'Images.Primary.Medium',
       'Images.Primary.Small',
+      'ItemInfo.Features',
+      'EditorialReviews.Entries',
+      'CustomerReviews.Count',
+      'CustomerReviews.StarRating',
       'Offers.Listings.Price',
       'Offers.Listings.SavingBasis',
       'Offers.Listings.ProgramEligibility'
@@ -93,6 +100,13 @@ export async function searchItems(params: { keywords: string; page?: number; min
   const items = (data.ItemsResult?.Items || []).map((it: any): AmazonItem => {
     const listing = it?.Offers?.Listings?.[0];
     const priceInfo = mapOffer(listing);
+    const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
+      ? it.ItemInfo.Features.DisplayValues.filter((value: any) => typeof value === 'string')
+      : undefined;
+    const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
+    const editorialContent = Array.isArray(editorialEntries) ? editorialEntries.find((entry: any) => entry?.Content)?.Content : undefined;
+    const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
+    const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
     return {
       asin: it?.ASIN,
       title: it?.ItemInfo?.Title?.DisplayValue,
@@ -103,6 +117,10 @@ export async function searchItems(params: { keywords: string; page?: number; min
         large: it?.Images?.Primary?.Large?.URL,
       },
       ...priceInfo,
+      rating: typeof starRating === 'number' ? starRating : undefined,
+      reviewCount,
+      features,
+      description: typeof editorialContent === 'string' ? editorialContent : undefined,
     };
   });
   return { items, fetchedAtISO: new Date().toISOString() };
@@ -119,6 +137,10 @@ export async function getItem(asin: string) {
       'Images.Primary.Large',
       'Images.Primary.Medium',
       'Images.Primary.Small',
+      'ItemInfo.Features',
+      'EditorialReviews.Entries',
+      'CustomerReviews.Count',
+      'CustomerReviews.StarRating',
       'Offers.Listings.Price',
       'Offers.Listings.SavingBasis',
       'Offers.Listings.ProgramEligibility'
@@ -129,6 +151,13 @@ export async function getItem(asin: string) {
   if (!it) return { item: null, fetchedAtISO: new Date().toISOString() };
   const listing = it?.Offers?.Listings?.[0];
   const priceInfo = mapOffer(listing);
+  const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
+    ? it.ItemInfo.Features.DisplayValues.filter((value: any) => typeof value === 'string')
+    : undefined;
+  const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
+  const editorialContent = Array.isArray(editorialEntries) ? editorialEntries.find((entry: any) => entry?.Content)?.Content : undefined;
+  const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
+  const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
   const item: AmazonItem = {
     asin: it?.ASIN,
     title: it?.ItemInfo?.Title?.DisplayValue,
@@ -139,6 +168,10 @@ export async function getItem(asin: string) {
       large: it?.Images?.Primary?.Large?.URL,
     },
     ...priceInfo,
+    rating: typeof starRating === 'number' ? starRating : undefined,
+    reviewCount,
+    features,
+    description: typeof editorialContent === 'string' ? editorialContent : undefined,
   };
   return { item, fetchedAtISO: new Date().toISOString() };
 }

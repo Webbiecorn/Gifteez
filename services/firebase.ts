@@ -4,7 +4,7 @@ import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
-import { getAnalytics, isSupported, type Analytics } from 'firebase/analytics';
+import type { Analytics } from 'firebase/analytics';
 
 const cfg = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -38,6 +38,7 @@ export const initializeAnalyticsWithConsent = async (): Promise<void> => {
   }
 
   try {
+    const { isSupported, getAnalytics } = await import('firebase/analytics');
     const ok = await isSupported();
     if (ok && app) {
       analyticsInst = getAnalytics(app);

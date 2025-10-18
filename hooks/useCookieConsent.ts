@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CookiePreferences } from '../components/CookieBanner';
+import { initializeAnalyticsWithConsent } from '../services/firebase';
 
 // Extend window interface for gtag
 declare global {
@@ -119,14 +120,13 @@ export const useCookieConsent = () => {
 
 // Initialize Firebase Analytics
 const initializeAnalytics = async () => {
-  // Only initialize if not already done
-  if (typeof window !== 'undefined') {
-    try {
-      // Import the initialization function dynamically to avoid circular dependencies
-      const { initializeAnalyticsWithConsent } = await import('../services/firebase');
-      await initializeAnalyticsWithConsent();
-    } catch (error) {
-      console.error('Failed to initialize analytics:', error);
-    }
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    await initializeAnalyticsWithConsent();
+  } catch (error) {
+    console.error('Failed to initialize analytics:', error);
   }
 };

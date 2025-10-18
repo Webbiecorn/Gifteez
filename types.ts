@@ -1,5 +1,5 @@
 import type React from 'react';
-export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | /* 'shop' | */ 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy' | 'admin';
+export type Page = 'home' | 'giftFinder' | 'categories' | 'blog' | 'favorites' | 'blogDetail' | 'contact' | 'about' | 'login' | 'signup' | 'account' | 'quiz' | 'download' | /* 'shop' | */ 'cart' | 'checkoutSuccess' | 'deals' | 'disclaimer' | 'privacy' | 'admin' | 'adminDealsPreview';
 
 export type NavigateTo = (page: Page, data?: any) => void;
 
@@ -59,6 +59,8 @@ export interface Gift {
   gender?: 'male' | 'female' | 'unisex';
   popularity?: number;
   availability?: 'in-stock' | 'pre-order' | 'out-of-stock';
+  matchReason?: string; // Why this gift matches the search criteria
+  trendingBadge?: 'trending' | 'hot-deal' | 'seasonal' | 'top-rated' | null; // Badge type
 }
 
 export interface Testimonial {

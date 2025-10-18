@@ -16,7 +16,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
   const { preferences, updatePreferences } = useCookieConsent();
 
   return (
-  <footer className="relative mt-24 overflow-hidden border-t border-muted-rose/70 bg-gradient-to-b from-secondary via-light-bg/60 to-white">
+  <footer className="relative mt-24 overflow-hidden border-t border-muted-rose/70 bg-gradient-to-b from-secondary via-light-bg/60 to-white" role="contentinfo" aria-label="Site footer">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
       <div className="absolute inset-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_top_left,#f43f5e22,transparent_60%)]"></div>
       <div className="absolute inset-y-0 right-[-20%] w-2/3 pointer-events-none opacity-70 bg-[radial-gradient(circle_at_top_right,#fb923c1c,transparent_65%)]"></div>
@@ -26,15 +26,15 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
           {/* Brand */}
           <div className="col-span-1 lg:col-span-2">
             <div className="inline-flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3 shadow-sm ring-1 ring-white/60 backdrop-blur">
-              <Logo alt="Gifteez.nl" className="h-12 w-auto" priority />
+              <Logo alt="Gifteez.nl - AI Gift Finder voor het perfecte cadeau" className="h-12 w-auto" priority />
             </div>
             <p className="mt-6 text-primary/75 leading-relaxed mb-6 max-w-md">
               Vind binnen seconden een persoonlijk cadeau-idee met AI. Minder zoeken, meer geven.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-3" role="list" aria-label="Social media links">
               <a
                 href={socialLinks.instagram}
-                aria-label="Instagram"
+                aria-label="Volg ons op Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group p-3 rounded-xl bg-white/90 shadow-sm ring-1 ring-muted-rose hover:ring-accent/60 hover:bg-white transition-all duration-300"
@@ -43,7 +43,7 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
               </a>
               <a
                 href={socialLinks.pinterest}
-                aria-label="Pinterest"
+                aria-label="Volg ons op Pinterest"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group p-3 rounded-xl bg-white/90 shadow-sm ring-1 ring-muted-rose hover:ring-accent/60 hover:bg-white transition-all duration-300"
@@ -56,45 +56,49 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
           {/* Navigate */}
           <div>
             <h4 className="font-semibold text-primary mb-5 text-sm tracking-[0.2em] uppercase">Ontdek</h4>
-            <ul className="space-y-3 text-sm text-primary/75">
-              {[
-                ['giftFinder','🎯','GiftFinder'],
-                ['quiz','❓','Cadeau Quiz'],
-                ['deals','🔥','Deals'],
-                ['blog','📝','Blog'],
-                ['about','ℹ️','Over Ons'],
-                ['contact','✉️','Contact']
-              ].map(([page, icon, label]) => (
-                <li key={page}>
-                  <button onClick={() => navigateTo(page as any)} className="group flex items-center gap-2 hover:text-accent transition-colors">
-                    <span className="text-xs" aria-hidden="true">{icon}</span>
-                    <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-accent group-hover:after:w-full after:transition-all">{label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            <nav aria-label="Footer navigatie">
+              <ul className="space-y-3 text-sm text-primary/75">
+                {[
+                  ['giftFinder','🎯','GiftFinder'],
+                  ['quiz','❓','Cadeau Quiz'],
+                  ['deals','🔥','Deals'],
+                  ['blog','📝','Blog'],
+                  ['about','ℹ️','Over Ons'],
+                  ['contact','✉️','Contact']
+                ].map(([page, icon, label]) => (
+                  <li key={page}>
+                    <button onClick={() => navigateTo(page as any)} aria-label={`Ga naar ${label}`} className="group flex items-center gap-2 hover:text-accent transition-colors">
+                      <span className="text-xs" aria-hidden="true">{icon}</span>
+                      <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-accent group-hover:after:w-full after:transition-all">{label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           {/* Service */}
           <div>
             <h4 className="font-semibold text-primary mb-5 text-sm tracking-[0.2em] uppercase">Service</h4>
-            <ul className="space-y-3 text-sm text-primary/75">
-              <li>
-                <button onClick={() => navigateTo('disclaimer')} className="hover:text-accent transition-colors flex items-center gap-2">
-                  <span className="text-xs" aria-hidden="true">📄</span> Disclaimer
-                </button>
-              </li>
-              <li>
-                <button onClick={() => navigateTo('privacy')} className="hover:text-accent transition-colors flex items-center gap-2">
-                  <span className="text-xs" aria-hidden="true">🔒</span> Privacybeleid
-                </button>
-              </li>
-              <li>
-                <button onClick={() => setShowPreferences(true)} className="hover:text-accent transition-colors flex items-center gap-2">
-                  <TargetIcon className="w-4 h-4" /> Cookie Instellingen
-                </button>
-              </li>
-            </ul>
+            <nav aria-label="Service links">
+              <ul className="space-y-3 text-sm text-primary/75">
+                <li>
+                  <button onClick={() => navigateTo('disclaimer')} aria-label="Lees onze disclaimer" className="hover:text-accent transition-colors flex items-center gap-2">
+                    <span className="text-xs" aria-hidden="true">📄</span> Disclaimer
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigateTo('privacy')} aria-label="Lees ons privacybeleid" className="hover:text-accent transition-colors flex items-center gap-2">
+                    <span className="text-xs" aria-hidden="true">🔒</span> Privacybeleid
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setShowPreferences(true)} aria-label="Beheer cookie instellingen" className="hover:text-accent transition-colors flex items-center gap-2">
+                    <TargetIcon className="w-4 h-4" /> Cookie Instellingen
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
 

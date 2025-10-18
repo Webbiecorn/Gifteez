@@ -6,6 +6,9 @@ import { MailIcon, InstagramIcon, PinterestIcon, SpinnerIcon, QuestionMarkCircle
 import { socialLinks } from '../socialLinks';
 import { pinterestPageVisit, pinterestLead } from '../services/pinterestTracking';
 import { gaLead, gaPageView } from '../services/googleAnalytics';
+import Meta from './Meta';
+import Breadcrumbs from './Breadcrumbs';
+import rateLimitService from '../services/rateLimitService';
 
 interface ContactPageProps {
   showToast: ShowToast;
@@ -51,6 +54,16 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setServerError(null);
+    
+    // Rate limiting check
+    const rateLimitKey = `contact:${formData.email || 'anonymous'}`;
+    if (!rateLimitService.isAllowed(rateLimitKey, 'contact')) {
+      const timeUntilReset = Math.ceil(rateLimitService.getTimeUntilReset(rateLimitKey) / 1000 / 60);
+      setServerError(`Te veel verzoeken. Probeer het over ${timeUntilReset} minuten opnieuw.`);
+      showToast(`Rate limit bereikt. Wacht ${timeUntilReset} minuten.`);
+      return;
+    }
+    
     if (!validate()) return;
     setFormStatus('submitting');
     try {
@@ -97,48 +110,121 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary via-blue-500 to-indigo-600 text-white overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
-          <div className="absolute top-1/4 right-20 w-24 h-24 bg-white rounded-full"></div>
-          <div className="absolute bottom-20 left-1/4 w-40 h-40 bg-white rounded-full"></div>
-          <div className="absolute bottom-10 right-10 w-20 h-20 bg-white rounded-full"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white rounded-full opacity-5"></div>
+    <>
+      <Meta 
+        title="Contact - Neem contact op met Gifteez | Vragen & Support"
+        description="Heb je vragen over Gifteez? Neem contact met ons op via het contactformulier of sociale media. We helpen je graag met cadeau-advies, technische vragen of feedback."
+      />
+      <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
+      
+      <Breadcrumbs 
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Contact' }
+        ]}
+      />
+      
+      {/* Hero Section - Modern Clean Design */}
+      <section className="relative bg-gradient-to-br from-rose-500 via-primary to-orange-600 overflow-hidden">
+        {/* Animated Background Pattern */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
+          <div className="absolute top-20 right-10 w-72 h-72 bg-white rounded-full blur-3xl opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-10 left-10 w-96 h-96 bg-yellow-300 rounded-full blur-3xl opacity-10 animate-pulse" style={{ animationDelay: '1s' }}></div>
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-              <MailIcon className="w-10 h-10 text-white" />
-            </div>
-            <h1 className="typo-h1 mb-6 leading-tight text-white">
-              Neem
-              <span className="block bg-gradient-to-r from-yellow-300 to-orange-400 bg-clip-text text-transparent">
-                Contact
-              </span>
-              Op
-            </h1>
-            <p className="typo-lead text-white/90 max-w-3xl mx-auto mb-8">
-              Vragen, opmerkingen of suggesties? We horen graag van je! Stuur ons een berichtje en we nemen zo snel mogelijk contact met je op.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <CheckIcon className="w-4 h-4" />
-                <span>Snelle Reactie</span>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 md:pt-16 md:pb-20 relative z-10">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              {/* Left Column - Content */}
+              <div className="text-white">
+                <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 text-sm font-semibold">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>We zijn online</span>
+                </div>
+                
+                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                  Laten we samen
+                  <span className="block bg-gradient-to-r from-yellow-200 via-yellow-300 to-orange-300 bg-clip-text text-transparent mt-2">
+                    iets moois maken
+                  </span>
+                </h1>
+                
+                <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
+                  Heb je een vraag, feedback of wil je gewoon een vriendelijk praatje maken? We staan voor je klaar!
+                </p>
+
+                {/* Contact Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-8">
+                  <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-2xl md:text-3xl font-bold mb-1">{'<24u'}</div>
+                    <div className="text-xs md:text-sm text-white/80">Reactietijd</div>
+                  </div>
+                  <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-2xl md:text-3xl font-bold mb-1">100%</div>
+                    <div className="text-xs md:text-sm text-white/80">Persoonlijk</div>
+                  </div>
+                  <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <div className="text-2xl md:text-3xl font-bold mb-1">24/7</div>
+                    <div className="text-xs md:text-sm text-white/80">Formulier</div>
+                  </div>
+                </div>
+
+                {/* Social Links */}
+                <div className="flex items-center gap-4">
+                  <span className="text-sm text-white/80">Volg ons ook op:</span>
+                  <a
+                    href={socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center hover:bg-white/30 transition-all duration-200 border border-white/20"
+                    aria-label="Instagram"
+                  >
+                    <InstagramIcon className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-200" />
+                  </a>
+                  <a
+                    href={socialLinks.pinterest}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center hover:bg-white/30 transition-all duration-200 border border-white/20"
+                    aria-label="Pinterest"
+                  >
+                    <PinterestIcon className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-200" />
+                  </a>
+                </div>
               </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <QuestionMarkCircleIcon className="w-4 h-4" />
-                <span>Altijd Helpen</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <MailIcon className="w-4 h-4" />
-                <span>Persoonlijk</span>
+
+              {/* Right Column - Visual Element */}
+              <div className="hidden lg:block">
+                <div className="relative">
+                  {/* Decorative Card Stack */}
+                  <div className="relative">
+                    <div className="absolute top-0 right-0 w-64 h-80 bg-white/10 backdrop-blur-sm rounded-3xl border border-white/20 transform rotate-6 shadow-2xl"></div>
+                    <div className="absolute top-4 right-4 w-64 h-80 bg-white/15 backdrop-blur-sm rounded-3xl border border-white/20 transform rotate-3 shadow-2xl"></div>
+                    <div className="relative w-64 h-80 bg-white/20 backdrop-blur-md rounded-3xl border border-white/30 shadow-2xl p-8 flex flex-col items-center justify-center">
+                      <div className="w-20 h-20 bg-gradient-to-br from-yellow-300 to-orange-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                        <MailIcon className="w-10 h-10 text-white" />
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-white mb-2">Stuur een</div>
+                        <div className="text-2xl font-bold text-yellow-300 mb-4">Berichtje! 💬</div>
+                        <div className="text-sm text-white/80 leading-relaxed">
+                          We reageren altijd binnen 24 uur
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+          </svg>
         </div>
       </section>
 
@@ -422,6 +508,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

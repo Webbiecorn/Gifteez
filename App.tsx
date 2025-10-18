@@ -25,6 +25,7 @@ const DealsPage = ReactLazy(() => import('./components/DealsPage'));
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
 const AdminPage = ReactLazy(() => import('./components/AdminPage'));
+const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'));
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
 import ErrorBoundary from './components/ErrorBoundary';
 import { useSEO } from './hooks/useSEO';
@@ -80,7 +81,8 @@ const App: React.FC = () => {
       case 'deals': return '/deals';
       case 'disclaimer': return '/disclaimer';
       case 'privacy': return '/privacy';
-      case 'admin': return '/admin';
+  case 'admin': return '/admin';
+  case 'adminDealsPreview': return '/admin/deals-preview';
       default: return '/';
     }
   };
@@ -100,7 +102,16 @@ const App: React.FC = () => {
       case 'favorites': setCurrentPage('favorites'); break;
       case 'contact': setCurrentPage('contact'); break;
       case 'about': setCurrentPage('about'); break;
-      case 'admin': setCurrentPage('admin'); break;
+      case 'admin':
+        if (second === 'deals-preview') {
+          setCurrentPage('adminDealsPreview');
+        } else {
+          setCurrentPage('admin');
+        }
+        break;
+      case 'admin-deals-preview':
+        setCurrentPage('adminDealsPreview');
+        break;
       case 'login': setCurrentPage('login'); break;
       case 'signup': setCurrentPage('signup'); break;
       case 'account': setCurrentPage('account'); break;
@@ -172,6 +183,7 @@ const App: React.FC = () => {
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Deals & Aanbiedingen',
+        adminDealsPreview: 'Admin deals preview',
         disclaimer: 'Disclaimer — Gifteez.nl',
         privacy: 'Privacybeleid — Gifteez.nl'
       };
@@ -186,7 +198,8 @@ const App: React.FC = () => {
         quiz: 'Doe de cadeau quiz en ontdek welk type cadeau het beste past.',
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
         shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
-        deals: 'Pak de beste actuele cadeau deals en aanbiedingen.'
+        deals: 'Pak de beste actuele cadeau deals en aanbiedingen.',
+        adminDealsPreview: 'Controleer als admin de live deals-selectie van Gifteez.'
       };
       const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
       metaDesc.setAttribute('content', descriptions[page] || 'Vind snel het perfecte cadeau met de AI GiftFinder, inspiratie, gidsen en deals.');
@@ -253,6 +266,8 @@ const App: React.FC = () => {
         return <CartPage navigateTo={navigateTo} showToast={showToast} />;
       case 'admin':
         return <AdminPage navigateTo={navigateTo} />;
+      case 'adminDealsPreview':
+        return <AdminDealsPreviewPage navigateTo={navigateTo} />;
       case 'checkoutSuccess':
         return <CheckoutSuccessPage navigateTo={navigateTo} />;
       case 'deals':
@@ -292,12 +307,8 @@ const App: React.FC = () => {
         <Layout>
           <div key={`${currentPage}-${currentPostSlug}`} className="flex-grow animate-fade-in">
             <React.Suspense fallback={
-              <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <BlogCardSkeleton />
-                  <BlogCardSkeleton />
-                  <BlogCardSkeleton />
-                </div>
+              <div className="flex items-center justify-center py-24">
+                <LoadingSpinner size="lg" message="Pagina laden…" />
               </div>
             }>
               {renderPage()}

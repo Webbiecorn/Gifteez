@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
 
-# Crawl-delay is optioneel; vaak niet nodig. Ontgrendel indien je servers snel vollopen.
-# Crawl-delay: 2
-
 Sitemap: https://gifteez.nl/sitemap.xml

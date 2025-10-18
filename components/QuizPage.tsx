@@ -13,6 +13,7 @@ import { blogPosts as staticBlogPosts } from '../data/blogData';
 import Button from './Button';
 import NewsletterSignup from './NewsletterSignup';
 import QuizShareCard from './QuizShareCard';
+import Meta from './Meta';
 import {
   GiftIcon,
   SparklesIcon,
@@ -353,7 +354,12 @@ const QuizPage: React.FC<QuizPageProps> = ({ navigateTo }) => {
 
   if (step === 'intro') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-rose-50/70">
+      <>
+        <Meta 
+          title="Cadeau Quiz - Ontdek jouw perfecte cadeau stijl | Gifteez"
+          description="Doe de Gifteez Cadeau Quiz en ontdek welke cadeaus het beste bij jou passen. Krijg persoonlijke aanbevelingen gebaseerd op jouw voorkeuren, budget en gelegenheid."
+        />
+        <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-rose-50/70">
         <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-pink-100 text-primary">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute -top-10 left-0 h-72 w-72 rounded-full bg-rose-200/50 blur-3xl" aria-hidden="true" />
@@ -485,6 +491,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ navigateTo }) => {
           </div>
         </section>
       </div>
+      </>
     );
   }
 

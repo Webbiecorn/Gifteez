@@ -2,198 +2,278 @@
 import React, { useState, FormEvent, useEffect, useMemo } from 'react';
 import { Container } from './layout/Container';
 import ImageWithFallback from './ImageWithFallback';
-import PlannerIllustration from './PlannerIllustration';
 import LazyViewport from './LazyViewport';
-import { topicImage, Topics } from '../services/images';
 import { Testimonial, NavigateTo } from '../types';
 import Button from './Button';
 import TestimonialCard from './TestimonialCard';
 import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon, CalendarIcon } from './IconComponents';
-import AmazonTeaser from './AmazonTeaser';
-import QuizIllustration from './QuizIllustration';
-import { gaPageView } from '../services/googleAnalytics';
-import { pinterestPageVisit } from '../services/pinterestTracking';
 import { useBlogContext } from '../contexts/BlogContext';
+import { BlogPostSkeleton } from './HomePageSkeletons';
 
 interface HomePageProps {
   navigateTo: NavigateTo;
 }
 
-const HERO_MASCOT_VERSION = 'v20250928-new';
-
-const curatedCollections = [
-  {
-    title: 'Top Cadeaus voor Foodies',
-    description: 'Verras de thuiskok of fijnproever met deze culinaire toppers.',
-    img: '/images/collection-foodie.jpg'
-  },
-  {
-    title: 'Brievenbuscadeaus',
-    description: 'Een kleine verrassing die altijd past. Perfect om iemand zomaar te laten weten dat je aan ze denkt.',
-    img: '/images/collection-mailbox.jpg'
-  },
-  {
-    title: 'Voor de Reiziger',
-    description: 'Handige en inspirerende cadeaus voor de avonturier in je leven.',
-    img: '/images/collection-travel.jpg'
-  }
-];
-
 const testimonials: Testimonial[] = [
   { quote: "Super handige tool, vond in 1 minuut iets voor mijn zus. Een echte aanrader!", author: "Linda de Vries" },
   { quote: "De AI GiftFinder is geniaal. Nooit meer keuzestress voor verjaardagen.", author: "Mark Jansen" },
+  { quote: "Eindelijk een site die begrijpt wat ik zoek. Binnen 30 seconden had ik 5 perfecte ideeën!", author: "Sophie van Dijk" },
+  { quote: "De deals sectie heeft me zoveel geld bespaard. Echt geweldige prijzen!", author: "Thomas Bakker" },
+  { quote: "Ik gebruik Gifteez nu voor alle cadeaus. De quiz is super leuk en accuraat!", author: "Emma Peters" },
+  { quote: "Als je niet weet wat te geven, moet je hier zijn. Simpel, snel en effectief.", author: "Ruben Visser" },
 ];
 
 const recipients = ["Partner", "Vriend(in)", "Familielid", "Collega", "Kind"];
+
+const getReadingTimeMinutes = (text: string): number => {
+  const words = text ? text.trim().split(/\s+/).length : 0;
+  return Math.max(1, Math.round(words / 200));
+};
+
+
 const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
-  const { posts: blogPosts } = useBlogContext();
+  const { posts: blogPosts, loading: blogLoading } = useBlogContext();
 
-  const trendingPosts = useMemo(() => blogPosts.slice(0, 3), [blogPosts]);
-
-  const latestPosts = useMemo(() => {
-    const trendingSlugs = new Set(trendingPosts.map((post) => post.slug));
-    const remaining = blogPosts.filter((post) => !trendingSlugs.has(post.slug));
-    return remaining.slice(0, 3);
-  }, [blogPosts, trendingPosts]);
-
-  const getReadingTimeMinutes = (text: string) => {
-    if (!text) return 1;
-    const words = text.split(/\s+/).filter(Boolean).length;
-    return Math.max(1, Math.ceil(words / 200));
-  };
-  // Pinterest PageVisit tracking for homepage
-  useEffect(() => {
-    pinterestPageVisit('homepage', `home_${Date.now()}`);
-    // Google Analytics pageview tracking
-    gaPageView('/', 'Gifteez.nl - AI Gift Finder');
-  }, []);
   const [previewRecipient, setPreviewRecipient] = useState<string>(recipients[0]);
   const [newsletterEmail, setNewsletterEmail] = useState('');
 
-  // Basic SEO meta for home page
+  const trendingPosts = useMemo(() => blogPosts.slice(0, 3), [blogPosts]);
+  const latestPosts = useMemo(() => blogPosts.slice(0, 3), [blogPosts]);
+
   useEffect(() => {
     document.title = 'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI';
+
     const ensure = (selector: string, create: () => HTMLElement) => {
       let el = document.head.querySelector(selector) as HTMLElement | null;
-      if (!el) { el = create(); document.head.appendChild(el); }
+      if (!el) {
+        el = create();
+        document.head.appendChild(el);
+      }
       return el;
     };
+
     const description = 'Gebruik de AI GiftFinder om razendsnel een persoonlijk cadeau-idee te vinden voor elke gelegenheid en elk budget.';
     const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
     metaDesc.setAttribute('content', description);
-    const canonical = ensure('link[rel="canonical"]', () => { const l = document.createElement('link'); l.rel='canonical'; return l; });
+
+    const canonical = ensure('link[rel="canonical"]', () => {
+      const link = document.createElement('link');
+      link.rel = 'canonical';
+      return link;
+    });
     canonical.setAttribute('href', window.location.origin + '/');
-    const setMeta = (attr: 'name'|'property', key: string, content: string) => {
-      const sel = attr === 'name' ? `meta[name="${key}"]` : `meta[property="${key}"]`;
-      const el = ensure(sel, () => { const m = document.createElement('meta'); m.setAttribute(attr, key); return m; });
-      el.setAttribute('content', content);
+
+    const setMeta = (attr: 'name' | 'property', key: string, content: string) => {
+      const selector = attr === 'name' ? `meta[name="${key}"]` : `meta[property="${key}"]`;
+      const element = ensure(selector, () => {
+        const meta = document.createElement('meta');
+        meta.setAttribute(attr, key);
+        return meta;
+      });
+      element.setAttribute('content', content);
     };
-    setMeta('property','og:title','Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI');
-    setMeta('property','og:description', description);
-    setMeta('property','og:type','website');
-    setMeta('property','og:url', window.location.origin + '/');
-    setMeta('property','og:image', window.location.origin + '/og-image.png');
-    setMeta('name','twitter:card','summary_large_image');
-    setMeta('name','twitter:title','Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI');
-    setMeta('name','twitter:description', description);
-    setMeta('name','twitter:image', window.location.origin + '/og-image.png');
+
+    setMeta('property', 'og:title', 'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI');
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:type', 'website');
+    setMeta('property', 'og:url', window.location.origin + '/');
+    setMeta('property', 'og:image', window.location.origin + '/og-image.png');
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', 'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI');
+    setMeta('name', 'twitter:description', description);
+    setMeta('name', 'twitter:image', window.location.origin + '/og-image.png');
   }, []);
 
-  const handleNewsletterSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleNewsletterSubmit = (event: FormEvent) => {
+    event.preventDefault();
     if (newsletterEmail && /\S+@\S+\.\S+/.test(newsletterEmail)) {
-      // In a real app, you'd send this to your backend
-      console.log("Subscribing email:", newsletterEmail);
+      console.log('Subscribing email:', newsletterEmail);
       navigateTo('download');
     }
   };
 
   return (
-    <div className="space-y-24 pb-24">
+    <div className="space-y-20 pb-20">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-pink-50">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -left-24 h-80 w-80 rounded-full bg-orange-200/30 blur-3xl" aria-hidden="true" />
-          <div className="absolute -bottom-32 right-1/3 h-96 w-96 rounded-full bg-pink-200/20 blur-3xl" aria-hidden="true" />
-          <div className="absolute top-16 right-12 h-72 w-72 rounded-full bg-red-200/40 blur-3xl" aria-hidden="true" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#fdf2ff] via-[#f3efff] to-[#eef7ff]">
+        <div className="pointer-events-none absolute -left-20 top-20 h-64 w-64 rounded-full bg-pink-200/30 blur-3xl"></div>
+        <div className="pointer-events-none absolute -right-24 bottom-10 h-72 w-72 rounded-full bg-purple-200/30 blur-3xl"></div>
+        
+        {/* Decorative floor with confetti pattern */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-64 overflow-hidden">
+          <style>{`
+            .confetti-floor {
+              background-image: 
+                radial-gradient(circle, rgba(244, 114, 182, 0.4) 1.5px, transparent 1.5px),
+                radial-gradient(circle, rgba(147, 51, 234, 0.4) 1.5px, transparent 1.5px),
+                radial-gradient(circle, rgba(251, 191, 36, 0.4) 1.5px, transparent 1.5px),
+                radial-gradient(circle, rgba(251, 113, 133, 0.4) 1.5px, transparent 1.5px),
+                radial-gradient(circle, rgba(125, 211, 252, 0.4) 1.5px, transparent 1.5px);
+              background-size: 
+                80px 80px,
+                80px 80px,
+                80px 80px,
+                80px 80px,
+                80px 80px;
+              background-position: 
+                0 0,
+                20px 20px,
+                40px 10px,
+                60px 30px,
+                10px 40px;
+              transform: perspective(500px) rotateX(60deg);
+              transform-origin: bottom;
+              opacity: 0;
+              animation: fadeInFloor 1s ease-out forwards;
+            }
+            @keyframes fadeInFloor {
+              to { opacity: 1; }
+            }
+          `}</style>
+          <div className="confetti-floor absolute inset-0"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#fdf2ff]"></div>
         </div>
-        <Container size="xl" className="relative z-10 py-24 lg:py-32">
-          <div className="grid items-center gap-16 lg:grid-cols-2">
+
+        <Container size="xl" className="relative z-10 py-16 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
             <div className="space-y-8 text-center lg:text-left">
-              <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2 text-sm font-semibold text-red-600 shadow-sm shadow-red-100 lg:mx-0">
-                <span className="text-lg">🎁</span>
-                AI GiftFinder met persoonlijke touch
+              <div className="inline-flex items-center gap-3 rounded-full bg-white/80 px-6 py-2.5 text-sm font-semibold text-green-600 shadow-md backdrop-blur-lg border border-white/50">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400/80"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                </span>
+                AI-Powered Gift Discovery
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 leading-tight tracking-tight">
-                Vind het perfecte cadeau, <span className="text-red-500">moeiteloos</span>.
+
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight">
+                <span className="text-slate-900 block">Vind het</span>
+                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 bg-clip-text text-transparent block">perfecte cadeau</span>
+                <span className="text-slate-900 block">in 30 seconden</span>
               </h1>
-              <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
-                Elke dag nieuwe inspiratie, afgestemd op jouw ontvanger. Laat onze slimme Cadeauzoeker het voorwerk doen terwijl jij geniet van het verrassingseffect.
+
+              <p className="text-lg sm:text-xl text-slate-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                Laat onze AI 1000+ cadeaus scannen en ontvang direct een persoonlijke shortlist inclusief kooplinks en expert tips.
               </p>
-              <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-start">
+
+              <div className="grid gap-4 sm:grid-cols-2 text-left">
+                <div className="rounded-2xl bg-white/80 p-4 shadow-lg border border-white/60 backdrop-blur-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
+                      <QuestionMarkCircleIcon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">Slimme vragen</h3>
+                      <p className="text-xs text-slate-600">AI leest tussen de regels en begrijpt jouw ontvanger.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl bg-white/80 p-4 shadow-lg border border-white/60 backdrop-blur-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-100 text-rose-600">
+                      <TagIcon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">Live deals</h3>
+                      <p className="text-xs text-slate-600">Automatisch de beste prijzen en exclusieve kortingen.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl bg-white/80 p-4 shadow-lg border border-white/60 backdrop-blur-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 text-sky-600">
+                      <CalendarIcon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">Altijd actueel</h3>
+                      <p className="text-xs text-slate-600">Dagelijks aangevuld met seizoensfavorieten.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="rounded-2xl bg-white/80 p-4 shadow-lg border border-white/60 backdrop-blur-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                      <BookOpenIcon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-slate-900">Direct inspiratie</h3>
+                      <p className="text-xs text-slate-600">Voor elke gelegenheid en elk type ontvanger.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4 pt-2 lg:pt-4">
                 <Button
                   variant="accent"
                   onClick={() => navigateTo('giftFinder')}
-                  className="bg-red-500 hover:bg-red-600 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white text-white px-10 sm:px-12 py-4 sm:py-5 rounded-2xl font-semibold text-lg md:text-xl shadow-lg shadow-red-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
+                  className="text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    background: 'linear-gradient(135deg, #f43f5e, #9333ea)',
+                    boxShadow: '0 25px 55px -18px rgba(147, 51, 234, 0.45)'
+                  }}
                 >
-                  Start de Cadeauzoeker
+                  🎁 Start Gratis
                 </Button>
                 <button
                   type="button"
                   onClick={() => navigateTo('quiz')}
-                  className="flex items-center gap-2 rounded-2xl border border-red-200 bg-white/90 px-5 py-3 text-sm font-semibold text-red-600 shadow-sm transition hover:border-red-300 hover:bg-white hover:shadow-md"
+                  className="flex items-center gap-2 rounded-2xl border border-purple-200 bg-white/80 px-6 py-3.5 text-base font-semibold text-purple-700 shadow-lg transition hover:border-purple-300 hover:shadow-xl backdrop-blur-lg"
                 >
-                  🎯 Doe de Cadeau Quiz
+                  🎯 Doe de Quiz
                 </button>
               </div>
-              <div className="hidden flex-wrap items-center justify-center gap-6 text-left lg:justify-start sm:flex">
-                <div className="rounded-2xl bg-white/90 px-5 py-4 shadow-sm shadow-red-100">
-                  <div className="text-3xl font-black text-red-500">1000+</div>
-                  <div className="text-sm font-semibold text-gray-500">Cadeau ideeën</div>
+
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4 text-sm text-slate-600">
+                <div className="flex items-center gap-2">
+                  <svg className="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Gratis te gebruiken</span>
                 </div>
-                <div className="rounded-2xl bg-white/90 px-5 py-4 shadow-sm shadow-red-100">
-                  <div className="text-3xl font-black text-red-500">30</div>
-                  <div className="text-sm font-semibold text-gray-500">Seconden tot match</div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Beveiligd & veilig</span>
                 </div>
-                <div className="rounded-2xl bg-white/90 px-5 py-4 shadow-sm shadow-red-100">
-                  <div className="flex items-center gap-2 text-3xl font-black text-red-500">
-                    4.8
-                    <span className="text-base">⭐</span>
-                  </div>
-                  <div className="text-sm font-semibold text-gray-500">Gebruikersscore</div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-5 w-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span className="font-medium">50.000+ tevreden gebruikers</span>
                 </div>
               </div>
             </div>
-            <div className="relative flex justify-center lg:justify-center">
-              <div className="relative w-full max-w-[480px] -ml-4 lg:-ml-8">
-                {/* Floating decorative elements */}
-                <div className="hero-floating hero-floating--sparkle absolute -top-2 right-8 text-2xl" aria-hidden="true">✨</div>
-                <div className="hero-floating hero-floating--heart absolute top-6 right-10 text-xl" aria-hidden="true">❤️</div>
-                <div className="hero-floating hero-floating--star absolute bottom-16 -left-2 text-2xl" aria-hidden="true">🌟</div>
+
+            <div className="relative flex justify-center lg:justify-end">
+              <div className="relative w-full max-w-[500px] sm:max-w-[560px] lg:max-w-[620px] xl:max-w-[680px]">
+                {/* Animated glow effects */}
+                <div className="pointer-events-none absolute -inset-12 rounded-full bg-gradient-to-br from-rose-300/60 via-purple-300/50 to-amber-300/40 blur-3xl animate-pulse"></div>
+                <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-pink-200/50 via-purple-200/40 to-sky-200/30 blur-2xl"></div>
                 
-                <div className="hero-gift-container relative flex items-center justify-center">
-                  <div className="hero-aura absolute inset-0" aria-hidden="true"></div>
+                {/* Mascotte image with float animation */}
+                <div className="relative z-10 animate-float">
+                  <style>{`
+                    @keyframes float {
+                      0%, 100% { transform: translateY(0px); }
+                      50% { transform: translateY(-15px); }
+                    }
+                    .animate-float {
+                      animation: float 3s ease-in-out infinite;
+                    }
+                  `}</style>
                   <ImageWithFallback
-                    src={`/images/gifteez-mascotte-wavin.png?${HERO_MASCOT_VERSION}`}
-                    alt="Vrolijke Gifteez cadeaumascotte met rode strik"
-                    width={520}
-                    height={520}
+                    src="/images/mascotte-hero-final2.png"
+                    alt="Gifteez mascotte - vrolijk cadeau karakter"
+                    className="w-full h-auto drop-shadow-2xl"
                     fit="contain"
-                    className="hero-gift-wave relative z-10 w-full max-w-[380px] drop-shadow-[0_25px_30px_rgba(229,57,53,0.25)] hover:scale-105 transition-transform duration-500 cursor-pointer"
-                    showSkeleton
                   />
-                </div>
-                
-                {/* Animated shadow/podium */}
-                <div className="hero-podium relative flex w-full items-center justify-center">
-                  <div className="h-3 w-40 rounded-full bg-gradient-to-r from-rose-200 via-rose-100 to-amber-100 opacity-80 hero-shadow-pulse"></div>
                 </div>
               </div>
             </div>
           </div>
         </Container>
       </section>
-
       {/* Trending Guides */}
       <Container size="xl" className="opacity-0 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
         <div className="text-center mb-12">
@@ -201,7 +281,11 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
           <p className="typo-body text-slate-600 max-w-2xl mx-auto">Ontdek onze populairste gidsen voor cadeau-inspiratie</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {trendingPosts.length > 0 ? (
+          {blogLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <BlogPostSkeleton key={`trending-skeleton-${index}`} />
+            ))
+          ) : trendingPosts.length > 0 ? (
             trendingPosts.map((post, i) => {
               const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
                 month: 'short',
@@ -264,10 +348,10 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             </div>
           )}
         </div>
-  </Container>
+      </Container>
 
       {/* GiftFinder Preview */}
-  <section className="bg-gradient-to-br from-rose-50 via-white to-orange-50/40 py-24">
+      <section className="bg-gradient-to-br from-rose-50 via-white to-orange-50/40 py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             {/* Header Section */}
@@ -385,208 +469,267 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* Interactive Quiz CTA */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
-        <div className="relative bg-gradient-to-br from-primary via-primary to-red-700 text-white p-8 md:p-12 rounded-2xl shadow-2xl overflow-hidden">
-          {/* Decorative background pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-full translate-x-12 -translate-y-12"></div>
-            <div className="absolute bottom-0 left-1/4 w-20 h-20 bg-white rounded-full translate-y-10"></div>
-            <div className="absolute bottom-0 right-1/3 w-16 h-16 bg-white rounded-full translate-y-8"></div>
-          </div>
+      {/* Interactive Quiz CTA - Modern Redesign */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-24 opacity-0 animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+        {/* Decorative blur elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-gradient-to-br from-blue-500/10 to-indigo-500/10 blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 blur-3xl" />
+          <div className="absolute top-1/3 left-1/3 h-[32rem] w-[32rem] rounded-full bg-gradient-to-br from-indigo-500/5 to-blue-500/5 blur-3xl" />
+        </div>
 
-          <div className="relative z-10">
-            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-              <div className="flex-1 text-center lg:text-left">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-secondary rounded-full mb-6 mx-auto lg:mx-0 shadow-lg">
-                  <QuestionMarkCircleIcon className="w-10 h-10 text-primary"/>
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            {/* Two-column layout */}
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+              {/* Left side - Text content */}
+              <div>
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 text-sm font-semibold text-primary shadow-sm backdrop-blur-sm">
+                  <QuestionMarkCircleIcon className="h-4 w-4" />
+                  Twijfel je nog?
                 </div>
-                <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                
+                <h2 className="typo-h1 bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
                   Vind je het lastig kiezen?
                 </h2>
-                <p className="text-lg md:text-xl text-gray-100 max-w-2xl mx-auto lg:mx-0 leading-relaxed mb-8">
-                  Doe onze leuke Cadeau Quiz en ontdek in een paar klikken welk type cadeaus perfect passen bij jouw vriend(in), partner of familielid!
+                
+                <p className="typo-body mt-6 text-gray-700">
+                  Doe onze interactieve Cadeau Quiz en ontdek in slechts een paar minuten welk type cadeaus 
+                  perfect passen bij jouw vriend(in), partner of familielid. Geen eindeloos scrollen meer – 
+                  direct de juiste richting!
                 </p>
-                <div className="flex justify-center lg:justify-start">
+
+                {/* Features list */}
+                <ul className="mt-8 space-y-4">
+                  <li className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
+                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Snel & Leuk</span>
+                      <p className="text-sm text-gray-600">Binnen 2 minuten weet je welke cadeaus passen</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
+                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Gepersonaliseerde Tips</span>
+                      <p className="text-sm text-gray-600">Aanbevelingen op maat van de ontvanger</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
+                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-gray-900">Direct Resultaten</span>
+                      <p className="text-sm text-gray-600">Krijg meteen concrete cadeau-ideeën</p>
+                    </div>
+                  </li>
+                </ul>
+
+                {/* CTA Button */}
+                <div className="mt-10">
                   <Button
-                    variant="accent"
+                    variant="primary"
                     onClick={() => navigateTo('quiz')}
-                    className="px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                    className="group px-10 py-5 text-lg font-semibold shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
                   >
-                    Doe de Quiz
+                    <QuestionMarkCircleIcon className="h-6 w-6 transition-transform group-hover:scale-110" />
+                    Start de Quiz
                   </Button>
+                  
+                  <p className="mt-4 text-sm text-gray-600">
+                    Gratis & zonder account • Duurt 2 minuten
+                  </p>
                 </div>
               </div>
 
-              <div className="flex-1 max-w-md w-full">
+              {/* Right side - Quiz mascot image */}
+              <div className="relative">
+                <div className="relative overflow-hidden rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-900/5">
+                  {/* Decorative gradient border effect */}
+                  <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 opacity-20 blur" />
+                  
+                  <div className="relative">
+                    <img 
+                      src="/images/kwis-afbeelding.png" 
+                      alt="Quiz Mascot - Happy gift box character" 
+                      className="w-full h-auto drop-shadow-2xl transition-transform hover:scale-105 duration-300"
+                    />
+                  </div>
+                </div>
+
+                {/* Floating stat badge */}
+                <div className="absolute -bottom-6 -left-6 rounded-2xl bg-white p-4 shadow-xl ring-1 ring-gray-900/5">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
+                      <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-gray-900">5.000+</div>
+                      <div className="text-xs text-gray-600">Mensen deden de quiz</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Deals CTA Section - Modern Redesign */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 py-24 opacity-0 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
+        {/* Decorative blur elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-gradient-to-br from-primary/10 to-rose-500/10 blur-3xl" />
+          <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-gradient-to-br from-orange-500/10 to-amber-500/10 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[32rem] w-[32rem] rounded-full bg-gradient-to-br from-pink-500/5 to-orange-500/5 blur-3xl" />
+        </div>
+
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            {/* Header section */}
+            <div className="mb-16 text-center">
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/80 px-5 py-2.5 text-sm font-semibold text-primary shadow-sm backdrop-blur-sm">
+                <TagIcon className="h-4 w-4" />
+                Dagelijks bijgewerkt
+              </div>
+              
+              <h2 className="typo-h1 bg-gradient-to-r from-primary via-rose-600 to-orange-600 bg-clip-text text-transparent">
+                Deals & Top Cadeaus
+              </h2>
+              
+              <p className="typo-lead mx-auto mt-6 max-w-3xl text-gray-700">
+                Ontdek onze zorgvuldig geselecteerde collectie van de beste deals en populairste cadeaus. 
+                Handmatig gekozen door onze experts voor maximale waarde.
+              </p>
+            </div>
+
+            {/* Feature cards grid */}
+            <div className="mb-12 grid gap-6 md:grid-cols-3">
+              {/* Card 1 - Beste Prijzen */}
+              <div className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-green-500/10 to-emerald-500/10 blur-2xl transition-opacity group-hover:opacity-70" />
+                
                 <div className="relative">
-                  <div className="absolute -inset-4 bg-white/10 rounded-2xl blur-lg"></div>
-                  <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                    <QuizIllustration className="w-full h-auto drop-shadow-lg" />
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg transition-transform group-hover:scale-110">
+                    <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
                   </div>
+                  
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Beste Prijzen</h3>
+                  <p className="text-sm leading-relaxed text-gray-600">
+                    Onverslaanbare deals op kwaliteitscadeaus. Bespaar tot 50% op topmerken en bestsellers.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 2 - Top Kwaliteit */}
+              <div className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-amber-500/10 to-yellow-500/10 blur-2xl transition-opacity group-hover:opacity-70" />
+                
+                <div className="relative">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 shadow-lg transition-transform group-hover:scale-110">
+                    <svg className="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </div>
+                  
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Top Kwaliteit</h3>
+                  <p className="text-sm leading-relaxed text-gray-600">
+                    Alleen het beste van het beste. Producten met uitstekende reviews en hoge tevredenheidscores.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 3 - Expert Selectie */}
+              <div className="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg ring-1 ring-gray-900/5 transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-gradient-to-br from-purple-500/10 to-indigo-500/10 blur-2xl transition-opacity group-hover:opacity-70" />
+                
+                <div className="relative">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg transition-transform group-hover:scale-110">
+                    <svg className="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                  </div>
+                  
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Expert Selectie</h3>
+                  <p className="text-sm leading-relaxed text-gray-600">
+                    Handmatig geselecteerd door ons team. Elk cadeau getest op originaliteit en presentatie.
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Deals CTA Section */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
-        <div className="relative overflow-hidden">
-          {/* Animated background with multiple gradients */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 rounded-3xl"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-purple-500/20 via-transparent to-pink-500/20 rounded-3xl"></div>
-
-          {/* Floating geometric shapes */}
-          <div className="absolute top-8 left-8 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute top-16 right-16 w-16 h-16 bg-white/5 rounded-full blur-lg animate-pulse" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-12 left-12 w-12 h-12 bg-white/8 rounded-full blur-md animate-pulse" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute bottom-8 right-8 w-24 h-24 bg-white/6 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-
-          {/* Grid pattern overlay */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0)`,
-              backgroundSize: '40px 40px'
-            }}></div>
-          </div>
-
-          <div className="relative z-10 p-8 md:p-16">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-                {/* Enhanced icon with glow effect */}
-                <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl mb-8 shadow-2xl border border-white/20 group hover:bg-white/30 transition-all duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                  <TagIcon className="w-12 h-12 text-white relative z-10 group-hover:scale-110 transition-transform duration-300"/>
+            {/* Stats bar */}
+            <div className="mb-12 overflow-hidden rounded-2xl bg-white p-6 shadow-xl ring-1 ring-gray-900/5">
+              <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+                <div className="text-center">
+                  <div className="mb-1 text-3xl font-bold text-primary">1000+</div>
+                  <div className="text-sm text-gray-600">Actieve deals</div>
                 </div>
-
-                {/* Enhanced title with gradient text */}
-                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent leading-tight">
-                  Deals & Top Cadeaus
-                </h2>
-
-                {/* Enhanced description */}
-                <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-4 font-light">
-                  Ontdek onze zorgvuldig geselecteerde collectie van de
-                  <span className="font-semibold text-yellow-300"> beste deals </span>
-                  en
-                  <span className="font-semibold text-yellow-300"> populairste cadeaus</span>
-                </p>
-                <p className="text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-                  Uitgekozen door onze experts voor maximale kwaliteit en waarde
-                </p>
-              </div>
-
-              {/* Feature highlights */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div className="text-center group">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
-                    <span className="text-2xl">💰</span>
-                  </div>
-                  <h3 className="font-semibold text-white mb-2">Beste Prijzen</h3>
-                  <p className="text-white/80 text-sm">Onverslaanbare deals</p>
+                <div className="text-center">
+                  <div className="mb-1 text-3xl font-bold text-primary">50+</div>
+                  <div className="text-sm text-gray-600">Categorieën</div>
                 </div>
-                <div className="text-center group">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
-                    <span className="text-2xl">⭐</span>
-                  </div>
-                  <h3 className="font-semibold text-white mb-2">Top Kwaliteit</h3>
-                  <p className="text-white/80 text-sm">Alleen het beste</p>
+                <div className="text-center">
+                  <div className="mb-1 text-3xl font-bold text-primary">20+</div>
+                  <div className="text-sm text-gray-600">Webshops</div>
                 </div>
-                <div className="text-center group">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
-                    <span className="text-2xl">🎯</span>
-                  </div>
-                  <h3 className="font-semibold text-white mb-2">Expert Selectie</h3>
-                  <p className="text-white/80 text-sm">Professioneel gekozen</p>
+                <div className="text-center">
+                  <div className="mb-1 text-3xl font-bold text-primary">Dagelijks</div>
+                  <div className="text-sm text-gray-600">Vernieuwd</div>
                 </div>
-              </div>
-
-              {/* Enhanced CTA button */}
-              <div className="text-center">
-                <Button
-                  variant="primary"
-                  onClick={() => navigateTo('deals')}
-                  className="px-12 py-5 text-xl font-bold bg-gradient-to-r from-blue-800 to-blue-900 text-white hover:from-blue-900 hover:to-blue-800 shadow-2xl hover:shadow-blue-900/50 transform hover:scale-105 transition-all duration-500 border-4 border-blue-700 rounded-2xl backdrop-blur-sm"
-                >
-                  <span className="flex items-center gap-3 font-extrabold">
-                    Ontdek de Deals
-                    <span className="text-2xl animate-bounce">🚀</span>
-                  </span>
-                </Button>
-
-                {/* Subtle hint */}
-                <p className="text-white/60 text-sm mt-4 font-light">
-                  Meer dan 100+ cadeaus om uit te kiezen • Dagelijks bijgewerkt
-                </p>
               </div>
             </div>
-          </div>
 
-          {/* Bottom wave effect */}
-          <div className="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1200 120" className="w-full h-12 text-light-bg">
-              <path fill="currentColor" d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
-              <path fill="currentColor" d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
-              <path fill="currentColor" d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
-            </svg>
-          </div>
-        </div>
-      </section>
-
-      {/* Amazon Teaser Section */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '900ms' }}>
-        <AmazonTeaser
-          items={[
-            { title: 'JBL Tune 510BT On‑Ear Koptelefoon', imageUrl: 'https://m.media-amazon.com/images/I/61FUX7QmifS._AC_SX522_.jpg', affiliateUrl: 'https://www.amazon.nl/JBL-Tune-510BT-ear-Purebas-geluid/dp/B08WM1V5P1?tag=gifteez77-21' },
-            { title: 'LEGO Technic Formula E Porsche 99X (Pull-Back)', imageUrl: 'https://m.media-amazon.com/images/I/91XlsfEr61L._AC_SX679_.jpg', affiliateUrl: 'https://www.amazon.nl/LEGO-Electric-Pull-back-Speelgoed-42137/dp/B09BNXCN3R?tag=gifteez77-21' },
-            { title: 'Rituals Sakura Cadeauset', imageUrl: 'https://m.media-amazon.com/images/I/51alCigMozL._AC_SX679_.jpg', affiliateUrl: 'https://www.amazon.nl/Cadeauset-kersenbloesem-huidverzorgende-vernieuwende-eigenschappen/dp/B0B88MY4FJ?tag=gifteez77-21' },
-            { title: 'Philips Hue White Ambiance E27 (2‑Pack)', imageUrl: 'https://m.media-amazon.com/images/I/71efTkPojQL._AC_SX522_.jpg', affiliateUrl: 'https://www.amazon.nl/Philips-Hue-Standaard-Lamp-2-Pack/dp/B099NP74QF?tag=gifteez77-21' },
-          ]}
-          note="Amazon‑links geüpdatet. Tag: gifteez77-21."
-        />
-      </section>
-
-       {/* Shop CTA Section */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '1000ms' }}>
-        <div className="bg-gradient-to-r from-primary to-primary/90 text-white p-8 md:p-12 rounded-2xl shadow-2xl text-center overflow-hidden relative">
-          {/* Background elements */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 left-4 w-16 h-16 bg-white rounded-full"></div>
-            <div className="absolute top-8 right-8 w-12 h-12 bg-white rounded-full"></div>
-            <div className="absolute bottom-6 left-1/4 w-8 h-8 bg-white rounded-full"></div>
-            <div className="absolute bottom-4 right-1/3 w-10 h-10 bg-white rounded-full"></div>
-          </div>
-
-          <div className="relative z-10">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-              <BookOpenIcon className="w-10 h-10 text-white"/>
+            {/* CTA Button */}
+            <div className="text-center">
+              <Button
+                variant="primary"
+                onClick={() => navigateTo('deals')}
+                className="group px-10 py-5 text-lg font-semibold shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+              >
+                <TagIcon className="h-6 w-6 transition-transform group-hover:scale-110" />
+                Ontdek alle Deals
+              </Button>
+              
+              <p className="mt-4 text-sm text-gray-600">
+                Nieuw aanbod elke dag • Gratis verzending bij veel producten
+              </p>
             </div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Nieuw in de Winkel</h2>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-              Download ons premium e-book: "Het Jaar Rond Perfecte Cadeaus" en word een expert in het geven van geschenken!
-            </p>
-            <Button
-              variant="accent"
-              onClick={() => navigateTo('download')} // Temporarily redirect to download instead of shop
-              className="px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-            >
-              Download E-book
-            </Button>
           </div>
         </div>
       </section>
 
       {/* Latest Blog Posts Section */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '1200ms' }}>
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-up" style={{ animationDelay: '1000ms' }}>
         <div className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Laatste Blogs & Cadeaugidsen</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">Blijf op de hoogte van de nieuwste cadeau-trends en tips</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {latestPosts.length > 0 ? latestPosts.map((post, index) => (
+          {blogLoading ? (
+            // Show skeleton loaders while blog posts are loading
+            <>
+              <BlogPostSkeleton />
+              <BlogPostSkeleton />
+              <BlogPostSkeleton />
+            </>
+          ) : latestPosts.length > 0 ? latestPosts.map((post, index) => (
             <LazyViewport key={post.slug}>
               {(visible) => (
                 <div
@@ -695,19 +838,19 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
       </section>
 
 
-      {/* Testimonials */}
+      {/* Testimonials - Enhanced with 6 testimonials */}
       <section className="bg-gradient-to-b from-white to-light-bg">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 opacity-0 animate-fade-in-up" style={{ animationDelay: '1600ms' }}>
           <div className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Wat Gebruikers Zeggen</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">Ontdek waarom duizenden mensen Gifteez gebruiken voor hun cadeau-ideeën</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
                 className="bg-white rounded-2xl shadow-lg hover:shadow-2xl p-8 border border-gray-100 opacity-0 animate-fade-in-up transform hover:scale-105 transition-all duration-300"
-                style={{ animationDelay: `${1600 + index * 200}ms` }}
+                style={{ animationDelay: `${1600 + index * 100}ms` }}
               >
                 <TestimonialCard testimonial={testimonial} />
               </div>

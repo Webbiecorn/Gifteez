@@ -7,6 +7,7 @@ import { NewsletterSignup } from './NewsletterSignup';
 import Meta from './Meta';
 import JsonLd from './JsonLd';
 import Card from './Card';
+import Breadcrumbs from './Breadcrumbs';
 import { useBlogContext } from '../contexts/BlogContext';
 
 const getReadingTime = (text: string) => {
@@ -407,6 +408,13 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo; }> = ({ navigateTo }) => {
                 ogImage="https://gifteez.nl/images/og-tech-gifts-2025.png"
             />
             <JsonLd data={itemListSchema} id="jsonld-blog-itemlist" />
+            
+            <Breadcrumbs 
+                items={[
+                    { label: 'Home', href: '/' },
+                    { label: 'Blog' }
+                ]}
+            />
 
             <section className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#f43f5e1f,transparent_55%),radial-gradient(circle_at_bottom_right,#0f172a22,transparent_45%)]" />

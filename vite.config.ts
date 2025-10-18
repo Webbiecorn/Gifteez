@@ -14,6 +14,8 @@ export default defineConfig({
           'firebase-core': ['firebase/app'],
           'firebase-auth': ['firebase/auth'],
           'firebase-firestore': ['firebase/firestore'],
+          'firebase-storage': ['firebase/storage'],
+          'firebase-analytics': ['firebase/analytics'],
 
           // AI services
           'ai-services': ['@google/genai'],
@@ -55,7 +57,7 @@ export default defineConfig({
       },
     },
     // Optimize chunk size
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
   },
   // Add preload hints for critical chunks
   optimizeDeps: {

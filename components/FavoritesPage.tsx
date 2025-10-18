@@ -67,11 +67,20 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ navigateTo, showToast }) 
      <div className="text-center py-12 bg-white rounded-lg shadow-md animate-fade-in">
         <HeartIcon className="w-24 h-24 text-gray-300 mx-auto" />
         <h3 className="mt-4 font-display text-2xl font-bold text-primary">Je hebt nog geen favorieten.</h3>
-        <p className="mt-2 text-gray-600">Klik op het hartje bij een cadeau om het hier op te slaan!</p>
-        <div className="mt-6">
-        <Button variant="accent" onClick={() => navigateTo('giftFinder')}>
-            Start met zoeken
-        </Button>
+        <p className="mt-2 text-gray-600 max-w-md mx-auto">
+          Gebruik de GiftFinder of bekijk de trending deals om het perfecte cadeau te vinden. 
+          Klik op het hartje om het hier op te slaan!
+        </p>
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <Button variant="primary" onClick={() => navigateTo('giftFinder')}>
+            🎁 Start GiftFinder
+          </Button>
+          <Button variant="accent" onClick={() => navigateTo('deals')}>
+            🔥 Bekijk Deals
+          </Button>
+          <Button variant="secondary" onClick={() => navigateTo('quiz')}>
+            ❓ Doe de Quiz
+          </Button>
         </div>
     </div>
   )

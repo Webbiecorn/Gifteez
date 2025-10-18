@@ -1,4 +1,24 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+// Opschonen-knop voor admin: wis alle categorieën en pinned deals
+import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
+const handleAdminOpschonen = async (
+  setStatus: (s: any) => void,
+  setPinnedDeals: (d: any) => void,
+  setCategories: (c: any) => void
+) => {
+  setStatus({ type: 'info', message: 'Bezig met opschonen…' });
+  try {
+    if (DealCategoryConfigService.clearAll) {
+      await DealCategoryConfigService.clearAll();
+    }
+    await clearAllPinnedDeals();
+    setPinnedDeals([]);
+    setCategories([]);
+    setStatus({ type: 'success', message: 'Admin en backend zijn opgeschoond.' });
+  } catch (error) {
+    setStatus({ type: 'error', message: 'Opschonen mislukt: ' + (error?.message || error) });
+  }
+};
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { NavigateTo, DealItem, DealCategory, QuizQuestion, QuizResult, BudgetTier, OccasionType, RelationshipType } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import BlogEditor from './BlogEditor';
@@ -9,7 +29,12 @@ import ProductPostWizard from './ProductPostWizard';
 import CoolblueFeedService, { CoolblueFeedMeta, CoolblueProduct } from '../services/coolblueFeedService';
 import ImageWithFallback from './ImageWithFallback';
 import AmazonProductManager from './AmazonProductManager';
+import DealCategoryManager from './DealCategoryManager';
+import AdminDashboard from './AdminDashboard';
+import ActivityLog from './ActivityLog';
+import PerformanceInsights from './PerformanceInsights';
 import { DynamicProductService } from '../services/dynamicProductService';
+import { PinnedDealsService, type PinnedDealEntry, clearAllPinnedDeals } from '../services/pinnedDealsService';
 import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
 import { quizQuestions, quizResults } from '../data/quizData';
@@ -58,7 +83,7 @@ const occasionOrder: OccasionType[] = ['birthday', 'housewarming', 'holidays', '
 const QUIZ_REMINDER_STORAGE_KEY = 'gifteez.quizAdmin.reminders.v1';
 const ADMIN_PREFERENCES_STORAGE_KEY = 'gifteez.admin.preferences.v1';
 
-type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings';
+type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings' | 'activity' | 'performance';
 
 interface QuizReminderPreferences {
   showAlerts: boolean;
@@ -218,6 +243,8 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
               { key: 'deals', label: 'Deals', icon: '🏷️' },
               { key: 'quiz', label: 'Quiz', icon: '❓' },
               { key: 'shop', label: 'Shop Items', icon: '🛍️' },
+              { key: 'activity', label: 'Activiteiten', icon: '📊' },
+              { key: 'performance', label: 'Performance', icon: '📈' },
               { key: 'settings', label: 'Instellingen', icon: '⚙️' },
             ].map((tab) => (
               <button
@@ -237,12 +264,19 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
         </div>
       </div>
 
+      {/* Dashboard - Always visible at top */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <AdminDashboard />
+      </div>
+
       {/* Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   {activeTab === 'blog' && <BlogAdmin isCloudConnected={firebaseEnabled} />}
         {activeTab === 'deals' && <DealsAdmin />}
   {activeTab === 'quiz' && <QuizAdmin navigateTo={navigateTo} />}
         {activeTab === 'shop' && <ShopAdmin />}
+        {activeTab === 'activity' && <ActivityLog />}
+        {activeTab === 'performance' && <PerformanceInsights />}
         {activeTab === 'settings' && (
           <SettingsAdmin
             adminEmails={adminEmails}
@@ -293,7 +327,7 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
     try {
       const fetchedPosts = await BlogService.getPosts(true);
       setAllPosts(fetchedPosts);
-      refresh();
+      await refresh();
     } catch (error: any) {
       console.error('Error loading posts:', error);
       setStatus({ type: 'error', message: error?.message ?? 'Kon blogposts niet laden.' });
@@ -318,11 +352,11 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
     setShowEditor(true);
   };
 
-  const handleCloseEditor = () => {
+  const handleCloseEditor = async () => {
     setShowEditor(false);
     setEditingPostId(undefined);
     setEditingPost(null);
-    void loadPosts();
+    await loadPosts();
   };
 
   const handleDeletePost = async (id: string, title: string) => {
@@ -334,11 +368,19 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
     setWorkingPostId(id);
     try {
       await BlogService.deletePost(id);
+      
+      // Update local state immediately for instant UI feedback
+      setAllPosts(prevPosts => prevPosts.filter(post => post.id !== id));
+      
+      // Then refresh the context to ensure consistency across the app
+      await refresh();
+      
       setStatus({ type: 'success', message: `"${title}" verwijderd.` });
-      await loadPosts();
     } catch (error: any) {
-      console.error('Kon blogpost niet verwijderen:', error);
+      console.error('[AdminPage] Kon blogpost niet verwijderen:', error);
       setStatus({ type: 'error', message: error?.message ?? 'Verwijderen mislukt.' });
+      // Reload posts to restore correct state if delete failed
+      await loadPosts();
     } finally {
       setWorkingPostId(null);
     }
@@ -747,14 +789,6 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
   );
 };
 
-// Deals Admin Component
-interface PinnedDealEntry {
-  id: string;
-  deal: DealItem;
-  pinnedAt: number;
-}
-
-const PINNED_DEALS_STORAGE_KEY = 'gifteez-admin-pinned-deals';
 const MAX_PINNED_DEALS = 20;
 
 const DealsAdmin: React.FC = () => {
@@ -762,6 +796,7 @@ const DealsAdmin: React.FC = () => {
   const [dealOfWeek, setDealOfWeek] = useState<DealItem | null>(null);
   const [topDeals, setTopDeals] = useState<DealItem[]>([]);
   const [categories, setCategories] = useState<DealCategory[]>([]);
+  const [dealsView, setDealsView] = useState<'overview' | 'categories'>('overview');
   const [stats, setStats] = useState<{
     totalProducts: number;
     lastUpdated: Date | null;
@@ -775,6 +810,8 @@ const DealsAdmin: React.FC = () => {
   const [priceFilter, setPriceFilter] = useState<'all' | 'budget' | 'mid' | 'premium'>('all');
   const [isCopying, setIsCopying] = useState(false);
   const [pinnedDeals, setPinnedDeals] = useState<PinnedDealEntry[]>([]);
+  const [pinnedLoaded, setPinnedLoaded] = useState(false);
+  const skipNextPinnedSaveRef = useRef(true);
   const [isExporting, setIsExporting] = useState(false);
 
   const loadDeals = useCallback(async (showSuccessMessage = false) => {
@@ -808,43 +845,54 @@ const DealsAdmin: React.FC = () => {
   }, [loadDeals]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
+    let active = true;
 
-    try {
-      const stored = window.localStorage.getItem(PINNED_DEALS_STORAGE_KEY);
-      if (!stored) {
-        return;
+    const loadPinnedDeals = async () => {
+      try {
+        const entries = await PinnedDealsService.load();
+        if (!active) {
+          return;
+        }
+        setPinnedDeals(entries);
+      } catch (error) {
+        console.warn('Kon vastgezette deals niet laden:', error);
+        if (active) {
+          setStatus({ type: 'error', message: 'Kon vastgezette deals niet laden. Controleer de verbinding en probeer opnieuw.' });
+        }
+      } finally {
+        if (active) {
+          skipNextPinnedSaveRef.current = true;
+          setPinnedLoaded(true);
+        }
       }
-      const parsed: Array<Partial<PinnedDealEntry>> = JSON.parse(stored);
-      if (Array.isArray(parsed)) {
-        const normalised = parsed
-          .filter((entry) => entry?.deal?.id)
-          .map((entry) => ({
-            id: entry?.id ?? entry?.deal?.id ?? '',
-            deal: entry?.deal as DealItem,
-            pinnedAt: typeof entry?.pinnedAt === 'number' ? entry.pinnedAt : Date.now()
-          }))
-          .filter((entry): entry is PinnedDealEntry => Boolean(entry.id));
-        setPinnedDeals(normalised);
-      }
-    } catch (error) {
-      console.warn('Kon vastgezette deals niet laden uit localStorage:', error);
-    }
+    };
+
+    void loadPinnedDeals();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (!pinnedLoaded) {
       return;
     }
 
-    try {
-      window.localStorage.setItem(PINNED_DEALS_STORAGE_KEY, JSON.stringify(pinnedDeals));
-    } catch (error) {
-      console.warn('Kon vastgezette deals niet opslaan:', error);
+    if (skipNextPinnedSaveRef.current) {
+      skipNextPinnedSaveRef.current = false;
+      return;
     }
-  }, [pinnedDeals]);
+
+    void (async () => {
+      try {
+        await PinnedDealsService.save(pinnedDeals);
+      } catch (error) {
+        console.error('Kon vastgezette deals niet opslaan:', error);
+        setStatus({ type: 'error', message: 'Synchroniseren van vastgezette deals is mislukt. Probeer het opnieuw.' });
+      }
+    })();
+  }, [pinnedDeals, pinnedLoaded, setStatus]);
 
   const formatDateTime = useCallback((value?: Date | null) => {
     if (!value) {
@@ -1226,6 +1274,51 @@ const DealsAdmin: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-wrap gap-3 items-center justify-between bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <h2 className="text-xl font-bold text-gray-900">Deals beheer</h2>
+        <Button
+          variant="danger"
+          onClick={() => handleAdminOpschonen(setStatus, setPinnedDeals, setCategories)}
+        >
+          Admin & backend opschonen
+        </Button>
+      </div>
+      {/* Sub-navigation */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="flex border-b border-gray-200">
+          <button
+            onClick={() => setDealsView('overview')}
+            className={`px-6 py-3 text-sm font-medium transition-colors ${
+              dealsView === 'overview'
+                ? 'text-rose-600 border-b-2 border-rose-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            📊 Deals Overzicht
+          </button>
+          <button
+            onClick={() => setDealsView('categories')}
+            className={`px-6 py-3 text-sm font-medium transition-colors ${
+              dealsView === 'categories'
+                ? 'text-rose-600 border-b-2 border-rose-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            🎯 Categorieën Beheren
+          </button>
+        </div>
+      </div>
+
+      {/* Category Manager View */}
+      {dealsView === 'categories' && (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <DealCategoryManager onSaved={() => loadDeals(true)} />
+        </div>
+      )}
+
+      {/* Overview View */}
+      {dealsView === 'overview' && (
+      <>
       <div className="rounded-lg bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -1734,28 +1827,39 @@ const DealsAdmin: React.FC = () => {
                   <TagIcon className="h-5 w-5 text-rose-500" aria-hidden="true" />
                   <h4 className="text-base font-semibold text-gray-900">{category.title}</h4>
                 </div>
-                <div className="space-y-4">
+                <div
+                  className={`grid grid-cols-1 gap-3 ${
+                    category.items.length >= 4 ? 'md:grid-cols-2 xl:grid-cols-4' : 'md:grid-cols-2'
+                  }`}
+                >
                   {category.items.map((item) => (
-                    <div key={item.id} className="flex gap-3 rounded-xl border border-gray-100 bg-gradient-to-r from-white to-gray-50/70 p-3">
-                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-100">
-                        <ImageWithFallback src={item.imageUrl} alt={item.name} className="h-full w-full" fit="contain" />
-                      </div>
-                      <div className="flex flex-col gap-1 text-sm">
-                        <p className="font-semibold text-gray-900 line-clamp-2">{item.name}</p>
-                        <p className="text-xs text-gray-500 line-clamp-2">{item.description}</p>
-                        <div className="mt-auto flex flex-wrap items-center gap-2 text-xs">
-                          <span className="rounded-full bg-rose-50 px-2 py-0.5 font-semibold text-rose-500">{item.price}</span>
-                          {item.giftScore && (
-                            <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-600">Score {item.giftScore}</span>
-                          )}
-                          {isDealPinned(item) && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-600">
-                              <BookmarkFilledIcon className="h-3 w-3" aria-hidden="true" />
-                              Vastgezet
-                            </span>
-                          )}
+                    <div
+                      key={item.id}
+                      className="flex h-full flex-col rounded-xl border border-gray-100 bg-gradient-to-b from-white to-gray-50/70 p-3"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border border-gray-100 bg-gray-100">
+                          <ImageWithFallback src={item.imageUrl} alt={item.name} className="h-full w-full" fit="contain" />
                         </div>
-                        <div className="flex items-center gap-2 text-xs font-semibold">
+                        <div className="flex-1 space-y-1 text-sm">
+                          <p className="font-semibold text-gray-900 line-clamp-2">{item.name}</p>
+                          <p className="text-xs text-gray-500 line-clamp-3">{item.description}</p>
+                        </div>
+                      </div>
+                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                        <span className="rounded-full bg-rose-50 px-2 py-0.5 font-semibold text-rose-500">{item.price}</span>
+                        {item.giftScore && (
+                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-600">Score {item.giftScore}</span>
+                        )}
+                        {isDealPinned(item) && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-600">
+                            <BookmarkFilledIcon className="h-3 w-3" aria-hidden="true" />
+                            Vastgezet
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 text-xs font-semibold">
+                        <div className="flex flex-wrap items-center gap-2">
                           <button
                             type="button"
                             onClick={() => togglePinDeal(item)}
@@ -1779,15 +1883,16 @@ const DealsAdmin: React.FC = () => {
                           >
                             Kopieer snippet
                           </button>
-                          <a
-                            href={withAffiliate(item.affiliateLink)}
-                            target="_blank"
-                            rel="noopener noreferrer sponsored"
-                            className="text-xs font-semibold text-rose-500 hover:text-rose-600"
-                          >
-                            Bekijk
-                          </a>
                         </div>
+                        <a
+                          href={withAffiliate(item.affiliateLink)}
+                          target="_blank"
+                          rel="noopener noreferrer sponsored"
+                          className="inline-flex items-center gap-1 rounded-md border border-rose-200 bg-rose-50 px-2.5 py-1 text-rose-600 transition hover:bg-rose-100"
+                        >
+                          <LinkIcon className="h-3 w-3" aria-hidden="true" />
+                          Bekijk
+                        </a>
                       </div>
                     </div>
                   ))}
@@ -1796,6 +1901,8 @@ const DealsAdmin: React.FC = () => {
             ))}
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );
@@ -2812,6 +2919,8 @@ const tabLabels: Record<AdminTab, string> = {
   quiz: 'Quiz',
   shop: 'Shop items',
   settings: 'Instellingen',
+  activity: 'Activiteiten',
+  performance: 'Performance',
 };
 
 const SettingsAdmin: React.FC<SettingsAdminProps> = ({

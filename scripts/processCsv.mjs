@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
+import { join, extname } from 'path';
+import { gunzipSync } from 'zlib';
 
 /**
  * Product Feed Processing Functions
@@ -230,17 +232,47 @@ class ProductFeedService {
  * Processes the downloaded CSV and generates gift products
  */
 class CsvProcessor {
-  static INPUT_FILE = '/home/kevin/Downloads/datafeed_2566111.csv';
+  static DOWNLOADS_DIR = '/home/kevin/Downloads';
+  static FEED_PREFIX = 'datafeed_2566111';
   static OUTPUT_FILE = '/home/kevin/Gifteez website/gifteez/data/importedProducts.json';
   static SAMPLE_OUTPUT = '/home/kevin/Gifteez website/gifteez/data/sampleProducts.json';
+  static MAX_PRODUCTS = 1200;
+
+  static resolveLatestFeedPath() {
+    const entries = readdirSync(this.DOWNLOADS_DIR)
+      .filter((name) => name.startsWith(this.FEED_PREFIX) && (name.endsWith('.csv') || name.endsWith('.csv.gz')))
+      .map((name) => ({
+        name,
+        path: join(this.DOWNLOADS_DIR, name),
+        mtimeMs: statSync(join(this.DOWNLOADS_DIR, name)).mtimeMs,
+      }))
+      .sort((a, b) => b.mtimeMs - a.mtimeMs);
+
+    if (!entries.length) {
+      throw new Error(`Geen Coolblue feed gevonden in ${this.DOWNLOADS_DIR}. Verwacht een bestand dat begint met "${this.FEED_PREFIX}".`);
+    }
+
+    const latest = entries[0];
+    const extension = extname(latest.name);
+    return {
+      path: latest.path,
+      extension,
+      isCompressed: extension === '.gz',
+      name: latest.name,
+    };
+  }
 
   static async processFile() {
     console.log('🚀 Starting Coolblue product feed processing...');
     
     try {
+      const feedInfo = this.resolveLatestFeedPath();
+      console.log(`📂 Found latest feed: ${feedInfo.name}`);
+
       // Read CSV file
       console.log('📄 Reading CSV file...');
-      const csvContent = readFileSync(this.INPUT_FILE, 'utf-8');
+      const rawBuffer = readFileSync(feedInfo.path);
+      const csvContent = feedInfo.isCompressed ? gunzipSync(rawBuffer).toString('utf-8') : rawBuffer.toString('utf-8');
       const lines = csvContent.split('\n');
       const headers = ProductFeedService.parseCSVLine(lines[0]);
       
@@ -292,12 +324,13 @@ class CsvProcessor {
         console.log(`   ${category}: ${count} products`);
       });
       
-      // Save all products
-      console.log('💾 Saving product data...');
-      writeFileSync(this.OUTPUT_FILE, JSON.stringify(giftProducts, null, 2));
+  const limitedGiftProducts = giftProducts.slice(0, this.MAX_PRODUCTS);
+
+  console.log(`💾 Saving top ${limitedGiftProducts.length} products (capped at ${this.MAX_PRODUCTS})...`);
+  writeFileSync(this.OUTPUT_FILE, JSON.stringify(limitedGiftProducts, null, 2));
       
-      // Save sample for development
-      const sampleProducts = giftProducts.slice(0, 50);
+  // Save sample for development
+  const sampleProducts = limitedGiftProducts.slice(0, 50);
       writeFileSync(this.SAMPLE_OUTPUT, JSON.stringify(sampleProducts, null, 2));
       
       console.log(`✨ Processing complete!`);

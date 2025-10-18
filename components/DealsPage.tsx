@@ -1,444 +1,1205 @@
-
-import React, { useState, useEffect, useMemo } from 'react';
-import { Container } from './layout/Container';
-import { NavigateTo, DealItem, DealCategory } from '../types';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { NavigateTo, DealCategory, DealItem } from '../types';
 import Meta from './Meta';
 import JsonLd from './JsonLd';
-import { DynamicProductService } from '../services/dynamicProductService';
 import Button from './Button';
+import LoadingSpinner from './LoadingSpinner';
+import ImageWithFallback from './ImageWithFallback';
+import InternalLinkCTA from './InternalLinkCTA';
+import Breadcrumbs from './Breadcrumbs';
+import { Container } from './layout/Container';
 import { withAffiliate } from '../services/affiliate';
-import { StarIcon, TagIcon, SparklesIcon, GiftIcon, CheckIcon, ShoppingCartIcon } from './IconComponents';
-import AmazonTeaser from './AmazonTeaser';
+import { DynamicProductService } from '../services/dynamicProductService';
+import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
+import { PinnedDealsService } from '../services/pinnedDealsService';
+import CoolblueFeedService from '../services/coolblueFeedService';
+import CoolblueAffiliateService from '../services/coolblueAffiliateService';
+import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton';
+import { PerformanceInsightsService } from '../services/performanceInsightsService';
+import {
+  SparklesIcon,
+  TagIcon,
+  StarIcon,
+  BookmarkFilledIcon,
+  BookmarkIcon,
+  CheckIcon,
+  ChevronRightIcon,
+  HeartIcon,
+  GiftIcon,
+  CakeIcon,
+  SnowflakeIcon
+} from './IconComponents';
+
+type RetailerInfo = {
+  label: string;
+  shortLabel: string;
+  badgeClass: string;
+  accentClass: string;
+};
+
+const parseHost = (url: string): string | null => {
+  if (!url) return null;
+  try {
+    const absolute = url.startsWith('http') ? url : `https://${url.replace(/^\/+/, '')}`;
+    const parsed = new URL(absolute);
+    if (parsed.hostname.includes('awin') && parsed.searchParams.has('p')) {
+      const original = CoolblueAffiliateService.extractOriginalUrl(absolute);
+      if (original) {
+        return parseHost(original);
+      }
+    }
+    return parsed.hostname;
+  } catch {
+    return null;
+  }
+};
+
+const resolveRetailerInfo = (affiliateLink: string): RetailerInfo => {
+  const host = parseHost(affiliateLink) ?? '';
+  if (host.includes('amazon')) {
+    return {
+      label: 'Partner: Amazon.nl',
+      shortLabel: 'Amazon.nl',
+      badgeClass: 'bg-orange-500 text-white',
+      accentClass: 'text-orange-600'
+    };
+  }
+  if (host.includes('coolblue')) {
+    return {
+      label: 'Partner: Coolblue',
+      shortLabel: 'Coolblue',
+      badgeClass: 'bg-sky-600 text-white',
+      accentClass: 'text-sky-600'
+    };
+  }
+  if (host.includes('bol')) {
+    return {
+      label: 'Partner: Bol.com',
+      shortLabel: 'Bol.com',
+      badgeClass: 'bg-blue-500 text-white',
+      accentClass: 'text-blue-600'
+    };
+  }
+  return {
+    label: 'Partnerdeal',
+    shortLabel: 'onze partner',
+    badgeClass: 'bg-slate-200 text-slate-700',
+    accentClass: 'text-slate-600'
+  };
+};
+
+const formatCurrency = (value: number): string =>
+  new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 
 interface DealsPageProps {
   navigateTo: NavigateTo;
 }
 
-// Reusable deal card with theme styling & accessibility improvements
-const DealCard: React.FC<{ item: DealItem; featured?: boolean }> = ({ item, featured = false }) => (
-  <div
-    className={`bg-white rounded-2xl shadow-md overflow-hidden flex flex-col group transition-all duration-300 hover:-translate-y-2 hover:shadow-xl border border-gray-100/70 focus-within:ring-2 focus-within:ring-accent/40 ${featured ? 'ring-2 ring-accent/30' : ''}`}
-  >
-    <div className="relative overflow-hidden">
-      {featured && (
-        <div className="absolute top-3 left-3 z-10">
-          <div className="bg-gradient-to-r from-primary to-accent text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow">
-            <TagIcon className="w-4 h-4" />
-            HOT
-          </div>
-        </div>
-      )}
-      {item.isOnSale && (
-        <div className="absolute top-3 right-3 z-10">
-          <div className="bg-gradient-to-r from-rose-500 to-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow">
-            <TagIcon className="w-4 h-4" />
-            SALE
-          </div>
-        </div>
-      )}
-      <div className="overflow-hidden bg-white flex items-center justify-center">
-        <img
-          src={item.imageUrl}
-          alt={item.name}
-          loading="lazy"
-          className="w-full h-56 object-contain group-hover:scale-110 transition-transform duration-500 will-change-transform"
-        />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-    </div>
-    <div className="p-5 flex flex-col flex-grow">
-      <h3 className="font-display text-lg font-bold text-slate-900 flex-grow leading-snug tracking-tight">{item.name}</h3>
-      <p className="mt-2 text-gray-600 text-sm leading-relaxed line-clamp-4">{item.description}</p>
-      {item.giftScore && item.giftScore >= 7 && (
-        <div className="mt-3 flex items-center gap-1" aria-label={`Cadeau score ${item.giftScore} van 10`}>
-          <GiftIcon className="w-4 h-4 text-amber-500" />
-          <span className="text-[11px] text-amber-600 font-medium">
-            Score: {item.giftScore}/10
-          </span>
-        </div>
-      )}
-      <div className="mt-5 flex justify-between items-end gap-4">
-        <div className="flex flex-col min-w-[40%]">
-          <p className="font-semibold text-slate-900 text-base leading-none">{item.price}</p>
-          {item.originalPrice && (
-            <p className="text-xs text-gray-500 line-through mt-1">{item.originalPrice}</p>
-          )}
-          {featured && <p className="text-[10px] text-accent font-semibold mt-1">Beperkte tijd</p>}
-        </div>
-        <a
-          href={withAffiliate(item.affiliateLink)}
-          target="_blank"
-          rel="noopener noreferrer sponsored nofollow"
-          aria-label={`Bekijk deal voor ${item.name}`}
-          className="focus:outline-none"
-        >
-          <Button
-            variant={featured ? 'accent' : 'primary'}
-            className="py-2 px-5 text-xs font-semibold shadow hover:shadow-md transform hover:scale-[1.03] active:scale-95 transition-all duration-300"
-          >
-            Bekijk
-          </Button>
-        </a>
-      </div>
-    </div>
-  </div>
-);
+interface DealsPageState {
+  dealOfWeek: DealItem | null;
+  topDeals: DealItem[];
+  categories: DealCategory[];
+}
+
+const DEFAULT_STATE: DealsPageState = {
+  dealOfWeek: null,
+  topDeals: [],
+  categories: []
+};
+
+// Helper function to get icon based on category title
+const getCategoryIcon = (title: string) => {
+  const lowerTitle = title.toLowerCase();
+  
+  if (lowerTitle.includes('tech') || lowerTitle.includes('gadget') || lowerTitle.includes('electronica')) {
+    return <SparklesIcon className="h-5 w-5" />;
+  }
+  if (lowerTitle.includes('home') || lowerTitle.includes('woon') || lowerTitle.includes('huis')) {
+    return <HeartIcon className="h-5 w-5" />;
+  }
+  if (lowerTitle.includes('food') || lowerTitle.includes('eten') || lowerTitle.includes('drinken')) {
+    return <CakeIcon className="h-5 w-5" />;
+  }
+  if (lowerTitle.includes('winter') || lowerTitle.includes('kerst') || lowerTitle.includes('feest')) {
+    return <SnowflakeIcon className="h-5 w-5" />;
+  }
+  if (lowerTitle.includes('top') || lowerTitle.includes('best')) {
+    return <StarIcon className="h-5 w-5" />;
+  }
+  
+  // Default fallback
+  return <GiftIcon className="h-5 w-5" />;
+};
+
+// Helper function to generate social proof badges
+const getSocialProofBadge = (deal: DealItem, index: number): { text: string; icon: string; color: string } | null => {
+  const score = deal.giftScore || 0;
+  
+  // Top 3 badge for first 3 items with high scores
+  if (index < 3 && score >= 8) {
+    return {
+      text: `#${index + 1} Deze week`,
+      icon: '🏆',
+      color: 'bg-amber-100 text-amber-700'
+    };
+  }
+  
+  // Trending badge for high score deals
+  if (score >= 9) {
+    return {
+      text: '150+ bekeken vandaag',
+      icon: '👀',
+      color: 'bg-purple-100 text-purple-700'
+    };
+  }
+  
+  // Popular badge for good score deals
+  if (score >= 8) {
+    return {
+      text: '50+ mensen bekeken',
+      icon: '🔥',
+      color: 'bg-orange-100 text-orange-700'
+    };
+  }
+  
+  // New badge for on-sale items
+  if (deal.isOnSale) {
+    return {
+      text: 'Populaire deal',
+      icon: '⚡',
+      color: 'bg-blue-100 text-blue-700'
+    };
+  }
+  
+  return null;
+};
 
 const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
-  const [dealOfTheWeek, setDealOfTheWeek] = useState<DealItem | null>(null);
-  const [top10Deals, setTop10Deals] = useState<DealItem[]>([]);
-  const [dealCategories, setDealCategories] = useState<DealCategory[]>([]);
+  const [state, setState] = useState<DealsPageState>(DEFAULT_STATE);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null);
+  const [dealOfWeekIndex, setDealOfWeekIndex] = useState(0);
+  const [premiumDeals, setPremiumDeals] = useState<DealItem[]>([]);
+  const [pinnedDeals, setPinnedDeals] = useState<DealItem[]>([]);
+  
+  // Filter state
+  const [priceFilter, setPriceFilter] = useState<string>('all');
+  const [scoreFilter, setScoreFilter] = useState<number>(0);
 
-  // Build ItemList structured data for Top 10 + featured
-  const itemListSchema = useMemo(() => {
-    const items: DealItem[] = [];
-    if (dealOfTheWeek) items.push(dealOfTheWeek);
-    items.push(...top10Deals);
+  // Track impressions for visible deals
+  const impressionTrackedRef = useRef<Set<string>>(new Set());
+  
+  const trackDealImpression = useCallback((dealId: string, retailer?: string) => {
+    if (!impressionTrackedRef.current.has(dealId)) {
+      const source = retailer ? `deals-page:${retailer}` : 'deals-page';
+      PerformanceInsightsService.trackImpression(dealId, source);
+      impressionTrackedRef.current.add(dealId);
+    }
+  }, []);
+
+  const trackDealClick = useCallback((dealId: string, retailer?: string) => {
+    const source = retailer ? `deals-page:${retailer}` : 'deals-page';
+    PerformanceInsightsService.trackClick(dealId, source);
+  }, []);
+
+  const formatPrice = useCallback((value: string | undefined) => {
+    if (!value) {
+      return null;
+    }
+    return value.startsWith('€') ? value : `€${value}`;
+  }, []);
+
+  const formatDate = useCallback((value?: Date | string | null) => {
+    if (!value) {
+      return null;
+    }
+    const date = typeof value === 'string' ? new Date(value) : value;
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+    return date.toLocaleString('nl-NL', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }, []);
+
+  const loadDeals = useCallback(async ({ forceRefresh = false }: { forceRefresh?: boolean } = {}) => {
+    setIsLoading(true);
+    setError(null);
+    impressionTrackedRef.current = new Set();
+
+    try {
+      if (forceRefresh) {
+        // Only invalidate caches when explicitly requested to avoid unnecessary cold starts
+        CoolblueFeedService.clearCache();
+        DealCategoryConfigService.clearCache();
+      }
+      
+      const [dealOfWeek, topDeals, categories, config, pinnedEntries] = await Promise.all([
+        DynamicProductService.getDealOfTheWeek(),
+        DynamicProductService.getTop10Deals(),
+        DynamicProductService.getDealCategories(),
+        DealCategoryConfigService.load(),
+        PinnedDealsService.load()
+      ]);
+
+      const stats = DynamicProductService.getStats();
+      setLastUpdated(stats?.lastUpdated ?? null);
+      setManualConfigUpdatedAt(config?.updatedAt ?? null);
+
+      // Collect premium candidates (featured deal + high scoring top deals)
+      const premiumCandidates = [dealOfWeek, ...topDeals.filter(deal => (deal.giftScore ?? 0) >= 7)]
+        .filter((candidate): candidate is DealItem => Boolean(candidate));
+      const uniquePremiums = Array.from(new Map(premiumCandidates.map(item => [item.id, item])).values());
+      const featuredDeal = dealOfWeek ?? uniquePremiums[0] ?? topDeals[0] ?? null;
+      const premiumRotation = uniquePremiums.length > 0
+        ? uniquePremiums.slice(0, 5)
+        : featuredDeal
+          ? [featuredDeal]
+          : [];
+
+      setPremiumDeals(premiumRotation);
+      setDealOfWeekIndex(0);
+
+      const pinned = pinnedEntries
+        .map((entry) => entry?.deal)
+        .filter((deal): deal is DealItem => Boolean(deal?.id));
+
+      setPinnedDeals(pinned);
+
+      const hasManualCategories = Boolean(config?.categories?.length);
+      const categoriesToDisplay = hasManualCategories
+        ? categories.filter((category) => category.items.length > 0)
+        : [];
+
+      setState({
+        dealOfWeek: featuredDeal,
+        topDeals,
+        categories: categoriesToDisplay
+      });
+    } catch (loadError: any) {
+      console.error('Kon deals niet laden:', loadError);
+      setError(loadError?.message ?? 'Kon deals niet laden. Probeer het later opnieuw.');
+      setState(DEFAULT_STATE);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadDeals();
+  }, [loadDeals]);
+
+  // Function to rotate to the next premium deal
+  const showNextDeal = useCallback(() => {
+    if (premiumDeals.length === 0) return;
+    
+    const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length;
+    setDealOfWeekIndex(nextIndex);
+    
+    setState(prev => ({
+      ...prev,
+      dealOfWeek: premiumDeals[nextIndex]
+    }));
+  }, [premiumDeals, dealOfWeekIndex]);
+
+  // Filter deals based on selected filters
+  const filterDeals = useCallback((deals: DealItem[]) => {
+    return deals.filter(deal => {
+      const normalizedPrice = deal.price ? deal.price.replace(/[^0-9,\.]/g, '').replace(',', '.') : '';
+      const parsedPrice = normalizedPrice ? Number.parseFloat(normalizedPrice) : Number.NaN;
+
+      let priceMatch = true;
+      if (priceFilter !== 'all') {
+        if (Number.isNaN(parsedPrice)) {
+          return false;
+        }
+
+        if (priceFilter === '0-50') priceMatch = parsedPrice <= 50;
+        else if (priceFilter === '50-100') priceMatch = parsedPrice > 50 && parsedPrice <= 100;
+        else if (priceFilter === '100-200') priceMatch = parsedPrice > 100 && parsedPrice <= 200;
+        else if (priceFilter === '200+') priceMatch = parsedPrice > 200;
+      }
+
+      const scoreValue = deal.giftScore ?? 0;
+      const scoreMatch = scoreFilter === 0 || scoreValue >= scoreFilter;
+
+      return priceMatch && scoreMatch;
+    });
+  }, [priceFilter, scoreFilter]);
+
+  const handleRefresh = useCallback(() => {
+    void loadDeals({ forceRefresh: true });
+  }, [loadDeals]);
+
+  const structuredData = useMemo(() => {
+    const topList = state.topDeals.map((deal, index) => {
+      const retailer = resolveRetailerInfo(deal.affiliateLink);
+      const sellerName = retailer.shortLabel || 'Partnerwinkel';
+
+      return ({
+      '@type': 'ListItem',
+      position: index + 1,
+      url: withAffiliate(deal.affiliateLink),
+      name: deal.name,
+      image: deal.imageUrl,
+      description: deal.description,
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'EUR',
+        price: deal.price?.replace(/[^0-9,\.]/g, '').replace(',', '.') ?? '',
+          url: withAffiliate(deal.affiliateLink),
+          seller: {
+            '@type': 'Organization',
+            name: sellerName
+          }
+        }
+      });
+    });
+
     return {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      itemListElement: items.map((d, i) => ({
-        '@type': 'ListItem',
-        position: i + 1,
-        name: d.name,
-        url: `https://gifteez.nl/deals#${d.id}`
-      }))
+      name: 'Gifteez deals overzicht',
+      description: 'Ontdek de scherpste cadeaudeals van deze week, samengesteld uit Coolblue en Amazon.',
+      itemListElement: topList
     };
-  }, [dealOfTheWeek, top10Deals]);
+  }, [state.topDeals]);
 
-  useEffect(() => {
-    const loadDeals = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  const featuredRetailer = useMemo(() => {
+    if (!state.dealOfWeek) return null;
+    return resolveRetailerInfo(state.dealOfWeek.affiliateLink);
+  }, [state.dealOfWeek]);
 
-        // Load all data concurrently
-        const [weeklyDeal, topDeals, categories] = await Promise.all([
-          DynamicProductService.getDealOfTheWeek(),
-          DynamicProductService.getTop10Deals(),
-          DynamicProductService.getDealCategories()
-        ]);
+  const featuredRetailerShortLabel = featuredRetailer?.shortLabel ?? null;
 
-        // Pad the Top 10 list with only Coolblue products if fewer than 10 were returned
-        // Ensures the section always shows 10 items from Coolblue where possible.
-        let filledTopDeals = topDeals;
-        if (filledTopDeals.length < 10) {
-          const needed = 10 - filledTopDeals.length;
-            const extra = DynamicProductService.getAdditionalCoolblueDeals(
-              filledTopDeals.map(d => d.id),
-              needed
-            );
-          if (extra.length) {
-            filledTopDeals = [...filledTopDeals, ...extra].slice(0, 10);
-          }
-        }
+  const handleFeaturedClick = useCallback(() => {
+    if (state.dealOfWeek) {
+      trackDealClick(state.dealOfWeek.id, featuredRetailerShortLabel ?? undefined);
+    }
+  }, [state.dealOfWeek, trackDealClick, featuredRetailerShortLabel]);
 
-        setDealOfTheWeek(weeklyDeal);
-        setTop10Deals(filledTopDeals);
-        setDealCategories(categories);
+  const partnerBadges = useMemo(() => {
+    const unique = new Map<string, string>();
+    const sampleDeals = [state.dealOfWeek, ...state.topDeals];
+    sampleDeals.forEach((deal) => {
+      if (!deal) return;
+      const info = resolveRetailerInfo(deal.affiliateLink);
+      unique.set(info.shortLabel, info.shortLabel);
+    });
+    const labels = Array.from(unique.keys()).filter(label => label !== 'onze partner');
+    return labels.slice(0, 4);
+  }, [state.dealOfWeek, state.topDeals]);
 
-        // Log stats for debugging
-        const stats = DynamicProductService.getStats();
-        console.log('📊 Product feed stats:', stats);
+  // Filter Bar Component
+  const FilterBar: React.FC = () => {
+    const activeFilters = priceFilter !== 'all' || scoreFilter > 0;
+    
+    return (
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-slate-700">Filters:</span>
+          </div>
+          
+          {/* Price Filter */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="price-filter" className="text-sm text-slate-600">Prijs:</label>
+            <select
+              id="price-filter"
+              value={priceFilter}
+              onChange={(e) => setPriceFilter(e.target.value)}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-200"
+            >
+              <option value="all">Alle prijzen</option>
+              <option value="0-50">€0 - €50</option>
+              <option value="50-100">€50 - €100</option>
+              <option value="100-200">€100 - €200</option>
+              <option value="200+">€200+</option>
+            </select>
+          </div>
 
-      } catch (err) {
-        console.error('❌ Failed to load deals:', err);
-        setError('Er is een fout opgetreden bij het laden van de deals. Probeer het later opnieuw.');
-        
-        // Load fallback data
-        try {
-          const { dealOfTheWeek: fallbackWeekly, top10Deals: fallbackTop10, dealCategories: fallbackCategories } = await import('../data/dealsData');
-          setDealOfTheWeek(fallbackWeekly);
-          setTop10Deals(fallbackTop10);
-          setDealCategories(fallbackCategories);
-        } catch (fallbackErr) {
-          console.error('❌ Failed to load fallback data:', fallbackErr);
-        }
-      } finally {
-        setIsLoading(false);
+          {/* Score Filter */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="score-filter" className="text-sm text-slate-600">Min. score:</label>
+            <select
+              id="score-filter"
+              value={scoreFilter}
+              onChange={(e) => setScoreFilter(Number(e.target.value))}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-200"
+            >
+              <option value="0">Alle scores</option>
+              <option value="7">7+ ⭐</option>
+              <option value="8">8+ ⭐⭐</option>
+              <option value="9">9+ ⭐⭐⭐</option>
+            </select>
+          </div>
+
+          {/* Reset Button */}
+          {activeFilters && (
+            <button
+              onClick={() => {
+                setPriceFilter('all');
+                setScoreFilter(0);
+              }}
+              className="ml-auto rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-200"
+            >
+              Reset filters
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Carousel Component
+  const Carousel: React.FC<{ items: DealItem[], title: string, badge?: string }> = ({ items, title, badge }) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+    
+    // Touch swipe state
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
+
+    const checkScroll = useCallback(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        setCanScrollLeft(scrollLeft > 0);
+        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+      }
+    }, []);
+
+    useEffect(() => {
+      checkScroll();
+      const ref = scrollRef.current;
+      if (ref) {
+        ref.addEventListener('scroll', checkScroll);
+        return () => ref.removeEventListener('scroll', checkScroll);
+      }
+    }, [checkScroll, items]);
+
+    const scroll = (direction: 'left' | 'right') => {
+      if (scrollRef.current) {
+        const scrollAmount = 320;
+        scrollRef.current.scrollBy({
+          left: direction === 'left' ? -scrollAmount : scrollAmount,
+          behavior: 'smooth'
+        });
       }
     };
 
-    loadDeals();
+    // Touch handlers for swipe gestures
+    const handleTouchStart = (e: React.TouchEvent) => {
+      setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+      setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+      if (!touchStart || !touchEnd) return;
+      
+      const distance = touchStart - touchEnd;
+      const isLeftSwipe = distance > 50;
+      const isRightSwipe = distance < -50;
+
+      if (isLeftSwipe && canScrollRight) {
+        scroll('right');
+      }
+      if (isRightSwipe && canScrollLeft) {
+        scroll('left');
+      }
+
+      // Reset
+      setTouchStart(0);
+      setTouchEnd(0);
+    };
+
+    return (
+      <div className="relative">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 text-white shadow-md">
+              {getCategoryIcon(title)}
+            </div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
+              {title}
+            </h2>
+            {badge && (
+              <span className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
+                {badge}
+              </span>
+            )}
+          </div>
+          <div className="hidden md:flex gap-2">
+            <button
+              onClick={() => scroll('left')}
+              disabled={!canScrollLeft}
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Scroll naar links"
+            >
+              <ChevronRightIcon className="h-5 w-5 rotate-180" />
+            </button>
+            <button
+              onClick={() => scroll('right')}
+              disabled={!canScrollRight}
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Scroll naar rechts"
+            >
+              <ChevronRightIcon className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        
+        {/* Mobile swipe indicator */}
+        <div className="md:hidden mb-3 flex items-center justify-center gap-2 text-xs text-slate-500">
+          <span className="animate-pulse">👈 Swipe 👉</span>
+        </div>
+        
+        <div
+          ref={scrollRef}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory touch-pan-x"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {items.map((deal, index) => (
+            <div key={deal.id} className="flex-shrink-0 w-[280px] snap-start">
+              <DealCard deal={deal} index={index} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Deal Card Component
+  const DealCard: React.FC<{
+    deal: DealItem;
+    index?: number;
+    variant?: 'carousel' | 'grid' | 'feature';
+  }> = ({ deal, index = 0, variant = 'carousel' }) => {
+    // Check if this is a top deal (score 9+) or hot deal (sale + score 8+)
+    const isTopDeal = deal.giftScore && deal.giftScore >= 9;
+    const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8;
+    const socialProof = getSocialProofBadge(deal, index);
+    const retailerInfo = useMemo(() => resolveRetailerInfo(deal.affiliateLink), [deal.affiliateLink]);
+    const imageHeightClass = variant === 'feature' ? 'h-64 md:h-72' : variant === 'grid' ? 'h-44' : 'h-48';
+    const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4';
+    const priceBadgeClass = variant === 'feature' ? 'px-4 py-2 text-base' : 'px-3 py-1.5 text-sm';
+    const buttonPaddingClass = variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm';
+    
+    // Track impression when card becomes visible
+    const cardRef = useRef<HTMLDivElement>(null);
+    
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && deal.id) {
+              trackDealImpression(deal.id, retailerInfo?.shortLabel);
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      
+      if (cardRef.current) {
+        observer.observe(cardRef.current);
+      }
+      
+      return () => {
+        if (cardRef.current) {
+          observer.unobserve(cardRef.current);
+        }
+      };
+    }, [deal.id, retailerInfo?.shortLabel, trackDealImpression]);
+    
+    const handleClick = () => {
+      if (deal.id) {
+        trackDealClick(deal.id, retailerInfo?.shortLabel);
+      }
+    };
+    
+    return (
+      <div
+        ref={cardRef} 
+        className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
+        isTopDeal 
+          ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy' 
+          : 'border border-slate-200'
+      }`}>
+        {/* Inner card wrapper for TOP deals (creates gradient border effect) */}
+        <div className={isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'}>
+          <div className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white ${imageHeightClass}`}>
+            <ImageWithFallback
+              src={deal.imageUrl}
+              alt={deal.name}
+              className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+              fit="contain"
+            />
+            
+            {/* Badges - stacked in top-right corner */}
+            <div className="absolute top-2 right-2 flex flex-col gap-1">
+              {isTopDeal && (
+                <div className="rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 px-2 py-1 text-xs font-bold text-white shadow-md animate-pulse">
+                  ⭐ TOP
+                </div>
+              )}
+              {isHotDeal && !isTopDeal && (
+                <div className="rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                  🔥 HOT
+                </div>
+              )}
+              {deal.isOnSale && !isHotDeal && !isTopDeal && (
+                <div className="rounded-lg bg-amber-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                  SALE
+                </div>
+              )}
+            </div>
+          </div>
+          <div className={`flex flex-1 flex-col gap-3 ${bodyPaddingClass}`}>
+            {/* Social Proof Badge */}
+            {socialProof && (
+              <div className={`inline-flex items-center gap-1.5 self-start rounded-full ${socialProof.color} px-3 py-1 text-xs font-semibold`}>
+                <span>{socialProof.icon}</span>
+                <span>{socialProof.text}</span>
+              </div>
+            )}
+            {retailerInfo && (
+              <div className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}>
+                {retailerInfo.label}
+              </div>
+            )}
+            
+            <div className="space-y-1.5">
+              <h3 className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug">
+                {deal.name}
+              </h3>
+              {variant === 'feature' && deal.description && (
+                <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">{deal.description}</p>
+              )}
+            </div>
+            <div className="mt-auto space-y-2.5">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={`rounded-lg bg-rose-500 font-bold text-white ${priceBadgeClass}`}>
+                  {formatPrice(deal.price) ?? 'Prijs op aanvraag'}
+                </span>
+                {deal.originalPrice && (
+                  <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs text-slate-500">
+                    <s>{deal.originalPrice}</s>
+                  </span>
+                )}
+              </div>
+              {deal.giftScore && (
+                <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+                  <CheckIcon className="h-3.5 w-3.5" />
+                  <span className="font-semibold">Cadeauscore: {deal.giftScore}/10</span>
+                </div>
+              )}
+              <a
+                href={withAffiliate(deal.affiliateLink)}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                onClick={handleClick}
+                className={`block w-full rounded-lg bg-accent text-center font-bold text-white shadow-md transition-all hover:bg-accent-hover hover:shadow-lg hover:scale-105 ${buttonPaddingClass}`}
+              >
+                Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'} →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const getDisplayTitle = useCallback((title: string) => {
+    const lowerTitle = title.toLowerCase();
+
+    if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
+      return 'Amazon Gift Sets die indruk maken';
+    }
+
+    if (lowerTitle.includes('keuken')) {
+      return 'Beste keukenaccessoires van nu';
+    }
+
+    if (lowerTitle.includes('tech')) {
+      return 'Top tech gadgets & smart upgrades';
+    }
+
+    if (lowerTitle.includes('lifestyle')) {
+      return 'Lifestyle cadeaus voor verwenmomenten';
+    }
+
+    return title;
   }, []);
 
-  // Loading state
-  if (isLoading) {
+  const getCategoryDescription = useCallback((title: string, displayTitle: string, count: number) => {
+    const lowerTitle = title.toLowerCase();
+
+    if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
+      return `Onze selectie van ${count} Amazon gift sets geeft direct het wow-effect. Perfect als last-minute cadeau: luxe verpakkingen, prime-levering en klaar om te geven.`;
+    }
+
+    if (lowerTitle.includes('keuken')) {
+      return `Handige keukenhulpen en smaakvolle cadeaus: ${count} toppers die koken leuker maken en bij foodies meteen in de smaak vallen.`;
+    }
+
+    if (lowerTitle.includes('tech')) {
+      return `${count} slimme gadgets en audio-upgrades waarmee je gadgetfans verrast. Mix van bestsellers en nieuwe releases, allemaal snel leverbaar.`;
+    }
+
+    if (lowerTitle.includes('lifestyle')) {
+      return `${count} lifestylecadeaus om iemand te verwennen – van wellness tot stijl. Ideaal voor persoonlijke momenten of self-care surprises.`;
+    }
+
+    return `Onze redactie selecteerde ${count} cadeaus binnen ${displayTitle}. Geen eindeloze scroll, maar direct inspiratie.`;
+  }, []);
+
+  const CategorySection: React.FC<{ category: DealCategory; index: number }> = ({ category, index }) => {
+    const items = category.items;
+
+    if (!items.length) {
+      return null;
+    }
+
+  const displayTitle = getDisplayTitle(category.title);
+  const description = getCategoryDescription(category.title, displayTitle, items.length);
+
+    const retailerLabels = useMemo(() => {
+      const unique = new Set<string>();
+      items.forEach((item) => {
+        const info = resolveRetailerInfo(item.affiliateLink);
+        if (info.shortLabel) {
+          unique.add(info.shortLabel);
+        }
+      });
+      return Array.from(unique);
+    }, [items]);
+
+    const priceRange = useMemo(() => {
+      const parsed = items
+        .map((item) => {
+          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.');
+          const value = Number.parseFloat(normalised);
+          return Number.isFinite(value) ? value : null;
+        })
+        .filter((value): value is number => value !== null);
+
+      if (!parsed.length) {
+        return null;
+      }
+
+      const min = Math.min(...parsed);
+      const max = Math.max(...parsed);
+      if (min === max) {
+        return formatCurrency(min);
+      }
+      return `${formatCurrency(min)} – ${formatCurrency(max)}`;
+    }, [items]);
+
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-muted-rose/60 flex items-center justify-center">
-        <div className="text-center animate-pulse">
-            <div className="mx-auto mb-6 w-16 h-16 rounded-full border-4 border-accent/30 border-t-accent animate-spin" aria-hidden="true"></div>
-            <p className="text-slate-600 text-base font-medium">Bezig met laden van de beste deals…</p>
-            <p className="text-xs text-slate-400 mt-2">Live productfeed ophalen</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state with fallback
-  if (error && !dealOfTheWeek) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-muted-rose/60 flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto p-6">
-          <div className="bg-red-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-            <span className="text-red-600 text-2xl">⚠️</span>
+      <article
+        className="space-y-6 animate-fade-in-up"
+        style={{ animationDelay: `${120 + index * 70}ms` }}
+      >
+        <header className="space-y-3">
+          <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
+            <GiftIcon className="h-4 w-4" />
+            Curated selectie
           </div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Oeps!</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()} variant="primary">
-            Probeer opnieuw
-          </Button>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/10">
-      <Meta
-        title="Beste Cadeau Deals & Aanbiedingen | Gifteez"
-        description="Ontdek dagelijks geüpdatete cadeau deals: top 10 populaire cadeaus, weekdeal en categorie selectie. Altijd inspiratie met voordeel."
-        canonical="https://gifteez.nl/deals"
-        ogImage="https://gifteez.nl/images/og-deals.png"
-      />
-      <JsonLd data={itemListSchema} id="jsonld-deals-itemlist" />
-  {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary via-accent to-accent-hover text-white overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute inset-0 opacity-[0.07] bg-[radial-gradient(circle_at_30%_40%,#ffffff,transparent_60%),radial-gradient(circle_at_70%_60%,#ffffff,transparent_55%)]"></div>
-
-  <Container size="xl" className="py-16 xs:py-18 sm:py-20 md:py-24 lg:py-28 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-              <SparklesIcon className="w-10 h-10 text-white" />
-            </div>
-            <h1 className="typo-h1 mb-6 tracking-tight text-white">
-              Beste <span className="bg-gradient-to-r from-accent to-highlight bg-clip-text text-transparent">Cadeau Deals</span>
-            </h1>
-            <p className="typo-lead text-white/90 max-w-3xl mx-auto mb-8">
-              Ontdek de beste aanbiedingen en meest populaire cadeaus, zorgvuldig geselecteerd voor de hoogste kwaliteit tegen de laagste prijzen!
-            </p>
-            <ul className="flex flex-wrap justify-center gap-3 text-[13px]" aria-label="Voordelen lijst">
-              <li className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 font-medium">
-                <TagIcon className="w-4 h-4" />
-                <span>Top kwaliteit</span>
-              </li>
-              <li className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 font-medium">
-                <TagIcon className="w-4 h-4" />
-                <span>Beperkte tijd</span>
-              </li>
-              <li className="flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 font-medium">
-                <GiftIcon className="w-4 h-4" />
-                <span>Populaire cadeaus</span>
-              </li>
-            </ul>
+          <div>
+            <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
+              {displayTitle}
+            </h3>
+            <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
           </div>
-        </Container>
-      </section>
-
-      <Container size="xl" className="py-16">
-        {/* Deal of the Week */}
-        {dealOfTheWeek && (
-          <section className="mb-20">
-            <div className="bg-white rounded-3xl shadow-xl overflow-hidden md:flex items-center border border-gray-100/70">
-              <div className="md:w-1/2 overflow-hidden relative bg-white flex items-center justify-center">
-                <div className="absolute top-6 left-6 z-10">
-                  <div className="bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold flex items-center gap-2 shadow">
-                    <TagIcon className="w-5 h-5" />
-                    DEAL VAN DE WEEK
-                  </div>
-                </div>
-                {dealOfTheWeek.isOnSale && (
-                  <div className="absolute top-6 right-6 z-10">
-                    <div className="bg-gradient-to-r from-accent to-accent-hover text-white px-4 py-2 rounded-full text-xs md:text-sm font-bold flex items-center gap-2 shadow">
-                      <CheckIcon className="w-5 h-5" />
-                      SALE
-                    </div>
-                  </div>
-                )}
-                <img
-                  src={dealOfTheWeek.imageUrl}
-                  alt={dealOfTheWeek.name}
-                  loading="lazy"
-                  className="w-full h-80 md:h-full object-contain transition-transform duration-500 hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              </div>
-              <div className="md:w-1/2 p-8 md:p-12">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 bg-accent/10 rounded-lg">
-                    <SparklesIcon className="w-8 h-8 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-accent uppercase tracking-wide">Exclusieve Aanbieding</h3>
-                    <p className="text-xs text-gray-600">Automatisch geselecteerd uit Coolblue feed</p>
-                  </div>
-                </div>
-                <h2 className="font-display text-3xl md:text-5xl font-bold text-primary mb-6 leading-tight tracking-tight">{dealOfTheWeek.name}</h2>
-                <p className="text-gray-600 leading-relaxed md:text-lg text-base mb-8 max-w-prose">{dealOfTheWeek.description}</p>
-                
-                {/* Gift Score Badge */}
-                {dealOfTheWeek.giftScore && dealOfTheWeek.giftScore >= 8 && (
-                  <div className="mb-6 inline-flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-xs md:text-sm font-semibold">
-                    <GiftIcon className="w-4 h-4" />
-                    Cadeau score: {dealOfTheWeek.giftScore}/10
-                  </div>
-                )}
-                
-                <div className="flex items-baseline gap-4 mb-8">
-                  <p className="font-display text-5xl font-bold text-accent">{dealOfTheWeek.price}</p>
-                  {dealOfTheWeek.originalPrice && (
-                    <>
-                      <p className="text-lg text-gray-500 line-through">{dealOfTheWeek.originalPrice}</p>
-                      <div className="bg-rose-100 text-rose-700 px-3 py-1 rounded-full text-xs md:text-sm font-bold">
-                        KORTING
-                      </div>
-                    </>
-                  )}
-                </div>
-                <a href={withAffiliate(dealOfTheWeek.affiliateLink)} target="_blank" rel="noopener noreferrer sponsored nofollow">
-                  <Button variant="accent" className="w-full md:w-auto py-4 px-8 text-base md:text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-[1.03] active:scale-95 transition-all duration-300 flex items-center justify-center gap-2">
-                    <ShoppingCartIcon className="w-6 h-6" />
-                    Profiteer van de Deal
-                  </Button>
-                </a>
-                
-                {/* Data source info */}
-                <p className="text-xs text-gray-500 mt-4">
-                  🔄 Automatisch bijgewerkt vanuit Coolblue productfeed • Laatste update: vandaag
-                </p>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Top 10 Popular Gifts */}
-        <section className="mb-20">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent text-white rounded-full mb-6 shadow">
-              <StarIcon className="w-8 h-8" />
-            </div>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4 tracking-tight">Top 10 Populaire Cadeaus</h2>
-            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              De meest geliefde en hoog beoordeelde cadeaus van dit moment. Altijd een veilige keuze voor uiteenlopende gelegenheden.
-            </p>
-            <div className="flex justify-center items-center gap-4 mt-6">
-              <div className="flex items-center gap-2 bg-muted-rose text-accent px-4 py-2 rounded-full text-sm font-semibold">
-                <CheckIcon className="w-4 h-4" />
-                Hoogste Kwaliteit
-              </div>
-              <div className="flex items-center gap-2 bg-highlight/10 text-highlight px-4 py-2 rounded-full text-sm font-semibold">
-                <StarIcon className="w-4 h-4" />
-                Best Beoordeeld
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {top10Deals.map((item, index) => (
-              <div key={item.id} className="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl border border-gray-100">
-                <div className="relative">
-                  <div className="absolute top-3 left-3 z-10">
-                    <div className="bg-gradient-to-r from-primary to-accent text-white text-base font-bold w-12 h-12 flex items-center justify-center rounded-full shadow">
-                      #{index+1}
-                    </div>
-                  </div>
-                  <div className="overflow-hidden bg-white flex items-center justify-center">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      loading="lazy"
-                      className="w-full h-40 object-contain group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <div className="p-4 flex flex-col flex-grow">
-                  <h3 className="font-display text-lg font-bold text-primary flex-grow leading-tight mb-2">{item.name}</h3>
-                  <div className="flex items-center gap-1 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIcon key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-1">(4.9)</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="font-bold text-primary text-xl">{item.price}</p>
-                    <a href={withAffiliate(item.affiliateLink)} target="_blank" rel="noopener noreferrer sponsored nofollow">
-                      <Button variant="primary" className="py-2 px-4 text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                        Bekijk
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-              </div>
+          <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+              {items.length} cadeaus
+            </span>
+            {priceRange && (
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">
+                Prijsrange {priceRange}
+              </span>
+            )}
+            {retailerLabels.map((label) => (
+              <span key={label} className="rounded-full bg-orange-100 px-3 py-1 text-orange-700">
+                {label}
+              </span>
             ))}
           </div>
-        </section>
+        </header>
 
-        {/* Amazon Teaser */}
-        <section className="mb-20" aria-labelledby="amazon-deals-heading">
-          <div className="bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 md:p-12 border border-muted-rose/60">
-            <div className="text-center mb-8">
-              <h3 id="amazon-deals-heading" className="font-display text-3xl font-bold text-primary mb-4 tracking-tight">Amazon Aanbiedingen</h3>
-              <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">Ontdek interessante Amazon deals via onze affiliate links (geen extra kosten voor jou – helpt ons platform ❤️).</p>
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {items.map((deal, dealIndex) => (
+            <div
+              key={deal.id}
+              className={dealIndex === 0 ? 'md:col-span-2 xl:col-span-2' : ''}
+            >
+              <DealCard deal={deal} index={dealIndex} variant={dealIndex === 0 ? 'feature' : 'grid'} />
             </div>
-            <AmazonTeaser
-              items={[
-                {
-                  title: 'JBL Tune 510BT On‑Ear Koptelefoon',
-                  imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop&crop=center',
-                  affiliateUrl: 'https://www.amazon.nl/dp/B08VJDLPG3?tag=gifteez77-21',
-                },
-                {
-                  title: 'LEGO Technic Formula E Porsche 99X',
-                  imageUrl: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop&crop=center',
-                  affiliateUrl: 'https://www.amazon.nl/dp/B0BPCPFRRC?tag=gifteez77-21',
-                },
-                {
-                  title: 'Rituals The Ritual of Sakura Gift Set',
-                  imageUrl: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400&h=400&fit=crop&crop=center',
-                  affiliateUrl: 'https://www.amazon.nl/dp/B07W7J5Z5J?tag=gifteez77-21',
-                },
-                {
-                  title: 'Philips Hue White Ambiance E27 (2‑pack)',
-                  imageUrl: 'https://images.unsplash.com/photo-1558002038-1055907df827?w=400&h=400&fit=crop&crop=center',
-                  affiliateUrl: 'https://www.amazon.nl/dp/B07SNRG7V6?tag=gifteez77-21',
-                },
-              ]}
-              note="Amazon‑links werken zonder API. Tag ingesteld: gifteez77-21."
-            />
-          </div>
-        </section>
+          ))}
+        </div>
+      </article>
+    );
+  };
 
-        {/* Categorized Deals */}
-        {dealCategories.map((category) => (
-          <section key={category.title} className="mb-20">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-primary to-accent text-white rounded-full mb-4">
-                <GiftIcon className="w-7 h-7" />
+  const PinnedDealsSection: React.FC<{ deals: DealItem[] }> = ({ deals }) => {
+    if (!deals.length) {
+      return null;
+    }
+
+    const featured = deals[0];
+    const supporting = deals.slice(1);
+
+    const priceRange = useMemo(() => {
+      const parsed = deals
+        .map((item) => {
+          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.');
+          const value = Number.parseFloat(normalised);
+          return Number.isFinite(value) ? value : null;
+        })
+        .filter((value): value is number => value !== null);
+
+      if (!parsed.length) {
+        return null;
+      }
+
+      const min = Math.min(...parsed);
+      const max = Math.max(...parsed);
+      return min === max ? formatCurrency(min) : `${formatCurrency(min)} – ${formatCurrency(max)}`;
+    }, [deals]);
+
+    const partnerLabels = useMemo(() => {
+      const labels = new Set<string>();
+      deals.forEach((deal) => {
+        const info = resolveRetailerInfo(deal.affiliateLink);
+        labels.add(info.shortLabel);
+      });
+      return Array.from(labels);
+    }, [deals]);
+
+    return (
+      <section className="space-y-8">
+        <header className="text-center space-y-3">
+          <span className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-orange-700">
+            <GiftIcon className="h-4 w-4" />
+            Amazon Gift Sets
+          </span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900">
+            Luxe cadeauboxen die direct klaar zijn om te geven
+          </h2>
+          <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-600">
+            Deze edit bestaat uit {deals.length} zorgvuldig geselecteerde gift sets. Stuk voor stuk Amazon Prime toppers met snelle levering, opvallende verpakkingen en een hoge cadeauscore.
+          </p>
+          <div className="flex flex-wrap justify-center gap-2 text-xs font-semibold text-slate-500">
+            {priceRange && (
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700">
+                Prijsrange {priceRange}
+              </span>
+            )}
+            {partnerLabels.map((label) => (
+              <span key={label} className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+                {label}
+              </span>
+            ))}
+          </div>
+        </header>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="lg:sticky lg:top-24 h-fit">
+            <DealCard deal={featured} variant="feature" />
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {supporting.map((deal, index) => (
+              <DealCard key={deal.id} deal={deal} index={index + 1} variant="grid" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  return (
+    <>
+      <Meta
+        title="Deals & cadeaudeals van de week"
+        description="Ontdek de scherpste cadeaudeals van Gifteez. We combineren de beste Coolblue aanbiedingen met handmatig geselecteerde toppers."
+      />
+      <JsonLd data={structuredData} />
+
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
+      
+      <Breadcrumbs 
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Deals' }
+        ]}
+      />
+      
+        {/* Hero Section - Compact & Modern */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-rose-500 via-rose-600 to-orange-600">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
+          </div>
+          
+          <Container size="xl" padded className="relative py-12 md:py-16">
+            <div className="max-w-4xl mx-auto text-center text-white">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 mb-4 text-sm font-semibold">
+                <SparklesIcon className="h-4 w-4" />
+                <span>Dagelijks bijgewerkt</span>
               </div>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">{category.title}</h2>
-              <p className="text-gray-600 max-w-xl mx-auto text-sm md:text-base">
-                {category.title === 'Top Tech Gadgets' && 'Top technologie & audio / smart picks geselecteerd op prijs-kwaliteit.'}
-                {category.title === 'Beste Keukenaccessoires' && 'Functionele en tijdsbesparende keukenhelpers voor dagelijks gebruik.'}
-                {category.title === 'Populaire Duurzame Keuzes' && 'Duurzame en herbruikbare favorieten voor een groenere lifestyle.'}
+              
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                De beste cadeaudeals
+                <span className="block text-yellow-300 mt-1">van deze week</span>
+              </h1>
+              
+              <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl mx-auto">
+                Ontdek scherpe deals van Coolblue en Amazon, perfect voor elk cadeau moment
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Button 
+                  variant="accent" 
+                  onClick={() => navigateTo('giftFinder')}
+                  className="shadow-lg"
+                >
+                  Vind je perfect cadeau
+                </Button>
+                {state.dealOfWeek && (
+                  <a
+                    href={withAffiliate(state.dealOfWeek.affiliateLink)}
+                    target="_blank"
+                    rel="noopener noreferrer sponsored"
+                    className="inline-flex items-center gap-2 rounded-xl border border-white/60 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/20"
+                    onClick={handleFeaturedClick}
+                  >
+                    Bekijk topdeal
+                  </a>
+                )}
+                <Button
+                  variant="ghost"
+                  className="border border-white/40 bg-white/10 text-white hover:bg-white/20"
+                  onClick={handleRefresh}
+                >
+                  Vernieuw deals
+                </Button>
+              </div>
+
+              {(lastUpdated || manualConfigUpdatedAt) && (
+                <div className="mt-6 text-xs text-white/70">
+                  {lastUpdated && <p>Laatst bijgewerkt: {formatDate(lastUpdated)}</p>}
+                </div>
+              )}
+              {partnerBadges.length > 0 && (
+                <div className="mt-4 text-xs font-semibold text-white/80">
+                  Partnerwinkels: {partnerBadges.join(' • ')}
+                </div>
+              )}
+              <p className="mt-3 text-xs text-white/70">
+                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor jou.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {category.items.map(item => (
-                <DealCard key={item.id} item={item} />
-              ))}
-            </div>
-          </section>
-        ))}
-
-        {/* Affiliate disclaimer */}
-        <section className="mt-24 text-center text-xs text-gray-500 max-w-3xl mx-auto">
-          Sommige links zijn affiliate links. Jij betaalt niets extra, maar wij kunnen een kleine commissie ontvangen ter ondersteuning van het platform.
+          </Container>
         </section>
 
-  </Container>
-    </div>
+        <Container size="xl" padded className="py-12 space-y-12">
+          {error && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
+              {error}
+            </div>
+          )}
+
+          {isLoading ? (
+            <div className="space-y-12">
+              {/* Featured deal skeleton */}
+              <FeaturedDealSkeleton />
+              
+              {/* Top 10 carousel skeleton */}
+              <CarouselSkeleton />
+              
+              {/* Category carousels skeletons */}
+              <CarouselSkeleton />
+              <CarouselSkeleton />
+            </div>
+          ) : (
+            <>
+              {/* Deal of the Week - Featured Card */}
+              {state.dealOfWeek && (
+                <section className="animate-fade-in">
+                  <div className="overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-white via-rose-50/30 to-orange-50/30 shadow-xl">
+                    <div className="grid lg:grid-cols-2 gap-6 p-6 md:p-8">
+                      <div className="flex items-center justify-center bg-white rounded-2xl p-6">
+                        <ImageWithFallback
+                          src={state.dealOfWeek.imageUrl}
+                          alt={state.dealOfWeek.name}
+                          className="w-full max-w-[320px] object-contain"
+                          fit="contain"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-center gap-4">
+                        <div className="inline-flex items-center gap-2 self-start rounded-full bg-rose-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
+                          <StarIcon className="h-4 w-4" />
+                          Deal van de week
+                        </div>
+                        {featuredRetailer && (
+                          <div className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${featuredRetailer.badgeClass}`}>
+                            {featuredRetailer.label}
+                          </div>
+                        )}
+                        <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900">
+                          {state.dealOfWeek.name}
+                        </h2>
+                        <p className="text-base text-slate-600 leading-relaxed">
+                          {state.dealOfWeek.description}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="inline-flex items-center gap-2 rounded-lg bg-rose-500 px-5 py-2.5 text-lg font-bold text-white">
+                            {formatPrice(state.dealOfWeek.price) ?? 'Prijs op aanvraag'}
+                          </span>
+                          {state.dealOfWeek.originalPrice && (
+                            <span className="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-500">
+                              <s>{state.dealOfWeek.originalPrice}</s>
+                            </span>
+                          )}
+                          {state.dealOfWeek.giftScore && (
+                            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-700">
+                              <CheckIcon className="h-4 w-4" />
+                              Score {state.dealOfWeek.giftScore}/10
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-3 mt-2">
+                          <a
+                            href={withAffiliate(state.dealOfWeek.affiliateLink)}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            onClick={handleFeaturedClick}
+                            className="inline-flex items-center gap-2 rounded-xl bg-accent px-8 py-3.5 text-base font-bold text-white shadow-lg transition-all hover:bg-accent-hover hover:shadow-xl hover:scale-105"
+                          >
+                            Naar {featuredRetailer ? featuredRetailer.shortLabel : 'de winkel'} →
+                          </a>
+                          <Button
+                            variant="secondary"
+                            className="bg-white"
+                            onClick={showNextDeal}
+                          >
+                            Toon andere deal
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              )}
+
+              {/* Filter Bar */}
+              <div className="animate-fade-in-up" style={{ animationDelay: '80ms' }}>
+                <FilterBar />
+              </div>
+
+              {/* Top 10 Deals Carousel */}
+              {state.topDeals.length > 0 && (
+                <section className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                  <Carousel 
+                    items={filterDeals(state.topDeals)} 
+                    title="🏆 Top 10 Cadeaus"
+                    badge={`${filterDeals(state.topDeals).length} deals`}
+                  />
+                </section>
+              )}
+
+              {pinnedDeals.length > 0 && (
+                <div className="animate-fade-in-up" style={{ animationDelay: '110ms' }}>
+                  <PinnedDealsSection deals={pinnedDeals} />
+                </div>
+              )}
+
+              {state.categories.length > 0 && (
+                <section className="space-y-14 animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+                  <div className="text-center space-y-3">
+                    <span className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
+                      <SparklesIcon className="h-4 w-4 text-rose-500" />
+                      Redactiecollecties
+                    </span>
+                    <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900">
+                      Handmatig samengestelde cadeaucollecties
+                    </h2>
+                    <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-600">
+                      We vullen deze blokken met actuele Amazon- en Coolblue-deals die direct cadeauproof zijn. Ideaal wanneer je snel een thematische selectie wilt zonder eindeloos zoeken.
+                    </p>
+                  </div>
+                  <div className="space-y-16">
+                    {state.categories.map((category, index) => (
+                      <CategorySection key={`${category.title}-${index}`} category={category} index={index} />
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Empty State */}
+              {!state.dealOfWeek && state.topDeals.length === 0 && state.categories.length === 0 && !error && (
+                <div className="text-center py-16">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
+                    <TagIcon className="h-8 w-8 text-slate-400" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-slate-700 mb-2">Nog geen deals beschikbaar</h3>
+                  <p className="text-slate-500 mb-6">Controleer later opnieuw voor de nieuwste cadeaudeals</p>
+                  <Button variant="primary" onClick={handleRefresh}>
+                    Vernieuw nu
+                  </Button>
+                </div>
+              )}
+              
+              {/* Internal Links - Related Content */}
+              <div className="mt-16">
+                <h3 className="font-display text-2xl font-bold text-primary mb-6 text-center">
+                  🎯 Meer cadeauinspiratie
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <InternalLinkCTA
+                    to="/giftfinder"
+                    title="🎁 AI GiftFinder"
+                    description="Niet gevonden wat je zocht? Laat onze AI je helpen het perfecte cadeau te vinden op basis van budget, gelegenheid en interesses."
+                    icon="🤖"
+                    variant="primary"
+                  />
+                  <InternalLinkCTA
+                    to="/blog"
+                    title="📚 Cadeau Blog"
+                    description="Lees inspirerende artikelen over de nieuwste cadeau trends, tips en gift guides voor elke gelegenheid."
+                    icon="✨"
+                    variant="secondary"
+                  />
+                </div>
+              </div>
+            </>
+          )}
+        </Container>
+      </div>
+
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+    </>
   );
 };
 

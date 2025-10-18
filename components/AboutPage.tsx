@@ -12,6 +12,8 @@ import {
 import ImageWithFallback from './ImageWithFallback';
 import Meta from './Meta';
 import JsonLd from './JsonLd';
+import FAQSchema from './FAQSchema';
+import Breadcrumbs from './Breadcrumbs';
 import { socialLinks } from '../socialLinks';
 
 interface AboutPageProps {
@@ -71,22 +73,25 @@ const milestones: Array<{ year: string; title: string; description: string }> = 
 
 const teamMembers = [
   {
-    name: 'Anna van der Meer',
-    role: 'Oprichter & Cadeau-strateeg',
-    imageUrl: 'https://i.pravatar.cc/150?u=anna',
-    bio: 'Anna lanceerde Gifteez vanuit de missie om cadeaustress te verslaan. Ze bewaakt de merkervaring en vertaalt gebruikersfeedback naar nieuwe features.'
+    name: 'Kevin',
+    role: 'Oprichter & Lead AI Developer',
+    initial: 'K',
+    color: 'from-blue-500 to-indigo-600',
+    bio: 'Kevin is het technische brein achter de GiftFinder. Hij bouwt slimme algoritmes die duizenden cadeaus in seconden matchen met de perfecte ontvanger.'
   },
   {
-    name: 'Bas de Groot',
-    role: 'Lead AI Developer',
-    imageUrl: 'https://i.pravatar.cc/150?u=bas',
-    bio: 'Bas is het technische brein achter de GiftFinder. Hij maakt modellen slimmer met live data en zorgt dat matches relevant en eerlijk blijven.'
-  },
-  {
-    name: 'Sophie de Jong',
+    name: 'Bianca',
     role: 'Content & Inspiratiemanager',
-    imageUrl: 'https://i.pravatar.cc/150?u=sophie',
-    bio: 'Sophie curateert cadeaucollecties en schrijft gidsen die je creativiteit aanwakkeren. Ze werkt nauw samen met retailers en trendwatchers.'
+    initial: 'B',
+    color: 'from-pink-500 to-rose-600',
+    bio: 'Bianca curateert cadeaucollecties en schrijft inspirerende gidsen. Ze werkt nauw samen met retailers en trendwatchers om je altijd de beste ideeën te geven.'
+  },
+  {
+    name: 'Anna',
+    role: 'Cadeau-strateeg',
+    initial: 'A',
+    color: 'from-purple-500 to-violet-600',
+    bio: 'Anna vertaalt gebruikersfeedback naar nieuwe features. Ze bewaakt de merkervaring en zorgt dat Gifteez blijft focussen op wat jij écht nodig hebt.'
   }
 ];
 
@@ -169,29 +174,42 @@ const structuredData = {
   }
 };
 
+const aboutFAQs = [
+  {
+    question: "Wat is Gifteez en hoe werkt het?",
+    answer: "Gifteez is een slimme AI-powered gift finder die je helpt het perfecte cadeau te vinden. Je vult simpelweg je budget, gelegenheid en interesses in, en onze AI scant 1000+ cadeaus om je een persoonlijke shortlist te geven met directe kooplinks."
+  },
+  {
+    question: "Is Gifteez gratis te gebruiken?",
+    answer: "Ja, Gifteez is volledig gratis te gebruiken. We verdienen commissie op verkopen via onze affiliate partners (Coolblue en Amazon), maar dit heeft geen invloed op de prijs die jij betaalt."
+  },
+  {
+    question: "Waar komen de producten vandaan?",
+    answer: "We tonen producten van gerenommeerde online retailers zoals Coolblue en Amazon. Alle producten worden dagelijks bijgewerkt met de nieuwste prijzen en deals."
+  },
+  {
+    question: "Hoe werkt de AI GiftFinder precies?",
+    answer: "Onze AI analyseert je input (budget, gelegenheid, interesses) en match dit met productkenmerken, reviews, populariteit en seizoenstrends. Zo krijg je binnen 30 seconden een gepersonaliseerde shortlist van cadeaus die het beste passen."
+  },
+  {
+    question: "Kan ik mijn favoriete cadeaus opslaan?",
+    answer: "Ja! Je kunt cadeaus toevoegen aan je favorieten en deze later terugvinden. Als je ingelogd bent, worden je favorieten automatisch gesynchroniseerd."
+  }
+];
+
 const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
       <Meta title={pageTitle} description={pageDescription} canonical={canonicalUrl} ogImage={heroImageUrl} />
       <JsonLd data={structuredData} id="about-page-jsonld" />
+      <FAQSchema faqs={aboutFAQs} />
 
-      <nav aria-label="Breadcrumb" className="bg-secondary/30">
-        <ol className="container mx-auto flex items-center gap-2 px-4 py-3 text-sm text-gray-600">
-          <li>
-            <button
-              type="button"
-              onClick={() => navigateTo('home')}
-              className="transition-colors hover:text-primary"
-            >
-              Home
-            </button>
-          </li>
-          <li aria-hidden="true" className="text-gray-400">
-            /
-          </li>
-          <li className="font-semibold text-primary">Over ons</li>
-        </ol>
-      </nav>
+      <Breadcrumbs 
+        items={[
+          { label: 'Home', onClick: () => navigateTo('home') },
+          { label: 'Over ons' }
+        ]}
+      />
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-white to-blue-50">
@@ -431,24 +449,25 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             {teamMembers.map((member) => (
               <article
                 key={member.name}
-                className="rounded-3xl border border-gray-100 bg-white p-8 text-center shadow-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl"
+                className="group rounded-3xl border border-gray-100 bg-white p-8 text-center shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
               >
+                {/* Initiaal cirkel met gradient */}
                 <div className="relative mx-auto mb-6 h-28 w-28">
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-primary/20 to-accent/20" />
-                  <ImageWithFallback
-                    src={member.imageUrl}
-                    alt={member.name}
-                    className="relative h-28 w-28 rounded-full border-4 border-white object-cover shadow-lg"
-                    showSkeleton
-                    fit="cover"
-                  />
+                  <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${member.color} opacity-90 shadow-lg transition-transform duration-300 group-hover:scale-110`} />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-5xl font-bold text-white drop-shadow-lg">
+                      {member.initial}
+                    </span>
+                  </div>
                 </div>
+                
                 <h3 className="text-xl font-semibold text-gray-900">{member.name}</h3>
-                <p className="text-primary/80 font-medium">{member.role}</p>
-                <p className="mt-4 text-sm text-gray-600">{member.bio}</p>
+                <p className="text-primary/80 font-medium mt-1">{member.role}</p>
+                <p className="mt-4 text-sm leading-relaxed text-gray-600">{member.bio}</p>
+                
                 <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-secondary/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-primary">
                   <HeartIcon className="h-4 w-4" />
-                  Teamcadeau
+                  Teamlid
                 </div>
               </article>
             ))}
@@ -456,39 +475,135 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-primary via-blue-500 to-indigo-600 py-20 text-white">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-12 left-12 h-32 w-32 rounded-full bg-white" />
-          <div className="absolute bottom-16 right-20 h-40 w-40 rounded-full bg-white" />
+      {/* CTA - Moderne versie */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 py-24">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-12 -right-12 h-64 w-64 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 blur-3xl" />
+          <div className="absolute -bottom-12 -left-12 h-64 w-64 rounded-full bg-gradient-to-br from-blue-500/10 to-purple-500/10 blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-gradient-to-br from-pink-500/5 to-rose-500/5 blur-3xl" />
         </div>
+
         <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-              <GiftIcon className="h-10 w-10 text-white" />
-            </div>
-            <h2 className="typo-h1 leading-tight text-white">
-              Klaar om cadeaustress achter je te laten?
-            </h2>
-            <p className="typo-lead mx-auto mt-6 max-w-2xl text-white/90">
-              Start vandaag nog met de GiftFinder en ontvang cadeau-inspiratie die past bij jouw budget, persoon en moment.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button
-                variant="accent"
-                onClick={() => navigateTo('giftFinder')}
-                className="px-10 py-4 text-lg font-semibold shadow-xl transition-transform hover:-translate-y-0.5 hover:shadow-2xl"
-              >
-                <SparklesIcon className="h-6 w-6" />
-                Start direct
-              </Button>
-              <button
-                onClick={() => navigateTo('blog')}
-                className="inline-flex items-center gap-2 font-semibold text-white/90 underline decoration-white/60 decoration-2 underline-offset-4 transition-colors hover:text-white"
-              >
-                <UserIcon className="h-5 w-5" />
-                Lees onze inspiratiegidsen
-              </button>
+          <div className="mx-auto max-w-5xl">
+            {/* Content grid */}
+            <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+              {/* Left side - Text content */}
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-primary shadow-sm backdrop-blur-sm">
+                  <SparklesIcon className="h-4 w-4" />
+                  Klaar om te beginnen?
+                </div>
+                
+                <h2 className="typo-h1 mt-6 bg-gradient-to-r from-primary via-rose-600 to-purple-600 bg-clip-text text-transparent">
+                  Vind het perfecte cadeau in 30 seconden
+                </h2>
+                
+                <p className="typo-body mt-6 text-gray-700">
+                  Geen eindeloos scrollen meer. Onze AI GiftFinder vraagt jou 5 simpele vragen en matcht direct met duizenden cadeaus. 
+                  Gepersonaliseerd, snel en altijd passend bij jouw budget.
+                </p>
+
+                {/* Features list */}
+                <ul className="mt-8 space-y-3">
+                  <li className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-600">
+                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Slimme vragen die direct tot matches leiden</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-600">
+                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Dagelijks verse deals van betrouwbare retailers</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-600">
+                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">Gratis en zonder inloggen direct bruikbaar</span>
+                  </li>
+                </ul>
+
+                {/* CTA Buttons */}
+                <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <Button
+                    variant="primary"
+                    onClick={() => navigateTo('giftFinder')}
+                    className="group px-8 py-4 text-base font-semibold shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
+                  >
+                    <GiftIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                    Start GiftFinder
+                  </Button>
+                  <button
+                    onClick={() => navigateTo('blog')}
+                    className="inline-flex items-center gap-2 font-semibold text-gray-700 transition-colors hover:text-primary"
+                  >
+                    <UserIcon className="h-5 w-5" />
+                    Of lees eerst onze tips
+                  </button>
+                </div>
+              </div>
+
+              {/* Right side - Visual card */}
+              <div className="relative">
+                <div className="relative rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-900/5">
+                  {/* Decorative gradient border */}
+                  <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-primary via-rose-500 to-purple-500 opacity-20 blur" />
+                  
+                  <div className="relative space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-rose-600 shadow-lg">
+                        <SparklesIcon className="h-8 w-8 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-gray-500">Gemiddelde tijd</div>
+                        <div className="text-3xl font-bold text-gray-900">30 sec</div>
+                      </div>
+                    </div>
+
+                    <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Cadeaus beschikbaar</span>
+                        <span className="text-lg font-bold text-primary">5.000+</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Categorieën</span>
+                        <span className="text-lg font-bold text-primary">50+</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-600">Tevreden gebruikers</span>
+                        <span className="text-lg font-bold text-primary">10.000+</span>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-purple-50 p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                          <svg className="h-5 w-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-700">
+                            "Binnen een minuut had ik 5 perfecte opties. Echt een lifesaver!"
+                          </p>
+                          <p className="mt-1 text-xs text-gray-500">— Lisa, Amsterdam</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

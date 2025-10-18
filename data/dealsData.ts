@@ -27,26 +27,82 @@ export const dealCategories: DealCategory[] = [
   {
     title: 'Top Tech Gadgets',
     items: [
-        top10Deals[0], // Sonos Speaker
-        top10Deals[3], // JBL Koptelefoon
-        { id: 'tech-webcam', name: 'Logitech C920 HD Pro Webcam', description: 'Full HD webcam met stereo microfoons, perfect voor videobellen en streaming.', imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2034297', price: '€69,99', affiliateLink: 'https://www.coolblue.nl/product/687267/logitech-c920-hd-pro-webcam.html' },
-  { id: 'deal-tech-3', name: 'Apple AirTag', description: 'Verlies nooit meer je sleutels, tas of koffer. Een must-have voor iedereen.', imageUrl: 'https://picsum.photos/seed/airtag-tracker/300/300', price: '€35,00', affiliateLink: 'https://www.coolblue.nl/product/884485/apple-airtag-1-stuk.html' },
+      top10Deals[0],
+      top10Deals[3],
+      {
+        id: 'tech-lightbar',
+        name: 'Philips Hue Play Lightbar Double Pack',
+        description: 'Creëer direct ambiance in je woonkamer met twee slimme lightbars.',
+        imageUrl: 'https://m.media-amazon.com/images/I/61i7fSWTCI-L._AC_SL1500_.jpg',
+        price: '€135,99',
+        affiliateLink: 'https://www.amazon.nl/dp/B07L8YN3J3'
+      },
+      {
+        id: 'tech-airtack',
+        name: 'Apple AirTag 4-pack',
+        description: 'Track je essentials met nauwkeurige U1-chip locatiebepaling.',
+        imageUrl: 'https://m.media-amazon.com/images/I/71tHNTGasKL._AC_SL1500_.jpg',
+        price: '€109,00',
+        affiliateLink: 'https://www.amazon.nl/dp/B0933BVK6D'
+      }
     ]
   },
   {
     title: 'Beste Keukenaccessoires',
     items: [
-      { ...dealOfTheWeek, id: 'deal-keuken-1', description: 'Inbouw vaatwasser met Maxi Space voor optimale ruimtebenutting.', imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781' }, // Whirlpool Vaatwasser
-        top10Deals[4], // Philips Senseo
-        top10Deals[6], // Thrustmaster Racestuur
+      {
+        ...dealOfTheWeek,
+        id: 'deal-keuken-1',
+        description: 'Inbouw vaatwasser met Maxi Space technologie en stille werking.',
+        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781'
+      },
+      top10Deals[4],
+      {
+        id: 'kitchen-airfryer',
+        name: 'Philips Airfryer XXL Smart Sensing',
+        description: 'Gezond frituren voor het hele gezin met automatische bereidingsprogramma’s.',
+        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2143848',
+        price: '€249,00',
+        affiliateLink: 'https://www.coolblue.nl/product/960955/philips-airfryer-xxl-smart-sensing-black.html'
+      },
+      {
+        id: 'kitchen-nutribullet',
+        name: 'NutriBullet Pro 900',
+        description: 'Compacte powerblender voor smoothies, dips en sauzen in seconden.',
+        imageUrl: 'https://m.media-amazon.com/images/I/61L+k0E8bBL._AC_SL1500_.jpg',
+        price: '€109,99',
+        affiliateLink: 'https://www.amazon.nl/dp/B07JLZ9CCX'
+      }
     ]
   },
   {
-    title: 'Populaire Duurzame Keuzes',
+    title: 'Populaire Lifestyle Producten',
     items: [
-        top10Deals[5], // AOHAN Sportdrinkfles
-        top10Deals[8], // Philips Hue lampen
-  { id: 'deal-duurzaam-3', name: 'HUSKEE Koffiekopjes met deksels', description: 'Herbruikbare koffiebekers gemaakt van koffieschillen. Duurzaam, stijlvol en perfect voor onderweg. Set van 4 bekers met deksels.', imageUrl: 'https://m.media-amazon.com/images/I/810UPc5ac8L._AC_SL1500_.jpg', price: '€44,99', affiliateLink: 'https://www.amazon.nl/HUSKEE-Koffiekopjes-met-deksels-Herbruikbare/dp/B09SNYVMGB/ref=sr_1_2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=24LPGZF5FN3KX&dib=eyJ2IjoiMSJ9.auvZHrvyjKY8qf8qHGU6qfC_jPc7oMJDeWn1utJo1ewM0Tg2WTneB2Idv0Ky1Z_AzZRKiYA2VYgRYOHA6jZj_79an9iJ5uO1muQ8E3yKPntADIIId9SkJEOjwwpfmtg38AHxBawpkg4ALGvN0QETis8c6OUaJPcJFdsMenWUh_d6yGgZaaykRi-qVTuzWd31HD0yzS1hxjjAMQjfasSklmoXXaQnckTvl1GYsSyj4jyIDNEOpysmm1ojSwKt52njonrQeq4KEqVPykM8sjteUHB2xPBRuXbg3jP8at0xr4g.hGYe1I1oobDp42-Mk_z2M5vPGraMCwMfnBGooswV5A0&dib_tag=se&keywords=herbruikbare%2Bkoffiebeker%2B(huskee%2Bcup)&qid=1757427063&sprefix=herbruikbare%2Bkoffiebeker%2Bhuskeecup%2B%2Caps%2C143&sr=8-2&th=1' },
+      top10Deals[5],
+      {
+        id: 'lifestyle-massage',
+        name: 'Renpho Massage Gun',
+        description: 'Ontspan vermoeide spieren met 5 standen en verwisselbare opzetstukken.',
+        imageUrl: 'https://m.media-amazon.com/images/I/71Wo0KxGz2L._AC_SL1500_.jpg',
+        price: '€99,99',
+        affiliateLink: 'https://www.amazon.nl/dp/B07TYR61N5'
+      },
+      {
+        id: 'lifestyle-aroma',
+        name: 'Yankee Candle Large Jar Clean Cotton',
+        description: 'Grote geurkaars met katoengeur voor directe huiselijke sfeer.',
+        imageUrl: 'https://m.media-amazon.com/images/I/61T6kRXKu-L._AC_SL1500_.jpg',
+        price: '€29,90',
+        affiliateLink: 'https://www.amazon.nl/dp/B000JDZ1LM'
+      },
+      {
+        id: 'lifestyle-huskee',
+        name: 'Huskee Herbruikbare Coffee Cups (set van 4)',
+        description: 'Gemaakt van koffieschillen en ideaal voor onderweg of op kantoor.',
+        imageUrl: 'https://m.media-amazon.com/images/I/810UPc5ac8L._AC_SL1500_.jpg',
+        price: '€44,99',
+        affiliateLink: 'https://www.amazon.nl/dp/B09SNYVMGB'
+      }
     ]
   }
 ];

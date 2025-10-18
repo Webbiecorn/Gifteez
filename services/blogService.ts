@@ -18,6 +18,7 @@ import { blogPosts as staticBlogPosts } from '../data/blogData';
 import type { BlogPost, ContentBlock } from '../types';
 
 const LOCAL_STORAGE_KEY = 'gifteez_blog_posts_v1';
+const DELETED_POSTS_KEY = 'gifteez_deleted_blog_posts';
 const hasWindow = typeof window !== 'undefined';
 const staticSlugSet = new Set(staticBlogPosts.map((post) => post.slug));
 
@@ -107,6 +108,7 @@ const convertStaticPost = (post: BlogPost): LocalBlogPost => ({
 
 const syncLocalPostsWithStatic = (posts: LocalBlogPost[]): { posts: LocalBlogPost[]; changed: boolean } => {
   let changed = false;
+  const deletedSlugs = getDeletedPostSlugs();
 
   const filtered = posts.filter((post) => {
     const isStaticSeed = post.id === post.slug;
@@ -118,6 +120,12 @@ const syncLocalPostsWithStatic = (posts: LocalBlogPost[]): { posts: LocalBlogPos
   });
 
   staticBlogPosts.forEach((staticPost) => {
+    // Skip if this post was explicitly deleted by user
+    if (deletedSlugs.has(staticPost.slug)) {
+      console.log(`[BlogService] Skipping deleted post: ${staticPost.slug}`);
+      return;
+    }
+
     const staticSeed = convertStaticPost(staticPost);
     const index = filtered.findIndex((post) => post.slug === staticPost.slug && post.id === post.slug);
 
@@ -171,6 +179,40 @@ const writeLocalPosts = (posts: LocalBlogPost[]) => {
     window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(posts));
   } catch (error) {
     console.warn('Kon lokale blogposts niet opslaan:', error);
+  }
+};
+
+// Track deleted posts to prevent re-syncing from static data
+const getDeletedPostSlugs = (): Set<string> => {
+  if (!hasWindow) return new Set();
+  try {
+    const stored = window.localStorage.getItem(DELETED_POSTS_KEY);
+    return stored ? new Set(JSON.parse(stored)) : new Set();
+  } catch (error) {
+    console.warn('Kon verwijderde posts niet lezen:', error);
+    return new Set();
+  }
+};
+
+const addDeletedPostSlug = (slug: string): void => {
+  if (!hasWindow) return;
+  try {
+    const deleted = getDeletedPostSlugs();
+    deleted.add(slug);
+    window.localStorage.setItem(DELETED_POSTS_KEY, JSON.stringify([...deleted]));
+  } catch (error) {
+    console.warn('Kon verwijderde post niet opslaan:', error);
+  }
+};
+
+const removeDeletedPostSlug = (slug: string): void => {
+  if (!hasWindow) return;
+  try {
+    const deleted = getDeletedPostSlugs();
+    deleted.delete(slug);
+    window.localStorage.setItem(DELETED_POSTS_KEY, JSON.stringify([...deleted]));
+  } catch (error) {
+    console.warn('Kon verwijderde post niet verwijderen uit tracking:', error);
   }
 };
 
@@ -265,7 +307,16 @@ class BlogService {
         );
 
         const posts = snapshot.docs.map((doc) => this.documentToPost(doc));
-        return includeDrafts ? posts : posts.filter((post) => !post.isDraft);
+        const filtered = includeDrafts ? posts : posts.filter((post) => !post.isDraft);
+
+        if (filtered.length > 0) {
+          return filtered;
+        }
+
+        const fallback = ensureLocalPosts();
+        return fallback
+          .filter((post) => includeDrafts || !post.isDraft)
+          .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
       } catch (error) {
         console.error('Error fetching blog posts:', error);
         throw new Error('Failed to fetch blog posts');
@@ -274,7 +325,7 @@ class BlogService {
 
     const posts = ensureLocalPosts();
     return posts
-      .filter(post => includeDrafts || !post.isDraft)
+      .filter((post) => includeDrafts || !post.isDraft)
       .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
   }
 
@@ -292,7 +343,8 @@ class BlogService {
         const snapshot = await getDocs(q);
         
         if (snapshot.empty) {
-          return null;
+          const fallbackMatch = ensureLocalPosts().find((post) => post.slug === slug);
+          return fallbackMatch ?? null;
         }
 
         return this.documentToPost(snapshot.docs[0]);
@@ -316,7 +368,8 @@ class BlogService {
         const docSnap = await getDoc(docRef);
         
         if (!docSnap.exists()) {
-          return null;
+          const fallbackMatch = ensureLocalPosts().find((post) => post.id === id || post.slug === id);
+          return fallbackMatch ?? null;
         }
 
         return this.documentToPost(docSnap as QueryDocumentSnapshot<DocumentData>);
@@ -428,21 +481,45 @@ class BlogService {
    * Delete a blog post
    */
   static async deletePost(id: string): Promise<void> {
+    // First get the slug before deleting
+    let slug: string | undefined;
+    
     if (this.useFirestore && db) {
       try {
         const docRef = doc(db, this.COLLECTION, id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          slug = docSnap.data().slug;
+        }
         await deleteDoc(docRef);
+        
+        // Track deletion to prevent re-sync from static data
+        if (slug) {
+          addDeletedPostSlug(slug);
+          console.log(`[BlogService] Added ${slug} to deleted posts tracking`);
+        }
         return;
       } catch (error) {
-        console.error('Error deleting blog post:', error);
-        throw new Error('Failed to delete blog post');
+        console.error('[BlogService] Error deleting blog post from Firestore:', error);
+        throw new Error('Failed to delete blog post from Firestore');
       }
     }
 
     const posts = ensureLocalPosts();
-  const filtered = posts.filter(post => post.id !== id);
-  filtered.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
-  writeLocalPosts(filtered);
+    const postToDelete = posts.find(post => post.id === id);
+    if (postToDelete) {
+      slug = postToDelete.slug;
+    }
+    
+    const filtered = posts.filter(post => post.id !== id);
+    filtered.sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime());
+    writeLocalPosts(filtered);
+    
+    // Track deletion to prevent re-sync from static data
+    if (slug) {
+      addDeletedPostSlug(slug);
+      console.log(`[BlogService] Added ${slug} to deleted posts tracking`);
+    }
   }
 
   /**
