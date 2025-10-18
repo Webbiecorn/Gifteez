@@ -33,6 +33,7 @@ import DealCategoryManager from './DealCategoryManager';
 import AdminDashboard from './AdminDashboard';
 import ActivityLog from './ActivityLog';
 import PerformanceInsights from './PerformanceInsights';
+import { BulkProductImporter } from './BulkProductImporter';
 import { DynamicProductService } from '../services/dynamicProductService';
 import { PinnedDealsService, type PinnedDealEntry, clearAllPinnedDeals } from '../services/pinnedDealsService';
 import Button from './Button';
@@ -83,7 +84,7 @@ const occasionOrder: OccasionType[] = ['birthday', 'housewarming', 'holidays', '
 const QUIZ_REMINDER_STORAGE_KEY = 'gifteez.quizAdmin.reminders.v1';
 const ADMIN_PREFERENCES_STORAGE_KEY = 'gifteez.admin.preferences.v1';
 
-type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings' | 'activity' | 'performance';
+type AdminTab = 'blog' | 'deals' | 'quiz' | 'shop' | 'settings' | 'activity' | 'performance' | 'import';
 
 interface QuizReminderPreferences {
   showAlerts: boolean;
@@ -243,6 +244,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
               { key: 'deals', label: 'Deals', icon: '🏷️' },
               { key: 'quiz', label: 'Quiz', icon: '❓' },
               { key: 'shop', label: 'Shop Items', icon: '🛍️' },
+              { key: 'import', label: 'Bulk Import', icon: '📦' },
               { key: 'activity', label: 'Activiteiten', icon: '📊' },
               { key: 'performance', label: 'Performance', icon: '📈' },
               { key: 'settings', label: 'Instellingen', icon: '⚙️' },
@@ -275,6 +277,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
         {activeTab === 'deals' && <DealsAdmin />}
   {activeTab === 'quiz' && <QuizAdmin navigateTo={navigateTo} />}
         {activeTab === 'shop' && <ShopAdmin />}
+        {activeTab === 'import' && <BulkProductImporter />}
         {activeTab === 'activity' && <ActivityLog />}
         {activeTab === 'performance' && <PerformanceInsights />}
         {activeTab === 'settings' && (
@@ -2918,6 +2921,7 @@ const tabLabels: Record<AdminTab, string> = {
   deals: 'Deals',
   quiz: 'Quiz',
   shop: 'Shop items',
+  import: 'Bulk Import',
   settings: 'Instellingen',
   activity: 'Activiteiten',
   performance: 'Performance',
