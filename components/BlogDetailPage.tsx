@@ -13,6 +13,27 @@ import { pinterestPageVisit } from '../services/pinterestTracking';
 import { gaDownloadResource, gaPageView } from '../services/googleAnalytics';
 import SocialShare from './SocialShare';
 
+// Helper function to get author icon based on name
+const getAuthorIcon = (authorName: string): string => {
+    const name = authorName.toLowerCase();
+    
+    if (name.includes('redactie') || name.includes('gifteez')) {
+        return '🎁'; // Gift box for Gifteez Redactie
+    }
+    if (name.includes('tech') || name.includes('expert')) {
+        return '💻'; // Laptop for Tech Expert
+    }
+    if (name.includes('linda') || name.includes('groen')) {
+        return '🌿'; // Leaf for Linda Groen (sustainability expert)
+    }
+    if (name.includes('admin')) {
+        return '✏️'; // Pen for admin
+    }
+    
+    // Default for other authors
+    return '✍️'; // Writing hand
+};
+
 // Print styles component
 const PrintStyles = () => (
     <style
@@ -164,8 +185,8 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
             image: post.imageUrl,
             author: {
                 '@type': 'Person',
-                name: post.author.name,
-                image: post.author.avatarUrl
+                name: post.author.name
+                // Note: image removed - using emoji icons instead
             },
             publisher: {
                 '@type': 'Organization',
@@ -660,11 +681,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                                 </p>
                                 <div className="flex flex-wrap justify-center gap-6 text-sm">
                                     <div className="flex items-center gap-2">
-                                        <ImageWithFallback
-                                            src={post.author.avatarUrl}
-                                            alt={post.author.name}
-                                            className="w-8 h-8 rounded-full object-cover"
-                                        />
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-2xl shadow-sm border-2 border-white">
+                                            {getAuthorIcon(post.author.name)}
+                                        </div>
                                         <span className="font-semibold text-gray-700">{post.author.name}</span>
                                     </div>
                                     <div className="flex items-center gap-2 text-gray-600">
@@ -815,11 +834,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                             <div className="mt-16 bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 border border-muted-rose" data-author-section>
                                 <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                                     <div className="flex-shrink-0">
-                                        <ImageWithFallback
-                                            src={post.author.avatarUrl}
-                                            alt={post.author.name}
-                                            className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
-                                        />
+                                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 via-accent/20 to-highlight/20 flex items-center justify-center text-5xl shadow-lg border-4 border-white">
+                                            {getAuthorIcon(post.author.name)}
+                                        </div>
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-3">
