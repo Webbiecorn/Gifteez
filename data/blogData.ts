@@ -116,6 +116,87 @@ const gift_workspace_labelprinter: Gift = {
   popularity: 7
 };
 
+// Amazon Gift Sets for Blog
+const gift_rituals_sakura: Gift = {
+  productName: 'Rituals The Ritual of Sakura Geschenkset',
+  description: 'Luxe geschenkset met doucheschuim (200ml), bodycrème (70ml), body mist (50ml) en geurkaars. Kersenbloesem geur met rijstmelk. Vegan formules.',
+  priceRange: '€24,90',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/RITUALS-Geschenkset-Renewing-Treat-Small/dp/B07MDHTY3C?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71YQ+hcEYPL._AC_SL1500_.jpg'
+};
+
+const gift_loccitane_shea: Gift = {
+  productName: 'L\'Occitane Shea Butter Discovery Set',
+  description: 'Franse luxe set met handcrème (30ml), bodylotion (75ml), doucheolie (75ml), ultra rich cream sample (8ml) en zeep (50g). 20% sheaboter concentratie.',
+  priceRange: '€35,00',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/LOccitane-Shea-Discovery-Collection-stuks/dp/B0856WFGZR?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71M-hf8uaOL._AC_SL1500_.jpg'
+};
+
+const gift_kusmi_tea: Gift = {
+  productName: 'Kusmi Tea Wellness Thee Geschenkset',
+  description: 'Premium Parijse thee collectie met 5 blikjes (25g): Detox, Sweet Love, BB Detox, Boost en AquaExotica. Biologische thee met functionele benefits.',
+  priceRange: '€29,90',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Kusmi-Tea-Wellness-geschenkset-biologisch/dp/B07ZYNQX9R?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/81L9vqhGQyL._AC_SL1500_.jpg'
+};
+
+const gift_bodyshop_rose: Gift = {
+  productName: 'The Body Shop British Rose Geschenkset',
+  description: 'Budget luxe set met showergel (250ml), body butter (200ml), body mist (100ml) en handcrème (30ml). Cult-favoriet rozengeur. Cruelty-free en vegan.',
+  priceRange: '€20,00',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Body-Shop-British-Festive-Picks/dp/B0BNKXGTMK?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71t5pqIkWcL._AC_SL1500_.jpg'
+};
+
+const gift_baylis_harding: Gift = {
+  productName: 'Baylis & Harding Midnight Fig & Pomegranate Spa Set',
+  description: 'Luxe spa set met 6 producten: badschuim, bodywash, bodylotion, bath crystals, body scrub en badspons. Kruidige fig-pomegranaat geur. Herbruikbare mand.',
+  priceRange: '€27,50',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Baylis-Harding-Midnight-Pomegranate-Basket/dp/B08KHQ4JQ9?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/91BXzK8MFRL._AC_SL1500_.jpg'
+};
+
+const gift_nivea_men: Gift = {
+  productName: 'Nivea Men Verwenpakket',
+  description: 'Complete verzorging voor mannen: douchegel (250ml), deodorant (50ml), aftershave balsem (100ml) en gezichtscrème (75ml). No-nonsense verpakking, frisse geur.',
+  priceRange: '€18,90',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/NIVEA-MEN-Cadeauset-Sensitive-producten/dp/B0BN84LKZS?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71ipGhEy4cL._AC_SL1500_.jpg'
+};
+
+const gift_molton_brown: Gift = {
+  productName: 'Molton Brown Orange & Bergamot Luxury Set',
+  description: 'Ultra premium Brits luxemerk uit vijfsterrenhotels. Handwash (300ml), hand lotion (300ml) en mini crème (40ml). Citrus-bergamot geur, unisex. Gouden details.',
+  priceRange: '€48,00',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/Molton-Brown-Orange-Bergamot-Collection/dp/B0BY3DLSKN?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61EhO6vwVfL._AC_SL1500_.jpg'
+};
+
+const gift_nyx_makeup: Gift = {
+  productName: 'NYX Professional Makeup Geschenkset',
+  description: 'Affordable-luxe makeup set met lipstick, mascara, eyeliner, oogschaduw palette en brushes. Full-size producten, cruelty-free formules. Trend-proof neutrals.',
+  priceRange: '€32,90',
+  retailers: [
+    { name: 'Amazon.nl', affiliateLink: 'https://www.amazon.nl/NYX-Professional-Makeup-Ultimate-Shadow/dp/B07L5Q6XYR?tag=gifteez77-21' }
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71tSxHWEWzL._AC_SL1500_.jpg'
+};
+
 export const blogPosts: BlogPost[] = [
   {
     slug: 'gifteez-nl-is-open',
@@ -536,40 +617,72 @@ export const blogPosts: BlogPost[] = [
       },
       { type: 'heading', content: '1. Rituals The Ritual of Sakura Geschenkset – Bloesempraal' },
       {
+        type: 'gift',
+        content: gift_rituals_sakura
+      },
+      {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €24,90 | <strong>Perfect voor:</strong> Vrouwen 25-65 jaar, wellness liefhebbers<br><br>De Ritual of Sakura-serie van Rituals is een klassieker die nooit teleurstelt. Deze geschenkset bevat een doucheschuim (200ml), bodycrème (70ml), body mist (50ml) en geurkaars (25 uur). De zachte kersenbloesem-geur met rijstmelk is verfijnde zonder opdringerig te zijn – perfect voor dagelijks gebruik.<br><br><strong>Waarom deze set werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Luxe verpakking in iconische Rituals-doos – geen extra inpakken nodig</li><li>Volledige verzorgingsroutine: douchen, verzorgen, geuren</li><li>Bestseller op Amazon met 4,7/5 sterren (8.500+ reviews)</li><li>Vegan formules en biologische ingrediënten</li><li>Ideaal formaat voor reizen of uitproberen</li></ul><br><strong>Best voor:</strong> Moederdag, verjaardagen, als dankjewel-cadeau. Werkt ook perfect als "ik denk aan je"-attentie. De neutrale geur maakt het geschikt voor bijna elke vrouw.'
       },
       { type: 'heading', content: '2. L\'Occitane Shea Butter Discovery Set – Franse Elegantie' },
+      {
+        type: 'gift',
+        content: gift_loccitane_shea
+      },
       {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €35,00 | <strong>Perfect voor:</strong> Luxe cadeau-zoekers, droge huid<br><br>L\'Occitane staat synoniem voor Franse luxe, en deze Shea Butter-set bewijst waarom. Je krijgt handcrème (30ml), bodylotion (75ml), doucheolie (75ml), ultra rich body cream (8ml sample) en zeep (50g). De sheaboter uit Burkina Faso is ultiem hydraterend en geeft een subtiele, warme geur.<br><br><strong>Waarom deze set top is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Premium merk met heritage sinds 1976 – name recognition</li><li>Intense hydratatie voor wintermaanden of droge huid</li><li>Compacte formaten perfect voor reizen of testen</li><li>Gouden gift box met lint – meteen cadeau-klaar</li><li>Sheaboter 20% concentratie (hoger dan de meeste concurrenten)</li></ul><br><strong>Best voor:</strong> Business cadeaus, schoonouders, belangrijke momenten. Deze set straalt klasse uit en wordt altijd gewaardeerd. Geschikt voor heren én dames (neutra gender geur).'
       },
       { type: 'heading', content: '3. Kusmi Tea Wellness Thee Geschenkset – Voor Theeliefhebbers' },
       {
+        type: 'gift',
+        content: gift_kusmi_tea
+      },
+      {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €29,90 | <strong>Perfect voor:</strong> Thee-fanaten, wellness enthousiastelingen<br><br>Kusmi Tea is het Parijse theemerk dat design en smaak combineert. Deze Wellness Collection bevat 5 premium theeblikjes (25g elk): Detox, Sweet Love, BB Detox, Boost en AquaExotica. De blikjes zijn kleurrijk, stapelbaar en herbruikbaar – perfect voor op het aanrecht.<br><br><strong>Waarom deze set uniek is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Biologische thee met functionele benefits (detox, boost, beauty)</li><li>5 verschillende smaken om uit te proberen – geen saai cadeau</li><li>Design blikken die je wilt bewaren (niet weggooien na gebruik)</li><li>Frans merk met 150+ jaar traditie</li><li>Geen cafeïne in meeste blends – ook voor avond</li></ul><br><strong>Best voor:</strong> Collegacadeaus, wellness-focused vrienden, iedereen die dagelijks thee drinkt. Werkt ook perfect als hostess gift bij een etentje. De set ziet er zo mooi uit dat mensen hem vaak als decoratie houden.'
       },
       { type: 'heading', content: '4. The Body Shop British Rose Geschenkset – Budget Luxe' },
+      {
+        type: 'gift',
+        content: gift_bodyshop_rose
+      },
       {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €20,00 | <strong>Perfect voor:</strong> Budget-bewuste gevers, tieners/studenten<br><br>The Body Shop combineert betaalbaar met kwalitatief in deze British Rose-set. Je krijgt showergel (250ml), body butter (200ml), body mist (100ml) en handcrème (30ml). De rozencrème is cult-favoriet en de body butter is intens hydraterend zonder vet aanvoelen.<br><br><strong>Waarom deze set populair is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Beste prijs-kwaliteit verhouding: 4 full-size producten onder €20</li><li>Herkenbaar merk dat iedereen vertrouwt</li><li>Cruelty-free en vegan – ethisch verantwoord</li><li>Romantische rozengeur die universeel geliefd is</li><li>Mooi doosje met lint – geen extra verpakking nodig</li></ul><br><strong>Best voor:</strong> Tieners, studenten, secret santa (€15-25 budget), als tussendoor-cadeau. Ook geweldig om jezelf te trakteren zonder schuldgevoel. De British Rose-lijn is de bestseller van The Body Shop voor een reden.'
       },
       { type: 'heading', content: '5. Baylis & Harding Midnight Fig & Pomegranate Spa Set – Spa Thuis' },
       {
+        type: 'gift',
+        content: gift_baylis_harding
+      },
+      {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €27,50 | <strong>Perfect voor:</strong> Ontspannings-zoekers, spa-liefhebbers<br><br>Breng de spa naar huis met deze luxe Baylis & Harding-set. De Midnight Fig & Pomegranate-collectie bevat badschuim, bodywash, bodylotion, bath crystals, body scrub en badspons – alles voor een complete spa-ervaring. De kruidige fig-pomegranaat geur is verfijnd en niet te zoet.<br><br><strong>Waarom deze set onderscheidt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>6 producten voor een complete spa-ritual thuis</li><li>Luxe mand/doos verpakking die herbruikbaar is</li><li>Unieke geur: geen standaard lavendel of roos</li><li>Bath crystals & scrub (niet in elke set aanwezig)</li><li>Baylis & Harding = British heritage merk sinds 1970</li></ul><br><strong>Best voor:</strong> Moeder/schoonmoeder, vriendin die het druk heeft, iedereen met badkuip. Perfect voor na een stressvolle periode of als "pamper yourself" cadeau. De mand kan daarna gebruikt worden voor handdoeken of tijdschriften.'
       },
       { type: 'heading', content: '6. Nivea Verwenpakket – Voor Mannen' },
+      {
+        type: 'gift',
+        content: gift_nivea_men
+      },
       {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €18,90 | <strong>Perfect voor:</strong> Mannen 18-50, low-maintenance types<br><br>Eindelijk een geschenkset die mannen écht gebruiken. Deze Nivea Men-set bevat douchegel (250ml), deodorant (50ml), aftershave balsem (100ml) en gezichtscrème (75ml). De no-nonsense verpakking en frisse geur maken het een veilige keuze voor elk type man.<br><br><strong>Waarom deze set voor mannen werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Nivea = trusted brand die mannen al kennen (geen scary nieuwe producten)</li><li>Complete verzorging: douchen, scheren, gezicht, geur</li><li>Geen overdreven parfum – subtiele mannelijke geur</li><li>Betaalbaar maar niet cheap – goede middenweg</li><li>Makkelijk te gebruiken (geen 10-step routine)</li></ul><br><strong>Best voor:</strong> Vader, broer, collega, schoonzoon. Perfect voor Vadderdag, verjaardag of als "bedankt voor je hulp" cadeau. Mannen vinden het vaak lastig om dit soort producten zelf te kopen, dus een set neemt die drempel weg.'
       },
       { type: 'heading', content: '7. Molton Brown Orange & Bergamot Luxury Set – Ultra Premium' },
       {
+        type: 'gift',
+        content: gift_molton_brown
+      },
+      {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €48,00 | <strong>Perfect voor:</strong> High-end cadeaus, speciale gelegenheden<br><br>Molton Brown is het Britse luxemerk dat je in vijfsterrrenhotels tegenkomt. Deze Orange & Bergamot-set bevat handwash (300ml), hand lotion (300ml) en mini hand crème (40ml). De citrus-bergamot geur is fris, sophisticated en unisex.<br><br><strong>Waarom deze set de investering waard is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Molton Brown = ultiem luxury merk (gebruikt in Ritz, Savoy)</li><li>Signature geur die mensen herkennen en associëren met luxe</li><li>Large formaten (300ml) – geen stingy sample sizes</li><li>Premium packaging met gouden details</li><li>Geschikt voor mannen én vrouwen (unisex geur)</li></ul><br><strong>Best voor:</strong> Baas/leidinggevende, belangrijke client, housewarming voor luxe woning, 50+ verjaardag. Dit is het cadeau als je echt indruk wilt maken. De ontvanger plaatst het direct op de meest zichtbare plek in de badkamer.'
       },
       { type: 'heading', content: '8. NYX Professional Makeup Geschenkset – Voor Beauty Fans' },
+      {
+        type: 'gift',
+        content: gift_nyx_makeup
+      },
       {
         type: 'paragraph',
         content: '<strong>Prijs:</strong> €32,90 | <strong>Perfect voor:</strong> Tieners, makeup-liefhebbers, beauty beginners<br><br>NYX is het affordable-luxe makeup merk met cult following. Deze geschenkset bevat lipstick, mascara, eyeliner, oogschaduw palette en makeup brushes. De producten zijn full-size (geen samples!) en de kleuren zijn trend-proof: neutrals en rosy tones.<br><br><strong>Waarom deze makeup set scoort:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>NYX = professional quality voor betaalbare prijs</li><li>Complete makeup look mogelijk met één set</li><li>Cruelty-free en vaak vegan formules</li><li>Trendy merk dat tieners/20-ers herkennen van YouTube/Instagram</li><li>Goede pigmentatie en long-lasting formulas</li></ul><br><strong>Best voor:</strong> Dochter 14-25 jaar, nichtje, vriendin die net begint met makeup. Perfect voor Sinterklaas, verjaardag of als "je bent geslaagd" cadeau. De set bevat alles om een natural makeup look te creëren zonder overwhelmend te zijn.'
