@@ -3,6 +3,7 @@
 import { writeFile, mkdir } from 'fs/promises';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { readFile } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');
@@ -12,50 +13,57 @@ const projectRoot = join(__dirname, '..');
  * Based on Pinterest specs: https://help.pinterest.com/nl/business/article/auto-publish-pins-from-your-rss-feed
  */
 
-// Your blog posts data
-const blogPosts = [
-  {
-    slug: 'duurzame-cadeaus-2025',
-    title: 'Top 10 Duurzame Cadeaus voor 2025',
-    excerpt: 'Ontdek de mooiste duurzame en milieuvriendelijke cadeaus die écht verschil maken.',
-    imageUrl: '/images/trending-eco.jpg',
-    category: 'Duurzaamheid',
-    publishedAt: '2024-12-15T10:00:00Z',
-    updatedAt: '2024-12-15T10:00:00Z'
-  },
-  {
-    slug: 'tech-gifts-2025',
-    title: 'De Beste Tech Cadeaus van 2025',
-    excerpt: 'Van smart home gadgets tot wearables - dit zijn de tech cadeaus die iedereen wil hebben.',
-    imageUrl: '/images/trending-tech.jpg',
-    category: 'Technologie',
-    publishedAt: '2024-12-10T10:00:00Z',
-    updatedAt: '2024-12-10T10:00:00Z'
-  },
-  {
-    slug: 'ervaring-cadeaus',
-    title: 'Waarom Ervaringscadeaus de Beste Keuze Zijn',
-    excerpt: 'Geef herinneringen die een leven lang meegaan met deze geweldige ervaringscadeaus.',
-    imageUrl: '/images/trending-experience.jpg',
-    category: 'Ervaringen',
-    publishedAt: '2024-12-05T10:00:00Z',
-    updatedAt: '2024-12-05T10:00:00Z'
-  },
-  {
-    slug: 'ai-smart-home-gifts',
-    title: 'AI-Powered Smart Home Cadeaus: De Toekomst is Nu',
-    excerpt: 'Transformeer elk huis met slimme technologie die écht verschil maakt. Van stemgestuurde assistenten tot automatische verlichting.',
-    imageUrl: '/images/og-tech-gifts-2025.png',
-    category: 'Technologie',
-    publishedAt: '2024-12-20T10:00:00Z',
-    updatedAt: '2024-12-20T10:00:00Z'
-  }
-];
-
 const SITE_URL = 'https://gifteez-7533b.web.app';
 const SITE_NAME = 'Gifteez';
 const SITE_DESCRIPTION = 'Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.';
 const SITE_LANGUAGE = 'nl-NL';
+
+/**
+ * Load blog posts from blogData.ts by parsing the TypeScript file
+ */
+async function loadBlogPosts() {
+  try {
+    // Read blogData.ts as text
+    const blogDataPath = join(projectRoot, 'data', 'blogData.ts');
+    const blogDataContent = await readFile(blogDataPath, 'utf-8');
+    
+    // Extract blog posts using regex (simple parser for our use case)
+    const posts = [];
+    
+    // Find all blog post objects in the blogPosts array
+    const blogPostsMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
+    if (!blogPostsMatch) {
+      console.warn('⚠️  Could not find blogPosts array');
+      return [];
+    }
+    
+    const postsContent = blogPostsMatch[1];
+    
+    // Extract individual post objects
+    const postMatches = postsContent.matchAll(/\{[\s\S]*?slug: '([^']+)'[\s\S]*?title: '([^']+)'[\s\S]*?excerpt: '([^']+)'[\s\S]*?imageUrl: '([^']+)'[\s\S]*?category: '([^']+)'[\s\S]*?publishedDate: '([^']+)'[\s\S]*?\}/g);
+    
+    for (const match of postMatches) {
+      const [, slug, title, excerpt, imageUrl, category, publishedDate] = match;
+      
+      posts.push({
+        slug,
+        title,
+        excerpt,
+        imageUrl,
+        category,
+        publishedAt: `${publishedDate}T10:00:00Z`,
+        updatedAt: `${publishedDate}T10:00:00Z`
+      });
+    }
+    
+    console.log(`✅ Loaded ${posts.length} blog posts from blogData.ts`);
+    return posts;
+    
+  } catch (error) {
+    console.warn('⚠️  Could not load blog posts from blogData.ts:', error.message);
+    return [];
+  }
+}
 
 function escapeXml(str) {
   if (!str) return '';
@@ -123,6 +131,14 @@ ${items}
 async function main() {
   console.log('📰 Generating RSS feed for Pinterest...\n');
 
+  // Load blog posts from blogData.ts
+  const blogPosts = await loadBlogPosts();
+  
+  if (blogPosts.length === 0) {
+    console.error('❌ No blog posts found to generate RSS feed');
+    process.exit(1);
+  }
+
   const rssFeed = generateRssFeed(blogPosts);
   const outputPath = join(projectRoot, 'public', 'rss.xml');
 
@@ -134,6 +150,10 @@ async function main() {
 
   console.log(`✅ RSS feed generated: ${outputPath}`);
   console.log(`📊 Included ${blogPosts.length} blog posts`);
+  console.log(`\n📝 Blog posts in feed:`);
+  blogPosts.forEach((post, i) => {
+    console.log(`   ${i + 1}. ${post.title} (${post.category})`);
+  });
   console.log(`\n📌 Pinterest Setup:`);
   console.log(`   1. Claim your domain: ${SITE_URL}`);
   console.log(`   2. RSS Feed URL: ${SITE_URL}/rss.xml`);
