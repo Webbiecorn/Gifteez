@@ -567,6 +567,10 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                     canonical={`https://gifteez.nl/blog/${post.slug}`}
                     ogImage={post.imageUrl.startsWith('http') ? post.imageUrl : `https://gifteez.nl${post.imageUrl}`}
                     type="article"
+                    author={post.author?.name || 'Gifteez Redactie'}
+                    publishedDate={post.publishedDate}
+                    category={post.category}
+                    keywords={post.seo?.keywords || []}
                 />
         {/* Print Styles */}
         <PrintStyles />
