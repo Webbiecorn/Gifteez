@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { animated, useTrail } from '@react-spring/web';
 import { DealItem } from '../types';
 import { ChevronLeftIcon, ChevronRightIcon } from './IconComponents';
 
@@ -12,6 +13,22 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
+  const [showTrail, setShowTrail] = useState(false);
+
+  const productKey = useMemo(() => products.map((product) => product.id).join('|'), [products]);
+
+  useEffect(() => {
+    setShowTrail(false);
+    const animationFrame = requestAnimationFrame(() => setShowTrail(true));
+    return () => cancelAnimationFrame(animationFrame);
+  }, [productKey]);
+
+  const trail = useTrail(products.length, {
+    opacity: showTrail ? 1 : 0,
+    y: showTrail ? 0 : 24,
+    config: { tension: 220, friction: 24, mass: 1.1 },
+    immediate: products.length > 12, // skip animation for large batches to keep scroll responsive
+  });
 
   const updateScrollButtons = () => {
     const container = scrollContainerRef.current;
@@ -85,14 +102,23 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
           msOverflowStyle: 'none',
         }}
       >
-        {products.map((product, index) => (
-          <div
-            key={product.id}
-            className="flex-shrink-0 w-[280px] sm:w-[320px] snap-start"
-          >
-            {renderProduct(product, index)}
-          </div>
-        ))}
+        {trail.map((styles, index) => {
+          const product = products[index];
+          if (!product) return null;
+
+          return (
+            <animated.div
+              key={product.id}
+              className="flex-shrink-0 w-[280px] sm:w-[320px] snap-start"
+              style={{
+                opacity: styles.opacity,
+                transform: styles.y.to((value) => `translate3d(0, ${value}px, 0)`),
+              }}
+            >
+              {renderProduct(product, index)}
+            </animated.div>
+          );
+        })}
       </div>
 
       {/* Right scroll button */}

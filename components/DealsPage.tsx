@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import { animated, useSpring } from '@react-spring/web';
 import { NavigateTo, DealCategory, DealItem } from '../types';
 import Meta from './Meta';
 import JsonLd from './JsonLd';
@@ -611,29 +612,60 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     
     // Track impression when card becomes visible
     const cardRef = useRef<HTMLDivElement>(null);
+    const prefersReducedMotion = useMemo(() => {
+      if (typeof window === 'undefined' || !('matchMedia' in window)) {
+        return false;
+      }
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }, []);
+    const [isVisible, setIsVisible] = useState(prefersReducedMotion);
+    const [styles, api] = useSpring(() => ({
+      opacity: prefersReducedMotion ? 1 : 0,
+      transform: prefersReducedMotion
+        ? 'translate3d(0, 0, 0) scale(1)'
+        : 'translate3d(0, 24px, 0) scale(0.95)'
+    }));
     
     useEffect(() => {
       const observer = new IntersectionObserver(
-        (entries) => {
+        (entries, obs) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting && deal.id) {
+            if (!entry.isIntersecting) {
+              return;
+            }
+            if (deal.id) {
               trackDealImpression(deal.id, retailerInfo?.shortLabel);
             }
+            setIsVisible(true);
+            obs.unobserve(entry.target);
           });
         },
-        { threshold: 0.5 }
+        { threshold: 0.4, rootMargin: '0px 0px -10% 0px' }
       );
-      
-      if (cardRef.current) {
-        observer.observe(cardRef.current);
+
+      const node = cardRef.current;
+      if (node) {
+        observer.observe(node);
       }
-      
+
       return () => {
-        if (cardRef.current) {
-          observer.unobserve(cardRef.current);
+        if (node) {
+          observer.unobserve(node);
         }
       };
     }, [deal.id, retailerInfo?.shortLabel, trackDealImpression]);
+
+    useEffect(() => {
+      if (!isVisible) {
+        return;
+      }
+      api.start({
+        opacity: 1,
+        transform: 'translate3d(0, 0, 0) scale(1)',
+        config: prefersReducedMotion ? undefined : { tension: 260, friction: 22 },
+        immediate: prefersReducedMotion
+      });
+    }, [api, isVisible, prefersReducedMotion]);
     
     const handleClick = () => {
       if (deal.id) {
@@ -642,13 +674,22 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     };
     
     return (
-      <div
-        ref={cardRef} 
-        className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
-        isTopDeal 
-          ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy' 
-          : 'border border-slate-200'
-      }`}>
+      <animated.div
+        ref={cardRef}
+        style={{
+          opacity: styles.opacity,
+          transform: styles.transform,
+          willChange: 'transform, opacity'
+        }}
+        className="h-full"
+      >
+        <div
+          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
+          isTopDeal 
+            ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy' 
+            : 'border border-slate-200'
+        }`}
+        >
         {/* Inner card wrapper for TOP deals (creates gradient border effect) */}
         <div className={isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'}>
           <div className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white ${imageHeightClass}`}>
@@ -729,7 +770,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </animated.div>
     );
   };
 

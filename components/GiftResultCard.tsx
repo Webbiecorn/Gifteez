@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Gift, ShowToast } from '../types';
 import Button from './Button';
 import { withAffiliate } from '../services/affiliate';
@@ -7,6 +6,7 @@ import { HeartIcon, HeartIconFilled } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 import ImageWithFallback from './ImageWithFallback';
 import SocialShare from './SocialShare';
+import { animated, useSpring, to as springTo } from '@react-spring/web';
 
 const badgeToneClasses: Record<string, string> = {
   primary: 'bg-[#232F3E] text-white',
@@ -61,6 +61,18 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
 }) => {
   const auth = useContext(AuthContext);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [hovered, setHovered] = useState(false);
+  const [favoritePulse, setFavoritePulse] = useState(false);
+  const favoritePulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const reduceMotion = typeof window !== 'undefined' && 'matchMedia' in window
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+  const [entryComplete, setEntryComplete] = useState(isEmbedded || reduceMotion);
+  const [springs, api] = useSpring(() => ({
+    opacity: isEmbedded || reduceMotion ? 1 : 0,
+    y: isEmbedded || reduceMotion ? 0 : 24,
+    scale: isEmbedded || reduceMotion ? 1 : 0.96
+  }));
 
   // Add Product Schema for SEO
   useEffect(() => {
@@ -127,6 +139,54 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     }
   }, [gift, auth, isReadOnly]);
 
+  useEffect(() => () => {
+    if (favoritePulseTimeoutRef.current) {
+      clearTimeout(favoritePulseTimeoutRef.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isEmbedded || reduceMotion) {
+      api.start({ opacity: 1, y: 0, scale: 1, immediate: true });
+      setEntryComplete(true);
+      return;
+    }
+
+    const delay = index * 80;
+    api.start({
+      opacity: 1,
+      y: 0,
+      delay,
+      config: { tension: 220, friction: 24 }
+    });
+    api.start({
+      scale: 1.035,
+      delay,
+      config: { tension: 320, friction: 18 }
+    });
+
+    const settleTimer = setTimeout(() => {
+      api.start({ scale: 1, config: { tension: 300, friction: 22 } });
+      setEntryComplete(true);
+    }, delay + 360);
+
+    return () => {
+      clearTimeout(settleTimer);
+    };
+  }, [api, index, isEmbedded, reduceMotion]);
+
+  useEffect(() => {
+    if (!entryComplete || reduceMotion) {
+      return;
+    }
+
+    const targetScale = favoritePulse ? 1.06 : hovered ? 1.02 : 1;
+    api.start({
+      scale: targetScale,
+      config: { mass: 0.9, tension: 330, friction: 18 }
+    });
+  }, [api, entryComplete, favoritePulse, hovered, reduceMotion]);
+
   const handleToggleFavorite = () => {
     if (isReadOnly) return;
     
@@ -157,25 +217,40 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     
     setIsFavorite(isNowFavorite);
     if (isNowFavorite) {
+        if (favoritePulseTimeoutRef.current) {
+          clearTimeout(favoritePulseTimeoutRef.current);
+        }
+        setFavoritePulse(true);
+        favoritePulseTimeoutRef.current = setTimeout(() => {
+          setFavoritePulse(false);
+        }, 220);
         showToast?.('Cadeau opgeslagen!');
+    } else {
+        setFavoritePulse(false);
     }
     onFavoriteChange?.(gift.productName, isNowFavorite);
   };
 
   const containerClasses = isEmbedded
     ? "bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
-    : "bg-white rounded-lg shadow-lg overflow-hidden flex flex-col opacity-0 animate-fade-in-up";
+    : "bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-shadow duration-300";
 
   const imageContainerHeight = candidateVariant ? 'h-32 md:h-36' : imageHeightClass;
 
   return (
-    <div
-      className={containerClasses + ' h-full'}
-      style={!isEmbedded ? { animationDelay: `${index * 100}ms` } : {}}
+    <animated.div
+      className={`${containerClasses} h-full`}
+      style={{
+        opacity: springs.opacity,
+        transform: springTo([springs.y, springs.scale], (y, scale) => `translate3d(0, ${y}px, 0) scale(${scale})`),
+        willChange: 'transform, opacity'
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {/* Only show image section if there's an imageUrl */}
       {gift.imageUrl && gift.imageUrl.trim() !== '' && (
-    <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : imageContainerHeight + ' w-full'}`}>
+          <div className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : imageContainerHeight + ' w-full'}`}>
           {candidateVariant ? (
             <ImageWithFallback
               src={gift.imageUrl}
@@ -348,7 +423,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
             </div>
         )}
       </div>
-    </div>
+    </animated.div>
   );
 };
 

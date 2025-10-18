@@ -1,5 +1,6 @@
 
 import React, { useState, FormEvent, useEffect, useMemo } from 'react';
+import { animated, useSpring, to as springTo } from '@react-spring/web';
 import { Container } from './layout/Container';
 import ImageWithFallback from './ImageWithFallback';
 import LazyViewport from './LazyViewport';
@@ -36,6 +37,22 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
   const [previewRecipient, setPreviewRecipient] = useState<string>(recipients[0]);
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined' || !('matchMedia' in window)) {
+      return false;
+    }
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+  const [heroImageSpring, heroImageApi] = useSpring(() => ({
+    opacity: prefersReducedMotion ? 1 : 0,
+    y: prefersReducedMotion ? 0 : 32,
+    scale: 1
+  }));
+  const [ctaSpring, ctaApi] = useSpring(() => ({
+    opacity: prefersReducedMotion ? 1 : 0,
+    y: prefersReducedMotion ? 0 : 20,
+    scale: 1
+  }));
 
   // Trending: Most recent posts (simulates popularity - could track views in future)
   const trendingPosts = useMemo(() => {
@@ -95,6 +112,37 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
     setMeta('name', 'twitter:description', description);
     setMeta('name', 'twitter:image', window.location.origin + '/og-image.png');
   }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      heroImageApi.start({ opacity: 1, y: 0, scale: 1, immediate: true });
+      return;
+    }
+
+    heroImageApi.start({
+      to: async (next) => {
+        await next({ opacity: 1, y: 0, scale: 1.04, config: { tension: 220, friction: 20 } });
+        await next({ y: -4, scale: 1, config: { tension: 200, friction: 18 } });
+        await next({ y: 0, config: { tension: 180, friction: 20 } });
+      },
+      delay: 120
+    });
+  }, [heroImageApi, prefersReducedMotion]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      ctaApi.start({ opacity: 1, y: 0, scale: 1, immediate: true });
+      return;
+    }
+
+    ctaApi.start({
+      to: async (next) => {
+        await next({ opacity: 1, y: 0, scale: 1.05, config: { tension: 240, friction: 18 } });
+        await next({ scale: 1, config: { tension: 250, friction: 22 } });
+      },
+      delay: 180
+    });
+  }, [ctaApi, prefersReducedMotion]);
 
   const handleNewsletterSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -214,7 +262,14 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center lg:items-start gap-4 pt-2 lg:pt-4">
+              <animated.div
+                className="flex flex-col sm:flex-row items-center lg:items-start gap-4 pt-2 lg:pt-4"
+                style={{
+                  opacity: ctaSpring.opacity,
+                  transform: springTo([ctaSpring.y, ctaSpring.scale], (y, scale) => `translate3d(0, ${y}px, 0) scale(${scale})`),
+                  willChange: 'transform, opacity'
+                }}
+              >
                 <Button
                   variant="accent"
                   onClick={() => navigateTo('giftFinder')}
@@ -233,7 +288,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                 >
                   🎯 Doe de Quiz
                 </button>
-              </div>
+              </animated.div>
 
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
@@ -258,7 +313,14 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             </div>
 
             <div className="relative flex justify-center lg:justify-end">
-              <div className="relative w-full max-w-[500px] sm:max-w-[560px] lg:max-w-[620px] xl:max-w-[680px]">
+              <animated.div
+                className="relative w-full max-w-[500px] sm:max-w-[560px] lg:max-w-[620px] xl:max-w-[680px]"
+                style={{
+                  opacity: heroImageSpring.opacity,
+                  transform: springTo([heroImageSpring.y, heroImageSpring.scale], (y, scale) => `translate3d(0, ${y}px, 0) scale(${scale})`),
+                  willChange: 'transform, opacity'
+                }}
+              >
                 {/* Animated glow effects - hidden on mobile for performance */}
                 <div className="pointer-events-none absolute -inset-12 rounded-full bg-gradient-to-br from-rose-300/60 via-purple-300/50 to-amber-300/40 blur-3xl animate-pulse hidden md:block"></div>
                 <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-pink-200/50 via-purple-200/40 to-sky-200/30 blur-2xl hidden md:block"></div>
@@ -281,7 +343,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     fit="contain"
                   />
                 </div>
-              </div>
+              </animated.div>
             </div>
           </div>
         </Container>
