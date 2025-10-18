@@ -79,7 +79,12 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
       })
     };
 
-    const scriptId = `product-schema-${gift.productName.replace(/\s+/g, '-').toLowerCase()}`;
+    // Create a valid CSS selector ID by removing all special characters
+    const scriptId = `product-schema-${gift.productName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')  // Replace all non-alphanumeric chars with hyphen
+      .replace(/^-+|-+$/g, '')}`;   // Remove leading/trailing hyphens
+    
     let script = document.head.querySelector(`#${scriptId}`) as HTMLScriptElement | null;
     
     if (!script) {
