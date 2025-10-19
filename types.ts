@@ -71,6 +71,12 @@ export interface Gift {
   relevanceScore?: number;
   story?: string;
   retailerBadges?: RetailerBadge[];
+  // AI Enhancement fields
+  explanations?: string[]; // Human-readable reasons from AI scoring
+  budgetFit?: number; // 0-1 score for budget match
+  occasionFit?: number; // 0-1 score for occasion match
+  personaFit?: number; // 0-1 score for personality match
+  trendScore?: number; // 0-1 score for popularity/quality
 }
 
 export interface Testimonial {

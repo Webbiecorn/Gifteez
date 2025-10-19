@@ -17,6 +17,10 @@ import rateLimitService from '../services/rateLimitService';
 import { withAffiliate } from '../services/affiliate';
 import CoolblueAffiliateService from '../services/coolblueAffiliateService';
 import { submitRelevanceFeedback } from '../services/scoringFeedbackService';
+// AI Enhancement imports
+import { generateSemanticLabels, generateUserPreferenceProfile, SemanticProfile } from '../services/semanticLabelService';
+import { calculateGiftScore, extractPriceFromRange } from '../services/giftScoringService';
+import { logFilterEvent } from '../services/giftFinderAnalyticsService';
 
 const occasions = ["Verjaardag", "Kerstmis", "Valentijnsdag", "Jubileum", "Zomaar"];
 const recipients = ["Partner", "Man", "Vrouw", "Vriend(in)", "Familielid", "Collega", "Kind"];
@@ -410,8 +414,70 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       const results = await findGiftsWithFilters(searchParams);
       const enhancedResults = enhanceGiftsWithMetadata(results);
       
-      // Add match reasons to each gift
-      const resultsWithReasons = enhancedResults.map(gift => {
+      // ===== AI ENHANCEMENT: Generate semantic profiles and scores =====
+      
+      // 1. Generate user preference profile from inputs
+      const selectedInterestsList = selectedInterestTags.length > 0 
+        ? selectedInterestTags 
+        : (interests ? interests.split(',').map(i => i.trim()).filter(Boolean) : []);
+      
+      const userPreferences = generateUserPreferenceProfile(
+        selectedInterestsList,
+        occasion || '',
+        recipient || ''
+      );
+      
+      // 2. Log filter event for analytics
+      const budgetMin = Math.max(5, budget - 20);
+      const budgetMax = budget + 20;
+      logFilterEvent(
+        occasion || undefined,
+        recipient || undefined,
+        budgetMin,
+        budgetMax,
+        selectedInterestsList
+      );
+      
+      // 3. Generate semantic profiles and calculate scores for each gift
+      const resultsWithAIScores = enhancedResults.map(gift => {
+        // Generate semantic profile for the gift
+        const giftProfile = generateSemanticLabels(
+          gift.productName,
+          gift.description,
+          gift.category || '',
+          extractPriceFromRange(gift.priceRange),
+          gift.tags || []
+        );
+        
+        // Calculate AI score with all components
+        const score = calculateGiftScore(
+          gift,
+          giftProfile,
+          userPreferences,
+          budgetMin,
+          budgetMax,
+          occasion || '',
+          recipient || ''
+        );
+        
+        return {
+          ...gift,
+          relevanceScore: score.totalScore,
+          budgetFit: score.budgetFit,
+          occasionFit: score.occasionFit,
+          personaFit: score.personaFit,
+          trendScore: score.trendScore,
+          explanations: score.explanations
+        };
+      });
+      
+      // 4. Sort by AI relevance score (highest first)
+      resultsWithAIScores.sort((a, b) => (b.relevanceScore || 0) - (a.relevanceScore || 0));
+      
+      // ===== END AI ENHANCEMENT =====
+      
+      // Add match reasons, trending badges, and stories to each gift
+      const resultsWithReasons = resultsWithAIScores.map(gift => {
         const reasons: string[] = [];
         let matchingInterests: string[] = [];
         

@@ -6,6 +6,8 @@ import { HeartIcon, HeartIconFilled } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 import ImageWithFallback from './ImageWithFallback';
 import SocialShare from './SocialShare';
+import { GiftExplainerCompact } from './GiftExplainer';
+import { logClickEvent } from '../services/giftFinderAnalyticsService';
 
 const badgeToneClasses: Record<string, string> = {
   primary: 'bg-[#232F3E] text-white',
@@ -316,6 +318,15 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
         
         <p className={`mt-2 text-gray-600 ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>{gift.description}</p>
 
+        {/* AI Explainer - Show why this gift is recommended */}
+        {gift.explanations && gift.explanations.length > 0 && (
+          <GiftExplainerCompact
+            explanations={gift.explanations}
+            totalScore={gift.relevanceScore}
+            className="mt-4"
+          />
+        )}
+
         {gift.story && (
           <p className={`mt-3 text-sm text-gray-500 italic ${candidateVariant ? 'text-center' : ''}`}>
             {gift.story}
@@ -327,6 +338,19 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
         {gift.retailers.map((retailer, i) => {
           const affiliateUrl = withAffiliate(retailer.affiliateLink);
           const handleClick = () => {
+            // Log AI analytics click event
+            logClickEvent(
+              gift.productName,
+              index + 1, // 1-indexed position
+              {
+                relevanceScore: gift.relevanceScore,
+                budgetFit: gift.budgetFit,
+                occasionFit: gift.occasionFit,
+                personaFit: gift.personaFit,
+                trendScore: gift.trendScore
+              }
+            );
+            
             const eventPayload = {
               event: 'affiliate_click',
               retailer: retailer.name,
