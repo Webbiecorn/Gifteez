@@ -38,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   const navItems: { page: Page; label: string, icon?: React.ElementType }[] = [
     { page: 'giftFinder', label: 'GiftFinder', icon: GiftIcon },
     { page: 'deals', label: 'Deals', icon: TagIcon },
-    { page: 'categories', label: 'Duurzaam', icon: SparklesIcon },
+    { page: 'categories', label: 'Categorieën', icon: SparklesIcon },
     { page: 'blog', label: 'Blog', icon: BookOpenIcon },
     { page: 'about', label: 'Over Ons', icon: UserCircleIcon },
     { page: 'contact', label: 'Contact', icon: MailIcon },
