@@ -384,7 +384,7 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
                       <div className="rounded-xl border border-gray-200 p-3">
                         <p className="text-xs uppercase text-gray-400">Affiliate link</p>
                         {focusedProduct.affiliateLink ? (
-                          <a href={focusedProduct.affiliateLink} className="break-all text-xs text-rose-500" target="_blank" rel="noreferrer">
+                          <a href={focusedProduct.affiliateLink} className="break-all text-xs text-rose-500" target="_blank" rel="noopener noreferrer sponsored">
                             {focusedProduct.affiliateLink}
                           </a>
                         ) : (

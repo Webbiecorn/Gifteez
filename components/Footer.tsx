@@ -7,6 +7,7 @@ import CookiePreferencesManager from './CookiePreferencesManager';
 import { useCookieConsent } from '../hooks/useCookieConsent';
 import { NewsletterSignup } from './NewsletterSignup';
 import Logo from './Logo';
+import OrganizationSchema from './OrganizationSchema';
 
 interface FooterProps {
   navigateTo: NavigateTo;
@@ -19,6 +20,9 @@ const Footer: React.FC<FooterProps> = ({ navigateTo, showToast }) => {
 
   return (
   <footer className="relative mt-24 overflow-hidden border-t border-muted-rose/70 bg-gradient-to-b from-secondary via-light-bg/60 to-white" role="contentinfo" aria-label="Site footer">
+      {/* Organization Schema for SEO */}
+      <OrganizationSchema />
+      
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
       <div className="absolute inset-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_top_left,#f43f5e22,transparent_60%)]"></div>
       <div className="absolute inset-y-0 right-[-20%] w-2/3 pointer-events-none opacity-70 bg-[radial-gradient(circle_at_top_right,#fb923c1c,transparent_65%)]"></div>
@@ -106,6 +110,11 @@ const Footer: React.FC<FooterProps> = ({ navigateTo, showToast }) => {
                 <li>
                   <button onClick={() => navigateTo('privacy')} aria-label="Lees ons privacybeleid" className="hover:text-accent transition-colors flex items-center gap-2">
                     <span className="text-xs" aria-hidden="true">🔒</span> Privacybeleid
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigateTo('affiliateDisclosure')} aria-label="Lees over onze affiliate partnerships" className="hover:text-accent transition-colors flex items-center gap-2">
+                    <span className="text-xs" aria-hidden="true">🤝</span> Affiliate Disclosure
                   </button>
                 </li>
                 <li>

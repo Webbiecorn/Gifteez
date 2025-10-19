@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+
+# Important pages for crawling
+Allow: /blog
+Allow: /blog/*
+Allow: /giftfinder
+Allow: /deals
+Allow: /deals/*
+
+# Crawl-delay for respectful bots
+Crawl-delay: 1
 
 Sitemap: https://gifteez.nl/sitemap.xml

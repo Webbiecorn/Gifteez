@@ -25,6 +25,7 @@ const DealsPage = ReactLazy(() => import('./components/DealsPage'));
 const CategoryDetailPage = ReactLazy(() => import('./components/CategoryDetailPage'));
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
+const AffiliateDisclosurePage = ReactLazy(() => import('./components/AffiliateDisclosurePage'));
 const AdminPage = ReactLazy(() => import('./components/AdminPage'));
 const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'));
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
@@ -90,6 +91,7 @@ const App: React.FC = () => {
       case 'categoryDetail': return `/deals/category/${data?.categoryId ?? ''}`;
       case 'disclaimer': return '/disclaimer';
       case 'privacy': return '/privacy';
+      case 'affiliateDisclosure': return '/affiliate-disclosure';
   case 'admin': return '/admin';
   case 'adminDealsPreview': return '/admin/deals-preview';
       default: return '/';
@@ -139,6 +141,7 @@ const App: React.FC = () => {
         break;
       case 'disclaimer': setCurrentPage('disclaimer'); break;
       case 'privacy': setCurrentPage('privacy'); break;
+      case 'affiliate-disclosure': setCurrentPage('affiliateDisclosure'); break;
       default: setCurrentPage('home'); setCurrentPostSlug(null); break;
     }
   }, []);
@@ -205,7 +208,8 @@ const App: React.FC = () => {
         categoryDetail: data?.categoryTitle ? `${data.categoryTitle} — Deals` : 'Categorie — Deals',
         adminDealsPreview: 'Admin deals preview',
         disclaimer: 'Disclaimer — Gifteez.nl',
-        privacy: 'Privacybeleid — Gifteez.nl'
+        privacy: 'Privacybeleid — Gifteez.nl',
+        affiliateDisclosure: 'Affiliate Disclosure — Transparantie over partnerships'
       };
       const title = pageTitles[page] ? `${pageTitles[page]} — ${baseTitle}` : baseTitle;
       document.title = title;
@@ -215,6 +219,7 @@ const App: React.FC = () => {
         favorites: 'Bekijk en deel je bewaarde favoriete cadeau-ideeën.',
         contact: 'Neem contact op met het Gifteez team voor vragen of samenwerkingen.',
         about: 'Lees over de missie achter Gifteez: cadeaustress voorgoed verminderen.',
+        affiliateDisclosure: 'Lees hoe Gifteez.nl werkt via affiliate partnerships. Volledige transparantie over commissies en hoe we producten selecteren.',
         quiz: 'Doe de cadeau quiz en ontdek welk type cadeau het beste past.',
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
         shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
@@ -310,7 +315,7 @@ const App: React.FC = () => {
                 <a 
                   href={product.affiliateLink}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer sponsored"
                   className="mt-auto inline-block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors text-center"
                 >
                   Bekijk deal
@@ -323,6 +328,8 @@ const App: React.FC = () => {
         return <DisclaimerPage navigateTo={navigateTo} />;
       case 'privacy':
         return <PrivacyPage navigateTo={navigateTo} />;
+      case 'affiliateDisclosure':
+        return <AffiliateDisclosurePage navigateTo={navigateTo} />;
       default:
         return <HomePage navigateTo={navigateTo} />;
     }

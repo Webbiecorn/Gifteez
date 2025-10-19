@@ -513,7 +513,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       return;
     }
 
-    const ctaHtml = `<p class="text-base font-semibold text-rose-600">👉 <a href="${product.affiliateLink}" target="_blank" rel="noopener noreferrer">Bekijk ${escapeHtml(product.name)} bij ${retailerLabel}</a></p>`;
+    const ctaHtml = `<p class="text-base font-semibold text-rose-600">👉 <a href="${product.affiliateLink}" target="_blank" rel="noopener noreferrer sponsored">Bekijk ${escapeHtml(product.name)} bij ${retailerLabel}</a></p>`;
     const paragraphDraft: ParagraphBlockDraft = {
       id: generateId(),
       type: 'paragraph',
