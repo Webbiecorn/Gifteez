@@ -42,6 +42,7 @@ import { useCookieConsent } from './hooks/useCookieConsent';
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor';
 import Layout from './components/layout/Layout';
 import { PerformanceInsightsService } from './services/performanceInsightsService';
+import { wecantrackService } from './services/wecantrackService';
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null);
@@ -52,6 +53,11 @@ const App: React.FC = () => {
   // Initialize performance tracking
   useEffect(() => {
     PerformanceInsightsService.init();
+  }, []);
+  
+  // Initialize AWIN MasterTag tracking (wecantrack, adMission, TRENDii)
+  useEffect(() => {
+    wecantrackService.initialize();
   }, []);
   
   useEffect(() => {
