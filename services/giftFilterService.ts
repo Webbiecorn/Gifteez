@@ -392,30 +392,30 @@ export const applyAdvancedFilters = (gifts: Gift[], filters: Partial<AdvancedFil
       }
     }
 
-    // Categories filter
+    // Categories filter - only filter if gift has a category
     if (filters.categories && filters.categories.length > 0) {
-      if (!gift.category || !filters.categories.includes(gift.category)) {
+      if (gift.category && !filters.categories.includes(gift.category)) {
         return false
       }
     }
 
-    // Gift type filter
-    if (filters.giftType && gift.giftType !== filters.giftType) {
+    // Gift type filter - only filter if gift has a giftType
+    if (filters.giftType && gift.giftType && gift.giftType !== filters.giftType) {
       return false
     }
 
-    // Delivery speed filter
-    if (filters.deliverySpeed && gift.deliverySpeed !== filters.deliverySpeed) {
+    // Delivery speed filter - only filter if gift has deliverySpeed
+    if (filters.deliverySpeed && gift.deliverySpeed && gift.deliverySpeed !== filters.deliverySpeed) {
       return false
     }
 
-    // Age group filter
-    if (filters.ageGroup && gift.ageGroup !== filters.ageGroup) {
+    // Age group filter - only filter if gift has ageGroup
+    if (filters.ageGroup && gift.ageGroup && gift.ageGroup !== filters.ageGroup) {
       return false
     }
 
-    // Gender filter
-    if (filters.gender && gift.gender !== filters.gender && gift.gender !== 'unisex') {
+    // Gender filter - only filter if gift has gender
+    if (filters.gender && gift.gender && gift.gender !== filters.gender && gift.gender !== 'unisex') {
       return false
     }
 
@@ -431,7 +431,7 @@ export const applyAdvancedFilters = (gifts: Gift[], filters: Partial<AdvancedFil
 
     // Availability filter
     if (filters.availability && filters.availability !== 'all') {
-      if (gift.availability !== filters.availability) {
+      if (gift.availability && gift.availability !== filters.availability) {
         return false
       }
     }
