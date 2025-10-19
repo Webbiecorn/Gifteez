@@ -367,7 +367,7 @@ const App: React.FC = () => {
             <TextSkeleton lines={2} />
           </div>
         }>
-          <Footer navigateTo={navigateTo} />
+          <Footer navigateTo={navigateTo} showToast={showToast} />
         </React.Suspense>
         <Toast message={toastMessage} />
         {showBanner && (

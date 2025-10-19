@@ -1,17 +1,19 @@
 
 import React, { useState } from 'react';
-import { NavigateTo } from '../types';
+import { NavigateTo, ShowToast } from '../types';
 import { InstagramIcon, PinterestIcon, TargetIcon } from './IconComponents';
 import { socialLinks } from '../socialLinks';
 import CookiePreferencesManager from './CookiePreferencesManager';
 import { useCookieConsent } from '../hooks/useCookieConsent';
+import { NewsletterSignup } from './NewsletterSignup';
 import Logo from './Logo';
 
 interface FooterProps {
   navigateTo: NavigateTo;
+  showToast: ShowToast;
 }
 
-const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
+const Footer: React.FC<FooterProps> = ({ navigateTo, showToast }) => {
   const [showPreferences, setShowPreferences] = useState(false);
   const { preferences, updatePreferences } = useCookieConsent();
 
@@ -22,6 +24,19 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
       <div className="absolute inset-y-0 right-[-20%] w-2/3 pointer-events-none opacity-70 bg-[radial-gradient(circle_at_top_right,#fb923c1c,transparent_65%)]"></div>
       <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(140deg,transparent_55%,rgba(148,27,40,0.1)_85%,transparent)]"></div>
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+        {/* Newsletter Section - Full Width */}
+        <div className="mb-16 p-8 bg-gradient-to-br from-accent/10 via-primary/5 to-highlight/10 rounded-3xl border border-accent/20 shadow-lg">
+          <div className="max-w-4xl mx-auto">
+            <NewsletterSignup 
+              showToast={showToast}
+              variant="inline"
+              title="📬 Blijf op de hoogte"
+              description="Ontvang exclusieve deals, nieuwe gidsen en cadeau-tips direct in je inbox!"
+              defaultFrequency="weekly"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {/* Brand */}
           <div className="col-span-1 lg:col-span-2">
@@ -31,7 +46,8 @@ const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
             <p className="mt-6 text-primary/75 leading-relaxed mb-6 max-w-md">
               Vind binnen seconden een persoonlijk cadeau-idee met AI. Minder zoeken, meer geven.
             </p>
-            <div className="flex gap-3" role="list" aria-label="Social media links">
+            
+            <div className="flex gap-3 mt-6" role="list" aria-label="Social media links">
               <a
                 href={socialLinks.instagram}
                 aria-label="Volg ons op Instagram"
