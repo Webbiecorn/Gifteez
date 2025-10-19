@@ -30,22 +30,19 @@ const AdminPage = ReactLazy(() => import('./components/AdminPage'))
 const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'))
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'))
 const FloatingCTA = ReactLazy(() => import('./components/FloatingCTA'))
-const PWAInstallPrompt = ReactLazy(() => import('./components/PWAInstallPrompt'))
 import ErrorBoundary from './components/ErrorBoundary'
 import { SpinnerIcon } from './components/IconComponents'
 import Layout from './components/layout/Layout'
 import LoadingSpinner from './components/LoadingSpinner'
-import { BlogCardSkeleton, TextSkeleton } from './components/SkeletonLoader'
+import { TextSkeleton } from './components/SkeletonLoader'
 import Toast from './components/Toast'
 import { AuthContext } from './contexts/AuthContext'
 import { BlogProvider } from './contexts/BlogContext'
 import { useCookieConsent } from './hooks/useCookieConsent'
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor'
-import { useSEO } from './hooks/useSEO'
 import { BlogNotificationService } from './services/blogNotificationService'
 import { PerformanceInsightsService } from './services/performanceInsightsService'
 import { wecantrackService } from './services/wecantrackService'
-import { registerServiceWorker, showUpdateNotification } from './services/swRegistration'
 import type { Page, InitialGiftFinderData, Gift } from './types'
 
 const App: React.FC = () => {
@@ -62,21 +59,6 @@ const App: React.FC = () => {
   // Initialize AWIN MasterTag tracking (wecantrack, adMission, TRENDii)
   useEffect(() => {
     wecantrackService.initialize()
-  }, [])
-
-  // Register Service Worker for PWA
-  useEffect(() => {
-    registerServiceWorker({
-      onSuccess: () => {
-        // Service worker registered successfully
-      },
-      onUpdate: () => {
-        showUpdateNotification()
-      },
-      onError: (error) => {
-        console.error('[PWA] Service worker registration failed:', error)
-      }
-    })
   }, [])
 
   useEffect(() => {
@@ -524,11 +506,6 @@ const App: React.FC = () => {
               <CookieBanner onAccept={acceptCookies} onDecline={declineCookies} />
             </React.Suspense>
           )}
-          
-          {/* PWA Install Prompt */}
-          <React.Suspense fallback={null}>
-            <PWAInstallPrompt />
-          </React.Suspense>
         </div>
       </ErrorBoundary>
     </BlogProvider>
