@@ -13,11 +13,10 @@ import { logFilterEvent } from '../services/giftFinderAnalyticsService'
 import { calculateGiftScore, extractPriceFromRange } from '../services/giftScoringService'
 import { gaSearch, gaPageView } from '../services/googleAnalytics'
 import { pinterestPageVisit, pinterestSearch } from '../services/pinterestTracking'
-import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, AdvancedFilters, GiftSearchParams, RetailerBadge } from '../types';
+import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, GiftSearchParams, RetailerBadge } from '../types';
 import GiftFinderHero from './GiftFinderHero';
 import Button from './Button'
 import GiftResultCard from './GiftResultCard'
-import AdvancedFilterPanel from './AdvancedFilterPanel'
 import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents'
 import InternalLinkCTA from './InternalLinkCTA'
 import Breadcrumbs from './Breadcrumbs'
@@ -176,8 +175,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [occasion, setOccasion] = useState<string>(occasions[0])
   const [interests, setInterests] = useState<string>('')
   const [selectedInterestTags, setSelectedInterestTags] = useState<string[]>([]) // Track selected visual tags
-  const [filters, setFilters] = useState<Partial<AdvancedFilters>>({})
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState<boolean>(false)
   const [sortBy, setSortBy] = useState<'relevance' | 'price' | 'rating' | 'popularity'>('relevance')
   const [gifts, setGifts] = useState<Gift[]>([])
   const [allGifts, setAllGifts] = useState<Gift[]>([])
@@ -377,7 +374,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         budget,
         occasion,
         interests,
-        filters,
         sampleResults: gifts.slice(0, 3),
       })
       setFeedbackSubmitted(true)
@@ -389,7 +385,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     } finally {
       setFeedbackSubmitting(false)
     }
-  }, [relevanceFeedback, recipient, budget, occasion, interests, filters, gifts, showToast])
+  }, [relevanceFeedback, recipient, budget, occasion, interests, gifts, showToast])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -419,7 +415,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       pinterestSearch(searchQuery, `search_${Date.now()}`)
       gaSearch(searchQuery)
       try {
-        const searchParams: GiftSearchParams = { recipient, budget, occasion, interests, filters }
+        const searchParams: GiftSearchParams = { recipient, budget, occasion, interests }
         const results = await findGiftsWithFilters(searchParams)
         const enhancedResults = enhanceGiftsWithMetadata(results)
 
@@ -576,7 +572,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
           }
 
           // Check sustainability
-          if (gift.sustainability && filters.sustainability) {
+          if (gift.sustainability) {
             reasons.push('Duurzame keuze')
           }
 
@@ -639,7 +635,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         setIsLoading(false)
       }
     },
-    [recipient, budget, occasion, interests, filters, sortBy]
+    [recipient, budget, occasion, interests, sortBy]
   )
 
   return (
@@ -856,13 +852,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 </div>
               </div>
 
-              <AdvancedFilterPanel
-                filters={filters}
-                onFiltersChange={setFilters}
-                isVisible={showAdvancedFilters}
-                onToggle={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              />
-
               <div className="pt-6 border-t border-gray-200">
                 <Button
                   type="submit"
@@ -994,8 +983,6 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       </h2>
                       <p className="text-gray-600">
                         {gifts.length} {gifts.length === 1 ? 'cadeau' : 'cadeaus'} gevonden
-                        {Object.keys(filters).length > 0 &&
-                          ` met ${Object.keys(filters).length} filter${Object.keys(filters).length > 1 ? 's' : ''}`}
                       </p>
                     </div>
                     <div className="flex items-center gap-4">
