@@ -32,7 +32,7 @@ import {
 } from '../services/semanticLabelService'
 
 const occasions = ['Verjaardag', 'Kerstmis', 'Valentijnsdag', 'Jubileum', 'Zomaar']
-const recipients = ['Partner', 'Man', 'Vrouw', 'Vriend(in)', 'Familielid', 'Collega', 'Kind']
+const recipients = ['Partner', 'Vriend(in)', 'Familielid', 'Collega', 'Kind', 'Iemand bijzonder']
 const baseSuggestedInterests = [
   { name: 'Koken', icon: '🍳' },
   { name: 'Tech', icon: '💻' },
@@ -44,15 +44,9 @@ const baseSuggestedInterests = [
   { name: 'Gaming', icon: '🎮' },
   { name: 'Mode', icon: '👗' },
   { name: 'Muziek', icon: '🎵' },
-]
-
-const maleInterestBoosts = [
   { name: 'Grooming', icon: '🪒' },
   { name: 'BBQ', icon: '🔥' },
   { name: 'Gadgets', icon: '🛠️' },
-]
-
-const femaleInterestBoosts = [
   { name: 'Sieraden', icon: '💍' },
   { name: 'Selfcare', icon: '💆' },
   { name: 'Creatief', icon: '🎨' },
@@ -63,16 +57,14 @@ const getRecipientNarrative = (recipient: string) => {
   switch (lower) {
     case 'partner':
       return { noun: 'partner', objectPronoun: 'hen' }
-    case 'man':
-      return { noun: 'man', objectPronoun: 'hem' }
-    case 'vrouw':
-      return { noun: 'vrouw', objectPronoun: 'haar' }
     case 'vriend(in)':
       return { noun: 'vriend(in)', objectPronoun: 'hen' }
     case 'familielid':
       return { noun: 'familielid', objectPronoun: 'hen' }
     case 'collega':
       return { noun: 'collega', objectPronoun: 'hen' }
+    case 'iemand bijzonder':
+      return { noun: 'iemand bijzonder', objectPronoun: 'hen' }
     case 'kind':
       return { noun: 'kind', objectPronoun: 'ze' }
     default:
@@ -203,17 +195,11 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const auth = useContext(AuthContext)
 
   const suggestedInterests = useMemo(() => {
-    const combined = [...baseSuggestedInterests]
-    if (recipient === 'Man') {
-      combined.push(...maleInterestBoosts)
-    }
-    if (recipient === 'Vrouw') {
-      combined.push(...femaleInterestBoosts)
-    }
-    return combined.filter(
+    // All interests are now available to everyone - no gender-based filtering
+    return baseSuggestedInterests.filter(
       (interest, index, array) => array.findIndex((item) => item.name === interest.name) === index
     )
-  }, [recipient])
+  }, [])
 
   const fallbackSearchQuery = useMemo(() => {
     const base = [recipient, occasion].filter(Boolean).join(' ')
@@ -1145,7 +1131,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                         <textarea
                           value={relevanceFeedback}
                           onChange={(e) => setRelevanceFeedback(e.target.value)}
-                          placeholder="Bijvoorbeeld: Ik zoek iets duurzaams voor mannen, of iets rond 25 euro."
+                          placeholder="Bijvoorbeeld: Ik zoek iets duurzaams voor sporters, of iets persoonlijks rond 25 euro."
                           className="mt-4 w-full min-h-[120px] p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-800"
                         />
                         <div className="mt-4 flex items-center gap-3 flex-wrap">
