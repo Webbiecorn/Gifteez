@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { NewsletterService } from '../services/newsletterService';
-import { EmailNotificationService } from '../services/emailNotificationService';
+import React, { useEffect, useState } from 'react'
+import { EmailNotificationService } from '../services/emailNotificationService'
+import { NewsletterService } from '../services/newsletterService'
 
 interface NewsletterSignupProps {
-  variant?: 'inline' | 'modal';
-  className?: string;
-  onSuccess?: () => void;
-  title?: string;
-  description?: string;
-  defaultCategories?: string[];
-  defaultFrequency?: 'immediate' | 'daily' | 'weekly';
+  variant?: 'inline' | 'modal'
+  className?: string
+  onSuccess?: () => void
+  title?: string
+  description?: string
+  defaultCategories?: string[]
+  defaultFrequency?: 'immediate' | 'daily' | 'weekly'
 }
 
 export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
@@ -21,26 +21,28 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
   defaultCategories,
   defaultFrequency,
 }) => {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [frequency, setFrequency] = useState<'immediate' | 'daily' | 'weekly'>(defaultFrequency ?? 'weekly');
-  const [categories, setCategories] = useState<string[]>(defaultCategories ?? []);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [frequency, setFrequency] = useState<'immediate' | 'daily' | 'weekly'>(
+    defaultFrequency ?? 'weekly'
+  )
+  const [categories, setCategories] = useState<string[]>(defaultCategories ?? [])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   useEffect(() => {
-    setFrequency(defaultFrequency ?? 'weekly');
-  }, [defaultFrequency]);
+    setFrequency(defaultFrequency ?? 'weekly')
+  }, [defaultFrequency])
 
   useEffect(() => {
-    setCategories(defaultCategories ?? []);
-  }, [defaultCategories?.join(',')]);
+    setCategories(defaultCategories ?? [])
+  }, [defaultCategories?.join(',')])
 
   const showMessage = (type: 'success' | 'error', text: string) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage(null), 4000);
-  };
+    setMessage({ type, text })
+    setTimeout(() => setMessage(null), 4000)
+  }
 
   const availableCategories = [
     'Verjaardagen',
@@ -52,64 +54,63 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
     'Bruiloft',
     'Afstuderen',
     'Sinterklaas',
-    'Lifestyle'
-  ];
+    'Lifestyle',
+  ]
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     if (!email) {
-      showMessage('error', 'Vul je e-mailadres in');
-      return;
+      showMessage('error', 'Vul je e-mailadres in')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const subscriber = await EmailNotificationService.subscribeToNewsletter(
         email,
         name || undefined,
         { frequency, categories }
-      );
+      )
 
-      await NewsletterService.addSubscriber(subscriber);
+      await NewsletterService.addSubscriber(subscriber)
 
-      showMessage('success', 'Je bent succesvol aangemeld voor onze nieuwsbrief! 🎉');
-      
+      showMessage('success', 'Je bent succesvol aangemeld voor onze nieuwsbrief! 🎉')
+
       // Reset form
-      setEmail('');
-      setName('');
-  setFrequency(defaultFrequency ?? 'weekly');
-  setCategories(defaultCategories ?? []);
-      setIsExpanded(false);
+      setEmail('')
+      setName('')
+      setFrequency(defaultFrequency ?? 'weekly')
+      setCategories(defaultCategories ?? [])
+      setIsExpanded(false)
 
-      onSuccess?.();
+      onSuccess?.()
     } catch (error: any) {
       if (error.message === 'Email is already subscribed') {
-        showMessage('error', 'Dit e-mailadres is al aangemeld');
+        showMessage('error', 'Dit e-mailadres is al aangemeld')
       } else {
-        showMessage('error', 'Er ging iets mis. Probeer het opnieuw.');
+        showMessage('error', 'Er ging iets mis. Probeer het opnieuw.')
       }
-      console.error('Newsletter signup error:', error);
+      console.error('Newsletter signup error:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleCategoryToggle = (category: string) => {
-    setCategories(prev => 
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
-    );
-  };
+    setCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    )
+  }
 
   const containerClasses = {
-    inline: 'relative overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-br from-white via-muted-rose/40 to-white p-6 shadow-[0_20px_45px_-28px_rgba(244,63,94,0.45)]',
+    inline:
+      'relative overflow-hidden rounded-2xl border border-accent/20 bg-gradient-to-br from-white via-muted-rose/40 to-white p-6 shadow-[0_20px_45px_-28px_rgba(244,63,94,0.45)]',
     modal: 'relative bg-white p-6 rounded-2xl shadow-lg max-w-md w-full',
-  };
+  }
 
-  const isInline = variant === 'inline';
+  const isInline = variant === 'inline'
 
   return (
     <div className={`${containerClasses[variant]} ${className}`}>
@@ -118,21 +119,23 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
       )}
       {/* Message display */}
       {message && (
-        <div className={`relative z-10 mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
-          message.type === 'success' 
-            ? 'border-accent/20 bg-accent/10 text-primary' 
-            : 'border-highlight/20 bg-highlight/10 text-primary'
-        }`}>
+        <div
+          className={`relative z-10 mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 text-sm ${
+            message.type === 'success'
+              ? 'border-accent/20 bg-accent/10 text-primary'
+              : 'border-highlight/20 bg-highlight/10 text-primary'
+          }`}
+        >
           {message.text}
         </div>
       )}
 
       <div className="relative z-10 mb-4 text-center">
-            <h3 className="font-display text-lg font-semibold uppercase tracking-[0.15em] text-primary mb-2">
-              {title ?? '📧 Blijf op de hoogte!'}
+        <h3 className="font-display text-lg font-semibold uppercase tracking-[0.15em] text-primary mb-2">
+          {title ?? '📧 Blijf op de hoogte!'}
         </h3>
-            <p className="mx-auto max-w-xs text-sm leading-relaxed text-primary/70">
-              {description ?? 'Ontvang de nieuwste cadeau-ideeën en blog posts direct in je inbox'}
+        <p className="mx-auto max-w-xs text-sm leading-relaxed text-primary/70">
+          {description ?? 'Ontvang de nieuwste cadeau-ideeën en blog posts direct in je inbox'}
         </p>
       </div>
 
@@ -189,8 +192,8 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
                 {[
                   { value: 'immediate', label: 'Direct bij nieuwe posts' },
                   { value: 'daily', label: 'Dagelijks overzicht' },
-                  { value: 'weekly', label: 'Wekelijks overzicht' }
-                ].map(option => (
+                  { value: 'weekly', label: 'Wekelijks overzicht' },
+                ].map((option) => (
                   <label key={option.value} className="flex items-center">
                     <input
                       type="radio"
@@ -211,7 +214,7 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
                 Interessante categorieën (laat leeg voor alles)
               </label>
               <div className="grid grid-cols-2 gap-2">
-                {availableCategories.map(category => (
+                {availableCategories.map((category) => (
                   <label key={category} className="flex items-center">
                     <input
                       type="checkbox"
@@ -231,7 +234,7 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
         Je kunt je op elk moment uitschrijven via de link in onze e-mails
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default NewsletterSignup;
+export default NewsletterSignup

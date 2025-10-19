@@ -1,16 +1,15 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App'
+import { AuthProvider } from './contexts/AuthContext'
+import { CartProvider } from './contexts/CartContext'
 
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { AuthProvider } from './contexts/AuthContext';
-import { CartProvider } from './contexts/CartContext';
-
-const rootElement = document.getElementById('root');
+const rootElement = document.getElementById('root')
 if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+  throw new Error('Could not find root element to mount to')
 }
 
-const root = ReactDOM.createRoot(rootElement);
+const root = ReactDOM.createRoot(rootElement)
 root.render(
   <React.StrictMode>
     <AuthProvider>
@@ -19,4 +18,4 @@ root.render(
       </CartProvider>
     </AuthProvider>
   </React.StrictMode>
-);
+)

@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
 interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  padded?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  padded?: boolean
 }
 
 const maxMap = {
@@ -10,8 +10,8 @@ const maxMap = {
   md: 'max-w-4xl',
   lg: 'max-w-5xl',
   xl: 'max-w-7xl',
-  full: 'max-w-full'
-};
+  full: 'max-w-full',
+}
 
 export const Container: React.FC<ContainerProps> = ({
   size = 'xl',
@@ -27,7 +27,7 @@ export const Container: React.FC<ContainerProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default Container;
+export default Container

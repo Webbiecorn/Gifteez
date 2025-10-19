@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../services/firebase';
-import Button from './Button';
-import { CheckCircleIcon, XCircleIcon, SpinnerIcon, SearchIcon } from './IconComponents';
+import React, { useState, useEffect } from 'react'
+import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore'
+import { db } from '../services/firebase'
+import Button from './Button'
+import { CheckCircleIcon, XCircleIcon, SpinnerIcon, SearchIcon } from './IconComponents'
 
 interface ProductWithImage {
-  id: string;
-  title: string;
-  imageUrl: string;
-  price?: number;
-  source: string;
-  collectionName: string;
+  id: string
+  title: string
+  imageUrl: string
+  price?: number
+  source: string
+  collectionName: string
 }
 
 interface ValidationResult {
-  product: ProductWithImage;
-  status: 'valid' | 'broken' | 'checking';
-  statusCode?: number;
+  product: ProductWithImage
+  status: 'valid' | 'broken' | 'checking'
+  statusCode?: number
 }
 
 const ImageValidator: React.FC = () => {
-  const [products, setProducts] = useState<ProductWithImage[]>([]);
-  const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
-  const [isScanning, setIsScanning] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
-  const [stats, setStats] = useState({ total: 0, valid: 0, broken: 0, checking: 0 });
-  const [filter, setFilter] = useState<'all' | 'broken' | 'valid'>('all');
+  const [products, setProducts] = useState<ProductWithImage[]>([])
+  const [validationResults, setValidationResults] = useState<ValidationResult[]>([])
+  const [isScanning, setIsScanning] = useState(false)
+  const [isValidating, setIsValidating] = useState(false)
+  const [stats, setStats] = useState({ total: 0, valid: 0, broken: 0, checking: 0 })
+  const [filter, setFilter] = useState<'all' | 'broken' | 'valid'>('all')
 
   // Scan Firestore for all products with images
   const scanProducts = async () => {
-    setIsScanning(true);
-    const foundProducts: ProductWithImage[] = [];
+    setIsScanning(true)
+    const foundProducts: ProductWithImage[] = []
 
     try {
       // Scan manualProducts collection
-      const manualProductsRef = collection(db, 'manualProducts');
-      const manualSnapshot = await getDocs(manualProductsRef);
-      
+      const manualProductsRef = collection(db, 'manualProducts')
+      const manualSnapshot = await getDocs(manualProductsRef)
+
       manualSnapshot.forEach((doc) => {
-        const data = doc.data();
+        const data = doc.data()
         if (data.imageUrl) {
           foundProducts.push({
             id: doc.id,
@@ -46,17 +46,17 @@ const ImageValidator: React.FC = () => {
             imageUrl: data.imageUrl,
             price: data.price,
             source: data.source || 'manual',
-            collectionName: 'manualProducts'
-          });
+            collectionName: 'manualProducts',
+          })
         }
-      });
+      })
 
       // Scan amazonProducts collection
-      const amazonProductsRef = collection(db, 'amazonProducts');
-      const amazonSnapshot = await getDocs(amazonProductsRef);
-      
+      const amazonProductsRef = collection(db, 'amazonProducts')
+      const amazonSnapshot = await getDocs(amazonProductsRef)
+
       amazonSnapshot.forEach((doc) => {
-        const data = doc.data();
+        const data = doc.data()
         if (data.imageUrl) {
           foundProducts.push({
             id: doc.id,
@@ -64,17 +64,17 @@ const ImageValidator: React.FC = () => {
             imageUrl: data.imageUrl,
             price: data.price,
             source: 'amazon',
-            collectionName: 'amazonProducts'
-          });
+            collectionName: 'amazonProducts',
+          })
         }
-      });
+      })
 
       // Scan slygadProducts collection
-      const slygadProductsRef = collection(db, 'slygadProducts');
-      const slygadSnapshot = await getDocs(slygadProductsRef);
-      
+      const slygadProductsRef = collection(db, 'slygadProducts')
+      const slygadSnapshot = await getDocs(slygadProductsRef)
+
       slygadSnapshot.forEach((doc) => {
-        const data = doc.data();
+        const data = doc.data()
         if (data.imageUrl) {
           foundProducts.push({
             id: doc.id,
@@ -82,166 +82,184 @@ const ImageValidator: React.FC = () => {
             imageUrl: data.imageUrl,
             price: data.price,
             source: 'slygad',
-            collectionName: 'slygadProducts'
-          });
+            collectionName: 'slygadProducts',
+          })
         }
-      });
+      })
 
-      console.log(`📸 Found ${foundProducts.length} products with images`);
-      setProducts(foundProducts);
-      
+      console.log(`📸 Found ${foundProducts.length} products with images`)
+      setProducts(foundProducts)
+
       // Initialize validation results
-      const initialResults: ValidationResult[] = foundProducts.map(product => ({
+      const initialResults: ValidationResult[] = foundProducts.map((product) => ({
         product,
-        status: 'checking' as const
-      }));
-      setValidationResults(initialResults);
-      
+        status: 'checking' as const,
+      }))
+      setValidationResults(initialResults)
     } catch (error) {
-      console.error('Error scanning products:', error);
-      alert('Failed to scan products: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Error scanning products:', error)
+      alert(
+        'Failed to scan products: ' + (error instanceof Error ? error.message : 'Unknown error')
+      )
     } finally {
-      setIsScanning(false);
+      setIsScanning(false)
     }
-  };
+  }
 
   // Validate a single image URL
-  const validateImageUrl = async (url: string): Promise<{ valid: boolean; statusCode?: number }> => {
+  const validateImageUrl = async (
+    url: string
+  ): Promise<{ valid: boolean; statusCode?: number }> => {
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
 
       const response = await fetch(url, {
         method: 'HEAD',
         signal: controller.signal,
-        mode: 'no-cors' // This won't give us status codes but will catch CORS errors
-      });
+        mode: 'no-cors', // This won't give us status codes but will catch CORS errors
+      })
 
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId)
 
       // For no-cors, we can't read the status, but if it loads, it's likely valid
       // Let's use a more reliable method with an Image object
       return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve({ valid: true, statusCode: 200 });
-        img.onerror = () => resolve({ valid: false, statusCode: 404 });
-        img.src = url;
-        
+        const img = new Image()
+        img.onload = () => resolve({ valid: true, statusCode: 200 })
+        img.onerror = () => resolve({ valid: false, statusCode: 404 })
+        img.src = url
+
         // Timeout after 10 seconds
         setTimeout(() => {
-          img.src = '';
-          resolve({ valid: false, statusCode: 408 }); // Timeout
-        }, 10000);
-      });
+          img.src = ''
+          resolve({ valid: false, statusCode: 408 }) // Timeout
+        }, 10000)
+      })
     } catch (error) {
-      console.error('Error validating image:', url, error);
-      return { valid: false, statusCode: 0 };
+      console.error('Error validating image:', url, error)
+      return { valid: false, statusCode: 0 }
     }
-  };
+  }
 
   // Validate all images
   const validateAllImages = async () => {
     if (products.length === 0) {
-      alert('Please scan products first');
-      return;
+      alert('Please scan products first')
+      return
     }
 
-    setIsValidating(true);
-    const results: ValidationResult[] = [];
+    setIsValidating(true)
+    const results: ValidationResult[] = []
 
     // Process in batches of 5 to avoid overwhelming the browser
-    const batchSize = 5;
+    const batchSize = 5
     for (let i = 0; i < products.length; i += batchSize) {
-      const batch = products.slice(i, i + batchSize);
-      
+      const batch = products.slice(i, i + batchSize)
+
       const batchResults = await Promise.all(
         batch.map(async (product) => {
-          const validation = await validateImageUrl(product.imageUrl);
+          const validation = await validateImageUrl(product.imageUrl)
           return {
             product,
             status: validation.valid ? ('valid' as const) : ('broken' as const),
-            statusCode: validation.statusCode
-          };
+            statusCode: validation.statusCode,
+          }
         })
-      );
+      )
 
-      results.push(...batchResults);
-      setValidationResults([...results]);
+      results.push(...batchResults)
+      setValidationResults([...results])
 
       // Update stats
-      const valid = results.filter(r => r.status === 'valid').length;
-      const broken = results.filter(r => r.status === 'broken').length;
-      setStats({ total: products.length, valid, broken, checking: products.length - valid - broken });
+      const valid = results.filter((r) => r.status === 'valid').length
+      const broken = results.filter((r) => r.status === 'broken').length
+      setStats({
+        total: products.length,
+        valid,
+        broken,
+        checking: products.length - valid - broken,
+      })
 
       // Small delay between batches
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500))
     }
 
-    setIsValidating(false);
-    console.log('✅ Validation complete:', results);
-  };
+    setIsValidating(false)
+    console.log('✅ Validation complete:', results)
+  }
 
   // Delete a product with broken image
   const deleteProduct = async (result: ValidationResult) => {
     if (!confirm(`Are you sure you want to delete "${result.product.title}"?`)) {
-      return;
+      return
     }
 
     try {
-      const docRef = doc(db, result.product.collectionName, result.product.id);
-      await deleteDoc(docRef);
-      
+      const docRef = doc(db, result.product.collectionName, result.product.id)
+      await deleteDoc(docRef)
+
       // Remove from local state
-      setValidationResults(prev => prev.filter(r => r.product.id !== result.product.id));
-      setProducts(prev => prev.filter(p => p.id !== result.product.id));
-      
-      alert('Product deleted successfully');
+      setValidationResults((prev) => prev.filter((r) => r.product.id !== result.product.id))
+      setProducts((prev) => prev.filter((p) => p.id !== result.product.id))
+
+      alert('Product deleted successfully')
     } catch (error) {
-      console.error('Error deleting product:', error);
-      alert('Failed to delete product: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Error deleting product:', error)
+      alert(
+        'Failed to delete product: ' + (error instanceof Error ? error.message : 'Unknown error')
+      )
     }
-  };
+  }
 
   // Update image URL for a product
   const updateImageUrl = async (result: ValidationResult, newUrl: string) => {
     try {
-      const docRef = doc(db, result.product.collectionName, result.product.id);
-      await updateDoc(docRef, { imageUrl: newUrl });
-      
-      // Update local state
-      setProducts(prev => prev.map(p => 
-        p.id === result.product.id ? { ...p, imageUrl: newUrl } : p
-      ));
-      
-      // Re-validate the updated image
-      const validation = await validateImageUrl(newUrl);
-      setValidationResults(prev => prev.map(r =>
-        r.product.id === result.product.id
-          ? { ...r, product: { ...r.product, imageUrl: newUrl }, status: validation.valid ? 'valid' : 'broken' }
-          : r
-      ));
-      
-      alert('Image URL updated successfully');
-    } catch (error) {
-      console.error('Error updating image URL:', error);
-      alert('Failed to update image URL: ' + (error instanceof Error ? error.message : 'Unknown error'));
-    }
-  };
+      const docRef = doc(db, result.product.collectionName, result.product.id)
+      await updateDoc(docRef, { imageUrl: newUrl })
 
-  const filteredResults = validationResults.filter(result => {
-    if (filter === 'all') return true;
-    if (filter === 'broken') return result.status === 'broken';
-    if (filter === 'valid') return result.status === 'valid';
-    return true;
-  });
+      // Update local state
+      setProducts((prev) =>
+        prev.map((p) => (p.id === result.product.id ? { ...p, imageUrl: newUrl } : p))
+      )
+
+      // Re-validate the updated image
+      const validation = await validateImageUrl(newUrl)
+      setValidationResults((prev) =>
+        prev.map((r) =>
+          r.product.id === result.product.id
+            ? {
+                ...r,
+                product: { ...r.product, imageUrl: newUrl },
+                status: validation.valid ? 'valid' : 'broken',
+              }
+            : r
+        )
+      )
+
+      alert('Image URL updated successfully')
+    } catch (error) {
+      console.error('Error updating image URL:', error)
+      alert(
+        'Failed to update image URL: ' + (error instanceof Error ? error.message : 'Unknown error')
+      )
+    }
+  }
+
+  const filteredResults = validationResults.filter((result) => {
+    if (filter === 'all') return true
+    if (filter === 'broken') return result.status === 'broken'
+    if (filter === 'valid') return result.status === 'valid'
+    return true
+  })
 
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">🖼️ Image Validator</h2>
         <p className="text-gray-600 mb-6">
-          Scan your Firestore collections for products with images and validate if the image URLs are accessible.
-          This helps identify broken Amazon links or other image hosting issues.
+          Scan your Firestore collections for products with images and validate if the image URLs
+          are accessible. This helps identify broken Amazon links or other image hosting issues.
         </p>
 
         {/* Action Buttons */}
@@ -355,34 +373,30 @@ const ImageValidator: React.FC = () => {
             ))}
           </div>
         ) : validationResults.length > 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No {filter} images found.
-          </div>
+          <div className="text-center py-8 text-gray-500">No {filter} images found.</div>
         ) : (
-          <div className="text-center py-8 text-gray-400">
-            Click "Scan Products" to begin
-          </div>
+          <div className="text-center py-8 text-gray-400">Click "Scan Products" to begin</div>
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Component for individual product row
 const ProductImageRow: React.FC<{
-  result: ValidationResult;
-  onDelete: (result: ValidationResult) => void;
-  onUpdateUrl: (result: ValidationResult, newUrl: string) => void;
+  result: ValidationResult
+  onDelete: (result: ValidationResult) => void
+  onUpdateUrl: (result: ValidationResult, newUrl: string) => void
 }> = ({ result, onDelete, onUpdateUrl }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [newUrl, setNewUrl] = useState(result.product.imageUrl);
+  const [isEditing, setIsEditing] = useState(false)
+  const [newUrl, setNewUrl] = useState(result.product.imageUrl)
 
   const handleSave = () => {
     if (newUrl && newUrl !== result.product.imageUrl) {
-      onUpdateUrl(result, newUrl);
-      setIsEditing(false);
+      onUpdateUrl(result, newUrl)
+      setIsEditing(false)
     }
-  };
+  }
 
   return (
     <div
@@ -390,8 +404,8 @@ const ProductImageRow: React.FC<{
         result.status === 'broken'
           ? 'border-red-200 bg-red-50'
           : result.status === 'valid'
-          ? 'border-green-200 bg-green-50'
-          : 'border-gray-200 bg-gray-50'
+            ? 'border-green-200 bg-green-50'
+            : 'border-gray-200 bg-gray-50'
       }`}
     >
       <div className="flex gap-4">
@@ -472,8 +486,8 @@ const ProductImageRow: React.FC<{
                 </button>
                 <button
                   onClick={() => {
-                    setNewUrl(result.product.imageUrl);
-                    setIsEditing(false);
+                    setNewUrl(result.product.imageUrl)
+                    setIsEditing(false)
                   }}
                   className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
                 >
@@ -510,8 +524,8 @@ const ProductImageRow: React.FC<{
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // Add TrashIcon if it doesn't exist
 const TrashIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) => (
@@ -523,6 +537,6 @@ const TrashIcon: React.FC<{ className?: string }> = ({ className = 'w-5 h-5' }) 
       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
     />
   </svg>
-);
+)
 
-export default ImageValidator;
+export default ImageValidator

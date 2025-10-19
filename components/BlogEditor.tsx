@@ -1,13 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { blogPosts } from '../data/blogData';
-import ImageUpload from './ImageUpload';
-import BlogService, { BlogPostData } from '../services/blogService';
-import { BlogPreview } from './BlogPreview';
-import SEOPanel from './SEOPanel';
-import { SEOData } from '../services/seoManager';
-import CoolblueFeedService, { CoolblueProduct } from '../services/coolblueFeedService';
-import { AmazonProductLibrary, type AmazonProduct } from '../services/amazonProductLibrary';
-import ContentBuilder, { ContentBlockDraft, GiftBlockDraft, ParagraphBlockDraft, RetailerDraft, generateId } from './ContentBuilder';
+import React, { useEffect, useMemo, useState } from 'react'
+import { blogPosts } from '../data/blogData'
+import { AmazonProductLibrary, type AmazonProduct } from '../services/amazonProductLibrary'
+import BlogService from '../services/blogService'
 import {
   contentBlocksToDrafts,
   draftsToContentBlocks,
@@ -15,42 +9,131 @@ import {
   draftsToPlainText,
   stringToDrafts,
   normalizeDraftList,
-} from '../services/contentDraftMapper';
+} from '../services/contentDraftMapper'
+import CoolblueFeedService, { CoolblueProduct } from '../services/coolblueFeedService'
+import { BlogPreview } from './BlogPreview'
+import ContentBuilder, { generateId } from './ContentBuilder'
+import ImageUpload from './ImageUpload'
+import SEOPanel from './SEOPanel'
+import type {
+  ContentBlockDraft,
+  GiftBlockDraft,
+  ParagraphBlockDraft,
+  RetailerDraft,
+} from './ContentBuilder'
+import type { BlogPostData } from '../services/blogService';
+import type { SEOData } from '../services/seoManager'
 
-type ProductSource = 'coolblue' | 'amazon';
+type ProductSource = 'coolblue' | 'amazon'
 
 type EditorProduct = {
-  id: string;
-  name: string;
-  description?: string | null;
-  shortDescription?: string | null;
-  imageUrl?: string | null;
-  price?: number | null;
-  originalPrice?: number | null;
-  affiliateLink?: string | null;
-  tags?: string[] | null;
-  source: ProductSource;
-};
+  id: string
+  name: string
+  description?: string | null
+  shortDescription?: string | null
+  imageUrl?: string | null
+  price?: number | null
+  originalPrice?: number | null
+  affiliateLink?: string | null
+  tags?: string[] | null
+  source: ProductSource
+}
 
 type BlogEditorProps = {
-  onClose: () => void;
-  postId?: string | null;
-  postSlug?: string | null;
-  initialPost?: BlogPostData | null;
-};
+  onClose: () => void
+  postId?: string | null
+  postSlug?: string | null
+  initialPost?: BlogPostData | null
+}
 
 const DUTCH_STOPWORDS = new Set([
-  'de', 'het', 'een', 'en', 'maar', 'want', 'toch', 'ook', 'bij', 'op', 'met', 'van', 'voor', 'dat', 'die',
-  'dit', 'daar', 'hier', 'heb', 'hebt', 'heeft', 'hebben', 'zijn', 'ben', 'bent', 'is', 'was', 'waren', 'word',
-  'wordt', 'worden', 'kunnen', 'kan', 'kunt', 'kon', 'konnen', 'we', 'wij', 'jullie', 'je', 'jij', 'u', 'ik',
-  'ze', 'zij', 'hun', 'hen', 'als', 'dan', 'te', 'tot', 'niet', 'geen', 'wel', 'al', 'door', 'over', 'onder',
-  'tussen', 'waar', 'wanneer', 'hoe', 'wat', 'welke', 'er', 'hierdoor', 'daarom', 'daardoor', 'eens', 'toen',
-  'na', 'vooral', 'veel', 'meer', 'minder', 'zoals', 'via', 'onder', 'boven', 'tegen', 'binnen', 'buiten'
-]);
+  'de',
+  'het',
+  'een',
+  'en',
+  'maar',
+  'want',
+  'toch',
+  'ook',
+  'bij',
+  'op',
+  'met',
+  'van',
+  'voor',
+  'dat',
+  'die',
+  'dit',
+  'daar',
+  'hier',
+  'heb',
+  'hebt',
+  'heeft',
+  'hebben',
+  'zijn',
+  'ben',
+  'bent',
+  'is',
+  'was',
+  'waren',
+  'word',
+  'wordt',
+  'worden',
+  'kunnen',
+  'kan',
+  'kunt',
+  'kon',
+  'konnen',
+  'we',
+  'wij',
+  'jullie',
+  'je',
+  'jij',
+  'u',
+  'ik',
+  'ze',
+  'zij',
+  'hun',
+  'hen',
+  'als',
+  'dan',
+  'te',
+  'tot',
+  'niet',
+  'geen',
+  'wel',
+  'al',
+  'door',
+  'over',
+  'onder',
+  'tussen',
+  'waar',
+  'wanneer',
+  'hoe',
+  'wat',
+  'welke',
+  'er',
+  'hierdoor',
+  'daarom',
+  'daardoor',
+  'eens',
+  'toen',
+  'na',
+  'vooral',
+  'veel',
+  'meer',
+  'minder',
+  'zoals',
+  'via',
+  'onder',
+  'boven',
+  'tegen',
+  'binnen',
+  'buiten',
+])
 
 const normalizeForTagExtraction = (raw: string): string => {
   if (!raw) {
-    return '';
+    return ''
   }
   return raw
     .normalize('NFD')
@@ -58,137 +141,152 @@ const normalizeForTagExtraction = (raw: string): string => {
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, ' ')
     .replace(/\s+/g, ' ')
-    .trim();
-};
+    .trim()
+}
 
 const toDisplayTag = (value: string): string => {
-  const normalized = value.trim();
+  const normalized = value.trim()
   if (!normalized) {
-    return '';
+    return ''
   }
   return normalized
     .toLowerCase()
     .split(/\s+|-/)
     .filter(Boolean)
     .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ');
-};
+    .join(' ')
+}
 
 const mergeTagLists = (primary: string[], secondary: string[]): string[] => {
-  const seen = new Set<string>();
-  const result: string[] = [];
+  const seen = new Set<string>()
+  const result: string[] = []
 
   for (const list of [primary, secondary]) {
     for (const tag of list) {
-      const cleaned = tag.trim();
+      const cleaned = tag.trim()
       if (!cleaned) {
-        continue;
+        continue
       }
-      const key = cleaned.toLowerCase();
+      const key = cleaned.toLowerCase()
       if (seen.has(key)) {
-        continue;
+        continue
       }
-      seen.add(key);
-      result.push(cleaned);
+      seen.add(key)
+      result.push(cleaned)
     }
   }
 
-  return result;
-};
+  return result
+}
 
 const countWords = (value?: string) => {
   if (!value) {
-    return 0;
+    return 0
   }
-  return value
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .length;
-};
+  return value.trim().split(/\s+/).filter(Boolean).length
+}
 
 const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, initialPost }) => {
-  const [post, setPost] = useState<BlogPostData | null>(null);
-  const [title, setTitle] = useState('');
-  const [excerpt, setExcerpt] = useState('');
-  const [contentDrafts, setContentDrafts] = useState<ContentBlockDraft[]>(() => normalizeDraftList([]));
-  const [category, setCategory] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [isDraft, setIsDraft] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
-  const [seoData, setSeoData] = useState<SEOData | null>(null);
-  const [coolblueProducts, setCoolblueProducts] = useState<EditorProduct[]>([]);
-  const [amazonProducts, setAmazonProducts] = useState<EditorProduct[]>([]);
-  const [productFilter, setProductFilter] = useState<'all' | ProductSource>('all');
-  const [productSearch, setProductSearch] = useState('');
-  const [productTagFilter, setProductTagFilter] = useState<string | null>(null);
-  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
-  const [slugValue, setSlugValue] = useState('');
-  const [hasCustomSlug, setHasCustomSlug] = useState(false);
-  const [tagsValue, setTagsValue] = useState('');
+  const [post, setPost] = useState<BlogPostData | null>(null)
+  const [title, setTitle] = useState('')
+  const [excerpt, setExcerpt] = useState('')
+  const [contentDrafts, setContentDrafts] = useState<ContentBlockDraft[]>(() =>
+    normalizeDraftList([])
+  )
+  const [category, setCategory] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  const [isDraft, setIsDraft] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
+  const [seoData, setSeoData] = useState<SEOData | null>(null)
+  const [coolblueProducts, setCoolblueProducts] = useState<EditorProduct[]>([])
+  const [amazonProducts, setAmazonProducts] = useState<EditorProduct[]>([])
+  const [productFilter, setProductFilter] = useState<'all' | ProductSource>('all')
+  const [productSearch, setProductSearch] = useState('')
+  const [productTagFilter, setProductTagFilter] = useState<string | null>(null)
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false)
+  const [slugValue, setSlugValue] = useState('')
+  const [hasCustomSlug, setHasCustomSlug] = useState(false)
+  const [tagsValue, setTagsValue] = useState('')
 
-  const plainTextContent = useMemo(() => draftsToPlainText(contentDrafts), [contentDrafts]);
-  const htmlContent = useMemo(() => draftsToHtml(contentDrafts), [contentDrafts]);
-  const structuredBlocks = useMemo(() => draftsToContentBlocks(contentDrafts), [contentDrafts]);
+  const plainTextContent = useMemo(() => draftsToPlainText(contentDrafts), [contentDrafts])
+  const htmlContent = useMemo(() => draftsToHtml(contentDrafts), [contentDrafts])
+  const structuredBlocks = useMemo(() => draftsToContentBlocks(contentDrafts), [contentDrafts])
   const parsedTags = useMemo(
-    () => tagsValue.split(',').map((tag) => tag.trim()).filter(Boolean),
+    () =>
+      tagsValue
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean),
     [tagsValue]
-  );
+  )
 
   const suggestedExcerpt = useMemo(() => {
-    const source = plainTextContent || title;
+    const source = plainTextContent || title
     if (!source?.trim()) {
-      return '';
+      return ''
     }
-    const normalized = source.replace(/\s+/g, ' ').trim();
+    const normalized = source.replace(/\s+/g, ' ').trim()
     if (!normalized) {
-      return '';
+      return ''
     }
-    const words = normalized.split(' ');
-    const excerptCandidate = words.slice(0, 45).join(' ');
-    const trimmed = excerptCandidate.length > 220 ? `${excerptCandidate.slice(0, 217).trimEnd()}…` : excerptCandidate;
-    return trimmed.endsWith('.') || trimmed.endsWith('!') || trimmed.endsWith('?') ? trimmed : `${trimmed}…`;
-  }, [plainTextContent, title]);
+    const words = normalized.split(' ')
+    const excerptCandidate = words.slice(0, 45).join(' ')
+    const trimmed =
+      excerptCandidate.length > 220
+        ? `${excerptCandidate.slice(0, 217).trimEnd()}…`
+        : excerptCandidate
+    return trimmed.endsWith('.') || trimmed.endsWith('!') || trimmed.endsWith('?')
+      ? trimmed
+      : `${trimmed}…`
+  }, [plainTextContent, title])
 
   const suggestedTags = useMemo(() => {
-    const textPool = normalizeForTagExtraction(`${category ?? ''} ${title ?? ''} ${plainTextContent ?? ''}`);
+    const textPool = normalizeForTagExtraction(
+      `${category ?? ''} ${title ?? ''} ${plainTextContent ?? ''}`
+    )
     if (!textPool) {
-      return category ? [toDisplayTag(category)] : [];
+      return category ? [toDisplayTag(category)] : []
     }
 
-    const counts = new Map<string, number>();
+    const counts = new Map<string, number>()
     textPool.split(' ').forEach((word) => {
       if (!word || word.length < 4 || DUTCH_STOPWORDS.has(word)) {
-        return;
+        return
       }
-      counts.set(word, (counts.get(word) ?? 0) + 1);
-    });
+      counts.set(word, (counts.get(word) ?? 0) + 1)
+    })
 
     const sorted = Array.from(counts.entries())
       .sort((a, b) => b[1] - a[1])
-      .map(([word]) => toDisplayTag(word));
+      .map(([word]) => toDisplayTag(word))
 
-    const base = category ? [toDisplayTag(category)] : [];
-    return mergeTagLists(base, sorted).slice(0, 6);
-  }, [plainTextContent, category, title]);
+    const base = category ? [toDisplayTag(category)] : []
+    return mergeTagLists(base, sorted).slice(0, 6)
+  }, [plainTextContent, category, title])
 
-  const excerptCharCount = useMemo(() => excerpt.trim().length, [excerpt]);
+  const excerptCharCount = useMemo(() => excerpt.trim().length, [excerpt])
 
-  const wordCount = useMemo(() => countWords(plainTextContent), [plainTextContent]);
-  const readMinutes = useMemo(() => (wordCount ? Math.max(1, Math.round(wordCount / 220)) : 0), [wordCount]);
-  const seoTitle = useMemo(() => (seoData?.metaTitle ?? title).trim(), [seoData, title]);
-  const seoDescription = useMemo(() => (seoData?.metaDescription ?? excerpt).trim(), [seoData, excerpt]);
-  const seoTitleLength = seoTitle.length;
-  const seoDescriptionLength = seoDescription.length;
+  const wordCount = useMemo(() => countWords(plainTextContent), [plainTextContent])
+  const readMinutes = useMemo(
+    () => (wordCount ? Math.max(1, Math.round(wordCount / 220)) : 0),
+    [wordCount]
+  )
+  const seoTitle = useMemo(() => (seoData?.metaTitle ?? title).trim(), [seoData, title])
+  const seoDescription = useMemo(
+    () => (seoData?.metaDescription ?? excerpt).trim(),
+    [seoData, excerpt]
+  )
+  const seoTitleLength = seoTitle.length
+  const seoDescriptionLength = seoDescription.length
   const keywordsCount = useMemo(() => {
     if (!seoData?.keywords) {
-      return 0;
+      return 0
     }
-    return seoData.keywords.filter((keyword) => keyword.trim().length > 0).length;
-  }, [seoData]);
-  const hasHero = Boolean(imageUrl);
+    return seoData.keywords.filter((keyword) => keyword.trim().length > 0).length
+  }, [seoData])
+  const hasHero = Boolean(imageUrl)
   const marketingChecklist = useMemo(
     () => [
       { id: 'hero', label: 'Hero-afbeelding toegevoegd', ok: hasHero },
@@ -205,153 +303,169 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       },
     ],
     [hasHero, wordCount, seoTitleLength, seoDescriptionLength]
-  );
+  )
   const checklistScore = useMemo(() => {
     if (!marketingChecklist.length) {
-      return 0;
+      return 0
     }
-    const completed = marketingChecklist.filter((item) => item.ok).length;
-    return Math.round((completed / marketingChecklist.length) * 100);
-  }, [marketingChecklist]);
+    const completed = marketingChecklist.filter((item) => item.ok).length
+    return Math.round((completed / marketingChecklist.length) * 100)
+  }, [marketingChecklist])
 
-  const combinedProducts = useMemo(() => [...coolblueProducts, ...amazonProducts], [coolblueProducts, amazonProducts]);
+  const combinedProducts = useMemo(
+    () => [...coolblueProducts, ...amazonProducts],
+    [coolblueProducts, amazonProducts]
+  )
 
   const filteredProducts = useMemo(() => {
     if (!combinedProducts.length) {
-      return [];
+      return []
     }
-    const term = productSearch.trim().toLowerCase();
-    let pool = combinedProducts;
+    const term = productSearch.trim().toLowerCase()
+    let pool = combinedProducts
     if (productFilter !== 'all') {
-      pool = pool.filter((product) => product.source === productFilter);
+      pool = pool.filter((product) => product.source === productFilter)
     }
     if (productTagFilter) {
-      const target = productTagFilter.toLowerCase();
+      const target = productTagFilter.toLowerCase()
       pool = pool.filter((product) =>
         (product.tags ?? []).some((tag) => tag.toLowerCase() === target)
-      );
+      )
     }
     if (term) {
       pool = pool.filter((product) => {
-        const haystack = `${product.name} ${product.description ?? ''} ${(product.tags ?? []).join(' ')}`.toLowerCase();
-        return haystack.includes(term);
-      });
+        const haystack =
+          `${product.name} ${product.description ?? ''} ${(product.tags ?? []).join(' ')}`.toLowerCase()
+        return haystack.includes(term)
+      })
     }
-    return pool.slice(0, 12);
-  }, [combinedProducts, productFilter, productSearch, productTagFilter]);
+    return pool.slice(0, 12)
+  }, [combinedProducts, productFilter, productSearch, productTagFilter])
 
   const availableProductTags = useMemo(() => {
-    const counts = new Map<string, number>();
+    const counts = new Map<string, number>()
     combinedProducts.forEach((product) => {
-      (product.tags ?? []).forEach((tag) => {
-        const key = tag.trim().toLowerCase();
+      ;(product.tags ?? []).forEach((tag) => {
+        const key = tag.trim().toLowerCase()
         if (!key) {
-          return;
+          return
         }
-        counts.set(key, (counts.get(key) ?? 0) + 1);
-      });
-    });
+        counts.set(key, (counts.get(key) ?? 0) + 1)
+      })
+    })
 
     return Array.from(counts.entries())
       .sort((a, b) => b[1] - a[1])
       .slice(0, 10)
-      .map(([key, count]) => ({ key, label: toDisplayTag(key), count }));
-  }, [combinedProducts]);
+      .map(([key, count]) => ({ key, label: toDisplayTag(key), count }))
+  }, [combinedProducts])
 
-  const generatedSlug = useMemo(() => BlogService.generateSlug(title || ''), [title]);
-  const slugPreview = useMemo(() => (slugValue.trim() || generatedSlug), [slugValue, generatedSlug]);
+  const generatedSlug = useMemo(() => BlogService.generateSlug(title || ''), [title])
+  const slugPreview = useMemo(() => slugValue.trim() || generatedSlug, [slugValue, generatedSlug])
   const categoryOptions = useMemo(() => {
-    const base = new Set<string>(['Home & Office', 'Tech', 'Duurzaam', 'Lifestyle', 'Reviews', 'Tips', 'Deals']);
+    const base = new Set<string>([
+      'Home & Office',
+      'Tech',
+      'Duurzaam',
+      'Lifestyle',
+      'Reviews',
+      'Tips',
+      'Deals',
+    ])
     blogPosts.forEach((postEntry) => {
       if (postEntry.category?.trim()) {
-        base.add(postEntry.category.trim());
+        base.add(postEntry.category.trim())
       }
-    });
+    })
     if (category?.trim()) {
-      base.add(category.trim());
+      base.add(category.trim())
     }
-    return Array.from(base).filter(Boolean).sort((a, b) => a.localeCompare(b, 'nl-NL'));
-  }, [category]);
+    return Array.from(base)
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, 'nl-NL'))
+  }, [category])
 
   const applyPostData = (existingPost: BlogPostData) => {
-    setPost(existingPost);
-    setTitle(existingPost.title || '');
-    setExcerpt(existingPost.excerpt || '');
-    setCategory(existingPost.category || '');
+    setPost(existingPost)
+    setTitle(existingPost.title || '')
+    setExcerpt(existingPost.excerpt || '')
+    setCategory(existingPost.category || '')
     const drafts = normalizeDraftList(
       existingPost.contentBlocks && existingPost.contentBlocks.length
         ? contentBlocksToDrafts(existingPost.contentBlocks)
         : stringToDrafts(existingPost.content || '')
-    );
-    setContentDrafts(drafts);
-    setImageUrl(existingPost.imageUrl || '');
-    setIsDraft(existingPost.isDraft ?? true);
-    setSeoData(existingPost.seo ?? null);
-    setSlugValue(existingPost.slug || '');
-    setHasCustomSlug(Boolean(existingPost.slug));
-    setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '');
-  };
+    )
+    setContentDrafts(drafts)
+    setImageUrl(existingPost.imageUrl || '')
+    setIsDraft(existingPost.isDraft ?? true)
+    setSeoData(existingPost.seo ?? null)
+    setSlugValue(existingPost.slug || '')
+    setHasCustomSlug(Boolean(existingPost.slug))
+    setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '')
+  }
 
   useEffect(() => {
     const loadPost = async () => {
       if (initialPost) {
-        applyPostData(initialPost);
-        setIsLoading(false);
-        return;
+        applyPostData(initialPost)
+        setIsLoading(false)
+        return
       }
 
       if (postId) {
-        setIsLoading(true);
+        setIsLoading(true)
         try {
-          const existingPost = await BlogService.getPostById(postId);
+          const existingPost = await BlogService.getPostById(postId)
           if (existingPost) {
-            applyPostData(existingPost);
+            applyPostData(existingPost)
           }
         } catch (error) {
-          console.error('Error loading post:', error);
+          console.error('Error loading post:', error)
         } finally {
-          setIsLoading(false);
+          setIsLoading(false)
         }
       } else if (postSlug) {
         // Fallback voor bestaande posts uit static data
-        const existingPost = blogPosts.find(p => p.slug === postSlug);
+        const existingPost = blogPosts.find((p) => p.slug === postSlug)
         if (existingPost) {
-          setTitle(existingPost.title);
-          setExcerpt(existingPost.excerpt);
-          setCategory(existingPost.category);
-          setImageUrl(existingPost.imageUrl || '');
-          setSlugValue(existingPost.slug || '');
-          setHasCustomSlug(Boolean(existingPost.slug));
-          
+          setTitle(existingPost.title)
+          setExcerpt(existingPost.excerpt)
+          setCategory(existingPost.category)
+          setImageUrl(existingPost.imageUrl || '')
+          setSlugValue(existingPost.slug || '')
+          setHasCustomSlug(Boolean(existingPost.slug))
+
           // Convert content blocks to simple text for now
-          const drafts = normalizeDraftList(contentBlocksToDrafts(existingPost.content));
-          setContentDrafts(drafts);
-          setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '');
+          const drafts = normalizeDraftList(contentBlocksToDrafts(existingPost.content))
+          setContentDrafts(drafts)
+          setTagsValue(
+            existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || ''
+          )
         }
       }
-    };
+    }
 
-    loadPost();
-  }, [postId, postSlug, initialPost]);
+    loadPost()
+  }, [postId, postSlug, initialPost])
 
   useEffect(() => {
     if (!hasCustomSlug) {
-      setSlugValue(generatedSlug);
+      setSlugValue(generatedSlug)
     }
-  }, [generatedSlug, hasCustomSlug]);
+  }, [generatedSlug, hasCustomSlug])
 
   useEffect(() => {
-    let cancelled = false;
+    let cancelled = false
 
     const loadProducts = async () => {
-      setIsLoadingProducts(true);
+      setIsLoadingProducts(true)
       try {
         const [coolblueFeed, amazonFeed] = await Promise.all([
           CoolblueFeedService.loadProducts(),
           AmazonProductLibrary.loadProducts(),
-        ]);
+        ])
 
-        if (cancelled) return;
+        if (cancelled) return
 
         const coolblueGallery: EditorProduct[] = coolblueFeed
           .filter((product) => (product.imageUrl || product.image) && product.affiliateLink)
@@ -367,8 +481,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             affiliateLink: product.affiliateLink,
             tags: product.tags,
             source: 'coolblue',
-          }));
-        setCoolblueProducts(coolblueGallery);
+          }))
+        setCoolblueProducts(coolblueGallery)
 
         const amazonGallery: EditorProduct[] = amazonFeed
           .filter((product) => product.affiliateLink)
@@ -383,91 +497,94 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             affiliateLink: product.affiliateLink,
             tags: product.tags,
             source: 'amazon',
-          }));
-        setAmazonProducts(amazonGallery);
+          }))
+        setAmazonProducts(amazonGallery)
       } catch (error) {
-        console.warn('Kon productafbeeldingen niet laden voor blogeditor:', error);
+        console.warn('Kon productafbeeldingen niet laden voor blogeditor:', error)
         if (!cancelled) {
-          setCoolblueProducts([]);
-          setAmazonProducts([]);
+          setCoolblueProducts([])
+          setAmazonProducts([])
         }
       } finally {
         if (!cancelled) {
-          setIsLoadingProducts(false);
+          setIsLoadingProducts(false)
         }
       }
-    };
+    }
 
-    loadProducts();
+    loadProducts()
 
     return () => {
-      cancelled = true;
-    };
-  }, []);
+      cancelled = true
+    }
+  }, [])
 
   const handleSlugInputChange = (value: string) => {
-    const sanitized = BlogService.generateSlug(value || '');
-    setSlugValue(sanitized);
-    setHasCustomSlug(Boolean(sanitized));
-  };
+    const sanitized = BlogService.generateSlug(value || '')
+    setSlugValue(sanitized)
+    setHasCustomSlug(Boolean(sanitized))
+  }
 
   const handleSlugReset = () => {
-    setHasCustomSlug(false);
-    setSlugValue(generatedSlug);
-  };
+    setHasCustomSlug(false)
+    setSlugValue(generatedSlug)
+  }
 
   const hasSuggestedExcerpt = useMemo(
     () => Boolean(suggestedExcerpt && suggestedExcerpt.trim() !== excerpt.trim()),
     [suggestedExcerpt, excerpt]
-  );
+  )
 
   const canApplySmartMetadata = useMemo(() => {
-    const slugNeedsUpdate = slugValue !== generatedSlug;
-    const tagSet = new Set(parsedTags.map((tag) => tag.toLowerCase()));
-    const hasMissingTag = suggestedTags.some((tag) => !tagSet.has(tag.toLowerCase()));
-    return slugNeedsUpdate || hasMissingTag || hasSuggestedExcerpt;
-  }, [generatedSlug, slugValue, parsedTags, suggestedTags, hasSuggestedExcerpt]);
+    const slugNeedsUpdate = slugValue !== generatedSlug
+    const tagSet = new Set(parsedTags.map((tag) => tag.toLowerCase()))
+    const hasMissingTag = suggestedTags.some((tag) => !tagSet.has(tag.toLowerCase()))
+    return slugNeedsUpdate || hasMissingTag || hasSuggestedExcerpt
+  }, [generatedSlug, slugValue, parsedTags, suggestedTags, hasSuggestedExcerpt])
 
   const handleApplySuggestedExcerpt = () => {
     if (suggestedExcerpt) {
-      setExcerpt(suggestedExcerpt);
+      setExcerpt(suggestedExcerpt)
     }
-  };
+  }
 
   const handleApplySuggestedTags = () => {
     if (!suggestedTags.length) {
-      return;
+      return
     }
-    const merged = mergeTagLists(parsedTags, suggestedTags);
-    setTagsValue(merged.join(', '));
-  };
+    const merged = mergeTagLists(parsedTags, suggestedTags)
+    setTagsValue(merged.join(', '))
+  }
 
   const handleTagSuggestionClick = (tag: string) => {
-    const merged = mergeTagLists(parsedTags, [tag]);
-    setTagsValue(merged.join(', '));
-  };
+    const merged = mergeTagLists(parsedTags, [tag])
+    setTagsValue(merged.join(', '))
+  }
 
   const handleApplySmartMetadata = () => {
     if (generatedSlug) {
-      setHasCustomSlug(false);
-      setSlugValue(generatedSlug);
+      setHasCustomSlug(false)
+      setSlugValue(generatedSlug)
     }
     if (suggestedTags.length) {
-      handleApplySuggestedTags();
+      handleApplySuggestedTags()
     }
     if (hasSuggestedExcerpt) {
-      handleApplySuggestedExcerpt();
+      handleApplySuggestedExcerpt()
     }
-  };
+  }
 
   const addDraftBlocks = (incoming: ContentBlockDraft | ContentBlockDraft[]) => {
-    const additions = Array.isArray(incoming) ? incoming : [incoming];
+    const additions = Array.isArray(incoming) ? incoming : [incoming]
     setContentDrafts((prev) => {
-      const hasOnlyEmptyPlaceholder = prev.length === 1 && prev[0].type === 'paragraph' && !(prev[0] as ParagraphBlockDraft).text.trim();
-      const base = hasOnlyEmptyPlaceholder ? [] : prev;
-      return [...base, ...additions];
-    });
-  };
+      const hasOnlyEmptyPlaceholder =
+        prev.length === 1 &&
+        prev[0].type === 'paragraph' &&
+        !(prev[0] as ParagraphBlockDraft).text.trim()
+      const base = hasOnlyEmptyPlaceholder ? [] : prev
+      return [...base, ...additions]
+    })
+  }
 
   const escapeHtml = (value: string) =>
     value
@@ -475,15 +592,15 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+      .replace(/'/g, '&#39;')
 
   const handleInsertProduct = (product: EditorProduct, variant: 'image+link' | 'link-only') => {
-    const retailerLabel = product.source === 'amazon' ? 'Amazon.nl' : 'Coolblue';
+    const retailerLabel = product.source === 'amazon' ? 'Amazon.nl' : 'Coolblue'
     const baseRetailer: RetailerDraft = {
       id: generateId(),
       name: retailerLabel,
       affiliateLink: product.affiliateLink || '',
-    };
+    }
 
     if (variant === 'image+link') {
       const giftDraft: GiftBlockDraft = {
@@ -492,14 +609,18 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
         gift: {
           productName: product.name,
           description: product.shortDescription || product.description || '',
-          priceRange: product.price ? `€${product.price.toFixed(2)}` : product.originalPrice ? `€${product.originalPrice.toFixed(2)}` : '',
+          priceRange: product.price
+            ? `€${product.price.toFixed(2)}`
+            : product.originalPrice
+              ? `€${product.originalPrice.toFixed(2)}`
+              : '',
           imageUrl: product.imageUrl || '',
           retailers: [baseRetailer],
           tags: (product.tags ?? []).join(', '),
         },
-      };
-      addDraftBlocks(giftDraft);
-      return;
+      }
+      addDraftBlocks(giftDraft)
+      return
     }
 
     if (!product.affiliateLink) {
@@ -508,38 +629,38 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
         type: 'paragraph',
         style: 'paragraph',
         text: product.shortDescription || product.description || product.name,
-      };
-      addDraftBlocks(paragraphDraft);
-      return;
+      }
+      addDraftBlocks(paragraphDraft)
+      return
     }
 
-    const ctaHtml = `<p class="text-base font-semibold text-rose-600">👉 <a href="${product.affiliateLink}" target="_blank" rel="sponsored nofollow noopener noreferrer">Bekijk ${escapeHtml(product.name)} bij ${retailerLabel}</a></p>`;
+    const ctaHtml = `<p class="text-base font-semibold text-rose-600">👉 <a href="${product.affiliateLink}" target="_blank" rel="sponsored nofollow noopener noreferrer">Bekijk ${escapeHtml(product.name)} bij ${retailerLabel}</a></p>`
     const paragraphDraft: ParagraphBlockDraft = {
       id: generateId(),
       type: 'paragraph',
       style: 'html',
       text: ctaHtml,
-    };
-    addDraftBlocks(paragraphDraft);
-  };
+    }
+    addDraftBlocks(paragraphDraft)
+  }
 
   const handleSave = async (publish = false) => {
     if (!title.trim()) {
-      alert('Titel is verplicht');
-      return;
+      alert('Titel is verplicht')
+      return
     }
 
     if (!structuredBlocks.length || !htmlContent.trim()) {
-      alert('Voeg contentblokken toe voordat je opslaat.');
-      return;
+      alert('Voeg contentblokken toe voordat je opslaat.')
+      return
     }
 
-    setIsSaving(true);
-    
+    setIsSaving(true)
+
     try {
-      const finalSlug = slugPreview.trim();
-      const sanitizedCategory = category.trim() || 'Algemeen';
-      const seoKeywords = parsedTags.length ? parsedTags : [sanitizedCategory];
+      const finalSlug = slugPreview.trim()
+      const sanitizedCategory = category.trim() || 'Algemeen'
+      const seoKeywords = parsedTags.length ? parsedTags : [sanitizedCategory]
       const postData: Omit<BlogPostData, 'id' | 'createdAt' | 'updatedAt'> = {
         slug: finalSlug,
         title: title.trim(),
@@ -550,52 +671,57 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
         tags: parsedTags.length ? parsedTags : undefined,
         author: {
           name: 'Admin',
-          avatarUrl: 'https://i.pravatar.cc/150?u=admin'
+          avatarUrl: 'https://i.pravatar.cc/150?u=admin',
         },
-        publishedDate: publish ? new Date().toISOString() : (post?.publishedDate || new Date().toISOString()),
+        publishedDate: publish
+          ? new Date().toISOString()
+          : post?.publishedDate || new Date().toISOString(),
         isDraft: publish ? false : isDraft,
         contentBlocks: structuredBlocks.length ? structuredBlocks : undefined,
-        seo: seoData ? {
-          metaTitle: seoData.metaTitle,
-          metaDescription: seoData.metaDescription,
-          keywords: seoData.keywords && seoData.keywords.length ? seoData.keywords : seoKeywords,
-          ogTitle: seoData.ogTitle,
-          ogDescription: seoData.ogDescription,
-          ogImage: seoData.ogImage,
-          canonicalUrl: seoData.canonicalUrl
-        } : {
-          metaTitle: title.trim(),
-          metaDescription: excerpt.trim(),
-          keywords: seoKeywords
-        }
-      };
+        seo: seoData
+          ? {
+              metaTitle: seoData.metaTitle,
+              metaDescription: seoData.metaDescription,
+              keywords:
+                seoData.keywords && seoData.keywords.length ? seoData.keywords : seoKeywords,
+              ogTitle: seoData.ogTitle,
+              ogDescription: seoData.ogDescription,
+              ogImage: seoData.ogImage,
+              canonicalUrl: seoData.canonicalUrl,
+            }
+          : {
+              metaTitle: title.trim(),
+              metaDescription: excerpt.trim(),
+              keywords: seoKeywords,
+            },
+      }
 
       if (postId) {
         // Update bestaande post
-        await BlogService.updatePost(postId, postData);
-        alert(`Blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}!`);
+        await BlogService.updatePost(postId, postData)
+        alert(`Blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}!`)
       } else {
         // Nieuwe post aanmaken
-        const newPostId = await BlogService.createPost(postData);
-        alert(`Nieuwe blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}! ID: ${newPostId}`);
+        const newPostId = await BlogService.createPost(postData)
+        alert(`Nieuwe blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}! ID: ${newPostId}`)
       }
-      
-      onClose();
+
+      onClose()
     } catch (error: any) {
-      console.error('Error saving post:', error);
-      alert(`Fout bij opslaan: ${error.message}`);
+      console.error('Error saving post:', error)
+      alert(`Fout bij opslaan: ${error.message}`)
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   const handleImageUpload = (url: string, filename: string) => {
-    setImageUrl(url);
-  };
+    setImageUrl(url)
+  }
 
   const handleImageDelete = () => {
-    setImageUrl('');
-  };
+    setImageUrl('')
+  }
 
   if (isLoading) {
     return (
@@ -605,7 +731,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
           <span>Post laden...</span>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -618,17 +744,16 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               {post ? 'Blog Post Bewerken' : 'Nieuwe Blog Post'}
             </h2>
             {post && (
-              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                isDraft ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-              }`}>
+              <span
+                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  isDraft ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                }`}
+              >
                 {isDraft ? 'Concept' : 'Gepubliceerd'}
               </span>
             )}
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl"
-          >
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl">
             ×
           </button>
         </div>
@@ -639,16 +764,18 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             {/* Editor Insights */}
             <div className="grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-rose-100 bg-rose-50/70 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">Content status</p>
-                <p className="mt-2 text-2xl font-semibold text-rose-600">
-                  {wordCount} woorden
+                <p className="text-xs font-semibold uppercase tracking-wide text-rose-500">
+                  Content status
                 </p>
+                <p className="mt-2 text-2xl font-semibold text-rose-600">{wordCount} woorden</p>
                 <p className="text-xs text-rose-500">
                   {wordCount ? `≈ ${readMinutes} min leestijd` : 'Begin met schrijven'}
                 </p>
               </div>
               <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-500">SEO-signalen</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-emerald-500">
+                  SEO-signalen
+                </p>
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-2xl font-semibold text-emerald-600">{seoTitleLength}</span>
                   <span className="text-xs text-emerald-500">tekens titel</span>
@@ -687,9 +814,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             {/* Title & slug */}
             <div className="grid gap-4 lg:grid-cols-[3fr,2fr]">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Titel
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Titel</label>
                 <input
                   type="text"
                   value={title}
@@ -701,9 +826,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
 
               <div>
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Slug (URL)
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Slug (URL)</label>
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -733,16 +856,17 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                   </button>
                 </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  Definitieve URL: <span className="font-mono text-gray-600">https://gifteez.nl/blog/{slugPreview || 'nieuwe-post'}</span>
+                  Definitieve URL:{' '}
+                  <span className="font-mono text-gray-600">
+                    https://gifteez.nl/blog/{slugPreview || 'nieuwe-post'}
+                  </span>
                 </p>
               </div>
             </div>
 
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Categorie
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Categorie</label>
               <input
                 list="blog-category-options"
                 value={category}
@@ -755,14 +879,14 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                   <option key={option} value={option} />
                 ))}
               </datalist>
-              <p className="mt-1 text-xs text-gray-500">Kies een bestaande categorie of typ een nieuwe naam om toe te voegen.</p>
+              <p className="mt-1 text-xs text-gray-500">
+                Kies een bestaande categorie of typ een nieuwe naam om toe te voegen.
+              </p>
             </div>
 
             <div>
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Tags
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Tags</label>
                 <button
                   type="button"
                   onClick={handleApplySuggestedTags}
@@ -779,11 +903,15 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500"
                 placeholder="Bijv. productiviteit, bureau, papier"
               />
-              <p className="mt-1 text-xs text-gray-500">Scheiding met komma’s. Tags helpen bij zoekfilters en tonen onderaan je artikel.</p>
+              <p className="mt-1 text-xs text-gray-500">
+                Scheiding met komma’s. Tags helpen bij zoekfilters en tonen onderaan je artikel.
+              </p>
               {suggestedTags.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {suggestedTags.map((tag) => {
-                    const tagActive = parsedTags.some((current) => current.toLowerCase() === tag.toLowerCase());
+                    const tagActive = parsedTags.some(
+                      (current) => current.toLowerCase() === tag.toLowerCase()
+                    )
                     return (
                       <button
                         key={tag}
@@ -798,7 +926,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                       >
                         {tag}
                       </button>
-                    );
+                    )
                   })}
                 </div>
               )}
@@ -807,9 +935,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             {/* Excerpt */}
             <div>
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Samenvatting
-                </label>
+                <label className="block text-sm font-medium text-gray-700">Samenvatting</label>
                 <button
                   type="button"
                   onClick={handleApplySuggestedExcerpt}
@@ -837,7 +963,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                 Hoofdafbeelding
               </label>
               <p className="text-xs text-gray-500 mb-3">
-                Deze afbeelding verschijnt als hero bovenaan het artikel. Lever bij voorkeur een liggende afbeelding van minimaal 1600×900 px aan.
+                Deze afbeelding verschijnt als hero bovenaan het artikel. Lever bij voorkeur een
+                liggende afbeelding van minimaal 1600×900 px aan.
               </p>
               <ImageUpload
                 currentImage={imageUrl}
@@ -850,9 +977,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
 
             {/* Content */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Content
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
               <ContentBuilder
                 value={contentDrafts}
                 onChange={(drafts) => setContentDrafts(normalizeDraftList(drafts))}
@@ -897,7 +1022,10 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               </div>
               <div className="border border-gray-200 rounded-lg bg-gray-50 p-4 space-y-4">
                 <p className="text-xs text-gray-500">
-                  Voeg eenvoudig productafbeeldingen toe aan je artikel. Klik op <strong>Afbeelding + link</strong> om meteen een mooie afbeelding inclusief affiliate link in de tekst te plakken, of kies <strong>Alleen link</strong> voor een snelle call-to-action.
+                  Voeg eenvoudig productafbeeldingen toe aan je artikel. Klik op{' '}
+                  <strong>Afbeelding + link</strong> om meteen een mooie afbeelding inclusief
+                  affiliate link in de tekst te plakken, of kies <strong>Alleen link</strong> voor
+                  een snelle call-to-action.
                 </p>
                 {availableProductTags.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2">
@@ -905,7 +1033,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                       Populaire tags:
                     </span>
                     {availableProductTags.map(({ key, label, count }) => {
-                      const active = productTagFilter === key;
+                      const active = productTagFilter === key
                       return (
                         <button
                           key={key}
@@ -920,7 +1048,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                           <span>{label}</span>
                           <span className="text-[10px] opacity-70">{count}</span>
                         </button>
-                      );
+                      )
                     })}
                     {productTagFilter && (
                       <button
@@ -941,25 +1069,46 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                 ) : filteredProducts.length ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {filteredProducts.map((product) => {
-                      const imageSrc = product.imageUrl || '/images/amazon-placeholder.png';
-                      const priceLabel = typeof product.price === 'number' && Number.isFinite(product.price) && product.price > 0 ? `€${product.price.toFixed(2)}` : undefined;
-                      const retailerLabel = product.source === 'amazon' ? 'Amazon.nl' : 'Coolblue';
+                      const imageSrc = product.imageUrl || '/images/amazon-placeholder.png'
+                      const priceLabel =
+                        typeof product.price === 'number' &&
+                        Number.isFinite(product.price) &&
+                        product.price > 0
+                          ? `€${product.price.toFixed(2)}`
+                          : undefined
+                      const retailerLabel = product.source === 'amazon' ? 'Amazon.nl' : 'Coolblue'
                       return (
-                        <div key={product.id} className="bg-white border border-gray-200 rounded-xl p-4 flex gap-4 shadow-sm">
+                        <div
+                          key={product.id}
+                          className="bg-white border border-gray-200 rounded-xl p-4 flex gap-4 shadow-sm"
+                        >
                           <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border border-gray-100 bg-gray-100">
-                            <img src={imageSrc} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
+                            <img
+                              src={imageSrc}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
                           </div>
                           <div className="flex-1 flex flex-col">
                             <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-wide text-gray-400">
                               <span>{retailerLabel}</span>
                               {product.tags?.length ? (
-                                <span className="truncate max-w-[45%]">{product.tags.slice(0, 2).join(' • ')}</span>
+                                <span className="truncate max-w-[45%]">
+                                  {product.tags.slice(0, 2).join(' • ')}
+                                </span>
                               ) : null}
                             </div>
-                            <h4 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">{product.name}</h4>
-                            {priceLabel && <p className="text-xs text-gray-500 mb-3">{priceLabel}</p>}
+                            <h4 className="text-sm font-semibold text-gray-900 mb-1 line-clamp-2">
+                              {product.name}
+                            </h4>
+                            {priceLabel && (
+                              <p className="text-xs text-gray-500 mb-3">{priceLabel}</p>
+                            )}
                             {product.description && (
-                              <p className="text-xs text-gray-500 line-clamp-2 mb-3">{product.description}</p>
+                              <p className="text-xs text-gray-500 line-clamp-2 mb-3">
+                                {product.description}
+                              </p>
                             )}
                             <div className="mt-auto flex flex-wrap gap-2">
                               <button
@@ -981,12 +1130,13 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
                             </div>
                           </div>
                         </div>
-                      );
+                      )
                     })}
                   </div>
                 ) : (
                   <p className="text-sm text-gray-500">
-                    Geen producten gevonden. Probeer een andere zoekterm of controleer of de productfeeds geladen zijn.
+                    Geen producten gevonden. Probeer een andere zoekterm of controleer of de
+                    productfeeds geladen zijn.
                   </p>
                 )}
               </div>
@@ -1012,11 +1162,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             {/* Preview */}
             {structuredBlocks.length > 0 && htmlContent && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Live Preview
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Live Preview</label>
                 <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 max-h-60 overflow-y-auto">
-                  <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                  <div
+                    className="prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: htmlContent }}
+                  />
                 </div>
               </div>
             )}
@@ -1036,7 +1187,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               <span className="text-sm text-gray-600">Opslaan als concept</span>
             </label>
           </div>
-          
+
           <div className="flex space-x-3">
             <button
               onClick={() => setShowPreview(true)}
@@ -1044,8 +1195,18 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
               className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
               </svg>
               <span>Preview</span>
             </button>
@@ -1078,7 +1239,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
           </div>
         </div>
       </div>
-      
+
       {/* Preview Modal */}
       {showPreview && (
         <BlogPreview
@@ -1086,23 +1247,23 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
             id: post?.id || 'new',
             title,
             excerpt,
-              content: htmlContent,
+            content: htmlContent,
             category,
             imageUrl: imageUrl || undefined,
-              slug: post?.slug || slugPreview,
+            slug: post?.slug || slugPreview,
             published: !isDraft,
             isDraft,
             publishedAt: post?.publishedAt || new Date().toISOString(),
             createdAt: post?.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-              tags: parsedTags
+            tags: parsedTags,
           }}
           isOpen={showPreview}
           onClose={() => setShowPreview(false)}
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default BlogEditor;
+export default BlogEditor

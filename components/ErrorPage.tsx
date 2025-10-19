@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { NavigateTo } from '../types';
-import { Button } from './ui/Button';
-import { EmptyState } from './ui/EmptyState';
+import React, { useEffect } from 'react'
+import { Button } from './ui/Button'
+import { EmptyState } from './ui/EmptyState'
+import type { NavigateTo } from '../types'
 
 interface ErrorPageProps {
-  navigateTo: NavigateTo;
-  error?: Error;
-  resetError?: () => void;
+  navigateTo: NavigateTo
+  error?: Error
+  resetError?: () => void
 }
 
 /**
@@ -16,11 +16,11 @@ interface ErrorPageProps {
  */
 const ErrorPage: React.FC<ErrorPageProps> = ({ navigateTo, error, resetError }) => {
   useEffect(() => {
-    document.title = '500 - Er ging iets mis | Gifteez';
-    
+    document.title = '500 - Er ging iets mis | Gifteez'
+
     // Log error to console for debugging
     if (error) {
-      console.error('Application Error:', error);
+      console.error('Application Error:', error)
     }
 
     // Track error in analytics (if consent given)
@@ -28,18 +28,18 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ navigateTo, error, resetError }) 
       window.dataLayer.push({
         event: 'application_error',
         error_message: error.message,
-        error_stack: error.stack?.substring(0, 500) // Limit stack trace size
-      });
+        error_stack: error.stack?.substring(0, 500), // Limit stack trace size
+      })
     }
-  }, [error]);
+  }, [error])
 
   const handleReload = () => {
     if (resetError) {
-      resetError();
+      resetError()
     } else {
-      window.location.reload();
+      window.location.reload()
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4 py-12">
@@ -50,7 +50,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ navigateTo, error, resetError }) 
           description="Onze foutdetectie heeft een probleem opgemerkt. We werken eraan! Probeer het later opnieuw of neem contact met ons op."
           action={{
             label: '🔄 Probeer opnieuw',
-            onClick: handleReload
+            onClick: handleReload,
           }}
         >
           {/* Recovery Options */}
@@ -75,9 +75,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ navigateTo, error, resetError }) 
 
           {/* Quick Links */}
           <div className="mt-6 p-4 bg-white rounded-lg border border-neutral-200">
-            <p className="text-sm text-neutral-600 text-center mb-3">
-              Of ga verder met:
-            </p>
+            <p className="text-sm text-neutral-600 text-center mb-3">Of ga verder met:</p>
             <div className="flex flex-wrap gap-2 justify-center">
               <button
                 onClick={() => navigateTo('giftFinder')}
@@ -138,13 +136,17 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ navigateTo, error, resetError }) 
           <div className="mt-6 text-center text-xs text-neutral-500">
             <p>Foutcode: 500 | Interne serverfout</p>
             <p className="mt-1">
-              Als dit probleem zich blijft voordoen, <a href="/contact" className="text-primary hover:underline">neem dan contact met ons op</a>.
+              Als dit probleem zich blijft voordoen,{' '}
+              <a href="/contact" className="text-primary hover:underline">
+                neem dan contact met ons op
+              </a>
+              .
             </p>
           </div>
         </EmptyState>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ErrorPage;
+export default ErrorPage

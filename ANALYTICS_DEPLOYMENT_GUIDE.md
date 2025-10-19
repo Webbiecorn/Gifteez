@@ -8,6 +8,7 @@
 ## ✅ What's Been Created
 
 ### **Services (3 files)**
+
 1. ✅ `services/analyticsEventService.ts` (~380 lines)
    - Unified event schema (view_product, click_affiliate, etc.)
    - Batch tracking voor product lists
@@ -27,6 +28,7 @@
    - Statistical significance testing
 
 ### **Hooks (2 files)**
+
 1. ✅ `hooks/useFunnelTracking.ts` (~100 lines)
    - React hook for funnel tracking
    - Auto-lifecycle management
@@ -38,6 +40,7 @@
    - Conversion tracking helper
 
 ### **Documentation (3 files)**
+
 1. ✅ `ANALYTICS_EXPERIMENTATION_PLAN.md` (~600 lines)
    - Complete architecture overview
    - Event schema definitions
@@ -62,6 +65,7 @@
 ### **Phase 1: Core Services** (Week 1)
 
 #### Step 1: Verify Files Exist
+
 ```bash
 # Check all files are in place
 ls -la services/analyticsEventService.ts
@@ -72,21 +76,23 @@ ls -la hooks/useABTest.ts
 ```
 
 #### Step 2: Build & Test
+
 ```bash
 npm run build
 # Should compile without errors
 ```
 
 #### Step 3: Test in Browser Console
+
 ```typescript
 // Open browser console on any page
-import { AnalyticsEvents } from './services/analyticsEventService';
+import { AnalyticsEvents } from './services/analyticsEventService'
 
 // Test event tracking
-AnalyticsEvents.startGiftFinder('test');
+AnalyticsEvents.startGiftFinder('test')
 
 // Check GTM dataLayer
-console.log(window.dataLayer);
+console.log(window.dataLayer)
 // Should see event: 'start_giftfinder'
 ```
 
@@ -95,42 +101,46 @@ console.log(window.dataLayer);
 ### **Phase 2: GiftFinder Integration** (Week 1-2)
 
 #### Step 1: Add Imports to GiftFinderPage.tsx
+
 ```typescript
-import { useFunnelTracking } from '../hooks/useFunnelTracking';
+import { useFunnelTracking } from '../hooks/useFunnelTracking'
 import {
   trackStartGiftFinder,
   trackApplyFilter,
-  trackProductImpressions
-} from '../services/analyticsEventService';
+  trackProductImpressions,
+} from '../services/analyticsEventService'
 ```
 
 #### Step 2: Setup Funnel Tracking
+
 ```typescript
-const { trackStep } = useFunnelTracking('giftfinder_flow');
+const { trackStep } = useFunnelTracking('giftfinder_flow')
 
 useEffect(() => {
-  trackStartGiftFinder('page_visit');
-  trackStep('start_giftfinder');
-}, [trackStep]);
+  trackStartGiftFinder('page_visit')
+  trackStep('start_giftfinder')
+}, [trackStep])
 ```
 
 #### Step 3: Track Filter Changes
+
 ```typescript
 const handleOccasionChange = (occasion: string) => {
-  setOccasion(occasion);
-  trackApplyFilter('occasion', occasion, 'giftfinder', filteredProducts.length);
-  trackStep('apply_filters');
-};
+  setOccasion(occasion)
+  trackApplyFilter('occasion', occasion, 'giftfinder', filteredProducts.length)
+  trackStep('apply_filters')
+}
 ```
 
 #### Step 4: Track Product Impressions
+
 ```typescript
 useEffect(() => {
   if (filteredProducts.length > 0) {
-    trackProductImpressions(filteredProducts, 'giftfinder_results');
-    trackStep('view_results');
+    trackProductImpressions(filteredProducts, 'giftfinder_results')
+    trackStep('view_results')
   }
-}, [filteredProducts, trackStep]);
+}, [filteredProducts, trackStep])
 ```
 
 ---
@@ -138,6 +148,7 @@ useEffect(() => {
 ### **Phase 3: A/B Testing Integration** (Week 2)
 
 #### Step 1: Add A/B Test to HomePage
+
 ```typescript
 import { useABTest } from '../hooks/useABTest';
 
@@ -156,6 +167,7 @@ const { variant: heroCTA, trackConversion } = useABTest('hero_cta_text', {
 ```
 
 #### Step 2: Test Variant Assignment
+
 ```bash
 # Open browser console
 localStorage.clear(); # Clear previous assignments
@@ -164,12 +176,13 @@ localStorage.clear(); # Clear previous assignments
 ```
 
 #### Step 3: Track Conversions
+
 ```typescript
 // In any component with A/B test
-const { trackConversion } = useABTest('test_name', variants);
+const { trackConversion } = useABTest('test_name', variants)
 
 // On conversion action (click, submit, etc.)
-trackConversion('click');
+trackConversion('click')
 ```
 
 ---
@@ -179,6 +192,7 @@ trackConversion('click');
 #### Step 1: Create DataLayer Variables in GTM
 
 **Required Variables:**
+
 1. `dlv - filter_type` → Data Layer Variable → `filter_type`
 2. `dlv - filter_value` → Data Layer Variable → `filter_value`
 3. `dlv - results_count` → Data Layer Variable → `results_count`
@@ -196,6 +210,7 @@ trackConversion('click');
 #### Step 2: Create Custom Event Triggers
 
 **Triggers to Create:**
+
 1. **Custom Event Trigger**: `apply_filter`
 2. **Custom Event Trigger**: `view_product`
 3. **Custom Event Trigger**: `click_affiliate`
@@ -208,67 +223,74 @@ trackConversion('click');
 #### Step 3: Create GA4 Event Tags
 
 **1. GA4 - Apply Filter**
+
 - Tag Type: Google Analytics: GA4 Event
 - Event Name: `apply_filter`
 - Parameters:
-  * `filter_type`: `{{dlv - filter_type}}`
-  * `filter_value`: `{{dlv - filter_value}}`
-  * `results_count`: `{{dlv - results_count}}`
+  - `filter_type`: `{{dlv - filter_type}}`
+  - `filter_value`: `{{dlv - filter_value}}`
+  - `results_count`: `{{dlv - results_count}}`
 - Trigger: `apply_filter`
 
 **2. GA4 - View Product**
+
 - Tag Type: Google Analytics: GA4 Event
 - Event Name: `view_item`
 - Parameters:
-  * `item_id`: `{{dlv - product_id}}`
-  * `item_name`: `{{dlv - product_name}}`
-  * `item_category`: `{{dlv - category}}`
-  * `price`: `{{dlv - price}}`
-  * `currency`: `EUR`
-  * `index`: `{{dlv - position}}`
-  * `item_list_name`: `{{dlv - list_name}}`
+  - `item_id`: `{{dlv - product_id}}`
+  - `item_name`: `{{dlv - product_name}}`
+  - `item_category`: `{{dlv - category}}`
+  - `price`: `{{dlv - price}}`
+  - `currency`: `EUR`
+  - `index`: `{{dlv - position}}`
+  - `item_list_name`: `{{dlv - list_name}}`
 - Trigger: `view_product`
 
 **3. GA4 - Click Affiliate**
+
 - Tag Type: Google Analytics: GA4 Event
 - Event Name: `select_item`
 - Parameters:
-  * `item_id`: `{{dlv - product_id}}`
-  * `item_name`: `{{dlv - product_name}}`
-  * `price`: `{{dlv - price}}`
-  * `source`: `{{dlv - source}}`
-  * `funnel_step`: `{{dlv - funnel_step}}`
+  - `item_id`: `{{dlv - product_id}}`
+  - `item_name`: `{{dlv - product_name}}`
+  - `price`: `{{dlv - price}}`
+  - `source`: `{{dlv - source}}`
+  - `funnel_step`: `{{dlv - funnel_step}}`
 - Trigger: `click_affiliate`
 
 **4. GA4 - Funnel Step**
+
 - Tag Type: Google Analytics: GA4 Event
 - Event Name: `funnel_step_complete`
 - Parameters:
-  * `funnel_name`: `{{dlv - funnel_name}}`
-  * `step_name`: `{{dlv - step_name}}`
-  * `step_number`: `{{dlv - step_number}}`
-  * `session_id`: `{{dlv - session_id}}`
-  * `time_on_step`: `{{dlv - time_on_step}}`
+  - `funnel_name`: `{{dlv - funnel_name}}`
+  - `step_name`: `{{dlv - step_name}}`
+  - `step_number`: `{{dlv - step_number}}`
+  - `session_id`: `{{dlv - session_id}}`
+  - `time_on_step`: `{{dlv - time_on_step}}`
 - Trigger: `funnel_step_complete`
 
 **5. GA4 - A/B Variant Impression**
+
 - Tag Type: Google Analytics: GA4 Event
 - Event Name: `ab_variant_impression`
 - Parameters:
-  * `test_name`: `{{dlv - test_name}}`
-  * `variant_name`: `{{dlv - variant_name}}`
+  - `test_name`: `{{dlv - test_name}}`
+  - `variant_name`: `{{dlv - variant_name}}`
 - Trigger: `ab_variant_impression`
 
 **6. GA4 - A/B Variant Conversion**
+
 - Tag Type: Google Analytics: GA4 Event
 - Event Name: `ab_variant_conversion`
 - Parameters:
-  * `test_name`: `{{dlv - test_name}}`
-  * `variant_name`: `{{dlv - variant_name}}`
-  * `conversion_action`: `{{dlv - conversion_action}}`
+  - `test_name`: `{{dlv - test_name}}`
+  - `variant_name`: `{{dlv - variant_name}}`
+  - `conversion_action`: `{{dlv - conversion_action}}`
 - Trigger: `ab_variant_conversion`
 
 #### Step 4: Test in GTM Preview Mode
+
 ```bash
 1. Open GTM → Click "Preview"
 2. Enter site URL: https://gifteez-7533b.web.app
@@ -288,11 +310,13 @@ trackConversion('click');
 ### **Phase 5: Production Deployment** (Week 3)
 
 #### Step 1: Build Production Bundle
+
 ```bash
 npm run build
 ```
 
 #### Step 2: Verify No Errors
+
 ```bash
 # Check for TypeScript errors
 npm run type-check
@@ -302,11 +326,13 @@ ls -lh dist/assets/*.js
 ```
 
 #### Step 3: Deploy to Firebase
+
 ```bash
 firebase deploy --only hosting
 ```
 
 #### Step 4: Verify in Production
+
 ```bash
 # Open production URL
 https://gifteez-7533b.web.app
@@ -321,6 +347,7 @@ window.dataLayer
 ## 📊 Testing Checklist
 
 ### **Analytics Events**
+
 - [ ] `start_giftfinder` fires on GiftFinder page load
 - [ ] `apply_filter` fires when filters change
 - [ ] `view_product` fires for each product impression
@@ -328,6 +355,7 @@ window.dataLayer
 - [ ] `share_pin` fires when Pinterest share clicked
 
 ### **Funnel Tracking**
+
 - [ ] Funnel starts on homepage view
 - [ ] Steps track in correct order
 - [ ] Drop-off rate calculates correctly
@@ -335,6 +363,7 @@ window.dataLayer
 - [ ] Funnel metrics visible in localStorage
 
 ### **A/B Testing**
+
 - [ ] Variant assignment is deterministic (same user = same variant)
 - [ ] Variant impressions track correctly
 - [ ] Conversions track when triggered
@@ -342,6 +371,7 @@ window.dataLayer
 - [ ] Winning variant identified correctly
 
 ### **GTM Integration**
+
 - [ ] All dataLayer variables populate
 - [ ] All triggers fire correctly
 - [ ] All GA4 tags send events
@@ -353,21 +383,24 @@ window.dataLayer
 ## 📈 Success Metrics
 
 ### **Week 1-2 (Baseline)**
+
 - Establish baseline funnel metrics
 - Track current drop-off rates
 - Measure average time per step
 - Identify top friction points
 
 ### **Week 3-4 (A/B Testing)**
+
 - Run 3 A/B tests simultaneously:
-  * Hero CTA text (3 variants)
-  * Hero image style (3 variants)
-  * Newsletter position (3 variants)
+  - Hero CTA text (3 variants)
+  - Hero image style (3 variants)
+  - Newsletter position (3 variants)
 - Collect minimum 1,000 impressions per variant
 - Achieve 95% statistical significance
 - Pick winning variants
 
 ### **Month 2+ (Optimization)**
+
 - **Target**: 10% increase in GiftFinder → Affiliate click rate
 - **Target**: 20% reduction in funnel drop-off
 - **Target**: 15% increase in average session duration
@@ -378,6 +411,7 @@ window.dataLayer
 ## 🔒 Privacy & GDPR
 
 ### **Compliance**
+
 - ✅ All events gated by cookie consent
 - ✅ No tracking before user accepts
 - ✅ Session IDs are non-identifying random strings
@@ -385,6 +419,7 @@ window.dataLayer
 - ✅ No personal data (names, emails, addresses)
 
 ### **Data Retention**
+
 - GA4: 14 months (configurable in GA4 settings)
 - Funnel metrics: 90 days (localStorage)
 - A/B test results: 60 days (localStorage)
@@ -411,10 +446,11 @@ window.dataLayer
 ---
 
 **Questions?** Check browser console:
-```typescript
-import { getAllTestMetrics } from './services/abTestingService';
-import { getAllFunnelMetrics } from './services/funnelTrackingService';
 
-console.log('A/B Tests:', getAllTestMetrics());
-console.log('Funnels:', getAllFunnelMetrics());
+```typescript
+import { getAllTestMetrics } from './services/abTestingService'
+import { getAllFunnelMetrics } from './services/funnelTrackingService'
+
+console.log('A/B Tests:', getAllTestMetrics())
+console.log('Funnels:', getAllFunnelMetrics())
 ```

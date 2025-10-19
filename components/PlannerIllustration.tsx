@@ -1,5 +1,5 @@
-import React from 'react';
-import ImageWithFallback from './ImageWithFallback';
+import React from 'react'
+import ImageWithFallback from './ImageWithFallback'
 
 // Terug naar het bestaande bestand zonder streepje (plannerillustration.png) zodat het zichtbaar is.
 const PlannerIllustration: React.FC = () => (
@@ -12,6 +12,6 @@ const PlannerIllustration: React.FC = () => (
     fit="contain"
     className="rounded-lg shadow-xl bg-white p-2 transform hover:scale-105 transition-transform duration-300"
   />
-);
+)
 
-export default PlannerIllustration;
+export default PlannerIllustration

@@ -1,24 +1,24 @@
-import React from 'react';
-import { Editor } from '@tinymce/tinymce-react';
+import React from 'react'
+import { Editor } from '@tinymce/tinymce-react'
 
 interface RichTextEditorProps {
-  value: string;
-  onChange: (content: string) => void;
-  placeholder?: string;
-  height?: number;
+  value: string
+  onChange: (content: string) => void
+  placeholder?: string
+  height?: number
 }
 
 export default function RichTextEditor({
   value,
   onChange,
   placeholder = 'Begin met schrijven...',
-  height = 400
+  height = 400,
 }: RichTextEditorProps) {
   const handleEditorChange = (content: string) => {
-    onChange(content);
-  };
+    onChange(content)
+  }
 
-  const apiKey = import.meta.env.VITE_TINYMCE_API_KEY;
+  const apiKey = import.meta.env.VITE_TINYMCE_API_KEY
 
   return (
     <div className="rich-text-editor">
@@ -30,16 +30,31 @@ export default function RichTextEditor({
           height,
           menubar: false,
           plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount', 'emoticons'
+            'advlist',
+            'autolink',
+            'lists',
+            'link',
+            'image',
+            'charmap',
+            'preview',
+            'anchor',
+            'searchreplace',
+            'visualblocks',
+            'code',
+            'fullscreen',
+            'insertdatetime',
+            'media',
+            'table',
+            'help',
+            'wordcount',
+            'emoticons',
           ],
           toolbar: [
             'undo redo | blocks | bold italic underline strikethrough | ' +
-            'alignleft aligncenter alignright alignjustify | ' +
-            'bullist numlist outdent indent | removeformat | help',
+              'alignleft aligncenter alignright alignjustify | ' +
+              'bullist numlist outdent indent | removeformat | help',
             'link image media table | code preview fullscreen | ' +
-            'forecolor backcolor | emoticons charmap | searchreplace'
+              'forecolor backcolor | emoticons charmap | searchreplace',
           ],
           content_style: `
             body { 
@@ -91,27 +106,29 @@ export default function RichTextEditor({
               tooltip: 'Afbeelding uploaden',
               onAction: () => {
                 // Dit zou een modal kunnen openen met onze ImageUpload component
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
+                const input = document.createElement('input')
+                input.type = 'file'
+                input.accept = 'image/*'
                 input.onchange = (e) => {
-                  const file = (e.target as HTMLInputElement).files?.[0];
+                  const file = (e.target as HTMLInputElement).files?.[0]
                   if (file) {
                     // Hier zou je de Firebase Storage upload logica kunnen integreren
-                    const reader = new FileReader();
+                    const reader = new FileReader()
                     reader.onload = (e) => {
-                      const src = e.target?.result as string;
-                      editor.insertContent(`<img src="${src}" alt="${file.name}" style="max-width: 100%; height: auto;" />`);
-                    };
-                    reader.readAsDataURL(file);
+                      const src = e.target?.result as string
+                      editor.insertContent(
+                        `<img src="${src}" alt="${file.name}" style="max-width: 100%; height: auto;" />`
+                      )
+                    }
+                    reader.readAsDataURL(file)
                   }
-                };
-                input.click();
-              }
-            });
-          }
+                }
+                input.click()
+              },
+            })
+          },
         }}
       />
     </div>
-  );
+  )
 }

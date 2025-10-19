@@ -1,9 +1,9 @@
 /**
  * Google Tag Manager DataLayer Service
- * 
+ *
  * Centralized service for pushing events to GTM dataLayer.
  * All tracking events (GA4, Pinterest, etc.) should go through this service.
- * 
+ *
  * Benefits:
  * - Single source of truth for tracking
  * - Easy to manage via GTM dashboard
@@ -14,13 +14,13 @@
 // Extend Window interface to include dataLayer
 declare global {
   interface Window {
-    dataLayer: any[];
+    dataLayer: any[]
   }
 }
 
 // Initialize dataLayer if it doesn't exist
 if (typeof window !== 'undefined') {
-  window.dataLayer = window.dataLayer || [];
+  window.dataLayer = window.dataLayer || []
 }
 
 /**
@@ -28,10 +28,10 @@ if (typeof window !== 'undefined') {
  */
 export const pushToDataLayer = (data: Record<string, any>) => {
   if (typeof window !== 'undefined' && window.dataLayer) {
-    window.dataLayer.push(data);
-    console.log('[DataLayer]', data); // Remove in production if needed
+    window.dataLayer.push(data)
+    console.log('[DataLayer]', data) // Remove in production if needed
   }
-};
+}
 
 /**
  * Page View Tracking
@@ -42,9 +42,9 @@ export const trackPageView = (pagePath: string, pageTitle: string) => {
     event: 'page_view',
     page_path: pagePath,
     page_title: pageTitle,
-    page_location: window.location.href
-  });
-};
+    page_location: window.location.href,
+  })
+}
 
 /**
  * Search Event
@@ -54,20 +54,20 @@ export const trackSearch = (searchTerm: string, resultsCount?: number) => {
   pushToDataLayer({
     event: 'search',
     search_term: searchTerm,
-    results_count: resultsCount || 0
-  });
-};
+    results_count: resultsCount || 0,
+  })
+}
 
 /**
  * Product/Deal Click
  * Fired when user clicks on a product or deal
  */
 export const trackProductClick = (params: {
-  productName: string;
-  price?: string;
-  category?: string;
-  retailer?: string;
-  position?: number;
+  productName: string
+  price?: string
+  category?: string
+  retailer?: string
+  position?: number
 }) => {
   pushToDataLayer({
     event: 'product_click',
@@ -76,20 +76,20 @@ export const trackProductClick = (params: {
     category: params.category || 'Unknown',
     retailer: params.retailer || 'Unknown',
     position: params.position || 0,
-    currency: 'EUR'
-  });
-};
+    currency: 'EUR',
+  })
+}
 
 /**
  * Product/Deal Impression
  * Fired when a product becomes visible in viewport
  */
 export const trackProductImpression = (params: {
-  productName: string;
-  price?: string;
-  category?: string;
-  retailer?: string;
-  position?: number;
+  productName: string
+  price?: string
+  category?: string
+  retailer?: string
+  position?: number
 }) => {
   pushToDataLayer({
     event: 'product_impression',
@@ -98,9 +98,9 @@ export const trackProductImpression = (params: {
     category: params.category || 'Unknown',
     retailer: params.retailer || 'Unknown',
     position: params.position || 0,
-    currency: 'EUR'
-  });
-};
+    currency: 'EUR',
+  })
+}
 
 /**
  * Add to Favorites
@@ -110,9 +110,9 @@ export const trackAddToFavorites = (productName: string, category?: string) => {
   pushToDataLayer({
     event: 'add_to_favorites',
     product_name: productName,
-    category: category || 'Unknown'
-  });
-};
+    category: category || 'Unknown',
+  })
+}
 
 /**
  * Remove from Favorites
@@ -121,9 +121,9 @@ export const trackAddToFavorites = (productName: string, category?: string) => {
 export const trackRemoveFromFavorites = (productName: string) => {
   pushToDataLayer({
     event: 'remove_from_favorites',
-    product_name: productName
-  });
-};
+    product_name: productName,
+  })
+}
 
 /**
  * Lead/Conversion Event
@@ -134,9 +134,9 @@ export const trackLead = (leadType: string, value?: string) => {
     event: 'generate_lead',
     lead_type: leadType,
     value: value || '',
-    currency: 'EUR'
-  });
-};
+    currency: 'EUR',
+  })
+}
 
 /**
  * Quiz Started
@@ -144,9 +144,9 @@ export const trackLead = (leadType: string, value?: string) => {
  */
 export const trackQuizStart = () => {
   pushToDataLayer({
-    event: 'quiz_start'
-  });
-};
+    event: 'quiz_start',
+  })
+}
 
 /**
  * Quiz Completed
@@ -155,20 +155,20 @@ export const trackQuizStart = () => {
 export const trackQuizComplete = (personality: string) => {
   pushToDataLayer({
     event: 'quiz_complete',
-    personality_type: personality
-  });
-};
+    personality_type: personality,
+  })
+}
 
 /**
  * GiftFinder Search
  * Fired when user uses the GiftFinder tool
  */
 export const trackGiftFinderSearch = (params: {
-  occasion?: string;
-  recipient?: string;
-  budget?: string;
-  interests?: string[];
-  resultsCount?: number;
+  occasion?: string
+  recipient?: string
+  budget?: string
+  interests?: string[]
+  resultsCount?: number
 }) => {
   pushToDataLayer({
     event: 'giftfinder_search',
@@ -176,26 +176,26 @@ export const trackGiftFinderSearch = (params: {
     recipient: params.recipient || 'Unknown',
     budget: params.budget || 'Unknown',
     interests: params.interests?.join(', ') || 'None',
-    results_count: params.resultsCount || 0
-  });
-};
+    results_count: params.resultsCount || 0,
+  })
+}
 
 /**
  * Outbound Link Click
  * Fired when user clicks an affiliate link
  */
 export const trackOutboundClick = (params: {
-  url: string;
-  retailer: string;
-  productName?: string;
+  url: string
+  retailer: string
+  productName?: string
 }) => {
   pushToDataLayer({
     event: 'outbound_click',
     outbound_url: params.url,
     retailer: params.retailer,
-    product_name: params.productName || 'Unknown'
-  });
-};
+    product_name: params.productName || 'Unknown',
+  })
+}
 
 /**
  * Social Share
@@ -205,9 +205,9 @@ export const trackSocialShare = (platform: string, contentType: string) => {
   pushToDataLayer({
     event: 'social_share',
     platform: platform,
-    content_type: contentType
-  });
-};
+    content_type: contentType,
+  })
+}
 
 /**
  * User Login
@@ -216,9 +216,9 @@ export const trackSocialShare = (platform: string, contentType: string) => {
 export const trackLogin = (method: string) => {
   pushToDataLayer({
     event: 'login',
-    method: method
-  });
-};
+    method: method,
+  })
+}
 
 /**
  * User Signup
@@ -227,28 +227,28 @@ export const trackLogin = (method: string) => {
 export const trackSignup = (method: string) => {
   pushToDataLayer({
     event: 'sign_up',
-    method: method
-  });
-};
+    method: method,
+  })
+}
 
 /**
  * Blog Post Read
  * Fired when user reads a blog post (scrolls to 50%+)
  */
 export const trackBlogRead = (params: {
-  postTitle: string;
-  postSlug: string;
-  category: string;
-  scrollDepth: number;
+  postTitle: string
+  postSlug: string
+  category: string
+  scrollDepth: number
 }) => {
   pushToDataLayer({
     event: 'blog_read',
     post_title: params.postTitle,
     post_slug: params.postSlug,
     category: params.category,
-    scroll_depth: params.scrollDepth
-  });
-};
+    scroll_depth: params.scrollDepth,
+  })
+}
 
 /**
  * Custom Event
@@ -257,9 +257,9 @@ export const trackBlogRead = (params: {
 export const trackCustomEvent = (eventName: string, data?: Record<string, any>) => {
   pushToDataLayer({
     event: eventName,
-    ...data
-  });
-};
+    ...data,
+  })
+}
 
 // Export all functions as a service object for easier imports
 export const DataLayerService = {
@@ -279,7 +279,7 @@ export const DataLayerService = {
   login: trackLogin,
   signup: trackSignup,
   blogRead: trackBlogRead,
-  customEvent: trackCustomEvent
-};
+  customEvent: trackCustomEvent,
+}
 
-export default DataLayerService;
+export default DataLayerService

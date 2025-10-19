@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from './ui/Button';
-import { GiftIcon, SparklesIcon, XIcon } from './IconComponents';
-import { NavigateTo } from '../types';
+import React, { useState, useEffect } from 'react'
+import { GiftIcon, SparklesIcon, XIcon } from './IconComponents'
+import { Button } from './ui/Button'
+import type { NavigateTo } from '../types'
 
 interface FloatingCTAProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 /**
@@ -13,59 +13,59 @@ interface FloatingCTAProps {
  * Can be dismissed, preference stored in localStorage
  */
 const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
-  const [hasEnoughPageViews, setHasEnoughPageViews] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
+  const [isDismissed, setIsDismissed] = useState(false)
+  const [hasEnoughPageViews, setHasEnoughPageViews] = useState(false)
 
   useEffect(() => {
     // Check if user has previously dismissed
-    const dismissed = localStorage.getItem('floatingCTA_dismissed');
+    const dismissed = localStorage.getItem('floatingCTA_dismissed')
     if (dismissed === 'true') {
-      setIsDismissed(true);
-      return;
+      setIsDismissed(true)
+      return
     }
 
     // Track page navigation count
     const trackPageNavigation = () => {
-      const navigationKey = 'floatingCTA_pageNavigations';
-      const currentCount = parseInt(localStorage.getItem(navigationKey) || '0', 10);
-      const newCount = currentCount + 1;
-      
-      localStorage.setItem(navigationKey, newCount.toString());
-      
+      const navigationKey = 'floatingCTA_pageNavigations'
+      const currentCount = parseInt(localStorage.getItem(navigationKey) || '0', 10)
+      const newCount = currentCount + 1
+
+      localStorage.setItem(navigationKey, newCount.toString())
+
       // Show CTA after 5 page navigations
       if (newCount >= 5) {
-        setHasEnoughPageViews(true);
+        setHasEnoughPageViews(true)
       }
-    };
+    }
 
     // Check current count on mount
-    const currentCount = parseInt(localStorage.getItem('floatingCTA_pageNavigations') || '0', 10);
+    const currentCount = parseInt(localStorage.getItem('floatingCTA_pageNavigations') || '0', 10)
     if (currentCount >= 5) {
-      setHasEnoughPageViews(true);
+      setHasEnoughPageViews(true)
     } else {
       // Track this page view
-      trackPageNavigation();
+      trackPageNavigation()
     }
 
     const handleScroll = () => {
       // Show CTA after scrolling 300px AND having 5+ page views
-      const shouldShow = window.scrollY > 300 && hasEnoughPageViews;
-      setIsVisible(shouldShow);
-    };
+      const shouldShow = window.scrollY > 300 && hasEnoughPageViews
+      setIsVisible(shouldShow)
+    }
 
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [hasEnoughPageViews]);
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [hasEnoughPageViews])
 
   const handleDismiss = () => {
-    setIsDismissed(true);
-    localStorage.setItem('floatingCTA_dismissed', 'true');
-  };
+    setIsDismissed(true)
+    localStorage.setItem('floatingCTA_dismissed', 'true')
+  }
 
-  if (isDismissed || !isVisible) return null;
+  if (isDismissed || !isVisible) return null
 
   return (
     <div
@@ -110,7 +110,7 @@ const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
             >
               Start GiftFinder
             </Button>
-            
+
             <Button
               variant="ghost"
               size="sm"
@@ -125,7 +125,7 @@ const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FloatingCTA;
+export default FloatingCTA

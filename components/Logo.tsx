@@ -1,15 +1,15 @@
-import React from 'react';
+import React from 'react'
 
 type LogoProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   /**
    * When true, the logo image is marked as high priority and will use eager loading.
    */
-  priority?: boolean;
+  priority?: boolean
   /**
    * Optional className applied to the wrapping <picture> element.
    */
-  pictureClassName?: string;
-};
+  pictureClassName?: string
+}
 
 const Logo: React.FC<LogoProps> = ({
   priority = false,
@@ -21,17 +21,17 @@ const Logo: React.FC<LogoProps> = ({
   ...rest
 }) => {
   const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = event.currentTarget;
+    const target = event.currentTarget
 
     if (!target.dataset.fallback) {
-      target.dataset.fallback = 'true';
-      target.src = '/images/gifteez-logo.png';
+      target.dataset.fallback = 'true'
+      target.src = '/images/gifteez-logo.png'
     }
 
     if (onError) {
-      onError(event);
+      onError(event)
     }
-  };
+  }
 
   return (
     <picture className={pictureClassName}>
@@ -45,7 +45,7 @@ const Logo: React.FC<LogoProps> = ({
         {...rest}
       />
     </picture>
-  );
-};
+  )
+}
 
-export default Logo;
+export default Logo

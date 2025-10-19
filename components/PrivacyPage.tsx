@@ -1,23 +1,35 @@
-import React, { useEffect } from 'react';
-import { NavigateTo } from '../types';
+import React, { useEffect } from 'react'
+import type { NavigateTo } from '../types'
 
 interface PrivacyPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
   useEffect(() => {
-    document.title = 'Privacybeleid — Gifteez.nl';
+    document.title = 'Privacybeleid — Gifteez.nl'
     const ensure = (selector: string, create: () => HTMLElement) => {
-      let el = document.head.querySelector(selector) as HTMLElement | null;
-      if (!el) { el = create(); document.head.appendChild(el); }
-      return el;
-    };
-    const metaDesc = ensure('meta[name="description"]', () => Object.assign(document.createElement('meta'), { name: 'description' }));
-    metaDesc.setAttribute('content', 'Privacybeleid van Gifteez.nl - Lees hoe wij omgaan met uw persoonsgegevens en cookies.');
-    const canonical = ensure('link[rel="canonical"]', () => { const l = document.createElement('link'); l.rel = 'canonical'; return l; });
-    canonical.setAttribute('href', window.location.origin + '/privacy');
-  }, []);
+      let el = document.head.querySelector(selector) as HTMLElement | null
+      if (!el) {
+        el = create()
+        document.head.appendChild(el)
+      }
+      return el
+    }
+    const metaDesc = ensure('meta[name="description"]', () =>
+      Object.assign(document.createElement('meta'), { name: 'description' })
+    )
+    metaDesc.setAttribute(
+      'content',
+      'Privacybeleid van Gifteez.nl - Lees hoe wij omgaan met uw persoonsgegevens en cookies.'
+    )
+    const canonical = ensure('link[rel="canonical"]', () => {
+      const l = document.createElement('link')
+      l.rel = 'canonical'
+      return l
+    })
+    canonical.setAttribute('href', window.location.origin + '/privacy')
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
@@ -37,9 +49,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6">
               <span className="text-3xl">🔒</span>
             </div>
-            <h1 className="typo-h1 mb-6 leading-tight text-white">
-              Privacybeleid
-            </h1>
+            <h1 className="typo-h1 mb-6 leading-tight text-white">Privacybeleid</h1>
             <p className="typo-lead text-white/90 max-w-3xl mx-auto">
               Hoe wij omgaan met uw persoonsgegevens
             </p>
@@ -52,18 +62,19 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
           <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-100">
             <div className="prose prose-lg lg:prose-xl max-w-none text-gray-700">
               <p className="text-sm text-gray-500 mb-8">
-                <strong>Laatst bijgewerkt:</strong> {new Date().toLocaleDateString('nl-NL', {
+                <strong>Laatst bijgewerkt:</strong>{' '}
+                {new Date().toLocaleDateString('nl-NL', {
                   year: 'numeric',
                   month: 'long',
-                  day: 'numeric'
+                  day: 'numeric',
                 })}
               </p>
 
               <h2>1. Inleiding</h2>
               <p>
-                Bij Gifteez.nl hechten wij veel waarde aan uw privacy. Dit privacybeleid legt uit hoe wij
-                persoonsgegevens verzamelen, gebruiken, beschermen en beheren wanneer u onze website bezoekt
-                of gebruikt.
+                Bij Gifteez.nl hechten wij veel waarde aan uw privacy. Dit privacybeleid legt uit
+                hoe wij persoonsgegevens verzamelen, gebruiken, beschermen en beheren wanneer u onze
+                website bezoekt of gebruikt.
               </p>
 
               <h2>2. Verantwoordelijke</h2>
@@ -72,24 +83,52 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
                 <br />
                 <strong>Gifteez.nl</strong>
                 <br />
-                Email: <a href="mailto:info@gifteez.nl" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">info@gifteez.nl</a>
+                Email:{' '}
+                <a
+                  href="mailto:info@gifteez.nl"
+                  className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline"
+                >
+                  info@gifteez.nl
+                </a>
                 <br />
-                Website: <a href="https://gifteez.nl" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline">https://gifteez.nl</a>
+                Website:{' '}
+                <a
+                  href="https://gifteez.nl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800 transition-colors duration-200 hover:underline"
+                >
+                  https://gifteez.nl
+                </a>
               </p>
 
               <h2>3. Welke Gegevens Verzamelen Wij?</h2>
               <h3>3.1 Automatisch Verzamelde Gegevens</h3>
               <ul>
-                <li><strong>Technische informatie:</strong> IP-adres, browsertype, besturingssysteem, schermresolutie</li>
-                <li><strong>Gebruiksgegevens:</strong> Bezochte pagina's, tijd besteed op de website, klikgedrag</li>
-                <li><strong>Cookies:</strong> Zie onze cookieverklaring hieronder</li>
+                <li>
+                  <strong>Technische informatie:</strong> IP-adres, browsertype, besturingssysteem,
+                  schermresolutie
+                </li>
+                <li>
+                  <strong>Gebruiksgegevens:</strong> Bezochte pagina's, tijd besteed op de website,
+                  klikgedrag
+                </li>
+                <li>
+                  <strong>Cookies:</strong> Zie onze cookieverklaring hieronder
+                </li>
               </ul>
 
               <h3>3.2 Door U Verstrekte Gegevens</h3>
               <ul>
-                <li><strong>Contactformulier:</strong> Naam, emailadres, bericht</li>
-                <li><strong>Newsletter:</strong> Emailadres voor inschrijving</li>
-                <li><strong>Account:</strong> Gebruikersnaam, emailadres, wachtwoord (gehasht)</li>
+                <li>
+                  <strong>Contactformulier:</strong> Naam, emailadres, bericht
+                </li>
+                <li>
+                  <strong>Newsletter:</strong> Emailadres voor inschrijving
+                </li>
+                <li>
+                  <strong>Account:</strong> Gebruikersnaam, emailadres, wachtwoord (gehasht)
+                </li>
               </ul>
 
               <h2>4. Cookies en Tracking</h2>
@@ -97,33 +136,48 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
 
               <h3>4.1 Functionele Cookies</h3>
               <p>
-                Noodzakelijk voor de basisfunctionaliteit van de website, zoals navigatie en formulierinzendingen.
+                Noodzakelijk voor de basisfunctionaliteit van de website, zoals navigatie en
+                formulierinzendingen.
               </p>
 
               <h3>4.2 Analytische Cookies</h3>
               <p>
-                Helpen ons te begrijpen hoe bezoekers de website gebruiken, zodat we de gebruikerservaring kunnen verbeteren.
-                Wij gebruiken Google Analytics voor deze doeleinden.
+                Helpen ons te begrijpen hoe bezoekers de website gebruiken, zodat we de
+                gebruikerservaring kunnen verbeteren. Wij gebruiken Google Analytics voor deze
+                doeleinden.
               </p>
 
               <h3>4.3 Marketing Cookies</h3>
               <p>
-                Gebruikt voor het tonen van relevante advertenties en het meten van de effectiviteit van marketingcampagnes.
+                Gebruikt voor het tonen van relevante advertenties en het meten van de effectiviteit
+                van marketingcampagnes.
               </p>
 
               <h3>4.4 Cookie Voorkeuren</h3>
               <p>
-                U kunt uw cookievoorkeuren aanpassen via de cookiebanner die verschijnt bij uw eerste bezoek.
-                U kunt cookies ook uitschakelen via uw browserinstellingen.
+                U kunt uw cookievoorkeuren aanpassen via de cookiebanner die verschijnt bij uw
+                eerste bezoek. U kunt cookies ook uitschakelen via uw browserinstellingen.
               </p>
 
               <h2>5. Hoe Gebruiken Wij Uw Gegevens?</h2>
               <ul>
-                <li><strong>Website functionaliteit:</strong> Om de website correct te laten werken</li>
-                <li><strong>Communicatie:</strong> Om te reageren op uw berichten en vragen</li>
-                <li><strong>Verbetering:</strong> Om onze diensten te optimaliseren</li>
-                <li><strong>Marketing:</strong> Om relevante informatie en aanbiedingen te sturen (alleen met toestemming)</li>
-                <li><strong>Wettelijke verplichtingen:</strong> Om te voldoen aan toepasselijke wet- en regelgeving</li>
+                <li>
+                  <strong>Website functionaliteit:</strong> Om de website correct te laten werken
+                </li>
+                <li>
+                  <strong>Communicatie:</strong> Om te reageren op uw berichten en vragen
+                </li>
+                <li>
+                  <strong>Verbetering:</strong> Om onze diensten te optimaliseren
+                </li>
+                <li>
+                  <strong>Marketing:</strong> Om relevante informatie en aanbiedingen te sturen
+                  (alleen met toestemming)
+                </li>
+                <li>
+                  <strong>Wettelijke verplichtingen:</strong> Om te voldoen aan toepasselijke wet-
+                  en regelgeving
+                </li>
               </ul>
 
               <h2>6. Gegevens Delen met Derden</h2>
@@ -131,9 +185,10 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
 
               <h3>6.1 Dienstverleners</h3>
               <p>
-                Wij werken samen met vertrouwde dienstverleners die ons helpen bij het beheer van de website,
-                emailverzending en analyse. Deze partijen hebben alleen toegang tot de gegevens die nodig zijn
-                voor hun diensten en zijn contractueel verplicht om de privacy te respecteren.
+                Wij werken samen met vertrouwde dienstverleners die ons helpen bij het beheer van de
+                website, emailverzending en analyse. Deze partijen hebben alleen toegang tot de
+                gegevens die nodig zijn voor hun diensten en zijn contractueel verplicht om de
+                privacy te respecteren.
               </p>
 
               <h3>6.2 Wettelijke Verplichtingen</h3>
@@ -144,15 +199,15 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
 
               <h3>6.3 Bedrijfsveranderingen</h3>
               <p>
-                Bij een fusie, overname of verkoop van activa kunnen persoonsgegevens worden overgedragen
-                aan de nieuwe eigenaar, mits de privacybescherming gegarandeerd blijft.
+                Bij een fusie, overname of verkoop van activa kunnen persoonsgegevens worden
+                overgedragen aan de nieuwe eigenaar, mits de privacybescherming gegarandeerd blijft.
               </p>
 
               <h2>7. Gegevens Beveiliging</h2>
               <p>
-                Wij nemen passende technische en organisatorische maatregelen om uw persoonsgegevens te beschermen
-                tegen verlies, misbruik, ongeautoriseerde toegang en andere vormen van onrechtmatige verwerking.
-                Dit omvat:
+                Wij nemen passende technische en organisatorische maatregelen om uw persoonsgegevens
+                te beschermen tegen verlies, misbruik, ongeautoriseerde toegang en andere vormen van
+                onrechtmatige verwerking. Dit omvat:
               </p>
               <ul>
                 <li>SSL/TLS encryptie voor gegevensoverdracht</li>
@@ -163,13 +218,22 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
 
               <h2>8. Bewaartermijnen</h2>
               <p>
-                Wij bewaren uw persoonsgegevens niet langer dan noodzakelijk voor de doeleinden waarvoor ze zijn verzameld:
+                Wij bewaren uw persoonsgegevens niet langer dan noodzakelijk voor de doeleinden
+                waarvoor ze zijn verzameld:
               </p>
               <ul>
-                <li><strong>Contactformulier:</strong> 2 jaar na laatste contact</li>
-                <li><strong>Newsletter:</strong> Tot uitschrijving</li>
-                <li><strong>Analytische gegevens:</strong> 26 maanden (Google Analytics standaard)</li>
-                <li><strong>Accountgegevens:</strong> Tot accountverwijdering of 7 jaar inactiviteit</li>
+                <li>
+                  <strong>Contactformulier:</strong> 2 jaar na laatste contact
+                </li>
+                <li>
+                  <strong>Newsletter:</strong> Tot uitschrijving
+                </li>
+                <li>
+                  <strong>Analytische gegevens:</strong> 26 maanden (Google Analytics standaard)
+                </li>
+                <li>
+                  <strong>Accountgegevens:</strong> Tot accountverwijdering of 7 jaar inactiviteit
+                </li>
               </ul>
 
               <h2>9. Uw Rechten</h2>
@@ -207,7 +271,8 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
 
               <h2>11. Klachten</h2>
               <p>
-                Als u een klacht heeft over de verwerking van uw persoonsgegevens, kunt u deze indienen bij:
+                Als u een klacht heeft over de verwerking van uw persoonsgegevens, kunt u deze
+                indienen bij:
                 <br />
                 <strong>Autoriteit Persoonsgegevens</strong>
                 <br />
@@ -215,20 +280,32 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
                 <br />
                 2509 AJ Den Haag
                 <br />
-                Website: <a href="https://autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-blue-600">autoriteitpersoonsgegevens.nl</a>
+                Website:{' '}
+                <a
+                  href="https://autoriteitpersoonsgegevens.nl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:text-blue-600"
+                >
+                  autoriteitpersoonsgegevens.nl
+                </a>
               </p>
 
               <h2>12. Wijzigingen</h2>
               <p>
-                Dit privacybeleid kan worden aangepast. Bij belangrijke wijzigingen zullen wij u hierover informeren
-                via onze website of per email. De meest recente versie is altijd beschikbaar op deze pagina.
+                Dit privacybeleid kan worden aangepast. Bij belangrijke wijzigingen zullen wij u
+                hierover informeren via onze website of per email. De meest recente versie is altijd
+                beschikbaar op deze pagina.
               </p>
 
               <div className="mt-12 p-6 bg-green-50 rounded-2xl border border-green-200">
-                <h3 className="text-lg font-semibold text-green-900 mb-2">Uw Privacy is Belangrijk</h3>
+                <h3 className="text-lg font-semibold text-green-900 mb-2">
+                  Uw Privacy is Belangrijk
+                </h3>
                 <p className="text-green-800">
-                  Wij streven ernaar transparant te zijn over hoe wij omgaan met uw gegevens. Als u vragen heeft
-                  over dit privacybeleid, aarzel dan niet om contact met ons op te nemen. Wij helpen u graag verder!
+                  Wij streven ernaar transparant te zijn over hoe wij omgaan met uw gegevens. Als u
+                  vragen heeft over dit privacybeleid, aarzel dan niet om contact met ons op te
+                  nemen. Wij helpen u graag verder!
                 </p>
               </div>
             </div>
@@ -236,7 +313,7 @@ const PrivacyPage: React.FC<PrivacyPageProps> = ({ navigateTo }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PrivacyPage;
+export default PrivacyPage

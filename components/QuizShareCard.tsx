@@ -1,19 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { toPng } from 'html-to-image';
-import { DownloadIcon, ShareIcon, SparklesIcon } from './IconComponents';
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { toPng } from 'html-to-image'
+import { DownloadIcon, ShareIcon, SparklesIcon } from './IconComponents'
 
 interface QuizShareCardProps {
-  personaTitle: string;
-  personaBadge: string;
-  personaTagline: string;
-  accentClass: string;
-  accentSoftClass: string;
-  gradientClass: string;
-  Icon: React.ComponentType<{ className?: string }>;
-  interests: string[];
-  budgetLabel?: string | null;
-  occasionLabel?: string | null;
-  relationshipLabel?: string | null;
+  personaTitle: string
+  personaBadge: string
+  personaTagline: string
+  accentClass: string
+  accentSoftClass: string
+  gradientClass: string
+  Icon: React.ComponentType<{ className?: string }>
+  interests: string[]
+  budgetLabel?: string | null
+  occasionLabel?: string | null
+  relationshipLabel?: string | null
 }
 
 const QuizShareCard: React.FC<QuizShareCardProps> = ({
@@ -29,101 +29,105 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
   occasionLabel,
   relationshipLabel,
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [recipientName, setRecipientName] = useState('');
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [recipientName, setRecipientName] = useState('')
   const defaultMessage = useMemo(() => {
-    const parts = [personaTagline];
+    const parts = [personaTagline]
     if (occasionLabel) {
-      parts.push(`Perfect voor ${occasionLabel?.toLowerCase()}`);
+      parts.push(`Perfect voor ${occasionLabel?.toLowerCase()}`)
     }
     if (relationshipLabel) {
-      parts.push(`Met extra aandacht voor ${relationshipLabel?.toLowerCase()}`);
+      parts.push(`Met extra aandacht voor ${relationshipLabel?.toLowerCase()}`)
     }
-    return parts.filter(Boolean).join(' • ');
-  }, [personaTagline, occasionLabel, relationshipLabel]);
+    return parts.filter(Boolean).join(' • ')
+  }, [personaTagline, occasionLabel, relationshipLabel])
 
-  const [customMessage, setCustomMessage] = useState(defaultMessage);
-  const [isExporting, setIsExporting] = useState(false);
-  const filename = `gifteez-cadeau-profiel-${personaTitle.replace(/\s+/g, '-').toLowerCase()}.png`;
+  const [customMessage, setCustomMessage] = useState(defaultMessage)
+  const [isExporting, setIsExporting] = useState(false)
+  const filename = `gifteez-cadeau-profiel-${personaTitle.replace(/\s+/g, '-').toLowerCase()}.png`
 
-  const renderInterests = interests.slice(0, 3);
-
-  useEffect(() => {
-    setCustomMessage(defaultMessage);
-  }, [defaultMessage]);
+  const renderInterests = interests.slice(0, 3)
 
   useEffect(() => {
-    setRecipientName('');
-  }, [personaTitle]);
+    setCustomMessage(defaultMessage)
+  }, [defaultMessage])
+
+  useEffect(() => {
+    setRecipientName('')
+  }, [personaTitle])
 
   const handleDownload = async () => {
     if (!cardRef.current) {
-      return;
+      return
     }
 
     try {
-      setIsExporting(true);
+      setIsExporting(true)
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         width: 1080,
         height: 1350,
         backgroundColor: '#ffffff',
         pixelRatio: 2,
-      });
+      })
 
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = dataUrl;
-      link.click();
+      const link = document.createElement('a')
+      link.download = filename
+      link.href = dataUrl
+      link.click()
     } catch (error) {
-      console.error('Share card export failed', error);
+      console.error('Share card export failed', error)
     } finally {
-      setIsExporting(false);
+      setIsExporting(false)
     }
-  };
+  }
 
   const handleNativeShare = async () => {
     if (!('share' in navigator)) {
-      await handleDownload();
-      return;
+      await handleDownload()
+      return
     }
 
     if (!cardRef.current) {
-      return;
+      return
     }
 
     try {
-      setIsExporting(true);
+      setIsExporting(true)
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
         width: 1080,
         height: 1350,
         backgroundColor: '#ffffff',
         pixelRatio: 2,
-      });
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-      const file = new File([blob], filename, { type: 'image/png' });
+      })
+      const response = await fetch(dataUrl)
+      const blob = await response.blob()
+      const file = new File([blob], filename, { type: 'image/png' })
 
       const shareData: ShareData = {
         title: `Mijn Gifteez cadeau-profiel: ${personaTitle}`,
         text: customMessage,
         files: [file],
-      };
-
-      if ('canShare' in navigator && typeof navigator.canShare === 'function' && !navigator.canShare(shareData)) {
-        await handleDownload();
-        return;
       }
 
-      await navigator.share(shareData);
+      if (
+        'canShare' in navigator &&
+        typeof navigator.canShare === 'function' &&
+        !navigator.canShare(shareData)
+      ) {
+        await handleDownload()
+        return
+      }
+
+      await navigator.share(shareData)
     } catch (error) {
-      console.error('Native share failed', error);
-      await handleDownload();
+      console.error('Native share failed', error)
+      await handleDownload()
     } finally {
-      setIsExporting(false);
+      setIsExporting(false)
     }
-  };
+  }
 
   return (
     <div className="space-y-5">
@@ -131,9 +135,14 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
         ref={cardRef}
         className={`relative mx-auto w-full max-w-[340px] rounded-[28px] border border-white/70 bg-gradient-to-br ${gradientClass} p-7 shadow-xl shadow-accent/20`}
       >
-        <div className="absolute inset-0 rounded-[28px] bg-white/30 backdrop-blur-sm" aria-hidden="true" />
+        <div
+          className="absolute inset-0 rounded-[28px] bg-white/30 backdrop-blur-sm"
+          aria-hidden="true"
+        />
         <div className="relative z-10 flex h-full flex-col items-center gap-5 text-center text-primary">
-          <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide ${accentSoftClass} ${accentClass}`}>
+          <span
+            className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-wide ${accentSoftClass} ${accentClass}`}
+          >
             <SparklesIcon className="h-4 w-4" />
             {personaBadge}
           </span>
@@ -141,7 +150,9 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
             <Icon className={`h-10 w-10 ${accentClass}`} />
           </div>
           <div className="space-y-2">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-primary/60">Cadeau-profiel</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-primary/60">
+              Cadeau-profiel
+            </p>
             <h3 className="font-display text-2xl font-bold text-primary sm:text-3xl">
               {recipientName ? `${recipientName} is een` : 'Ik ben een'} {personaTitle}
             </h3>
@@ -151,17 +162,23 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary/60">
             {budgetLabel && (
-              <span className="rounded-full bg-white/70 px-3 py-1 text-primary/70">Budget {budgetLabel}</span>
+              <span className="rounded-full bg-white/70 px-3 py-1 text-primary/70">
+                Budget {budgetLabel}
+              </span>
             )}
             {occasionLabel && (
-              <span className="rounded-full bg-white/70 px-3 py-1 text-primary/70">{occasionLabel}</span>
+              <span className="rounded-full bg-white/70 px-3 py-1 text-primary/70">
+                {occasionLabel}
+              </span>
             )}
             {relationshipLabel && (
-              <span className="rounded-full bg-white/70 px-3 py-1 text-primary/70">Voor {relationshipLabel.toLowerCase()}</span>
+              <span className="rounded-full bg-white/70 px-3 py-1 text-primary/70">
+                Voor {relationshipLabel.toLowerCase()}
+              </span>
             )}
           </div>
           <div className="mt-1 grid w-full grid-cols-3 gap-2 text-[11px] font-semibold uppercase tracking-wide text-primary/60">
-            {renderInterests.map(tag => (
+            {renderInterests.map((tag) => (
               <span key={tag} className="truncate rounded-full bg-white/70 px-3 py-1">
                 #{tag.replace(/\s+/g, '')}
               </span>
@@ -181,7 +198,7 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
             <input
               type="text"
               value={recipientName}
-              onChange={event => setRecipientName(event.target.value)}
+              onChange={(event) => setRecipientName(event.target.value)}
               placeholder="Voor wie is dit?"
               className="mt-1 rounded-xl border border-primary/10 bg-white/90 px-3 py-2 text-primary shadow-sm outline-none transition focus:border-accent/40 focus:ring-2 focus:ring-accent/40"
             />
@@ -191,7 +208,7 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
             <input
               type="text"
               value={customMessage}
-              onChange={event => setCustomMessage(event.target.value)}
+              onChange={(event) => setCustomMessage(event.target.value)}
               placeholder="Schrijf een korte boodschap"
               maxLength={120}
               className="mt-1 rounded-xl border border-primary/10 bg-white/90 px-3 py-2 text-primary shadow-sm outline-none transition focus:border-accent/40 focus:ring-2 focus:ring-accent/40"
@@ -220,7 +237,7 @@ const QuizShareCard: React.FC<QuizShareCardProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default QuizShareCard;
+export default QuizShareCard

@@ -1,104 +1,104 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { NavigateTo, DealCategory, DealItem } from '../types';
-import Meta from './Meta';
-import JsonLd from './JsonLd';
-import Button from './Button';
-import LoadingSpinner from './LoadingSpinner';
-import ImageWithFallback from './ImageWithFallback';
-import { Container } from './layout/Container';
-import { withAffiliate } from '../services/affiliate';
-import { DynamicProductService } from '../services/dynamicProductService';
-import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { withAffiliate } from '../services/affiliate'
+import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
+import { DynamicProductService } from '../services/dynamicProductService'
+import Button from './Button'
 import {
   SparklesIcon,
   TagIcon,
   StarIcon,
   BookmarkFilledIcon,
   BookmarkIcon,
-  CheckIcon
-} from './IconComponents';
+  CheckIcon,
+} from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
+import JsonLd from './JsonLd'
+import { Container } from './layout/Container'
+import LoadingSpinner from './LoadingSpinner'
+import Meta from './Meta'
+import type { NavigateTo, DealCategory, DealItem } from '../types'
 
 interface DealsPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 interface DealsPageState {
-  dealOfWeek: DealItem | null;
-  topDeals: DealItem[];
-  categories: DealCategory[];
+  dealOfWeek: DealItem | null
+  topDeals: DealItem[]
+  categories: DealCategory[]
 }
 
 const DEFAULT_STATE: DealsPageState = {
   dealOfWeek: null,
   topDeals: [],
-  categories: []
-};
+  categories: [],
+}
 
 const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
-  const [state, setState] = useState<DealsPageState>(DEFAULT_STATE);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null);
+  const [state, setState] = useState<DealsPageState>(DEFAULT_STATE)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null)
 
   const formatPrice = useCallback((value: string | undefined) => {
     if (!value) {
-      return null;
+      return null
     }
-    return value.startsWith('€') ? value : `€${value}`;
-  }, []);
+    return value.startsWith('€') ? value : `€${value}`
+  }, [])
 
   const formatDate = useCallback((value?: Date | string | null) => {
     if (!value) {
-      return null;
+      return null
     }
-    const date = typeof value === 'string' ? new Date(value) : value;
+    const date = typeof value === 'string' ? new Date(value) : value
     if (Number.isNaN(date.getTime())) {
-      return null;
+      return null
     }
     return date.toLocaleString('nl-NL', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    });
-  }, []);
+      minute: '2-digit',
+    })
+  }, [])
 
   const loadDeals = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
-      DealCategoryConfigService.clearCache();
+      DealCategoryConfigService.clearCache()
       const [dealOfWeek, topDeals, categories, config] = await Promise.all([
         DynamicProductService.getDealOfTheWeek(),
         DynamicProductService.getTop10Deals(),
         DynamicProductService.getDealCategories(),
-        DealCategoryConfigService.load()
-      ]);
+        DealCategoryConfigService.load(),
+      ])
 
-      const stats = DynamicProductService.getStats();
-      setLastUpdated(stats?.lastUpdated ?? null);
-      setManualConfigUpdatedAt(config?.updatedAt ?? null);
+      const stats = DynamicProductService.getStats()
+      setLastUpdated(stats?.lastUpdated ?? null)
+      setManualConfigUpdatedAt(config?.updatedAt ?? null)
 
       setState({
         dealOfWeek,
         topDeals,
-        categories: categories.filter((category) => category.items.length > 0)
-      });
+        categories: categories.filter((category) => category.items.length > 0),
+      })
     } catch (loadError: any) {
-      console.error('Kon deals niet laden:', loadError);
-      setError(loadError?.message ?? 'Kon deals niet laden. Probeer het later opnieuw.');
-      setState(DEFAULT_STATE);
+      console.error('Kon deals niet laden:', loadError)
+      setError(loadError?.message ?? 'Kon deals niet laden. Probeer het later opnieuw.')
+      setState(DEFAULT_STATE)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    void loadDeals();
-  }, [loadDeals]);
+    void loadDeals()
+  }, [loadDeals])
 
   const structuredData = useMemo(() => {
     const topList = state.topDeals.map((deal, index) => ({
@@ -112,28 +112,30 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         '@type': 'Offer',
         priceCurrency: 'EUR',
         price: deal.price?.replace(/[^0-9,\.]/g, '').replace(',', '.') ?? '',
-        url: withAffiliate(deal.affiliateLink)
-      }
-    }));
+        url: withAffiliate(deal.affiliateLink),
+      },
+    }))
 
     return {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
       name: 'Gifteez deals overzicht',
-      description: 'Ontdek de scherpste cadeaudeals van deze week, samengesteld uit Coolblue en Amazon.',
-      itemListElement: topList
-    };
-  }, [state.topDeals]);
+      description:
+        'Ontdek de scherpste cadeaudeals van deze week, samengesteld uit Coolblue en Amazon.',
+      itemListElement: topList,
+    }
+  }, [state.topDeals])
 
   const renderDealCard = (deal: DealItem, variant: 'default' | 'compact' = 'default') => {
-    const isAmazonImage = /amazon\./i.test(deal.imageUrl);
-    const imageClasses = variant === 'compact'
-      ? isAmazonImage
-        ? 'h-36 w-full object-contain p-3'
-        : 'h-36 w-full object-cover'
-      : isAmazonImage
-        ? 'h-60 w-full object-contain p-4'
-        : 'h-56 w-full object-cover';
+    const isAmazonImage = /amazon\./i.test(deal.imageUrl)
+    const imageClasses =
+      variant === 'compact'
+        ? isAmazonImage
+          ? 'h-36 w-full object-contain p-3'
+          : 'h-36 w-full object-cover'
+        : isAmazonImage
+          ? 'h-60 w-full object-contain p-4'
+          : 'h-56 w-full object-cover'
 
     return (
       <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-rose-50 bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md">
@@ -147,12 +149,16 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         </div>
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="space-y-2">
-            <h3 className="font-display text-xl font-semibold text-slate-900 line-clamp-2">{deal.name}</h3>
+            <h3 className="font-display text-xl font-semibold text-slate-900 line-clamp-2">
+              {deal.name}
+            </h3>
             <p className="text-sm text-slate-600 line-clamp-3">{deal.description}</p>
           </div>
           <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2 text-sm font-semibold text-rose-600">
-              <span className="rounded-full bg-rose-50 px-3 py-1">{formatPrice(deal.price) ?? 'Prijs op aanvraag'}</span>
+              <span className="rounded-full bg-rose-50 px-3 py-1">
+                {formatPrice(deal.price) ?? 'Prijs op aanvraag'}
+              </span>
               {deal.originalPrice && (
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-500">
                   <s>{deal.originalPrice}</s>
@@ -182,8 +188,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <>
@@ -205,7 +211,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   Elke week nieuwe cadeaus met extra voordeel
                 </h1>
                 <p className="max-w-2xl text-base text-white/80 sm:text-lg">
-                  We scannen dagelijks de Coolblue productfeed en onze Amazon favorieten. De deals hieronder zijn direct te bestellen en sluiten aan bij populaire cadeaumomenten.
+                  We scannen dagelijks de Coolblue productfeed en onze Amazon favorieten. De deals
+                  hieronder zijn direct te bestellen en sluiten aan bij populaire cadeaumomenten.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button variant="accent" onClick={() => navigateTo('giftFinder')}>
@@ -221,7 +228,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 </div>
               </div>
               <div className="relative">
-                <div className="absolute -inset-6 rounded-3xl bg-white/20 blur-2xl" aria-hidden="true" />
+                <div
+                  className="absolute -inset-6 rounded-3xl bg-white/20 blur-2xl"
+                  aria-hidden="true"
+                />
                 <div className="relative overflow-hidden rounded-3xl border border-white/30 bg-white/10 p-8 shadow-2xl backdrop-blur">
                   <div className="flex items-center gap-3 text-sm font-semibold uppercase tracking-wide text-white/80">
                     <SparklesIcon className="h-5 w-5" />
@@ -244,7 +254,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   <div className="mt-6 rounded-2xl border border-white/30 bg-white/10 p-4 text-xs text-white/70">
                     <p>Laatste feed update: {formatDate(lastUpdated) ?? 'Onbekend'}.</p>
                     {manualConfigUpdatedAt && (
-                      <p>Handmatige categorieën gepubliceerd op: {formatDate(manualConfigUpdatedAt)}.</p>
+                      <p>
+                        Handmatige categorieën gepubliceerd op: {formatDate(manualConfigUpdatedAt)}.
+                      </p>
                     )}
                   </div>
                 </div>
@@ -341,7 +353,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       Top 10 cadeaus van deze week
                     </h2>
                     <p className="mt-3 text-base text-slate-600 sm:text-lg">
-                      Deze cadeaus scoren hoog op cadeauscore, populariteit en voordeel. De lijst wordt dagelijks bijgewerkt.
+                      Deze cadeaus scoren hoog op cadeauscore, populariteit en voordeel. De lijst
+                      wordt dagelijks bijgewerkt.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-5">
@@ -353,9 +366,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                         <span className="absolute left-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-rose-500 font-semibold text-white shadow">
                           #{index + 1}
                         </span>
-                        <div className="mt-10">
-                          {renderDealCard(deal, 'compact')}
-                        </div>
+                        <div className="mt-10">{renderDealCard(deal, 'compact')}</div>
                       </div>
                     ))}
                   </div>
@@ -365,7 +376,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               {state.categories.length > 0 && (
                 <section className="space-y-16">
                   {state.categories.map((category, index) => (
-                    <div key={category.title} className="animate-fade-in-up" style={{ animationDelay: `${300 + index * 80}ms` }}>
+                    <div
+                      key={category.title}
+                      className="animate-fade-in-up"
+                      style={{ animationDelay: `${300 + index * 80}ms` }}
+                    >
                       <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <h2 className="font-display text-3xl font-bold text-slate-900 sm:text-4xl">
                           {category.title}
@@ -385,23 +400,31 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 </section>
               )}
 
-              {!state.dealOfWeek && state.topDeals.length === 0 && state.categories.length === 0 && !error && (
-                <div className="rounded-3xl border border-dashed border-slate-200 bg-white p-12 text-center text-slate-500">
-                  <p className="text-lg font-semibold text-slate-700">Nog geen deals beschikbaar</p>
-                  <p className="mt-2 text-sm">Controleer later opnieuw – zodra er nieuwe feed-updates zijn verschijnen ze hier automatisch.</p>
-                  <div className="mt-4 flex justify-center">
-                    <Button variant="primary" onClick={loadDeals}>
-                      Vernieuw nu
-                    </Button>
+              {!state.dealOfWeek &&
+                state.topDeals.length === 0 &&
+                state.categories.length === 0 &&
+                !error && (
+                  <div className="rounded-3xl border border-dashed border-slate-200 bg-white p-12 text-center text-slate-500">
+                    <p className="text-lg font-semibold text-slate-700">
+                      Nog geen deals beschikbaar
+                    </p>
+                    <p className="mt-2 text-sm">
+                      Controleer later opnieuw – zodra er nieuwe feed-updates zijn verschijnen ze
+                      hier automatisch.
+                    </p>
+                    <div className="mt-4 flex justify-center">
+                      <Button variant="primary" onClick={loadDeals}>
+                        Vernieuw nu
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </>
           )}
         </Container>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default DealsPage;
+export default DealsPage

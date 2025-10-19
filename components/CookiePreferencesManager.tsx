@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { CheckIcon, XIcon, TargetIcon } from './IconComponents';
-import { CookiePreferences } from './CookieBanner';
+import React, { useState } from 'react'
+import { CheckIcon, XIcon, TargetIcon } from './IconComponents'
+import type { CookiePreferences } from './CookieBanner'
 
 interface CookiePreferencesManagerProps {
-  currentPreferences: CookiePreferences;
-  onUpdatePreferences: (preferences: CookiePreferences) => void;
-  onClose: () => void;
+  currentPreferences: CookiePreferences
+  onUpdatePreferences: (preferences: CookiePreferences) => void
+  onClose: () => void
 }
 
 const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
@@ -13,17 +13,17 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
   onUpdatePreferences,
   onClose,
 }) => {
-  const [preferences, setPreferences] = useState<CookiePreferences>(currentPreferences);
+  const [preferences, setPreferences] = useState<CookiePreferences>(currentPreferences)
 
   const handleSave = () => {
-    onUpdatePreferences(preferences);
-    onClose();
-  };
+    onUpdatePreferences(preferences)
+    onClose()
+  }
 
   const updatePreference = (type: keyof CookiePreferences, value: boolean) => {
-    if (type === 'necessary') return; // Necessary cookies kunnen niet worden uitgeschakeld
-    setPreferences(prev => ({ ...prev, [type]: value }));
-  };
+    if (type === 'necessary') return // Necessary cookies kunnen niet worden uitgeschakeld
+    setPreferences((prev) => ({ ...prev, [type]: value }))
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -48,8 +48,8 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
 
           {/* Description */}
           <p className="text-gray-600 mb-6 leading-relaxed">
-            Hier kunt u uw cookie voorkeuren aanpassen. Sommige cookies zijn noodzakelijk voor de werking van de website
-            en kunnen niet worden uitgeschakeld.
+            Hier kunt u uw cookie voorkeuren aanpassen. Sommige cookies zijn noodzakelijk voor de
+            werking van de website en kunnen niet worden uitgeschakeld.
           </p>
 
           {/* Cookie Categories */}
@@ -63,11 +63,14 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
                 <div className="flex-grow">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-semibold text-gray-900">Noodzakelijke Cookies</h3>
-                    <span className="text-sm bg-light-bg text-accent px-3 py-1 rounded-full">Altijd actief</span>
+                    <span className="text-sm bg-light-bg text-accent px-3 py-1 rounded-full">
+                      Altijd actief
+                    </span>
                   </div>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Deze cookies zijn essentieel voor de basisfunctionaliteit van de website, zoals navigatie,
-                    beveiliging en het onthouden van uw cookie voorkeuren. Ze kunnen niet worden uitgeschakeld.
+                    Deze cookies zijn essentieel voor de basisfunctionaliteit van de website, zoals
+                    navigatie, beveiliging en het onthouden van uw cookie voorkeuren. Ze kunnen niet
+                    worden uitgeschakeld.
                   </p>
                 </div>
               </div>
@@ -87,10 +90,13 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
                 </div>
                 <div className="flex-grow">
                   <label htmlFor="analytics-pref" className="cursor-pointer">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Analytische Cookies</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      Analytische Cookies
+                    </h3>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      Deze cookies helpen ons te begrijpen hoe bezoekers de website gebruiken, zodat we de
-                      ervaring kunnen verbeteren. We gebruiken Firebase Analytics om anonieme statistieken te verzamelen.
+                      Deze cookies helpen ons te begrijpen hoe bezoekers de website gebruiken, zodat
+                      we de ervaring kunnen verbeteren. We gebruiken Firebase Analytics om anonieme
+                      statistieken te verzamelen.
                     </p>
                   </label>
                 </div>
@@ -113,8 +119,9 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
                   <label htmlFor="marketing-pref" className="cursor-pointer">
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Marketing Cookies</h3>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      Deze cookies worden gebruikt om relevante advertenties te tonen en de effectiviteit van
-                      marketing campagnes te meten. Ze kunnen afkomstig zijn van derde partijen.
+                      Deze cookies worden gebruikt om relevante advertenties te tonen en de
+                      effectiviteit van marketing campagnes te meten. Ze kunnen afkomstig zijn van
+                      derde partijen.
                     </p>
                   </label>
                 </div>
@@ -150,7 +157,7 @@ const CookiePreferencesManager: React.FC<CookiePreferencesManagerProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CookiePreferencesManager;
+export default CookiePreferencesManager

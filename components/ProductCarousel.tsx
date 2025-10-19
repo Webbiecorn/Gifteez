@@ -1,86 +1,86 @@
-import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
-import { DealItem } from '../types';
-import { ChevronLeftIcon, ChevronRightIcon } from './IconComponents';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react'
+import { ChevronLeftIcon, ChevronRightIcon } from './IconComponents'
+import type { DealItem } from '../types'
 
 interface ProductCarouselProps {
-  products: DealItem[];
-  renderProduct: (product: DealItem, index: number) => React.ReactNode;
+  products: DealItem[]
+  renderProduct: (product: DealItem, index: number) => React.ReactNode
 }
 
 const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProduct }) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(true)
+  const [isScrolling, setIsScrolling] = useState(false)
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined' || !('matchMedia' in window)) {
-      return false;
+      return false
     }
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  }, []);
-  const [hasAnimatedIn, setHasAnimatedIn] = useState(prefersReducedMotion);
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }, [])
+  const [hasAnimatedIn, setHasAnimatedIn] = useState(prefersReducedMotion)
 
-  const productKey = useMemo(() => products.map((product) => product.id).join('|'), [products]);
+  const productKey = useMemo(() => products.map((product) => product.id).join('|'), [products])
 
   useEffect(() => {
     if (prefersReducedMotion) {
-      setHasAnimatedIn(true);
-      return;
+      setHasAnimatedIn(true)
+      return
     }
 
-    setHasAnimatedIn(false);
-    const animationFrame = requestAnimationFrame(() => setHasAnimatedIn(true));
-    return () => cancelAnimationFrame(animationFrame);
-  }, [productKey, prefersReducedMotion]);
+    setHasAnimatedIn(false)
+    const animationFrame = requestAnimationFrame(() => setHasAnimatedIn(true))
+    return () => cancelAnimationFrame(animationFrame)
+  }, [productKey, prefersReducedMotion])
 
   const updateScrollButtons = useCallback(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const container = scrollContainerRef.current
+    if (!container) return
 
-    const { scrollLeft, scrollWidth, clientWidth } = container;
-    setCanScrollLeft(scrollLeft > 10);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-  }, []);
+    const { scrollLeft, scrollWidth, clientWidth } = container
+    setCanScrollLeft(scrollLeft > 10)
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+  }, [])
 
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const container = scrollContainerRef.current
+    if (!container) return
 
-    updateScrollButtons();
-    container.addEventListener('scroll', updateScrollButtons);
-    window.addEventListener('resize', updateScrollButtons);
+    updateScrollButtons()
+    container.addEventListener('scroll', updateScrollButtons)
+    window.addEventListener('resize', updateScrollButtons)
 
     return () => {
-      container.removeEventListener('scroll', updateScrollButtons);
-      window.removeEventListener('resize', updateScrollButtons);
-    };
-  }, [productKey, updateScrollButtons]);
+      container.removeEventListener('scroll', updateScrollButtons)
+      window.removeEventListener('resize', updateScrollButtons)
+    }
+  }, [productKey, updateScrollButtons])
 
   const scroll = (direction: 'left' | 'right') => {
-    const container = scrollContainerRef.current;
-    if (!container || isScrolling) return;
+    const container = scrollContainerRef.current
+    if (!container || isScrolling) return
 
-    setIsScrolling(true);
-    const cardWidth = 320; // Approximate card width + gap
-    const scrollAmount = direction === 'left' ? -cardWidth * 2 : cardWidth * 2;
+    setIsScrolling(true)
+    const cardWidth = 320 // Approximate card width + gap
+    const scrollAmount = direction === 'left' ? -cardWidth * 2 : cardWidth * 2
 
     container.scrollBy({
       left: scrollAmount,
-      behavior: 'smooth'
-    });
+      behavior: 'smooth',
+    })
 
     setTimeout(() => {
-      setIsScrolling(false);
-      updateScrollButtons();
-    }, 400);
-  };
+      setIsScrolling(false)
+      updateScrollButtons()
+    }, 400)
+  }
 
   if (products.length === 0) {
     return (
       <div className="text-center py-12 text-gray-500">
         <p>Geen producten beschikbaar in deze categorie</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -106,15 +106,15 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
         }}
       >
         {products.map((product, index) => {
-          if (!product) return null;
+          if (!product) return null
 
           const animationStyle = prefersReducedMotion
             ? undefined
-            : {
+            : ({
                 opacity: hasAnimatedIn ? 1 : 0,
                 transition: 'opacity 260ms ease-out',
                 transitionDelay: `${Math.min(index, 10) * 40}ms`,
-              } as React.CSSProperties;
+              } as React.CSSProperties)
 
           return (
             <div
@@ -124,7 +124,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
             >
               {renderProduct(product, index)}
             </div>
-          );
+          )
         })}
       </div>
 
@@ -145,7 +145,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default ProductCarousel;
+export default ProductCarousel

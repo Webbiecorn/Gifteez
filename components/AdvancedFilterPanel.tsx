@@ -1,49 +1,59 @@
-import React, { useState } from 'react';
-import { AdvancedFilters } from '../types';
-import { FilterIcon, ChevronDownIcon, ChevronUpIcon } from './IconComponents';
+import React, { useState } from 'react'
+import { FilterIcon, ChevronDownIcon, ChevronUpIcon } from './IconComponents'
+import type { AdvancedFilters } from '../types'
 
 interface AdvancedFilterPanelProps {
-  filters: Partial<AdvancedFilters>;
-  onFiltersChange: (filters: Partial<AdvancedFilters>) => void;
-  isVisible: boolean;
-  onToggle: () => void;
+  filters: Partial<AdvancedFilters>
+  onFiltersChange: (filters: Partial<AdvancedFilters>) => void
+  isVisible: boolean
+  onToggle: () => void
 }
 
 const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
   filters,
   onFiltersChange,
   isVisible,
-  onToggle
+  onToggle,
 }) => {
   const categories = [
-    'Elektronica', 'Mode & Accessoires', 'Boeken & Media', 'Sport & Fitness',
-    'Huis & Tuin', 'Voeding & Drinken', 'Wellness & Beauty', 'Hobby & Vrije tijd',
-    'Reizen & Ervaringen', 'Kunst & Cultuur'
-  ];
+    'Elektronica',
+    'Mode & Accessoires',
+    'Boeken & Media',
+    'Sport & Fitness',
+    'Huis & Tuin',
+    'Voeding & Drinken',
+    'Wellness & Beauty',
+    'Hobby & Vrije tijd',
+    'Reizen & Ervaringen',
+    'Kunst & Cultuur',
+  ]
 
   const ageGroups = [
-    '0-2 jaar', '3-5 jaar', '6-12 jaar', '13-17 jaar',
-    '18-25 jaar', '26-35 jaar', '36-50 jaar', '50+ jaar'
-  ];
+    '0-2 jaar',
+    '3-5 jaar',
+    '6-12 jaar',
+    '13-17 jaar',
+    '18-25 jaar',
+    '26-35 jaar',
+    '36-50 jaar',
+    '50+ jaar',
+  ]
 
-  const updateFilter = <K extends keyof AdvancedFilters>(
-    key: K,
-    value: AdvancedFilters[K]
-  ) => {
+  const updateFilter = <K extends keyof AdvancedFilters>(key: K, value: AdvancedFilters[K]) => {
     onFiltersChange({
       ...filters,
-      [key]: value
-    });
-  };
+      [key]: value,
+    })
+  }
 
   const toggleCategory = (category: string) => {
-    const currentCategories = filters.categories || [];
+    const currentCategories = filters.categories || []
     const newCategories = currentCategories.includes(category)
-      ? currentCategories.filter(c => c !== category)
-      : [...currentCategories, category];
-    
-    updateFilter('categories', newCategories);
-  };
+      ? currentCategories.filter((c) => c !== category)
+      : [...currentCategories, category]
+
+    updateFilter('categories', newCategories)
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
@@ -72,20 +82,20 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
         <div className="p-6 space-y-6 max-h-96 overflow-y-auto">
           {/* Price Range */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Prijsbereik (€)
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Prijsbereik (€)</label>
             <div className="flex items-center gap-4">
               <div className="flex-1">
                 <input
                   type="number"
                   placeholder="Min"
                   value={filters.priceRange?.min || ''}
-                  onChange={(e) => updateFilter('priceRange', {
-                    ...filters.priceRange,
-                    min: parseInt(e.target.value) || 0,
-                    max: filters.priceRange?.max || 1000
-                  })}
+                  onChange={(e) =>
+                    updateFilter('priceRange', {
+                      ...filters.priceRange,
+                      min: parseInt(e.target.value) || 0,
+                      max: filters.priceRange?.max || 1000,
+                    })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
               </div>
@@ -95,10 +105,12 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                   type="number"
                   placeholder="Max"
                   value={filters.priceRange?.max || ''}
-                  onChange={(e) => updateFilter('priceRange', {
-                    min: filters.priceRange?.min || 0,
-                    max: parseInt(e.target.value) || 1000
-                  })}
+                  onChange={(e) =>
+                    updateFilter('priceRange', {
+                      min: filters.priceRange?.min || 0,
+                      max: parseInt(e.target.value) || 1000,
+                    })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 />
               </div>
@@ -107,11 +119,9 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
 
           {/* Categories */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Categorieën
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Categorieën</label>
             <div className="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
-              {categories.map(category => (
+              {categories.map((category) => (
                 <label
                   key={category}
                   className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-2"
@@ -130,16 +140,14 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
 
           {/* Gift Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Type Cadeau
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Type Cadeau</label>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { value: 'physical', label: 'Fysiek product' },
                 { value: 'experience', label: 'Ervaring' },
                 { value: 'digital', label: 'Digitaal' },
-                { value: 'subscription', label: 'Abonnement' }
-              ].map(option => (
+                { value: 'subscription', label: 'Abonnement' },
+              ].map((option) => (
                 <label
                   key={option.value}
                   className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-2"
@@ -176,36 +184,31 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
 
           {/* Age Group */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Leeftijdsgroep
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Leeftijdsgroep</label>
             <select
               value={filters.ageGroup || ''}
               onChange={(e) => updateFilter('ageGroup', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
               <option value="">Alle leeftijden</option>
-              {ageGroups.map(age => (
-                <option key={age} value={age}>{age}</option>
+              {ageGroups.map((age) => (
+                <option key={age} value={age}>
+                  {age}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Gender */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Geslacht
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Geslacht</label>
             <div className="flex gap-4">
               {[
                 { value: 'unisex', label: 'Unisex' },
                 { value: 'male', label: 'Mannelijk' },
-                { value: 'female', label: 'Vrouwelijk' }
-              ].map(option => (
-                <label
-                  key={option.value}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
+                { value: 'female', label: 'Vrouwelijk' },
+              ].map((option) => (
+                <label key={option.value} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="gender"
@@ -249,13 +252,13 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                   type="checkbox"
                   checked={filters.preferredPartner === 'sustainable'}
                   onChange={(e) => {
-                    const nextFilters = { ...filters };
+                    const nextFilters = { ...filters }
                     if (e.target.checked) {
-                      nextFilters.preferredPartner = 'sustainable';
+                      nextFilters.preferredPartner = 'sustainable'
                     } else {
-                      delete nextFilters.preferredPartner;
+                      delete nextFilters.preferredPartner
                     }
-                    onFiltersChange(nextFilters);
+                    onFiltersChange(nextFilters)
                   }}
                   className="rounded border-gray-300 text-primary focus:ring-primary/20"
                 />
@@ -279,7 +282,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AdvancedFilterPanel;
+export default AdvancedFilterPanel

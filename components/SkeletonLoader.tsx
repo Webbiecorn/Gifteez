@@ -1,28 +1,28 @@
-import React from 'react';
+import React from 'react'
 
 interface SkeletonProps {
-  className?: string;
-  width?: string;
-  height?: string;
-  rounded?: boolean;
+  className?: string
+  width?: string
+  height?: string
+  rounded?: boolean
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({ 
-  className = '', 
-  width = 'w-full', 
-  height = 'h-4', 
-  rounded = false 
+export const Skeleton: React.FC<SkeletonProps> = ({
+  className = '',
+  width = 'w-full',
+  height = 'h-4',
+  rounded = false,
 }) => {
   return (
-    <div 
+    <div
       className={`bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse ${width} ${height} ${rounded ? 'rounded-full' : 'rounded'} ${className}`}
       style={{
         backgroundSize: '200% 100%',
-        animation: 'shimmer 1.5s ease-in-out infinite'
+        animation: 'shimmer 1.5s ease-in-out infinite',
       }}
     />
-  );
-};
+  )
+}
 
 export const BlogCardSkeleton: React.FC = () => {
   return (
@@ -44,8 +44,8 @@ export const BlogCardSkeleton: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const GiftCardSkeleton: React.FC = () => {
   return (
@@ -61,8 +61,8 @@ export const GiftCardSkeleton: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const ProfileSkeleton: React.FC = () => {
   return (
@@ -73,26 +73,22 @@ export const ProfileSkeleton: React.FC = () => {
         <Skeleton width="w-20" height="h-3" />
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const TextSkeleton: React.FC<{ lines?: number }> = ({ lines = 3 }) => {
   return (
     <div className="space-y-2">
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton 
-          key={i} 
-          height="h-4" 
-          width={i === lines - 1 ? 'w-3/4' : 'w-full'} 
-        />
+        <Skeleton key={i} height="h-4" width={i === lines - 1 ? 'w-3/4' : 'w-full'} />
       ))}
     </div>
-  );
-};
+  )
+}
 
 export const ButtonSkeleton: React.FC = () => {
-  return <Skeleton width="w-32" height="h-10" className="rounded-lg" />;
-};
+  return <Skeleton width="w-32" height="h-10" className="rounded-lg" />
+}
 
 export const ListSkeleton: React.FC<{ items?: number }> = ({ items = 5 }) => {
   return (
@@ -107,8 +103,8 @@ export const ListSkeleton: React.FC<{ items?: number }> = ({ items = 5 }) => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
 // Add the shimmer animation to the global CSS
 const shimmerStyle = `
@@ -120,11 +116,11 @@ const shimmerStyle = `
     background-position: 200% 0;
   }
 }
-`;
+`
 
 // Inject the style into the document head
 if (typeof document !== 'undefined') {
-  const styleElement = document.createElement('style');
-  styleElement.textContent = shimmerStyle;
-  document.head.appendChild(styleElement);
+  const styleElement = document.createElement('style')
+  styleElement.textContent = shimmerStyle
+  document.head.appendChild(styleElement)
 }

@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 
 interface ToastProps {
-  message: string;
+  message: string
 }
 
 const Toast: React.FC<ToastProps> = ({ message }) => {
-  const [visible, setVisible] = useState(false);
-  const [currentMessage, setCurrentMessage] = useState('');
+  const [visible, setVisible] = useState(false)
+  const [currentMessage, setCurrentMessage] = useState('')
 
   useEffect(() => {
     if (message) {
-      setCurrentMessage(message);
-      setVisible(true);
+      setCurrentMessage(message)
+      setVisible(true)
       const timer = setTimeout(() => {
-        setVisible(false);
-      }, 2800);
-      return () => clearTimeout(timer);
+        setVisible(false)
+      }, 2800)
+      return () => clearTimeout(timer)
     } else {
-      setVisible(false);
+      setVisible(false)
     }
-  }, [message]);
+  }, [message])
 
   return (
     <div
@@ -30,7 +30,7 @@ const Toast: React.FC<ToastProps> = ({ message }) => {
     >
       {currentMessage}
     </div>
-  );
-};
+  )
+}
 
-export default Toast;
+export default Toast

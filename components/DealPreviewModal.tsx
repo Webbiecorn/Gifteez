@@ -1,32 +1,32 @@
-import React from 'react';
-import { DealItem } from '../types';
-import ImageWithFallback from './ImageWithFallback';
-import { XIcon, CheckCircleIcon, XCircleIcon, LinkIcon } from './IconComponents';
-import { withAffiliate } from '../services/affiliate';
+import React from 'react'
+import { withAffiliate } from '../services/affiliate'
+import { XIcon, CheckCircleIcon, XCircleIcon, LinkIcon } from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
+import type { DealItem } from '../types'
 
 interface DealPreviewModalProps {
-  deal: DealItem | null;
-  isOpen: boolean;
-  onClose: () => void;
+  deal: DealItem | null
+  isOpen: boolean
+  onClose: () => void
 }
 
 const DealPreviewModal: React.FC<DealPreviewModalProps> = ({ deal, isOpen, onClose }) => {
-  if (!isOpen || !deal) return null;
+  if (!isOpen || !deal) return null
 
   const testAffiliateLink = () => {
     if (deal.affiliateLink) {
-      window.open(withAffiliate(deal.affiliateLink), '_blank', 'noopener,noreferrer');
+      window.open(withAffiliate(deal.affiliateLink), '_blank', 'noopener,noreferrer')
     }
-  };
+  }
 
   const testImage = () => {
     if (deal.image) {
-      window.open(deal.image, '_blank', 'noopener,noreferrer');
+      window.open(deal.image, '_blank', 'noopener,noreferrer')
     }
-  };
+  }
 
-  const imageWorks = deal.image && deal.image.startsWith('http');
-  const linkWorks = deal.affiliateLink && deal.affiliateLink.startsWith('http');
+  const imageWorks = deal.image && deal.image.startsWith('http')
+  const linkWorks = deal.affiliateLink && deal.affiliateLink.startsWith('http')
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -98,7 +98,9 @@ const DealPreviewModal: React.FC<DealPreviewModalProps> = ({ deal, isOpen, onClo
                       <h5 className="text-xs font-semibold line-clamp-1">{deal.name}</h5>
                       <div className="flex items-center justify-between mt-1">
                         <span className="text-sm font-bold text-rose-600">{deal.price}</span>
-                        <button className="text-xs bg-rose-500 text-white px-2 py-1 rounded">Bekijk</button>
+                        <button className="text-xs bg-rose-500 text-white px-2 py-1 rounded">
+                          Bekijk
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -120,7 +122,9 @@ const DealPreviewModal: React.FC<DealPreviewModalProps> = ({ deal, isOpen, onClo
                     <XCircleIcon className="h-5 w-5 text-red-600" />
                   )}
                 </div>
-                <p className="text-xs text-gray-600 mb-2 break-all">{deal.image || 'Geen afbeelding'}</p>
+                <p className="text-xs text-gray-600 mb-2 break-all">
+                  {deal.image || 'Geen afbeelding'}
+                </p>
                 {imageWorks && (
                   <button
                     onClick={testImage}
@@ -235,7 +239,7 @@ const DealPreviewModal: React.FC<DealPreviewModalProps> = ({ deal, isOpen, onClo
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DealPreviewModal;
+export default DealPreviewModal

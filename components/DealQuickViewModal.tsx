@@ -1,52 +1,52 @@
-import React, { useEffect } from 'react';
-import { DealItem } from '../types';
-import ImageWithFallback from './ImageWithFallback';
-import { XIcon, CheckIcon, StarIcon } from './IconComponents';
-import { withAffiliate } from '../services/affiliate';
+import React, { useEffect } from 'react'
+import { withAffiliate } from '../services/affiliate'
+import { XIcon, CheckIcon, StarIcon } from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
+import type { DealItem } from '../types'
 
 interface DealQuickViewModalProps {
-  deal: DealItem | null;
-  isOpen: boolean;
-  onClose: () => void;
+  deal: DealItem | null
+  isOpen: boolean
+  onClose: () => void
 }
 
 const DealQuickViewModal: React.FC<DealQuickViewModalProps> = ({ deal, isOpen, onClose }) => {
   // Close on Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
+      if (e.key === 'Escape') onClose()
     }
-    
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
-    };
-  }, [isOpen, onClose]);
 
-  if (!isOpen || !deal) return null;
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen || !deal) return null
 
   const formatPrice = (value: string | undefined) => {
-    if (!value) return null;
-    const cleaned = value.replace(/[^\d,.-]/g, '');
-    const num = parseFloat(cleaned.replace(',', '.'));
-    if (isNaN(num)) return value;
-    return `€${num.toFixed(2).replace('.', ',')}`;
-  };
+    if (!value) return null
+    const cleaned = value.replace(/[^\d,.-]/g, '')
+    const num = parseFloat(cleaned.replace(',', '.'))
+    if (isNaN(num)) return value
+    return `€${num.toFixed(2).replace('.', ',')}`
+  }
 
-  const isTopDeal = deal.giftScore && deal.giftScore >= 9;
-  const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8;
+  const isTopDeal = deal.giftScore && deal.giftScore >= 9
+  const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
       onClick={onClose}
     >
-      <div 
+      <div
         className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl animate-fade-in-up"
         onClick={(e) => e.stopPropagation()}
       >
@@ -69,7 +69,7 @@ const DealQuickViewModal: React.FC<DealQuickViewModalProps> = ({ deal, isOpen, o
               className="w-full max-w-md object-contain"
               fit="contain"
             />
-            
+
             {/* Quality badges in corner */}
             <div className="absolute top-4 right-4 flex flex-col gap-2">
               {isTopDeal && (
@@ -132,9 +132,7 @@ const DealQuickViewModal: React.FC<DealQuickViewModalProps> = ({ deal, isOpen, o
 
             {/* Description */}
             {deal.description && (
-              <p className="text-base text-slate-600 leading-relaxed">
-                {deal.description}
-              </p>
+              <p className="text-base text-slate-600 leading-relaxed">{deal.description}</p>
             )}
 
             {/* Key features */}
@@ -207,7 +205,7 @@ const DealQuickViewModal: React.FC<DealQuickViewModalProps> = ({ deal, isOpen, o
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DealQuickViewModal;
+export default DealQuickViewModal

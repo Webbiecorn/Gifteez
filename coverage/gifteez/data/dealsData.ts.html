@@ -1,0 +1,646 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for gifteez/data/dealsData.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">gifteez/data</a> dealsData.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>0/187</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>0/1</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">0% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>0/187</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >import type { DealItem, DealCategory } from '../types'</span></span></span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export const dealOfTheWeek: DealItem = {</span>
+<span class="cstat-no" title="statement not covered" >  id: 'deal-001',</span>
+<span class="cstat-no" title="statement not covered" >  name: 'Whirlpool WH7IPC15BM60 Maxispace',</span>
+<span class="cstat-no" title="statement not covered" >  description:</span>
+<span class="cstat-no" title="statement not covered" >    'Inbouw vaatwasser met Maxi Space technologie en PowerClean sproeiarm. Perfect voor grote families en effectieve reiniging van al je servies.',</span>
+<span class="cstat-no" title="statement not covered" >  imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781',</span>
+<span class="cstat-no" title="statement not covered" >  price: 'Nu voor €629,00',</span>
+<span class="cstat-no" title="statement not covered" >  affiliateLink: 'https://www.coolblue.nl/product/966434/whirlpool-wh7ipc15bm60-maxispace.html',</span>
+<span class="cstat-no" title="statement not covered" >}</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export const top10Deals: DealItem[] = [</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-01',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'Sonos Roam SL Speaker',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Grootse draagbare Bluetooth speaker met uitstekende geluidskwaliteit.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/51x24PzVnoL._AC_SL1000_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€234,95',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/Sonos-grootse-lichtgewicht-draagbare-speaker/dp/B09PNSV48L/ref=sr_1_2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;crid=3589OU964AFOZ&amp;dib=eyJ2IjoiMSJ9.9IHwYG3HjWtIoOucSDPr9iRokuwbOPruR0NWGsJWWSjtQD_94t54-FEt_NdC5lk9UJx6jf4Y83jTm0gWNvNqxdTQbC4NnZTdcI6M7ih6_fZvh_GxQ0C4-henxbLnB8yz7xT6lYpQ2cKY8hJCeuS55OmRjPwJWQq-TY0rkGLoKMbMjZmeXPiAjYhhUHu0MeLQFr7ZbviHbkttCTYkEt0YHVS9daeMRdmBQHkdildzQZkhT3ikGTjpSAtevj-sBDF66NgTNV2FBJe0NmDoaRcIkvmZDV8AfpIhF6FI8ZaMwfg.68-AIdmpBVNG3f9FQe3Z_LdHbmaTr0C5QIHtlf1UsRs&amp;dib_tag=se&amp;keywords=Sonos%2BRoam%2BSL%2BSpeaker&amp;qid=1757423666&amp;sprefix=sonos%2Broam%2Bsl%2Bspeaker%2Caps%2C95&amp;sr=8-2&amp;th=1',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-02',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'RITUALS Amsterdam Collection',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Luxe foaming shower gel set voor een verwennende douchebeleving.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/61OcRmEAogL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€37,90',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/RITUALS-Amsterdam-Collection-Foaming-Shower/dp/B0CTCR9449/ref=sr_1_1?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;crid=117YXOPVSZNMQ&amp;dib=eyJ2IjoiMSJ9.xjrf7uFglOGNfJE_RDX7svNzFqWeTOpFFv-ZdmshzCOzE9CdiKwRpIr4_ew3mJWlVbvoUetqc-gBZPh389yCxeu57m6ZhJSNynBmMwvZqsSul2h6UAx0HM6cJFCGrsFIaG924iC2zJDO5kqIU5xVjjURcR3NUGcmuiKZScKLhtG3WGgnT5I5MPWY_gHgIwvooHXEkl0RyApxQ4z5ulwP45XFwVTSBhEm-GTEhwDNQI2XGj-w0eCXbbShOR-UXKmuvyPgHBH6UmKls8TYwQsAMZTGBU6sAkhuuY_N357jluw.BdlJb5-v2_iJ2_1EDDmlBVk6CCanOzwv4XB9VDkLbYc&amp;dib_tag=se&amp;keywords=Rituals+Verwenpakket&amp;qid=1757423946&amp;sprefix=rituals+verwenpakket%2Caps%2C100&amp;sr=8-1',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-03',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'LEGO Technic Fast &amp; Furious',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Uitdagend bouwpakket voor volwassenen met gedetailleerde racewagen.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/81rFz-MoPmL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€149,99',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/LEGO-Technic-Furious-Bouwpakket-Volwassenen/dp/B0DRCXL888/ref=sr_1_3?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;crid=3R97ILD63XB1L&amp;dib=eyJ2IjoiMSJ9.okNecXEwOiiE3iiAg79E6pHZNjzRq-Cyn6IR_B8AbquGmsVpIVwSADLouzJ50Jdo3CH-yC8iBmh512MuciSIv8ZiX8VW-KE-QJdl9rgLObUw-Jb8eo7RP42zWWkF8NLBfElCUVUwSpke8U-a74M84e2hKtEwTwECLeCmPWWZ_Wr_AhUWpkZU8InSbJXEeBVmnUBCBxmt4ZaB_DZG-SYn9eX1N4w9KMFLoc3IsTbQ2z8kHpdcb41kbr2K5fWR7OIA3Tcw8OIXKwPBiFg0HLVgQ8KUFyxNGYrmhv0RKdFGJTg.-5-fnVyfhGHxm6hoFKntIoGxyR_AVxWTc6Km8Spa8ak&amp;dib_tag=se&amp;keywords=LEGO+Technic+auto&amp;qid=1757424087&amp;sprefix=lego+technic+auto%2Caps%2C118&amp;sr=8-3',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-04',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'JBL Live 770NC Koptelefoon',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Draadloze noise-cancelling koptelefoon met superieure geluidskwaliteit.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1962259',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€118,00',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink: 'https://www.coolblue.nl/product/934400/jbl-live-770nc-zwart.html',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-05',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'Philips Senseo Original',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Klassieke koffiepadmachine voor perfecte koffie in een handomdraai.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2140334',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€59,00',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink: 'https://www.coolblue.nl/product/960722/philips-senseo-original-hd6553-50.html',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-06',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'AOHAN Sportdrinkfles',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Duurzame waterfles met klapdeksel, vaatwasmachinebestendig en BPA-vrij.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/71PSj-UDbnL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€19,99',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/AOHAN-klapdeksel-sportdrinkfles-vaatwasmachinebestendig-niet-giftige/dp/B0CDXXNCWQ/ref=zg_bs_c_sports_d_sccl_1/260-3978121-9055707?pd_rd_w=Vfkyn&amp;content-id=amzn1.sym.2e8be302-3286-4d33-9152-b96f031ef392&amp;pf_rd_p=2e8be302-3286-4d33-9152-b96f031ef392&amp;pf_rd_r=VF4N4RBG418QG9716CFD&amp;pd_rd_wg=FMrcn&amp;pd_rd_r=3f958ea4-7899-496a-bbd6-5308a8cf5cca&amp;pd_rd_i=B0CDXXNCWQ&amp;th=1',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-07',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'Thrustmaster T598 Racestuur',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Direct Drive racestuur voor de ultieme racing simulatie ervaring.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2169599',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€1.499,00',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.coolblue.nl/product/964585/thrustmaster-t598-direct-drive-racestuur.html',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-08',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'Dokter Bibber Bordspel',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Klassiek elektronisch bordspel met draagkoffer voor spanning en plezier.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/816zV4FDosL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€24,99',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/Dokter-Bibber-elektronisch-bordspel-draagkoffer/dp/B0DXG669PN/ref=sr_1_4_sspa?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&amp;crid=1JL01WFOOG4P8&amp;dib=eyJ2IjoiMSJ9.tFtr9cUeKrrYh18VWhk8I7cmMHUtW9jmYgz1S5KJHWRB7ZcSEEBY_dqIyVG1EdY9z2qqIZTUpgfMJqMs6z9Wnx9wNKJXwUc1HRazcdAv7kY32CcsvQpIJ06r_Lk3xZhXR0GYcd8C1ijfJjVDoW18Ajw4QokI2YbhEWvJOVtUXNsenaj-mUNZ0iU4kinD8AeyDCbKeE2XDQnWgD12uZvOoNUotrg2WX2oCuB2iHzbSOl5f4EUy9EU2XKFiHLNjIMqhyI84SN5MMqxONU4_oyZOoa-6lhQPJDE52eSG1uFRjg.85JcBn4itjlNeqB04QZh59LNrKGvrHt2l8YXAngbjkc&amp;dib_tag=se&amp;keywords=Bordspel&amp;qid=1757424646&amp;sprefix=bordspel%2Caps%2C124&amp;sr=8-4-spons&amp;sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&amp;psc=1',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-09',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'Philips Hue GU10 Smart Lampen',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Slimme LED spotjes 3-pack, 16 miljoen kleuren en dimbaar via app.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/718D9f+dQZL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€89,99',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/Philips-Hue-GU10-3-Pack-400lm/dp/B0D6NLK4RZ/ref=zg_bs_c_hi_d_sccl_3/260-3978121-9055707?pd_rd_w=12xJu&amp;content-id=amzn1.sym.2e8be302-3286-4d33-9152-b96f031ef392&amp;pf_rd_p=2e8be302-3286-4d33-9152-b96f031ef392&amp;pf_rd_r=6ZC5PN1SY1RWFDRVM4T4&amp;pd_rd_wg=HXabC&amp;pd_rd_r=aba85bd9-e902-4668-8547-fcaf73c21438&amp;pd_rd_i=B0D6NLK4RZ&amp;th=1',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    id: 'top-10',</span>
+<span class="cstat-no" title="statement not covered" >    name: 'Utopia Bedding Hoeslaken Set',</span>
+<span class="cstat-no" title="statement not covered" >    description: 'Luxe geborstelde microvezel hoeslaken set, zacht en ademend.',</span>
+<span class="cstat-no" title="statement not covered" >    imageUrl: 'https://m.media-amazon.com/images/I/61GmOwnGQAL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >    price: '€25,99',</span>
+<span class="cstat-no" title="statement not covered" >    affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >      'https://www.amazon.nl/Utopia-Bedding-Onderlaken-geborstelde-microvezel/dp/B0BTYVF5D1/ref=zg_bs_c_home_d_sccl_3/260-3978121-9055707?pd_rd_w=9ohCR&amp;content-id=amzn1.sym.2e8be302-3286-4d33-9152-b96f031ef392&amp;pf_rd_p=2e8be302-3286-4d33-9152-b96f031ef392&amp;pf_rd_r=6ZC5PN1SY1RWFDRVM4T4&amp;pd_rd_wg=HXabC&amp;pd_rd_r=aba85bd9-e902-4668-8547-fcaf73c21438&amp;pd_rd_i=B0BTYVF5D1&amp;th=1',</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >]</span>
+<span class="cstat-no" title="statement not covered" ></span>
+<span class="cstat-no" title="statement not covered" >export const dealCategories: DealCategory[] = [</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    title: 'Top Tech Gadgets',</span>
+<span class="cstat-no" title="statement not covered" >    items: [</span>
+<span class="cstat-no" title="statement not covered" >      top10Deals[0],</span>
+<span class="cstat-no" title="statement not covered" >      top10Deals[3],</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'tech-lightbar',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'Philips Hue Play Lightbar Double Pack',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Creëer direct ambiance in je woonkamer met twee slimme lightbars.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://m.media-amazon.com/images/I/61i7fSWTCI-L._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€135,99',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink: 'https://www.amazon.nl/dp/B07L8YN3J3',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'tech-airtack',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'Apple AirTag 4-pack',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Track je essentials met nauwkeurige U1-chip locatiebepaling.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://m.media-amazon.com/images/I/71tHNTGasKL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€109,00',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink: 'https://www.amazon.nl/dp/B0933BVK6D',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >    ],</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    title: 'Beste Keukenaccessoires',</span>
+<span class="cstat-no" title="statement not covered" >    items: [</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        ...dealOfTheWeek,</span>
+<span class="cstat-no" title="statement not covered" >        id: 'deal-keuken-1',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Inbouw vaatwasser met Maxi Space technologie en stille werking.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >      top10Deals[4],</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'kitchen-airfryer',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'Philips Airfryer XXL Smart Sensing',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Gezond frituren voor het hele gezin met automatische bereidingsprogramma’s.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2143848',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€249,00',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink:</span>
+<span class="cstat-no" title="statement not covered" >          'https://www.coolblue.nl/product/960955/philips-airfryer-xxl-smart-sensing-black.html',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'kitchen-nutribullet',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'NutriBullet Pro 900',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Compacte powerblender voor smoothies, dips en sauzen in seconden.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://m.media-amazon.com/images/I/61L+k0E8bBL._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€109,99',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink: 'https://www.amazon.nl/dp/B07JLZ9CCX',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >    ],</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >  {</span>
+<span class="cstat-no" title="statement not covered" >    title: 'Populaire Lifestyle Producten',</span>
+<span class="cstat-no" title="statement not covered" >    items: [</span>
+<span class="cstat-no" title="statement not covered" >      top10Deals[5],</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'lifestyle-massage',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'Renpho Massage Gun',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Ontspan vermoeide spieren met 5 standen en verwisselbare opzetstukken.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://m.media-amazon.com/images/I/71Wo0KxGz2L._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€99,99',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink: 'https://www.amazon.nl/dp/B07TYR61N5',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'lifestyle-aroma',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'Yankee Candle Large Jar Clean Cotton',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Grote geurkaars met katoengeur voor directe huiselijke sfeer.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://m.media-amazon.com/images/I/61T6kRXKu-L._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€29,90',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink: 'https://www.amazon.nl/dp/B000JDZ1LM',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >      {</span>
+<span class="cstat-no" title="statement not covered" >        id: 'lifestyle-huskee',</span>
+<span class="cstat-no" title="statement not covered" >        name: 'Huskee Herbruikbare Coffee Cups (set van 4)',</span>
+<span class="cstat-no" title="statement not covered" >        description: 'Gemaakt van koffieschillen en ideaal voor onderweg of op kantoor.',</span>
+<span class="cstat-no" title="statement not covered" >        imageUrl: 'https://m.media-amazon.com/images/I/810UPc5ac8L._AC_SL1500_.jpg',</span>
+<span class="cstat-no" title="statement not covered" >        price: '€44,99',</span>
+<span class="cstat-no" title="statement not covered" >        affiliateLink: 'https://www.amazon.nl/dp/B09SNYVMGB',</span>
+<span class="cstat-no" title="statement not covered" >      },</span>
+<span class="cstat-no" title="statement not covered" >    ],</span>
+<span class="cstat-no" title="statement not covered" >  },</span>
+<span class="cstat-no" title="statement not covered" >]</span>
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-10-19T13:34:34.967Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    

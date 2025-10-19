@@ -1,30 +1,27 @@
-import React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import React from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '../../lib/utils'
 
 /**
  * Skeleton component for loading states
  * Uses design tokens for consistent styling
  */
 
-const skeletonVariants = cva(
-  'animate-pulse bg-neutral-200 rounded',
-  {
-    variants: {
-      variant: {
-        text: 'h-4 bg-neutral-200',
-        title: 'h-8 bg-neutral-300',
-        avatar: 'rounded-full bg-neutral-200',
-        thumbnail: 'aspect-square bg-neutral-200',
-        rectangle: 'bg-neutral-200',
-        circle: 'rounded-full bg-neutral-200',
-      },
+const skeletonVariants = cva('animate-pulse bg-neutral-200 rounded', {
+  variants: {
+    variant: {
+      text: 'h-4 bg-neutral-200',
+      title: 'h-8 bg-neutral-300',
+      avatar: 'rounded-full bg-neutral-200',
+      thumbnail: 'aspect-square bg-neutral-200',
+      rectangle: 'bg-neutral-200',
+      circle: 'rounded-full bg-neutral-200',
     },
-    defaultVariants: {
-      variant: 'rectangle',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'rectangle',
+  },
+})
 
 export interface SkeletonProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -32,19 +29,19 @@ export interface SkeletonProps
 
 /**
  * Skeleton component
- * 
+ *
  * @example
  * // Text skeleton
  * <Skeleton variant="text" className="w-3/4" />
- * 
+ *
  * @example
  * // Title skeleton
  * <Skeleton variant="title" className="w-1/2 mb-4" />
- * 
+ *
  * @example
  * // Avatar skeleton
  * <Skeleton variant="avatar" className="w-12 h-12" />
- * 
+ *
  * @example
  * // Card skeleton
  * <Card>
@@ -64,11 +61,11 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
         role="status"
         {...props}
       />
-    );
+    )
   }
-);
+)
 
-Skeleton.displayName = 'Skeleton';
+Skeleton.displayName = 'Skeleton'
 
 /**
  * ProductCardSkeleton - Pre-built skeleton for product cards
@@ -84,7 +81,7 @@ export const ProductCardSkeleton: React.FC<{ className?: string }> = ({ classNam
       <Skeleton variant="rectangle" className="w-24 h-10 rounded-lg" />
     </div>
   </div>
-);
+)
 
 /**
  * BlogCardSkeleton - Pre-built skeleton for blog cards
@@ -106,7 +103,7 @@ export const BlogCardSkeleton: React.FC<{ className?: string }> = ({ className }
       </div>
     </div>
   </div>
-);
+)
 
 /**
  * DealCardSkeleton - Pre-built skeleton for deal cards
@@ -128,21 +125,21 @@ export const DealCardSkeleton: React.FC<{ className?: string }> = ({ className }
       <Skeleton variant="rectangle" className="w-28 h-10 rounded-lg" />
     </div>
   </div>
-);
+)
 
 /**
  * ListSkeleton - Multiple skeleton items
  */
-export const ListSkeleton: React.FC<{ 
-  count?: number; 
-  itemClassName?: string;
-  containerClassName?: string;
+export const ListSkeleton: React.FC<{
+  count?: number
+  itemClassName?: string
+  containerClassName?: string
 }> = ({ count = 3, itemClassName, containerClassName }) => (
   <div className={cn('space-y-4', containerClassName)}>
     {Array.from({ length: count }).map((_, i) => (
       <Skeleton key={i} variant="rectangle" className={cn('w-full h-20', itemClassName)} />
     ))}
   </div>
-);
+)
 
-export { Skeleton, skeletonVariants };
+export { Skeleton, skeletonVariants }

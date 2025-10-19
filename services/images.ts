@@ -6,8 +6,8 @@
 export function topicImage(query: string, w: number, h: number) {
   // Temporary fallback: use Picsum with a deterministic seed per query to avoid Unsplash outages (503).
   // Seed by query so images stay stable between builds but vary across topics.
-  const seed = encodeURIComponent(query.trim().toLowerCase().replace(/\s+/g, '-'));
-  return `https://picsum.photos/seed/${seed}/${w}/${h}`;
+  const seed = encodeURIComponent(query.trim().toLowerCase().replace(/\s+/g, '-'))
+  return `https://picsum.photos/seed/${seed}/${w}/${h}`
 }
 
 /** Commonly used topics */
@@ -34,4 +34,4 @@ export const Topics = {
   huskee: 'reusable coffee cup',
   shaving: 'shaving kit classic',
   earbuds: 'wireless earbuds',
-};
+}

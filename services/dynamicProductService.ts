@@ -1,48 +1,49 @@
-import { DealItem, DealCategory } from '../types';
-import CoolblueFeedService, { CoolblueProduct } from './coolblueFeedService';
-import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary';
-import { ShopLikeYouGiveADamnService, type SLYGADProduct } from './shopLikeYouGiveADamnService';
-import { DealCategoryConfigService, type DealCategoryConfig } from './dealCategoryConfigService';
-import { PinnedDealsService } from './pinnedDealsService';
+import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary'
+import CoolblueFeedService from './coolblueFeedService'
+import { DealCategoryConfigService, type DealCategoryConfig } from './dealCategoryConfigService'
+import { PinnedDealsService } from './pinnedDealsService'
+import { ShopLikeYouGiveADamnService, type SLYGADProduct } from './shopLikeYouGiveADamnService'
+import type { CoolblueProduct } from './coolblueFeedService'
+import type { DealItem, DealCategory } from '../types'
 
-const DEFAULT_PRODUCT_PLACEHOLDER = '/images/amazon-placeholder.png';
+const DEFAULT_PRODUCT_PLACEHOLDER = '/images/amazon-placeholder.png'
 
 /**
  * Dynamic Product Service for Gifteez
  * Loads and manages products from multiple feeds (Coolblue + Amazon + Shop Like You Give A Damn)
  */
 export class DynamicProductService {
-  private static coolblueProducts: CoolblueProduct[] = [];
-  private static amazonProducts: any[] = [];
-  private static slygadProducts: SLYGADProduct[] = [];
-  private static lastUpdated: Date | null = null;
-  private static isLoading = false;
-  private static loadingPromise: Promise<void> | null = null;
+  private static coolblueProducts: CoolblueProduct[] = []
+  private static amazonProducts: any[] = []
+  private static slygadProducts: SLYGADProduct[] = []
+  private static lastUpdated: Date | null = null
+  private static isLoading = false
+  private static loadingPromise: Promise<void> | null = null
 
   /**
    * Load products from multiple sources
    */
   static async loadProducts(): Promise<void> {
     if (this.loadingPromise) {
-      await this.loadingPromise;
-      return;
+      await this.loadingPromise
+      return
     }
 
     this.loadingPromise = (async () => {
-      this.isLoading = true;
+      this.isLoading = true
 
       try {
-        console.log('📦 Loading products from multiple sources...');
+        console.log('📦 Loading products from multiple sources...')
 
         // Check if we need to force refresh (e.g., after deployment)
-        const CACHE_VERSION = '2025-10-18-v3'; // Update this after each deployment
-        const lastCacheVersion = localStorage.getItem('gifteez_cache_version');
+        const CACHE_VERSION = '2025-10-18-v3' // Update this after each deployment
+        const lastCacheVersion = localStorage.getItem('gifteez_cache_version')
 
         if (lastCacheVersion !== CACHE_VERSION) {
-          console.log('🔄 New deployment detected (v3), clearing ALL caches...');
-          this.clearCache();
-          CoolblueFeedService.clearCache();
-          DealCategoryConfigService.clearCache();
+          console.log('🔄 New deployment detected (v3), clearing ALL caches...')
+          this.clearCache()
+          CoolblueFeedService.clearCache()
+          DealCategoryConfigService.clearCache()
 
           // Clear all category-related localStorage keys
           const keysToRemove = [
@@ -50,117 +51,122 @@ export class DynamicProductService {
             'gifteez_deal_categories_cache',
             'coolblue_feed_cache',
             'gifteez_coolblue_feed_v1',
-          ];
+          ]
           keysToRemove.forEach((key) => {
             try {
-              localStorage.removeItem(key);
-              console.log(`🗑️  Cleared: ${key}`);
+              localStorage.removeItem(key)
+              console.log(`🗑️  Cleared: ${key}`)
             } catch (e) {
-              console.warn(`Could not clear ${key}:`, e);
+              console.warn(`Could not clear ${key}:`, e)
             }
-          });
+          })
 
-          localStorage.setItem('gifteez_cache_version', CACHE_VERSION);
-          console.log('✅ All caches cleared for v3 deployment');
+          localStorage.setItem('gifteez_cache_version', CACHE_VERSION)
+          console.log('✅ All caches cleared for v3 deployment')
         }
 
         // Load Coolblue products (managed feed)
         try {
-          const coolblueData = await CoolblueFeedService.loadProducts();
-          this.coolblueProducts = coolblueData;
-          console.log(`🔵 Loaded ${this.coolblueProducts.length} Coolblue products via feed service`);
+          const coolblueData = await CoolblueFeedService.loadProducts()
+          this.coolblueProducts = coolblueData
+          console.log(
+            `🔵 Loaded ${this.coolblueProducts.length} Coolblue products via feed service`
+          )
         } catch (error) {
-          console.warn('⚠️  Could not load Coolblue products:', error);
-          this.coolblueProducts = [];
+          console.warn('⚠️  Could not load Coolblue products:', error)
+          this.coolblueProducts = []
         }
 
         // Load Amazon products (manual feed)
         try {
-          const amazonData = await AmazonProductLibrary.loadProducts();
+          const amazonData = await AmazonProductLibrary.loadProducts()
           this.amazonProducts = amazonData.map((product: AmazonProduct) => ({
             ...product,
             id: product.id ?? product.asin,
             image: product.image ?? product.imageLarge,
             imageUrl: product.imageLarge ?? product.image,
             shortDescription: product.shortDescription ?? product.description,
-          }));
-          console.log(`🟠 Loaded ${this.amazonProducts.length} Amazon products`);
+          }))
+          console.log(`🟠 Loaded ${this.amazonProducts.length} Amazon products`)
         } catch (error) {
-          console.warn('⚠️  Could not load Amazon products:', error);
-          this.amazonProducts = [];
+          console.warn('⚠️  Could not load Amazon products:', error)
+          this.amazonProducts = []
         }
 
         // Load Shop Like You Give A Damn products (sustainable/vegan)
         try {
-          const slygadData = await ShopLikeYouGiveADamnService.loadProducts();
-          this.slygadProducts = slygadData;
-          console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`);
+          const slygadData = await ShopLikeYouGiveADamnService.loadProducts()
+          this.slygadProducts = slygadData
+          console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`)
         } catch (error) {
-          console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error);
-          this.slygadProducts = [];
+          console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error)
+          this.slygadProducts = []
         }
 
-        this.lastUpdated = new Date();
+        this.lastUpdated = new Date()
 
-        const totalProducts = this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length;
-        console.log(`📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD)`);
+        const totalProducts =
+          this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length
+        console.log(
+          `📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD)`
+        )
 
         try {
-          await PinnedDealsService.load();
+          await PinnedDealsService.load()
         } catch (error) {
-          console.warn('⚠️  Kon vastgezette deals niet synchroniseren tijdens laden:', error);
+          console.warn('⚠️  Kon vastgezette deals niet synchroniseren tijdens laden:', error)
         }
       } catch (error) {
-        console.warn('⚠️  Error loading products:', error);
+        console.warn('⚠️  Error loading products:', error)
 
         // Load fallback data
         try {
-          const { default: sampleData } = await import('../data/sampleProducts.json');
-          this.coolblueProducts = sampleData;
-          this.amazonProducts = [];
-          this.lastUpdated = new Date();
-          console.log(`📦 Loaded ${this.coolblueProducts.length} products from fallback data`);
+          const { default: sampleData } = await import('../data/sampleProducts.json')
+          this.coolblueProducts = sampleData
+          this.amazonProducts = []
+          this.lastUpdated = new Date()
+          console.log(`📦 Loaded ${this.coolblueProducts.length} products from fallback data`)
         } catch (importError) {
-          console.error('❌ Failed to load any product data:', importError);
-          this.coolblueProducts = [];
-          this.amazonProducts = [];
+          console.error('❌ Failed to load any product data:', importError)
+          this.coolblueProducts = []
+          this.amazonProducts = []
         }
       } finally {
-        this.isLoading = false;
-        this.loadingPromise = null;
+        this.isLoading = false
+        this.loadingPromise = null
       }
-    })();
+    })()
 
-    await this.loadingPromise;
+    await this.loadingPromise
   }
 
   /**
    * Clear all cached products and force reload
    */
   static clearCache(): void {
-    this.coolblueProducts = [];
-    this.amazonProducts = [];
-    this.slygadProducts = [];
-    this.lastUpdated = null;
-    this.isLoading = false;
-    this.loadingPromise = null;
-    PinnedDealsService.clearCache();
-    ShopLikeYouGiveADamnService.clearCache();
-    console.log('🗑️  DynamicProductService cache cleared');
+    this.coolblueProducts = []
+    this.amazonProducts = []
+    this.slygadProducts = []
+    this.lastUpdated = null
+    this.isLoading = false
+    this.loadingPromise = null
+    PinnedDealsService.clearCache()
+    ShopLikeYouGiveADamnService.clearCache()
+    console.log('🗑️  DynamicProductService cache cleared')
   }
 
   /**
    * Get all products from both sources (public method)
    */
   static getProducts(): any[] {
-    return this.getAllProducts();
+    return this.getAllProducts()
   }
 
   /**
    * Get all products from both sources (internal method)
    */
   private static getAllProducts(): any[] {
-    return [...this.coolblueProducts, ...this.amazonProducts, ...this.slygadProducts];
+    return [...this.coolblueProducts, ...this.amazonProducts, ...this.slygadProducts]
   }
 
   /**
@@ -169,14 +175,14 @@ export class DynamicProductService {
   static getProductsBySource(source: 'coolblue' | 'amazon' | 'slygad' | 'all' = 'all'): any[] {
     switch (source) {
       case 'coolblue':
-        return this.coolblueProducts;
+        return this.coolblueProducts
       case 'amazon':
-        return this.amazonProducts;
+        return this.amazonProducts
       case 'slygad':
-        return this.slygadProducts;
+        return this.slygadProducts
       case 'all':
       default:
-        return this.getAllProducts();
+        return this.getAllProducts()
     }
   }
 
@@ -190,18 +196,15 @@ export class DynamicProductService {
     // 3. First entry in product.images array
     // 4. Derived transformation if we detect a Coolblue Bynder base id
     // 5. Local placeholder
-  const placeholder = DEFAULT_PRODUCT_PLACEHOLDER; // Re‑use existing generic placeholder
-    const imagesArray: string[] = Array.isArray(product.images) ? product.images : [];
+    const placeholder = DEFAULT_PRODUCT_PLACEHOLDER // Re‑use existing generic placeholder
+    const imagesArray: string[] = Array.isArray(product.images) ? product.images : []
 
-    let chosenImage: string | undefined = (
-      product.image ||
-      product.imageUrl ||
-      imagesArray.find((src: string) => !!src)
-    );
+    let chosenImage: string | undefined =
+      product.image || product.imageUrl || imagesArray.find((src: string) => !!src)
 
     // Basic sanitation: ensure it's a non-empty string and looks like a URL
     if (typeof chosenImage !== 'string' || chosenImage.trim().length === 0) {
-      chosenImage = undefined;
+      chosenImage = undefined
     }
 
     // If it's a Coolblue Bynder transform URL but very large, optionally normalize to a reasonable size
@@ -209,14 +212,18 @@ export class DynamicProductService {
     // We could downscale to e.g. 600px for performance, but we'll keep original to avoid extra variants.
 
     if (!chosenImage) {
-      chosenImage = placeholder;
+      chosenImage = placeholder
     }
 
     // Guard for malformed price values
-    const priceNumber = typeof product.price === 'number' && !isNaN(product.price) ? product.price : 0;
+    const priceNumber =
+      typeof product.price === 'number' && !isNaN(product.price) ? product.price : 0
 
-    const description = product.shortDescription
-      || (typeof product.description === 'string' ? (product.description.substring(0, 140) + (product.description.length > 140 ? '…' : '')) : '');
+    const description =
+      product.shortDescription ||
+      (typeof product.description === 'string'
+        ? product.description.substring(0, 140) + (product.description.length > 140 ? '…' : '')
+        : '')
 
     return {
       id: String(product.id),
@@ -225,41 +232,44 @@ export class DynamicProductService {
       imageUrl: chosenImage,
       price: `€${priceNumber.toFixed(2)}`,
       affiliateLink: product.affiliateLink,
-      originalPrice: typeof product.originalPrice === 'number' ? `€${product.originalPrice.toFixed(2)}` : undefined,
+      originalPrice:
+        typeof product.originalPrice === 'number'
+          ? `€${product.originalPrice.toFixed(2)}`
+          : undefined,
       isOnSale: !!product.isOnSale,
       tags: product.tags,
-      giftScore: product.giftScore
-    };
+      giftScore: product.giftScore,
+    }
   }
 
   private static getPinnedDeals(limit: number = 4): DealItem[] {
     if (limit <= 0) {
-      return [];
+      return []
     }
 
-    const entries = PinnedDealsService.getCachedPinnedDeals();
+    const entries = PinnedDealsService.getCachedPinnedDeals()
     if (!entries.length) {
-      return [];
+      return []
     }
 
-    const uniqueDeals: DealItem[] = [];
-    const seen = new Set<string>();
+    const uniqueDeals: DealItem[] = []
+    const seen = new Set<string>()
 
     for (const entry of entries) {
-      const deal = entry?.deal;
+      const deal = entry?.deal
       if (!deal?.id || seen.has(deal.id)) {
-        continue;
+        continue
       }
 
-      uniqueDeals.push(deal);
-      seen.add(deal.id);
+      uniqueDeals.push(deal)
+      seen.add(deal.id)
 
       if (uniqueDeals.length >= limit) {
-        break;
+        break
       }
     }
 
-    return uniqueDeals;
+    return uniqueDeals
   }
 
   /**
@@ -267,83 +277,83 @@ export class DynamicProductService {
    * This only considers Coolblue products and excludes already used ids.
    */
   static getAdditionalCoolblueDeals(excludeIds: string[], limit: number): DealItem[] {
-    if (limit <= 0) return [];
+    if (limit <= 0) return []
     // We assume products are already loaded if another public getter was called, but ensure anyway.
     // (No await here to keep sync usage after initial awaited calls.)
-    const exclude = new Set(excludeIds);
+    const exclude = new Set(excludeIds)
     const candidates = this.coolblueProducts
-      .filter(p => !exclude.has(p.id))
+      .filter((p) => !exclude.has(p.id))
       // Basic sanity checks
-      .filter(p => typeof p.price === 'number' && p.price > 0)
+      .filter((p) => typeof p.price === 'number' && p.price > 0)
       // Prefer higher giftScore, then items on sale, then lower price for value
       .sort((a, b) => {
-        if (a.isOnSale !== b.isOnSale) return a.isOnSale ? -1 : 1;
-        if (b.giftScore !== a.giftScore) return (b.giftScore || 0) - (a.giftScore || 0);
-        return a.price - b.price;
+        if (a.isOnSale !== b.isOnSale) return a.isOnSale ? -1 : 1
+        if (b.giftScore !== a.giftScore) return (b.giftScore || 0) - (a.giftScore || 0)
+        return a.price - b.price
       })
-      .slice(0, limit);
+      .slice(0, limit)
 
-    return candidates.map(p => this.convertToDealItem(p));
+    return candidates.map((p) => this.convertToDealItem(p))
   }
 
   /**
    * Get deal of the week (highest scoring premium product from both sources)
    */
   static async getDealOfTheWeek(): Promise<DealItem> {
-    await this.loadProducts();
-    
-    const allProducts = this.getAllProducts();
-    
+    await this.loadProducts()
+
+    const allProducts = this.getAllProducts()
+
     if (allProducts.length === 0) {
-      return this.getFallbackDealOfTheWeek();
+      return this.getFallbackDealOfTheWeek()
     }
 
     // Find the best premium deal (price 150-500, highest gift score)
     const premiumDeals = allProducts
-      .filter(p => p.price >= 150 && p.price <= 500)
-      .filter(p => p.giftScore >= 8)
+      .filter((p) => p.price >= 150 && p.price <= 500)
+      .filter((p) => p.giftScore >= 8)
       .sort((a, b) => {
         // Sort by gift score first, then by popularity indicators
         if (b.giftScore !== a.giftScore) {
-          return b.giftScore - a.giftScore;
+          return b.giftScore - a.giftScore
         }
         // If gift scores are equal, prefer products on sale
         if (a.isOnSale !== b.isOnSale) {
-          return a.isOnSale ? -1 : 1;
+          return a.isOnSale ? -1 : 1
         }
-        return 0;
-      });
+        return 0
+      })
 
     if (premiumDeals.length > 0) {
-      return this.convertToDealItem(premiumDeals[0]);
+      return this.convertToDealItem(premiumDeals[0])
     }
 
     // Fallback to any high-scoring product
     const topDeals = allProducts
-      .filter(p => p.giftScore >= 7)
-      .sort((a, b) => b.giftScore - a.giftScore);
+      .filter((p) => p.giftScore >= 7)
+      .sort((a, b) => b.giftScore - a.giftScore)
 
     if (topDeals.length > 0) {
-      return this.convertToDealItem(topDeals[0]);
+      return this.convertToDealItem(topDeals[0])
     }
 
-    return this.getFallbackDealOfTheWeek();
+    return this.getFallbackDealOfTheWeek()
   }
 
   /**
    * Get top 10 deals across all categories
    */
   static async getTop10Deals(): Promise<DealItem[]> {
-    await this.loadProducts();
+    await this.loadProducts()
 
-    const allProducts = this.getAllProducts();
+    const allProducts = this.getAllProducts()
 
     if (!allProducts.length) {
-      return this.getFallbackTop10Deals();
+      return this.getFallbackTop10Deals()
     }
 
-    const MAX_TOTAL = 10;
-    const DEFAULT_GROUP_LIMIT = 2;
+    const MAX_TOTAL = 10
+    const DEFAULT_GROUP_LIMIT = 2
     const GROUP_LIMITS: Record<string, number> = {
       tech: 3,
       smartHome: 2,
@@ -354,15 +364,15 @@ export class DynamicProductService {
       outdoor: 2,
       beauty: 2,
       wellness: 2,
-      general: 4
-    };
+      general: 4,
+    }
     const DOMAIN_LIMITS: Record<string, number | null> = {
       coolblue: 6,
       amazon: 5,
       bol: 3,
       other: 3,
-      default: 6
-    };
+      default: 6,
+    }
     const BUCKET_TARGETS: Record<string, number> = {
       tech: 2,
       smartHome: 1,
@@ -372,21 +382,145 @@ export class DynamicProductService {
       kids: 1,
       outdoor: 1,
       beauty: 1,
-      wellness: 1
-    };
-    const BUCKET_PRIORITY = ['tech', 'smartHome', 'kitchen', 'lifestyle', 'gaming', 'kids', 'beauty', 'wellness', 'outdoor', 'general'];
+      wellness: 1,
+    }
+    const BUCKET_PRIORITY = [
+      'tech',
+      'smartHome',
+      'kitchen',
+      'lifestyle',
+      'gaming',
+      'kids',
+      'beauty',
+      'wellness',
+      'outdoor',
+      'general',
+    ]
 
     const keywordMatchers: Array<{ id: string; keywords: string[] }> = [
-      { id: 'kids', keywords: ['kids', 'kind', 'kinder', 'speelgoed', 'lego', 'puzzel', 'familie', 'baby'] },
-      { id: 'gaming', keywords: ['gaming', 'game', 'switch', 'playstation', 'xbox', 'nintendo', 'console', 'pc gaming', 'vr'] },
-      { id: 'kitchen', keywords: ['keuken', 'kitchen', 'coffee', 'koffie', 'espresso', 'airfryer', 'keukenmachine', 'blender', 'oven', 'bak', 'barista', 'pan', 'vaatwasser'] },
-      { id: 'smartHome', keywords: ['smart home', 'slimme lamp', 'hue', 'philips hue', 'thermostaat', 'ring', 'security', 'sensor', 'rookmelder', 'videodeurbel', 'robotstofzuiger'] },
-      { id: 'lifestyle', keywords: ['fitness', 'sport', 'wellness', 'gezondheid', 'health', 'mindfulness', 'relax', 'yoga', 'energie', 'sleep', 'wearable', 'smartwatch'] },
-      { id: 'beauty', keywords: ['beauty', 'verzorging', 'haar', 'hair', 'skin', 'skincare', 'gezicht', 'parfum', 'makeup', 'make-up', 'schoonheid'] },
-      { id: 'outdoor', keywords: ['outdoor', 'bbq', 'barbecue', 'camping', 'tuin', 'garden', 'wandelen', 'hiken', 'travel', 'reis', 'fiets', 'bike'] },
-      { id: 'tech', keywords: ['audio', 'speaker', 'koptelefoon', 'headset', 'bluetooth', 'soundbar', 'laptop', 'tablet', 'camera', 'wearable', 'earbuds', 'monitor', 'smartphone', 'tech'] },
+      {
+        id: 'kids',
+        keywords: ['kids', 'kind', 'kinder', 'speelgoed', 'lego', 'puzzel', 'familie', 'baby'],
+      },
+      {
+        id: 'gaming',
+        keywords: [
+          'gaming',
+          'game',
+          'switch',
+          'playstation',
+          'xbox',
+          'nintendo',
+          'console',
+          'pc gaming',
+          'vr',
+        ],
+      },
+      {
+        id: 'kitchen',
+        keywords: [
+          'keuken',
+          'kitchen',
+          'coffee',
+          'koffie',
+          'espresso',
+          'airfryer',
+          'keukenmachine',
+          'blender',
+          'oven',
+          'bak',
+          'barista',
+          'pan',
+          'vaatwasser',
+        ],
+      },
+      {
+        id: 'smartHome',
+        keywords: [
+          'smart home',
+          'slimme lamp',
+          'hue',
+          'philips hue',
+          'thermostaat',
+          'ring',
+          'security',
+          'sensor',
+          'rookmelder',
+          'videodeurbel',
+          'robotstofzuiger',
+        ],
+      },
+      {
+        id: 'lifestyle',
+        keywords: [
+          'fitness',
+          'sport',
+          'wellness',
+          'gezondheid',
+          'health',
+          'mindfulness',
+          'relax',
+          'yoga',
+          'energie',
+          'sleep',
+          'wearable',
+          'smartwatch',
+        ],
+      },
+      {
+        id: 'beauty',
+        keywords: [
+          'beauty',
+          'verzorging',
+          'haar',
+          'hair',
+          'skin',
+          'skincare',
+          'gezicht',
+          'parfum',
+          'makeup',
+          'make-up',
+          'schoonheid',
+        ],
+      },
+      {
+        id: 'outdoor',
+        keywords: [
+          'outdoor',
+          'bbq',
+          'barbecue',
+          'camping',
+          'tuin',
+          'garden',
+          'wandelen',
+          'hiken',
+          'travel',
+          'reis',
+          'fiets',
+          'bike',
+        ],
+      },
+      {
+        id: 'tech',
+        keywords: [
+          'audio',
+          'speaker',
+          'koptelefoon',
+          'headset',
+          'bluetooth',
+          'soundbar',
+          'laptop',
+          'tablet',
+          'camera',
+          'wearable',
+          'earbuds',
+          'monitor',
+          'smartphone',
+          'tech',
+        ],
+      },
       { id: 'wellness', keywords: ['massage', 'theragun', 'spa', 'wellness', 'relax'] },
-    ];
+    ]
 
     const normaliseText = (product: any): string => {
       const parts = [
@@ -394,71 +528,75 @@ export class DynamicProductService {
         product.category,
         product.description,
         product.shortDescription,
-        Array.isArray(product.tags) ? product.tags.join(' ') : ''
+        Array.isArray(product.tags) ? product.tags.join(' ') : '',
       ]
         .filter(Boolean)
-        .map((value: string) => value.toString().toLowerCase());
+        .map((value: string) => value.toString().toLowerCase())
 
-      return parts.join(' ');
-    };
+      return parts.join(' ')
+    }
 
     const detectBucket = (product: any): string => {
-      const text = normaliseText(product);
+      const text = normaliseText(product)
       for (const matcher of keywordMatchers) {
         if (matcher.keywords.some((keyword) => text.includes(keyword))) {
-          return matcher.id;
+          return matcher.id
         }
       }
-      return 'general';
-    };
+      return 'general'
+    }
 
     const detectDomain = (link: unknown): string => {
       if (typeof link !== 'string') {
-        return 'other';
+        return 'other'
       }
-      const value = link.toLowerCase();
+      const value = link.toLowerCase()
       if (value.includes('amazon.')) {
-        return 'amazon';
+        return 'amazon'
       }
       if (value.includes('coolblue.')) {
-        return 'coolblue';
+        return 'coolblue'
       }
       if (value.includes('bol.')) {
-        return 'bol';
+        return 'bol'
       }
-      return 'other';
-    };
+      return 'other'
+    }
 
     const computeScore = (product: any): number => {
-      const giftScore = typeof product.giftScore === 'number' ? product.giftScore : 0;
-      const ratingScore = typeof product.rating === 'number' ? Math.min(3, (product.rating / 5) * 3) : 0;
-      const reviewBoost = typeof product.reviewCount === 'number' ? Math.min(1.5, Math.log10(product.reviewCount + 1)) : 0;
-      const saleBoost = product.isOnSale ? 1.5 : 0;
-      return giftScore + ratingScore + reviewBoost + saleBoost;
-    };
+      const giftScore = typeof product.giftScore === 'number' ? product.giftScore : 0
+      const ratingScore =
+        typeof product.rating === 'number' ? Math.min(3, (product.rating / 5) * 3) : 0
+      const reviewBoost =
+        typeof product.reviewCount === 'number'
+          ? Math.min(1.5, Math.log10(product.reviewCount + 1))
+          : 0
+      const saleBoost = product.isOnSale ? 1.5 : 0
+      return giftScore + ratingScore + reviewBoost + saleBoost
+    }
 
     type ProductMeta = {
-      product: any;
-      bucket: string;
-      domain: string;
-      score: number;
-      price: number;
-      isOnSale: boolean;
-    };
+      product: any
+      bucket: string
+      domain: string
+      score: number
+      price: number
+      isOnSale: boolean
+    }
 
     const parsePrice = (value: unknown): number => {
       if (typeof value === 'number' && Number.isFinite(value)) {
-        return value;
+        return value
       }
       if (typeof value === 'string') {
-        const normalised = value.replace(/[^0-9.,]/g, '').replace(',', '.');
-        const parsed = Number.parseFloat(normalised);
+        const normalised = value.replace(/[^0-9.,]/g, '').replace(',', '.')
+        const parsed = Number.parseFloat(normalised)
         if (Number.isFinite(parsed)) {
-          return parsed;
+          return parsed
         }
       }
-      return 0;
-    };
+      return 0
+    }
 
     const productMetas: ProductMeta[] = allProducts.map((product: any) => ({
       product,
@@ -466,110 +604,113 @@ export class DynamicProductService {
       domain: detectDomain(product.affiliateLink),
       score: computeScore(product),
       price: parsePrice(product.price),
-      isOnSale: Boolean(product.isOnSale)
-    }));
+      isOnSale: Boolean(product.isOnSale),
+    }))
 
-    const metasByBucket = new Map<string, ProductMeta[]>();
+    const metasByBucket = new Map<string, ProductMeta[]>()
     for (const meta of productMetas) {
-      const list = metasByBucket.get(meta.bucket) ?? [];
-      list.push(meta);
-      metasByBucket.set(meta.bucket, list);
+      const list = metasByBucket.get(meta.bucket) ?? []
+      list.push(meta)
+      metasByBucket.set(meta.bucket, list)
     }
 
     for (const list of metasByBucket.values()) {
       list.sort((a, b) => {
         if (a.isOnSale !== b.isOnSale) {
-          return a.isOnSale ? -1 : 1;
+          return a.isOnSale ? -1 : 1
         }
         if (b.score !== a.score) {
-          return b.score - a.score;
+          return b.score - a.score
         }
-        return a.price - b.price;
-      });
+        return a.price - b.price
+      })
     }
 
-    const selected: Array<ProductMeta & { locked?: boolean }> = [];
-    const usedIds = new Set<string>();
-    const bucketCounts = new Map<string, number>();
-    const domainCounts = new Map<string, number>();
+    const selected: Array<ProductMeta & { locked?: boolean }> = []
+    const usedIds = new Set<string>()
+    const bucketCounts = new Map<string, number>()
+    const domainCounts = new Map<string, number>()
 
     const increment = (map: Map<string, number>, key: string) => {
-      map.set(key, (map.get(key) ?? 0) + 1);
-    };
+      map.set(key, (map.get(key) ?? 0) + 1)
+    }
 
     const decrement = (map: Map<string, number>, key: string) => {
-      const next = (map.get(key) ?? 0) - 1;
+      const next = (map.get(key) ?? 0) - 1
       if (next <= 0) {
-        map.delete(key);
+        map.delete(key)
       } else {
-        map.set(key, next);
+        map.set(key, next)
       }
-    };
+    }
 
-    const addMeta = (meta: ProductMeta, options: { lock?: boolean; force?: boolean } = {}): boolean => {
+    const addMeta = (
+      meta: ProductMeta,
+      options: { lock?: boolean; force?: boolean } = {}
+    ): boolean => {
       if (selected.length >= MAX_TOTAL) {
-        return false;
+        return false
       }
 
-      const id = meta?.product?.id != null ? String(meta.product.id) : '';
+      const id = meta?.product?.id != null ? String(meta.product.id) : ''
       if (!id || usedIds.has(id)) {
-        return false;
+        return false
       }
 
-      const bucketLimit = GROUP_LIMITS[meta.bucket] ?? DEFAULT_GROUP_LIMIT;
-      const domainLimit = DOMAIN_LIMITS[meta.domain] ?? DOMAIN_LIMITS.default;
+      const bucketLimit = GROUP_LIMITS[meta.bucket] ?? DEFAULT_GROUP_LIMIT
+      const domainLimit = DOMAIN_LIMITS[meta.domain] ?? DOMAIN_LIMITS.default
 
       if (!options.force) {
         if (bucketLimit !== null && (bucketCounts.get(meta.bucket) ?? 0) >= bucketLimit) {
-          return false;
+          return false
         }
         if (domainLimit !== null && (domainCounts.get(meta.domain) ?? 0) >= domainLimit) {
-          return false;
+          return false
         }
       }
 
-      selected.push({ ...meta, locked: options.lock ?? false });
-      usedIds.add(id);
-      increment(bucketCounts, meta.bucket);
-      increment(domainCounts, meta.domain);
-      return true;
-    };
+      selected.push({ ...meta, locked: options.lock ?? false })
+      usedIds.add(id)
+      increment(bucketCounts, meta.bucket)
+      increment(domainCounts, meta.domain)
+      return true
+    }
 
     const removeMetaAt = (index: number): void => {
       if (index < 0 || index >= selected.length) {
-        return;
+        return
       }
-      const removed = selected.splice(index, 1)[0];
+      const removed = selected.splice(index, 1)[0]
       if (!removed) {
-        return;
+        return
       }
-      const id = removed?.product?.id != null ? String(removed.product.id) : '';
+      const id = removed?.product?.id != null ? String(removed.product.id) : ''
       if (id) {
-        usedIds.delete(id);
+        usedIds.delete(id)
       }
-      decrement(bucketCounts, removed.bucket);
-      decrement(domainCounts, removed.domain);
-    };
+      decrement(bucketCounts, removed.bucket)
+      decrement(domainCounts, removed.domain)
+    }
 
     for (const bucket of BUCKET_PRIORITY) {
       if (selected.length >= MAX_TOTAL) {
-        break;
+        break
       }
-      const target = BUCKET_TARGETS[bucket] ?? 0;
+      const target = BUCKET_TARGETS[bucket] ?? 0
       if (!target) {
-        continue;
+        continue
       }
-      const list = metasByBucket.get(bucket);
+      const list = metasByBucket.get(bucket)
       if (!list?.length) {
-        continue;
+        continue
       }
-      let added = 0;
+      let added = 0
       for (const meta of list) {
         if (addMeta(meta, { lock: added === 0 })) {
-          added += 1;
+          added += 1
         }
         if (selected.length >= MAX_TOTAL || added >= target) {
-          break;
+          break
         }
       }
     }
@@ -578,21 +719,21 @@ export class DynamicProductService {
       const remainingMetas = productMetas
         .filter((meta) => !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : ''))
         .sort((a, b) => {
-          const domainWeightA = a.domain === 'amazon' ? 1 : 0;
-          const domainWeightB = b.domain === 'amazon' ? 1 : 0;
+          const domainWeightA = a.domain === 'amazon' ? 1 : 0
+          const domainWeightB = b.domain === 'amazon' ? 1 : 0
           if (domainWeightA !== domainWeightB) {
-            return domainWeightB - domainWeightA;
+            return domainWeightB - domainWeightA
           }
           if (b.score !== a.score) {
-            return b.score - a.score;
+            return b.score - a.score
           }
-          return a.price - b.price;
-        });
+          return a.price - b.price
+        })
 
       for (const meta of remainingMetas) {
         if (addMeta(meta)) {
           if (selected.length >= MAX_TOTAL) {
-            break;
+            break
           }
         }
       }
@@ -601,254 +742,265 @@ export class DynamicProductService {
     if (selected.length < MAX_TOTAL) {
       const fallbackMetas = productMetas
         .filter((meta) => !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : ''))
-        .sort((a, b) => b.score - a.score);
+        .sort((a, b) => b.score - a.score)
       for (const meta of fallbackMetas) {
         if (addMeta(meta, { force: true })) {
           if (selected.length >= MAX_TOTAL) {
-            break;
+            break
           }
         }
       }
     }
 
-    const minAmazon = Math.min(3, this.amazonProducts.length);
-    const amazonCount = selected.filter((meta) => meta.domain === 'amazon').length;
+    const minAmazon = Math.min(3, this.amazonProducts.length)
+    const amazonCount = selected.filter((meta) => meta.domain === 'amazon').length
 
     if (amazonCount < minAmazon) {
-      const needed = minAmazon - amazonCount;
+      const needed = minAmazon - amazonCount
       const amazonCandidates = productMetas
-        .filter((meta) => meta.domain === 'amazon' && !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : ''))
-        .sort((a, b) => b.score - a.score);
+        .filter(
+          (meta) =>
+            meta.domain === 'amazon' &&
+            !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : '')
+        )
+        .sort((a, b) => b.score - a.score)
 
       for (let i = 0; i < needed && i < amazonCandidates.length; i += 1) {
         const replaceable = selected
           .map((meta, index) => ({ meta, index }))
           .filter(({ meta }) => meta.domain !== 'amazon' && !meta.locked)
-          .sort((a, b) => a.meta.score - b.meta.score);
+          .sort((a, b) => a.meta.score - b.meta.score)
 
         if (!replaceable.length) {
-          break;
+          break
         }
 
-        removeMetaAt(replaceable[0].index);
-        addMeta(amazonCandidates[i], { force: true });
+        removeMetaAt(replaceable[0].index)
+        addMeta(amazonCandidates[i], { force: true })
       }
     }
 
     if (!selected.length) {
-      return this.getFallbackTop10Deals();
+      return this.getFallbackTop10Deals()
     }
 
     const finalDeals = selected
       .sort((a, b) => {
         if (a.domain !== b.domain) {
-          if (a.domain === 'amazon') return -1;
-          if (b.domain === 'amazon') return 1;
+          if (a.domain === 'amazon') return -1
+          if (b.domain === 'amazon') return 1
         }
         if (b.score !== a.score) {
-          return b.score - a.score;
+          return b.score - a.score
         }
         if (a.isOnSale !== b.isOnSale) {
-          return a.isOnSale ? -1 : 1;
+          return a.isOnSale ? -1 : 1
         }
-        return a.price - b.price;
+        return a.price - b.price
       })
       .slice(0, MAX_TOTAL)
-      .map((meta) => this.convertToDealItem(meta.product));
+      .map((meta) => this.convertToDealItem(meta.product))
 
     if (finalDeals.length < MAX_TOTAL) {
-      const fallback = this.getFallbackTop10Deals();
-      const seen = new Set(finalDeals.map((deal) => deal.id));
+      const fallback = this.getFallbackTop10Deals()
+      const seen = new Set(finalDeals.map((deal) => deal.id))
       for (const item of fallback) {
         if (finalDeals.length >= MAX_TOTAL) {
-          break;
+          break
         }
         if (seen.has(item.id)) {
-          continue;
+          continue
         }
-        finalDeals.push(item);
-        seen.add(item.id);
+        finalDeals.push(item)
+        seen.add(item.id)
       }
     }
 
-    return finalDeals;
+    return finalDeals
   }
 
   /**
    * Get categorized deals
    */
   static async getDealCategories(): Promise<DealCategory[]> {
-    await this.loadProducts();
+    await this.loadProducts()
 
-    let manualConfig: DealCategoryConfig | null = null;
+    let manualConfig: DealCategoryConfig | null = null
     try {
-      manualConfig = await DealCategoryConfigService.load();
+      manualConfig = await DealCategoryConfigService.load()
     } catch (error) {
-      console.warn('Kon handmatige categoriebesturing niet laden:', error);
+      console.warn('Kon handmatige categoriebesturing niet laden:', error)
     }
 
     // Build smart categories as fallback (no caching to ensure fresh data)
-    const getFallback = () => this.buildSmartCategories();
+    const getFallback = () => this.buildSmartCategories()
 
     if (manualConfig?.categories?.length) {
-      const manualCategories = this.buildCategoriesFromConfig(manualConfig, getFallback);
+      const manualCategories = this.buildCategoriesFromConfig(manualConfig, getFallback)
       if (manualCategories.length) {
-        return manualCategories;
+        return manualCategories
       }
     }
 
-    return getFallback();
+    return getFallback()
   }
 
   /**
    * Search products by keyword
    */
   static async searchProducts(query: string, limit: number = 20): Promise<DealItem[]> {
-    await this.loadProducts();
-    
+    await this.loadProducts()
+
     if (this.getAllProducts().length === 0 || !query.trim()) {
-      return [];
+      return []
     }
 
-    const searchTerm = query.toLowerCase().trim();
-    
+    const searchTerm = query.toLowerCase().trim()
+
     const results = this.getAllProducts()
-      .filter(p => {
-        const text = `${p.name} ${p.description} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase();
-        return text.includes(searchTerm);
+      .filter((p) => {
+        const text =
+          `${p.name} ${p.description} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase()
+        return text.includes(searchTerm)
       })
-      .filter(p => p.giftScore >= 5)
+      .filter((p) => p.giftScore >= 5)
       .sort((a, b) => {
         // Prioritize name matches
-        const aNameMatch = a.name.toLowerCase().includes(searchTerm);
-        const bNameMatch = b.name.toLowerCase().includes(searchTerm);
-        
-        if (aNameMatch !== bNameMatch) {
-          return aNameMatch ? -1 : 1;
-        }
-        
-        return b.giftScore - a.giftScore;
-      })
-      .slice(0, limit);
+        const aNameMatch = a.name.toLowerCase().includes(searchTerm)
+        const bNameMatch = b.name.toLowerCase().includes(searchTerm)
 
-    return results.map(p => this.convertToDealItem(p));
+        if (aNameMatch !== bNameMatch) {
+          return aNameMatch ? -1 : 1
+        }
+
+        return b.giftScore - a.giftScore
+      })
+      .slice(0, limit)
+
+    return results.map((p) => this.convertToDealItem(p))
   }
 
   /**
    * Get products by price range
    */
-  static async getProductsByPriceRange(minPrice: number, maxPrice: number, limit: number = 20): Promise<DealItem[]> {
-    await this.loadProducts();
-    
+  static async getProductsByPriceRange(
+    minPrice: number,
+    maxPrice: number,
+    limit: number = 20
+  ): Promise<DealItem[]> {
+    await this.loadProducts()
+
     if (this.getAllProducts().length === 0) {
-      return [];
+      return []
     }
 
     const results = this.getAllProducts()
-      .filter(p => p.price >= minPrice && p.price <= maxPrice)
-      .filter(p => p.giftScore >= 6)
+      .filter((p) => p.price >= minPrice && p.price <= maxPrice)
+      .filter((p) => p.giftScore >= 6)
       .sort((a, b) => {
         // Prefer products on sale
         if (a.isOnSale !== b.isOnSale) {
-          return a.isOnSale ? -1 : 1;
+          return a.isOnSale ? -1 : 1
         }
-        return b.giftScore - a.giftScore;
+        return b.giftScore - a.giftScore
       })
-      .slice(0, limit);
+      .slice(0, limit)
 
-    return results.map(p => this.convertToDealItem(p));
+    return results.map((p) => this.convertToDealItem(p))
   }
 
   static async findDealItemById(id: string): Promise<DealItem | null> {
     if (!id) {
-      return null;
+      return null
     }
 
-    await this.loadProducts();
+    await this.loadProducts()
 
-    const productMatch = this.getAllProducts().find((product) => String(product.id) === id);
+    const productMatch = this.getAllProducts().find((product) => String(product.id) === id)
     if (productMatch) {
-      return this.convertToDealItem(productMatch);
+      return this.convertToDealItem(productMatch)
     }
 
-    const pinnedMatch = this.getPinnedDeals(50).find((deal) => deal.id === id);
+    const pinnedMatch = this.getPinnedDeals(50).find((deal) => deal.id === id)
     if (pinnedMatch) {
-      return pinnedMatch;
+      return pinnedMatch
     }
 
-    const fallbackMatch = [...this.getFallbackTop10Deals(), this.getFallbackDealOfTheWeek()].find((deal) => deal.id === id);
+    const fallbackMatch = [...this.getFallbackTop10Deals(), this.getFallbackDealOfTheWeek()].find(
+      (deal) => deal.id === id
+    )
     if (fallbackMatch) {
-      return fallbackMatch;
+      return fallbackMatch
     }
 
-    return null;
+    return null
   }
 
   /**
    * Get statistics about loaded products
    */
   static getStats() {
-    const products = this.getAllProducts();
-    const totalProducts = products.length;
+    const products = this.getAllProducts()
+    const totalProducts = products.length
 
     const scoreTotals = products.reduce(
       (acc, product) => {
-        const value = typeof product.giftScore === 'number' ? product.giftScore : null;
+        const value = typeof product.giftScore === 'number' ? product.giftScore : null
         if (value !== null && !Number.isNaN(value)) {
-          acc.sum += value;
-          acc.count += 1;
+          acc.sum += value
+          acc.count += 1
         }
-        return acc;
+        return acc
       },
       { sum: 0, count: 0 }
-    );
+    )
 
-    const averageGiftScore = scoreTotals.count > 0 ? scoreTotals.sum / scoreTotals.count : 0;
+    const averageGiftScore = scoreTotals.count > 0 ? scoreTotals.sum / scoreTotals.count : 0
 
     const priceRanges = products.reduce(
       (acc, product) => {
-        const priceValue = typeof product.price === 'number' ? product.price : Number.NaN;
+        const priceValue = typeof product.price === 'number' ? product.price : Number.NaN
         if (Number.isNaN(priceValue)) {
-          return acc;
+          return acc
         }
 
-        if (priceValue < 50) acc.budget += 1;
-        else if (priceValue < 150) acc.midRange += 1;
-        else acc.premium += 1;
+        if (priceValue < 50) acc.budget += 1
+        else if (priceValue < 150) acc.midRange += 1
+        else acc.premium += 1
 
-        return acc;
+        return acc
       },
       { budget: 0, midRange: 0, premium: 0 }
-    );
+    )
 
     return {
       totalProducts,
       lastUpdated: this.lastUpdated,
       averageGiftScore,
-      priceRanges
-    };
+      priceRanges,
+    }
   }
 
   private static buildDealItemMap(): Map<string, DealItem> {
-    const map = new Map<string, DealItem>();
+    const map = new Map<string, DealItem>()
 
     const push = (deal?: DealItem | null) => {
       if (!deal || !deal.id || map.has(deal.id)) {
-        return;
+        return
       }
-      map.set(deal.id, deal);
-    };
+      map.set(deal.id, deal)
+    }
 
     this.getAllProducts().forEach((product) => {
-      const deal = this.convertToDealItem(product);
-      push(deal);
-    });
+      const deal = this.convertToDealItem(product)
+      push(deal)
+    })
 
-    this.getPinnedDeals(50).forEach(push);
-    this.getFallbackTop10Deals().forEach(push);
-    push(this.getFallbackDealOfTheWeek());
+    this.getPinnedDeals(50).forEach(push)
+    this.getFallbackTop10Deals().forEach(push)
+    push(this.getFallbackDealOfTheWeek())
 
-    return map;
+    return map
   }
 
   private static buildCategoriesFromConfig(
@@ -856,78 +1008,81 @@ export class DynamicProductService {
     getFallback: () => DealCategory[]
   ): DealCategory[] {
     if (!config.categories.length) {
-      return [];
+      return []
     }
 
-    const itemMap = this.buildDealItemMap();
-    const fallbackCategories = getFallback();
+    const itemMap = this.buildDealItemMap()
+    const fallbackCategories = getFallback()
     const fallbackByTitle = new Map<string, { index: number; category: DealCategory }>(
-      fallbackCategories.map((category, index) => [category.title.toLowerCase(), { index, category }])
-    );
-    const usedFallbackIndexes = new Set<number>();
+      fallbackCategories.map((category, index) => [
+        category.title.toLowerCase(),
+        { index, category },
+      ])
+    )
+    const usedFallbackIndexes = new Set<number>()
 
     const takeFallbackByTitle = (title: string): DealCategory | null => {
       if (!title) {
-        return null;
+        return null
       }
-      const match = fallbackByTitle.get(title.toLowerCase());
+      const match = fallbackByTitle.get(title.toLowerCase())
       if (!match || usedFallbackIndexes.has(match.index)) {
-        return null;
+        return null
       }
-      usedFallbackIndexes.add(match.index);
-      return match.category;
-    };
+      usedFallbackIndexes.add(match.index)
+      return match.category
+    }
 
     const takeNextFallback = (): DealCategory | null => {
       for (let index = 0; index < fallbackCategories.length; index += 1) {
         if (usedFallbackIndexes.has(index)) {
-          continue;
+          continue
         }
-        usedFallbackIndexes.add(index);
-        return fallbackCategories[index];
+        usedFallbackIndexes.add(index)
+        return fallbackCategories[index]
       }
-      return null;
-    };
+      return null
+    }
 
-    const manualCategories: DealCategory[] = [];
+    const manualCategories: DealCategory[] = []
 
     for (const categoryConfig of config.categories) {
-      const seen = new Set<string>();
-      const items: DealItem[] = [];
+      const seen = new Set<string>()
+      const items: DealItem[] = []
 
       categoryConfig.itemIds.forEach((rawId) => {
-        const id = typeof rawId === 'string' ? rawId.trim() : '';
+        const id = typeof rawId === 'string' ? rawId.trim() : ''
         if (!id || seen.has(id)) {
-          return;
+          return
         }
-        const deal = itemMap.get(id);
+        const deal = itemMap.get(id)
         if (deal && deal.id && !seen.has(deal.id)) {
-          items.push(deal);
-          seen.add(deal.id);
+          items.push(deal)
+          seen.add(deal.id)
         }
-      });
+      })
 
       if (!items.length) {
-        const fallbackForTitle = takeFallbackByTitle(categoryConfig.title);
+        const fallbackForTitle = takeFallbackByTitle(categoryConfig.title)
         if (fallbackForTitle) {
           fallbackForTitle.items.forEach((deal) => {
             if (deal.id && !seen.has(deal.id)) {
-              items.push(deal);
-              seen.add(deal.id);
+              items.push(deal)
+              seen.add(deal.id)
             }
-          });
+          })
         }
       }
 
       if (!items.length) {
-        const fallbackCategory = takeNextFallback();
+        const fallbackCategory = takeNextFallback()
         if (fallbackCategory) {
           fallbackCategory.items.forEach((deal) => {
             if (deal.id && !seen.has(deal.id)) {
-              items.push(deal);
-              seen.add(deal.id);
+              items.push(deal)
+              seen.add(deal.id)
             }
-          });
+          })
         }
       }
 
@@ -935,117 +1090,133 @@ export class DynamicProductService {
         manualCategories.push({
           title: categoryConfig.title,
           items,
-        });
+        })
       }
     }
 
-    return manualCategories;
+    return manualCategories
   }
 
   private static buildSmartCategories(): DealCategory[] {
     if (this.getAllProducts().length === 0) {
-      console.log('⚠️ No products available, using fallback categories');
-      return this.getFallbackCategories();
+      console.log('⚠️ No products available, using fallback categories')
+      return this.getFallbackCategories()
     }
 
-    console.log(`📦 Building smart categories from ${this.getAllProducts().length} products`);
-    const categories: DealCategory[] = [];
+    console.log(`📦 Building smart categories from ${this.getAllProducts().length} products`)
+    const categories: DealCategory[] = []
     const pinnedKitchenDeals = this.getPinnedDeals(4).filter((deal) => {
-      const text = `${deal.name} ${deal.description}`.toLowerCase();
-      return text.includes('keuken') || text.includes('kitchen') || text.includes('coffee') || text.includes('koffie');
-    });
-    const usedDealIds = new Set<string>();
+      const text = `${deal.name} ${deal.description}`.toLowerCase()
+      return (
+        text.includes('keuken') ||
+        text.includes('kitchen') ||
+        text.includes('coffee') ||
+        text.includes('koffie')
+      )
+    })
+    const usedDealIds = new Set<string>()
 
     const registerUsedDeal = (deal?: DealItem | null) => {
       if (!deal?.id) {
-        return;
+        return
       }
-      usedDealIds.add(deal.id);
-    };
+      usedDealIds.add(deal.id)
+    }
 
-    pinnedKitchenDeals.forEach(registerUsedDeal);
+    pinnedKitchenDeals.forEach(registerUsedDeal)
 
     const selectDeals = (candidates: any[], limit: number): DealItem[] => {
       if (limit <= 0) {
-        return [];
+        return []
       }
 
-      const items: DealItem[] = [];
+      const items: DealItem[] = []
       for (const product of candidates) {
-        const productId = String(product.id);
+        const productId = String(product.id)
         if (usedDealIds.has(productId)) {
-          continue;
+          continue
         }
 
-        const deal = this.convertToDealItem(product);
+        const deal = this.convertToDealItem(product)
         if (!deal?.id || usedDealIds.has(deal.id)) {
-          continue;
+          continue
         }
 
-        items.push(deal);
-        usedDealIds.add(deal.id);
+        items.push(deal)
+        usedDealIds.add(deal.id)
 
         if (items.length >= limit) {
-          break;
+          break
         }
       }
 
-      return items;
-    };
-
-    const techCandidates = this.getAllProducts()
-      .filter(p => {
-        const text = `${p.name} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase();
-        return text.includes('audio') || text.includes('speaker') || 
-               text.includes('headset') || text.includes('bluetooth') ||
-               text.includes('smart') || text.includes('tech');
-      })
-      .filter(p => p.giftScore >= 7)
-      .filter(p => p.price >= 50 && p.price <= 500)
-      .sort((a, b) => b.giftScore - a.giftScore);
-
-    const techCategoryItems = selectDeals(techCandidates, 4);
-
-    if (techCategoryItems.length > 0) {
-      techCategoryItems.forEach(registerUsedDeal);
-      categories.push({
-        title: 'Top Tech Gadgets',
-        items: techCategoryItems
-      });
-      console.log(`✅ Added 'Top Tech Gadgets' with ${techCategoryItems.length} items`);
-    } else {
-      console.log('⚠️ No tech items found');
+      return items
     }
 
-    const kitchenLimit = 4;
-  const kitchenItems: DealItem[] = [...pinnedKitchenDeals];
+    const techCandidates = this.getAllProducts()
+      .filter((p) => {
+        const text = `${p.name} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase()
+        return (
+          text.includes('audio') ||
+          text.includes('speaker') ||
+          text.includes('headset') ||
+          text.includes('bluetooth') ||
+          text.includes('smart') ||
+          text.includes('tech')
+        )
+      })
+      .filter((p) => p.giftScore >= 7)
+      .filter((p) => p.price >= 50 && p.price <= 500)
+      .sort((a, b) => b.giftScore - a.giftScore)
+
+    const techCategoryItems = selectDeals(techCandidates, 4)
+
+    if (techCategoryItems.length > 0) {
+      techCategoryItems.forEach(registerUsedDeal)
+      categories.push({
+        title: 'Top Tech Gadgets',
+        items: techCategoryItems,
+      })
+      console.log(`✅ Added 'Top Tech Gadgets' with ${techCategoryItems.length} items`)
+    } else {
+      console.log('⚠️ No tech items found')
+    }
+
+    const kitchenLimit = 4
+    const kitchenItems: DealItem[] = [...pinnedKitchenDeals]
 
     if (kitchenItems.length < kitchenLimit) {
       const kitchenCandidates = this.getAllProducts()
-        .filter(p => {
-          const text = `${p.name} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase();
-          return text.includes('coffee') || text.includes('kitchen') || 
-                 text.includes('keuken') || text.includes('home') ||
-                 text.includes('vaatwasser') || text.includes('senseo') ||
-                 text.includes('keukenmachine') || text.includes('airfryer');
+        .filter((p) => {
+          const text = `${p.name} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase()
+          return (
+            text.includes('coffee') ||
+            text.includes('kitchen') ||
+            text.includes('keuken') ||
+            text.includes('home') ||
+            text.includes('vaatwasser') ||
+            text.includes('senseo') ||
+            text.includes('keukenmachine') ||
+            text.includes('airfryer')
+          )
         })
-        .filter(p => p.giftScore >= 6)
-        .sort((a, b) => b.giftScore - a.giftScore);
+        .filter((p) => p.giftScore >= 6)
+        .sort((a, b) => b.giftScore - a.giftScore)
 
-      const needed = kitchenLimit - kitchenItems.length;
-      const extraKitchen = selectDeals(kitchenCandidates, needed);
-      kitchenItems.push(...extraKitchen);
+      const needed = kitchenLimit - kitchenItems.length
+      const extraKitchen = selectDeals(kitchenCandidates, needed)
+      kitchenItems.push(...extraKitchen)
     }
 
     if (kitchenItems.length > 0) {
-      kitchenItems.forEach(registerUsedDeal);
+      kitchenItems.forEach(registerUsedDeal)
       categories.push({
         title: 'Beste Keukenaccessoires',
-        items: kitchenItems
-      });
-      console.log(`✅ Added 'Beste Keukenaccessoires' with ${kitchenItems.length} items`);
+        items: kitchenItems,
+      })
+      console.log(`✅ Added 'Beste Keukenaccessoires' with ${kitchenItems.length} items`)
     } else {
-      console.log('⚠️ No kitchen items found');
+      console.log('⚠️ No kitchen items found')
     }
 
     const lifestyleKeywords = [
@@ -1066,47 +1237,47 @@ export class DynamicProductService {
       'care',
       'selfcare',
       'energie',
-      'relax'
-    ];
+      'relax',
+    ]
 
     const lifestyleCandidates = this.getAllProducts()
-      .filter(p => {
-        const text = `${p.name} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase();
-        return lifestyleKeywords.some(keyword => text.includes(keyword));
+      .filter((p) => {
+        const text = `${p.name} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase()
+        return lifestyleKeywords.some((keyword) => text.includes(keyword))
       })
-      .filter(p => p.giftScore >= 6)
-      .filter(p => p.price >= 20 && p.price <= 350)
+      .filter((p) => p.giftScore >= 6)
+      .filter((p) => p.price >= 20 && p.price <= 350)
       .sort((a, b) => {
         if (a.isOnSale !== b.isOnSale) {
-          return a.isOnSale ? -1 : 1;
+          return a.isOnSale ? -1 : 1
         }
         if ((b.giftScore || 0) !== (a.giftScore || 0)) {
-          return (b.giftScore || 0) - (a.giftScore || 0);
+          return (b.giftScore || 0) - (a.giftScore || 0)
         }
-        return a.price - b.price;
-      });
+        return a.price - b.price
+      })
 
-    const lifestyleItems = selectDeals(lifestyleCandidates, 4);
+    const lifestyleItems = selectDeals(lifestyleCandidates, 4)
 
     if (lifestyleItems.length > 0) {
       categories.push({
         title: 'Populaire Lifestyle Producten',
-        items: lifestyleItems
-      });
-      console.log(`✅ Added 'Populaire Lifestyle Producten' with ${lifestyleItems.length} items`);
+        items: lifestyleItems,
+      })
+      console.log(`✅ Added 'Populaire Lifestyle Producten' with ${lifestyleItems.length} items`)
     } else {
-      console.log('⚠️ No lifestyle items found');
+      console.log('⚠️ No lifestyle items found')
     }
 
-    console.log(`📊 Total categories built: ${categories.length}`);
-    
+    console.log(`📊 Total categories built: ${categories.length}`)
+
     if (categories.length < 3) {
-      const fallback = this.getFallbackCategories();
-      categories.push(...fallback.slice(categories.length));
-      console.log(`📦 Added ${fallback.slice(categories.length).length} fallback categories`);
+      const fallback = this.getFallbackCategories()
+      categories.push(...fallback.slice(categories.length))
+      console.log(`📦 Added ${fallback.slice(categories.length).length} fallback categories`)
     }
 
-    return categories;
+    return categories
   }
 
   // Fallback methods for when dynamic data is not available
@@ -1117,8 +1288,8 @@ export class DynamicProductService {
       description: 'Inbouw vaatwasser met Maxi Space technologie en PowerClean sproeiarm.',
       imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781',
       price: '€629,00',
-      affiliateLink: 'https://www.coolblue.nl/product/966434/whirlpool-wh7ipc15bm60-maxispace.html'
-    };
+      affiliateLink: 'https://www.coolblue.nl/product/966434/whirlpool-wh7ipc15bm60-maxispace.html',
+    }
   }
 
   private static getFallbackTop10Deals(): DealItem[] {
@@ -1126,18 +1297,20 @@ export class DynamicProductService {
       {
         id: 'top-01',
         name: 'Sonos Roam SL Speaker',
-        description: 'Compacte Bluetooth-speaker met verrassend vol geluid en waterdichte behuizing.',
+        description:
+          'Compacte Bluetooth-speaker met verrassend vol geluid en waterdichte behuizing.',
         imageUrl: 'https://m.media-amazon.com/images/I/51x24PzVnoL._AC_SL1000_.jpg',
         price: '€234,95',
-        affiliateLink: 'https://www.amazon.nl/dp/B09PNSV48L/?tag=gifteez77-21'
+        affiliateLink: 'https://www.amazon.nl/dp/B09PNSV48L/?tag=gifteez77-21',
       },
       {
         id: 'top-02',
         name: 'JBL Live 770NC Koptelefoon',
-        description: 'Comfortabele over-ear koptelefoon met adaptieve noise cancelling en 65 uur speeltijd.',
+        description:
+          'Comfortabele over-ear koptelefoon met adaptieve noise cancelling en 65 uur speeltijd.',
         imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1962259',
         price: '€118,00',
-        affiliateLink: 'https://www.coolblue.nl/product/934400/jbl-live-770nc-zwart.html'
+        affiliateLink: 'https://www.coolblue.nl/product/934400/jbl-live-770nc-zwart.html',
       },
       {
         id: 'top-03',
@@ -1145,23 +1318,25 @@ export class DynamicProductService {
         description: 'Lichtgewicht handheld console om overal je favoriete games te spelen.',
         imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1433030',
         price: '€219,00',
-        affiliateLink: 'https://www.coolblue.nl/product/840605/nintendo-switch-lite-turquoise.html'
+        affiliateLink: 'https://www.coolblue.nl/product/840605/nintendo-switch-lite-turquoise.html',
       },
       {
         id: 'top-04',
         name: 'Philips Hue White & Color Ambiance Starter Kit',
-        description: 'Smart verlichting met bridge en 3 lampen voor sfeervolle verlichting in huis.',
+        description:
+          'Smart verlichting met bridge en 3 lampen voor sfeervolle verlichting in huis.',
         imageUrl: 'https://m.media-amazon.com/images/I/81Md1GZ9vXL._AC_SL1500_.jpg',
         price: '€189,99',
-        affiliateLink: 'https://www.amazon.nl/dp/B09G9LGQY3/?tag=gifteez77-21'
+        affiliateLink: 'https://www.amazon.nl/dp/B09G9LGQY3/?tag=gifteez77-21',
       },
       {
         id: 'top-05',
         name: 'Sage Barista Express Espressomachine',
-        description: 'Volautomatische espressomachine met ingebouwde molen voor versgemalen koffie.',
+        description:
+          'Volautomatische espressomachine met ingebouwde molen voor versgemalen koffie.',
         imageUrl: 'https://m.media-amazon.com/images/I/71gxdTM5WDL._AC_SL1500_.jpg',
         price: '€649,00',
-        affiliateLink: 'https://www.amazon.nl/dp/B00G6IJ5NI/?tag=gifteez77-21'
+        affiliateLink: 'https://www.amazon.nl/dp/B00G6IJ5NI/?tag=gifteez77-21',
       },
       {
         id: 'top-06',
@@ -1169,7 +1344,7 @@ export class DynamicProductService {
         description: 'Stijlvolle smartwatch met AMOLED-scherm en uitgebreide health tracking.',
         imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1990337',
         price: '€259,00',
-        affiliateLink: 'https://www.coolblue.nl/product/939902/garmin-venu-sq-2-zwart.html'
+        affiliateLink: 'https://www.coolblue.nl/product/939902/garmin-venu-sq-2-zwart.html',
       },
       {
         id: 'top-07',
@@ -1177,7 +1352,7 @@ export class DynamicProductService {
         description: 'Krachtige compacte massagegun voor spierherstel en ontspanning onderweg.',
         imageUrl: 'https://m.media-amazon.com/images/I/61iydRki0KL._AC_SL1500_.jpg',
         price: '€199,00',
-        affiliateLink: 'https://www.amazon.nl/dp/B08HS45D69/?tag=gifteez77-21'
+        affiliateLink: 'https://www.amazon.nl/dp/B08HS45D69/?tag=gifteez77-21',
       },
       {
         id: 'top-08',
@@ -1185,15 +1360,17 @@ export class DynamicProductService {
         description: 'Creatief bouwproject en blijvend boeket in één – ideaal cadeau voor thuis.',
         imageUrl: 'https://m.media-amazon.com/images/I/81tf-fY2FuL._AC_SL1500_.jpg',
         price: '€49,99',
-        affiliateLink: 'https://www.amazon.nl/dp/B08HVXZW5K/?tag=gifteez77-21'
+        affiliateLink: 'https://www.amazon.nl/dp/B08HVXZW5K/?tag=gifteez77-21',
       },
       {
         id: 'top-09',
         name: 'Weber Spirit II E-210 GBS',
-        description: 'Duurzame 2-pits gasbarbecue met gietijzeren rooster voor zomerse grillavonden.',
+        description:
+          'Duurzame 2-pits gasbarbecue met gietijzeren rooster voor zomerse grillavonden.',
         imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1105189',
         price: '€499,00',
-        affiliateLink: 'https://www.coolblue.nl/product/810743/weber-spirit-ii-e-210-gbs-zwart.html'
+        affiliateLink:
+          'https://www.coolblue.nl/product/810743/weber-spirit-ii-e-210-gbs-zwart.html',
       },
       {
         id: 'top-10',
@@ -1201,17 +1378,17 @@ export class DynamicProductService {
         description: 'Direct-klaar camera voor creatieve snapshots tijdens feestjes en trips.',
         imageUrl: 'https://m.media-amazon.com/images/I/71lE2vDn0L._AC_SL1500_.jpg',
         price: '€79,99',
-        affiliateLink: 'https://www.amazon.nl/dp/B0BWN6L62N/?tag=gifteez77-21'
-      }
-    ];
+        affiliateLink: 'https://www.amazon.nl/dp/B0BWN6L62N/?tag=gifteez77-21',
+      },
+    ]
   }
 
   private static getFallbackCategories(): DealCategory[] {
     return [
       {
         title: 'Top Tech Gadgets',
-        items: this.getFallbackTop10Deals().slice(0, 3)
-      }
-    ];
+        items: this.getFallbackTop10Deals().slice(0, 3),
+      },
+    ]
   }
 }

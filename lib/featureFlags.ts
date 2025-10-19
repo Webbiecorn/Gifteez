@@ -1,6 +1,6 @@
 /**
  * Feature Flags Service
- * 
+ *
  * Features:
  * - Environment-based feature flags
  * - Runtime feature toggling
@@ -9,8 +9,8 @@
  * - Feature flag analytics
  */
 
-import { env } from './env';
-import { logger } from './logger';
+import { env } from './env'
+import { logger } from './logger'
 
 type FeatureFlag =
   | 'giftAI'
@@ -22,46 +22,46 @@ type FeatureFlag =
   | 'deals'
   | 'quiz'
   | 'adminDashboard'
-  | 'productRecommendations';
+  | 'productRecommendations'
 
 interface FeatureFlagOverride {
-  flag: FeatureFlag;
-  enabled: boolean;
-  expiresAt?: number;
+  flag: FeatureFlag
+  enabled: boolean
+  expiresAt?: number
 }
 
 interface ABTestConfig {
-  name: string;
-  variants: string[];
-  distribution: number[]; // Percentage for each variant (should sum to 100)
+  name: string
+  variants: string[]
+  distribution: number[] // Percentage for each variant (should sum to 100)
 }
 
 class FeatureFlagService {
-  private overrides: Map<FeatureFlag, FeatureFlagOverride> = new Map();
-  private abTests: Map<string, ABTestConfig> = new Map();
+  private overrides: Map<FeatureFlag, FeatureFlagOverride> = new Map()
+  private abTests: Map<string, ABTestConfig> = new Map()
 
   constructor() {
-    this.loadOverridesFromStorage();
-    this.cleanupExpiredOverrides();
+    this.loadOverridesFromStorage()
+    this.cleanupExpiredOverrides()
   }
 
   /**
    * Load overrides from localStorage
    */
   private loadOverridesFromStorage(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return
 
     try {
-      const stored = localStorage.getItem('gifteez_feature_overrides');
+      const stored = localStorage.getItem('gifteez_feature_overrides')
       if (stored) {
-        const overrides: FeatureFlagOverride[] = JSON.parse(stored);
-        overrides.forEach(override => {
-          this.overrides.set(override.flag, override);
-        });
-        logger.debug('Feature flag overrides loaded', { count: overrides.length });
+        const overrides: FeatureFlagOverride[] = JSON.parse(stored)
+        overrides.forEach((override) => {
+          this.overrides.set(override.flag, override)
+        })
+        logger.debug('Feature flag overrides loaded', { count: overrides.length })
       }
     } catch (error) {
-      logger.warn('Failed to load feature flag overrides', { error });
+      logger.warn('Failed to load feature flag overrides', { error })
     }
   }
 
@@ -69,13 +69,13 @@ class FeatureFlagService {
    * Save overrides to localStorage
    */
   private saveOverridesToStorage(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return
 
     try {
-      const overrides = Array.from(this.overrides.values());
-      localStorage.setItem('gifteez_feature_overrides', JSON.stringify(overrides));
+      const overrides = Array.from(this.overrides.values())
+      localStorage.setItem('gifteez_feature_overrides', JSON.stringify(overrides))
     } catch (error) {
-      logger.warn('Failed to save feature flag overrides', { error });
+      logger.warn('Failed to save feature flag overrides', { error })
     }
   }
 
@@ -83,19 +83,19 @@ class FeatureFlagService {
    * Clean up expired overrides
    */
   private cleanupExpiredOverrides(): void {
-    const now = Date.now();
-    let cleaned = 0;
+    const now = Date.now()
+    let cleaned = 0
 
     for (const [flag, override] of this.overrides.entries()) {
       if (override.expiresAt && now > override.expiresAt) {
-        this.overrides.delete(flag);
-        cleaned++;
+        this.overrides.delete(flag)
+        cleaned++
       }
     }
 
     if (cleaned > 0) {
-      this.saveOverridesToStorage();
-      logger.info('Cleaned up expired feature flag overrides', { count: cleaned });
+      this.saveOverridesToStorage()
+      logger.info('Cleaned up expired feature flag overrides', { count: cleaned })
     }
   }
 
@@ -104,62 +104,58 @@ class FeatureFlagService {
    */
   isEnabled(flag: FeatureFlag): boolean {
     // Check for runtime override first
-    const override = this.overrides.get(flag);
+    const override = this.overrides.get(flag)
     if (override) {
       // Check if override is expired
       if (override.expiresAt && Date.now() > override.expiresAt) {
-        this.overrides.delete(flag);
-        this.saveOverridesToStorage();
+        this.overrides.delete(flag)
+        this.saveOverridesToStorage()
       } else {
-        logger.debug('Feature flag override applied', { flag, enabled: override.enabled });
-        return override.enabled;
+        logger.debug('Feature flag override applied', { flag, enabled: override.enabled })
+        return override.enabled
       }
     }
 
     // Fall back to environment config
-    return env.isFeatureEnabled(flag);
+    return env.isFeatureEnabled(flag)
   }
 
   /**
    * Set runtime override for a feature flag
    */
-  setOverride(
-    flag: FeatureFlag,
-    enabled: boolean,
-    expiresInMs?: number
-  ): void {
+  setOverride(flag: FeatureFlag, enabled: boolean, expiresInMs?: number): void {
     const override: FeatureFlagOverride = {
       flag,
       enabled,
-      expiresAt: expiresInMs ? Date.now() + expiresInMs : undefined
-    };
+      expiresAt: expiresInMs ? Date.now() + expiresInMs : undefined,
+    }
 
-    this.overrides.set(flag, override);
-    this.saveOverridesToStorage();
+    this.overrides.set(flag, override)
+    this.saveOverridesToStorage()
 
     logger.info('Feature flag override set', {
       flag,
       enabled,
-      expiresAt: override.expiresAt
-    });
+      expiresAt: override.expiresAt,
+    })
   }
 
   /**
    * Clear override for a feature flag
    */
   clearOverride(flag: FeatureFlag): void {
-    this.overrides.delete(flag);
-    this.saveOverridesToStorage();
-    logger.info('Feature flag override cleared', { flag });
+    this.overrides.delete(flag)
+    this.saveOverridesToStorage()
+    logger.info('Feature flag override cleared', { flag })
   }
 
   /**
    * Clear all overrides
    */
   clearAllOverrides(): void {
-    this.overrides.clear();
-    this.saveOverridesToStorage();
-    logger.info('All feature flag overrides cleared');
+    this.overrides.clear()
+    this.saveOverridesToStorage()
+    logger.info('All feature flag overrides cleared')
   }
 
   /**
@@ -176,15 +172,15 @@ class FeatureFlagService {
       'deals',
       'quiz',
       'adminDashboard',
-      'productRecommendations'
-    ];
+      'productRecommendations',
+    ]
 
-    const status: Record<string, boolean> = {};
-    flags.forEach(flag => {
-      status[flag] = this.isEnabled(flag);
-    });
+    const status: Record<string, boolean> = {}
+    flags.forEach((flag) => {
+      status[flag] = this.isEnabled(flag)
+    })
 
-    return status;
+    return status
   }
 
   /**
@@ -192,60 +188,58 @@ class FeatureFlagService {
    */
   registerABTest(config: ABTestConfig): void {
     // Validate distribution
-    const sum = config.distribution.reduce((a, b) => a + b, 0);
+    const sum = config.distribution.reduce((a, b) => a + b, 0)
     if (Math.abs(sum - 100) > 0.01) {
-      throw new Error('A/B test distribution must sum to 100');
+      throw new Error('A/B test distribution must sum to 100')
     }
 
-    this.abTests.set(config.name, config);
-    logger.info('A/B test registered', { name: config.name, variants: config.variants });
+    this.abTests.set(config.name, config)
+    logger.info('A/B test registered', { name: config.name, variants: config.variants })
   }
 
   /**
    * Get A/B test variant for user
    */
   getABTestVariant(testName: string, userId?: string): string | null {
-    const test = this.abTests.get(testName);
+    const test = this.abTests.get(testName)
     if (!test) {
-      logger.warn('A/B test not found', { testName });
-      return null;
+      logger.warn('A/B test not found', { testName })
+      return null
     }
 
     // Check for persistent variant in storage
-    const storageKey = `gifteez_ab_${testName}`;
-    const stored = typeof window !== 'undefined'
-      ? localStorage.getItem(storageKey)
-      : null;
+    const storageKey = `gifteez_ab_${testName}`
+    const stored = typeof window !== 'undefined' ? localStorage.getItem(storageKey) : null
 
     if (stored) {
-      return stored;
+      return stored
     }
 
     // Assign variant based on distribution
-    const random = Math.random() * 100;
-    let cumulative = 0;
-    let variant = test.variants[0];
+    const random = Math.random() * 100
+    let cumulative = 0
+    let variant = test.variants[0]
 
     for (let i = 0; i < test.variants.length; i++) {
-      cumulative += test.distribution[i];
+      cumulative += test.distribution[i]
       if (random <= cumulative) {
-        variant = test.variants[i];
-        break;
+        variant = test.variants[i]
+        break
       }
     }
 
     // Store variant
     if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, variant);
+      localStorage.setItem(storageKey, variant)
     }
 
     logger.info('A/B test variant assigned', {
       test: testName,
       variant,
-      userId
-    });
+      userId,
+    })
 
-    return variant;
+    return variant
   }
 
   /**
@@ -255,45 +249,42 @@ class FeatureFlagService {
     logger.logUserAction(`Feature: ${flag} - ${action}`, {
       flag,
       action,
-      enabled: this.isEnabled(flag)
-    });
+      enabled: this.isEnabled(flag),
+    })
   }
 
   /**
    * Enable debug mode (shows all feature flags in console)
    */
   debug(): void {
-    console.group('🚩 Feature Flags Debug');
-    
-    const flags = this.getAllFlags();
+    console.group('🚩 Feature Flags Debug')
+
+    const flags = this.getAllFlags()
     Object.entries(flags).forEach(([flag, enabled]) => {
-      const override = this.overrides.get(flag as FeatureFlag);
-      console.log(
-        `${enabled ? '✅' : '❌'} ${flag}`,
-        override ? '(overridden)' : ''
-      );
-    });
+      const override = this.overrides.get(flag as FeatureFlag)
+      console.log(`${enabled ? '✅' : '❌'} ${flag}`, override ? '(overridden)' : '')
+    })
 
     if (this.abTests.size > 0) {
-      console.group('A/B Tests');
+      console.group('A/B Tests')
       this.abTests.forEach((test, name) => {
-        const variant = this.getABTestVariant(name);
-        console.log(`${name}: ${variant}`, test);
-      });
-      console.groupEnd();
+        const variant = this.getABTestVariant(name)
+        console.log(`${name}: ${variant}`, test)
+      })
+      console.groupEnd()
     }
 
-    console.groupEnd();
+    console.groupEnd()
   }
 }
 
 // Export singleton instance
-export const featureFlags = new FeatureFlagService();
+export const featureFlags = new FeatureFlagService()
 
 // Export types
-export type { FeatureFlag, ABTestConfig };
+export type { FeatureFlag, ABTestConfig }
 
 // Export helper hook for React components
 export function useFeatureFlag(flag: FeatureFlag): boolean {
-  return featureFlags.isEnabled(flag);
+  return featureFlags.isEnabled(flag)
 }

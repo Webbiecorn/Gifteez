@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
-import { Category, NavigateTo } from '../types';
-import { HeartIcon, SnowflakeIcon, CakeIcon, GiftIcon } from './IconComponents';
-import Meta from './Meta';
-import JsonLd from './JsonLd';
+import React, { useMemo } from 'react'
+import { HeartIcon, SnowflakeIcon, CakeIcon, GiftIcon } from './IconComponents'
+import JsonLd from './JsonLd'
+import Meta from './Meta'
+import type { Category, NavigateTo } from '../types'
 
 interface CategoriesPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 const categories: Category[] = [
@@ -13,41 +13,49 @@ const categories: Category[] = [
   { name: 'Verjaardag', icon: CakeIcon },
   { name: 'Kerstmis', icon: SnowflakeIcon },
   { name: 'Zomaar', icon: GiftIcon },
-];
+]
 
-const CategoryCard: React.FC<{ category: Category; onClick: () => void }> = ({ category, onClick }) => (
-  <div 
+const CategoryCard: React.FC<{ category: Category; onClick: () => void }> = ({
+  category,
+  onClick,
+}) => (
+  <div
     onClick={onClick}
     className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center justify-center text-center cursor-pointer
                group hover:bg-secondary transition-all duration-300 transform hover:-translate-y-1"
   >
     <category.icon className="w-16 h-16 text-primary mb-4 group-hover:text-blue-600 transition-colors duration-300" />
-    <h3 className="font-display text-xl font-bold text-primary">{category.name === 'Zomaar' ? 'Zomaar een cadeau' : category.name}</h3>
+    <h3 className="font-display text-xl font-bold text-primary">
+      {category.name === 'Zomaar' ? 'Zomaar een cadeau' : category.name}
+    </h3>
   </div>
-);
+)
 
 const CategoriesPage: React.FC<CategoriesPageProps> = ({ navigateTo }) => {
   const handleCategoryClick = (categoryName: string) => {
     // This pre-fills the occasion in the GiftFinder
-    navigateTo('giftFinder', { occasion: categoryName });
-  };
+    navigateTo('giftFinder', { occasion: categoryName })
+  }
 
-  const itemListSchema = useMemo(() => ({
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Cadeau categorieën',
-    itemListElement: categories.map((c, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: c.name,
-      url: `https://gifteez.nl/categories#${encodeURIComponent(c.name)}`
-    }))
-  }), []);
+  const itemListSchema = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Cadeau categorieën',
+      itemListElement: categories.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.name,
+        url: `https://gifteez.nl/categories#${encodeURIComponent(c.name)}`,
+      })),
+    }),
+    []
+  )
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Meta 
-        title="Cadeau Categorieën — Gifteez.nl" 
+      <Meta
+        title="Cadeau Categorieën — Gifteez.nl"
         description="Vind cadeau inspiratie per gelegenheid: verjaardag, kerst, valentijn en meer. Start sneller met kiezen."
         canonical="https://gifteez.nl/categories"
         ogImage="https://gifteez.nl/images/trending-eco.png"
@@ -55,15 +63,21 @@ const CategoriesPage: React.FC<CategoriesPageProps> = ({ navigateTo }) => {
       <JsonLd data={itemListSchema} id="jsonld-categories-itemlist" />
       <div className="text-center mb-12">
         <h1 className="font-display text-4xl font-bold text-primary">Cadeau Categorieën</h1>
-        <p className="mt-2 text-lg text-gray-600">Vind inspiratie voor elke speciale gelegenheid.</p>
+        <p className="mt-2 text-lg text-gray-600">
+          Vind inspiratie voor elke speciale gelegenheid.
+        </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {categories.map((category) => (
-          <CategoryCard key={category.name} category={category} onClick={() => handleCategoryClick(category.name)} />
+          <CategoryCard
+            key={category.name}
+            category={category}
+            onClick={() => handleCategoryClick(category.name)}
+          />
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CategoriesPage;
+export default CategoriesPage

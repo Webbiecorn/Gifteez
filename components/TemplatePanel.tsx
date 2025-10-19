@@ -1,117 +1,118 @@
-import React, { useState, useEffect } from 'react';
-import { CategoryTemplate, TemplateService } from '../services/templateService';
-import { CategoryBlockConfig } from '../services/dealCategoryConfigService';
-import LoadingSpinner from './LoadingSpinner';
+import React, { useState, useEffect } from 'react'
+import { TemplateService } from '../services/templateService'
+import LoadingSpinner from './LoadingSpinner'
+import type { CategoryBlockConfig } from '../services/dealCategoryConfigService'
+import type { CategoryTemplate } from '../services/templateService'
 
 interface TemplatePanelProps {
-  currentCategories: CategoryBlockConfig[];
-  onApplyTemplate: (categories: CategoryBlockConfig[], mode: 'replace' | 'merge') => void;
-  onClose: () => void;
+  currentCategories: CategoryBlockConfig[]
+  onApplyTemplate: (categories: CategoryBlockConfig[], mode: 'replace' | 'merge') => void
+  onClose: () => void
 }
 
 const TemplatePanel: React.FC<TemplatePanelProps> = ({
   currentCategories,
   onApplyTemplate,
-  onClose
+  onClose,
 }) => {
-  const [templates, setTemplates] = useState<CategoryTemplate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedTemplate, setSelectedTemplate] = useState<CategoryTemplate | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
-  const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [saveTemplateName, setSaveTemplateName] = useState('');
-  const [saveTemplateDesc, setSaveTemplateDesc] = useState('');
-  const [saveTemplateIcon, setSaveTemplateIcon] = useState('📦');
-  
+  const [templates, setTemplates] = useState<CategoryTemplate[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedTemplate, setSelectedTemplate] = useState<CategoryTemplate | null>(null)
+  const [showPreview, setShowPreview] = useState(false)
+  const [showSaveDialog, setShowSaveDialog] = useState(false)
+  const [saveTemplateName, setSaveTemplateName] = useState('')
+  const [saveTemplateDesc, setSaveTemplateDesc] = useState('')
+  const [saveTemplateIcon, setSaveTemplateIcon] = useState('📦')
+
   // Load templates on mount
   useEffect(() => {
-    loadTemplates();
-  }, []);
-  
+    loadTemplates()
+  }, [])
+
   const loadTemplates = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const allTemplates = await TemplateService.getAllTemplates();
-      setTemplates(allTemplates);
+      const allTemplates = await TemplateService.getAllTemplates()
+      setTemplates(allTemplates)
     } catch (error) {
-      console.error('Error loading templates:', error);
+      console.error('Error loading templates:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-  
+  }
+
   const handleApplyTemplate = (template: CategoryTemplate, mode: 'replace' | 'merge') => {
-    onApplyTemplate(template.categories, mode);
-    onClose();
-  };
-  
+    onApplyTemplate(template.categories, mode)
+    onClose()
+  }
+
   const handleSaveAsTemplate = async () => {
-    if (!saveTemplateName.trim()) return;
-    
+    if (!saveTemplateName.trim()) return
+
     try {
       await TemplateService.saveTemplate({
         name: saveTemplateName,
         description: saveTemplateDesc,
         icon: saveTemplateIcon,
-        categories: currentCategories
-      });
-      
-      await loadTemplates();
-      setShowSaveDialog(false);
-      setSaveTemplateName('');
-      setSaveTemplateDesc('');
-      setSaveTemplateIcon('📦');
+        categories: currentCategories,
+      })
+
+      await loadTemplates()
+      setShowSaveDialog(false)
+      setSaveTemplateName('')
+      setSaveTemplateDesc('')
+      setSaveTemplateIcon('📦')
     } catch (error) {
-      console.error('Error saving template:', error);
-      alert('Fout bij opslaan template');
+      console.error('Error saving template:', error)
+      alert('Fout bij opslaan template')
     }
-  };
-  
+  }
+
   const handleDeleteTemplate = async (templateId: string) => {
-    if (!confirm('Weet je zeker dat je dit template wilt verwijderen?')) return;
-    
+    if (!confirm('Weet je zeker dat je dit template wilt verwijderen?')) return
+
     try {
-      await TemplateService.deleteTemplate(templateId);
-      await loadTemplates();
+      await TemplateService.deleteTemplate(templateId)
+      await loadTemplates()
     } catch (error) {
-      console.error('Error deleting template:', error);
-      alert('Fout bij verwijderen template');
+      console.error('Error deleting template:', error)
+      alert('Fout bij verwijderen template')
     }
-  };
-  
+  }
+
   const handleExportTemplate = (template: CategoryTemplate) => {
-    const json = TemplateService.exportTemplate(template);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${template.name.toLowerCase().replace(/\s+/g, '-')}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-  
+    const json = TemplateService.exportTemplate(template)
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${template.name.toLowerCase().replace(/\s+/g, '-')}.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   const handleImportTemplate = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    
+    const file = event.target.files?.[0]
+    if (!file) return
+
     try {
-      const text = await file.text();
-      const template = TemplateService.importTemplate(text);
-      
-      const templateId = await TemplateService.saveTemplate(template);
-      await loadTemplates();
-      alert('Template succesvol geïmporteerd!');
+      const text = await file.text()
+      const template = TemplateService.importTemplate(text)
+
+      const templateId = await TemplateService.saveTemplate(template)
+      await loadTemplates()
+      alert('Template succesvol geïmporteerd!')
     } catch (error) {
-      console.error('Error importing template:', error);
-      alert('Fout bij importeren template. Controleer het JSON bestand.');
+      console.error('Error importing template:', error)
+      alert('Fout bij importeren template. Controleer het JSON bestand.')
     }
-  };
-  
-  const prebuiltTemplates = templates.filter(t => t.isPrebuilt);
-  const customTemplates = templates.filter(t => !t.isPrebuilt);
-  
+  }
+
+  const prebuiltTemplates = templates.filter((t) => t.isPrebuilt)
+  const customTemplates = templates.filter((t) => !t.isPrebuilt)
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col">
@@ -129,12 +130,17 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
               className="text-gray-400 hover:text-gray-600 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
         </div>
-        
+
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
@@ -151,7 +157,8 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                       💾 Huidige Configuratie Opslaan
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Sla je huidige categorieën op als herbruikbaar template ({currentCategories.length} categorieën)
+                      Sla je huidige categorieën op als herbruikbaar template (
+                      {currentCategories.length} categorieën)
                     </p>
                   </div>
                   <button
@@ -161,7 +168,7 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                     {showSaveDialog ? 'Annuleren' : 'Opslaan als Template'}
                   </button>
                 </div>
-                
+
                 {showSaveDialog && (
                   <div className="mt-4 space-y-3 bg-white rounded-lg p-4">
                     <div>
@@ -211,14 +218,12 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                   </div>
                 )}
               </div>
-              
+
               {/* Prebuilt Templates */}
               <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">
-                  🎁 Voorgebouwde Templates
-                </h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">🎁 Voorgebouwde Templates</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {prebuiltTemplates.map(template => (
+                  {prebuiltTemplates.map((template) => (
                     <div
                       key={template.id}
                       className="bg-white border border-gray-200 rounded-xl p-4 hover:border-purple-300 hover:shadow-lg transition-all"
@@ -230,8 +235,18 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                           className="text-gray-400 hover:text-gray-600 transition-colors"
                           title="Exporteer als JSON"
                         >
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -258,15 +273,13 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                   ))}
                 </div>
               </div>
-              
+
               {/* Custom Templates */}
               {customTemplates.length > 0 && (
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">
-                    🔧 Eigen Templates
-                  </h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">🔧 Eigen Templates</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {customTemplates.map(template => (
+                    {customTemplates.map((template) => (
                       <div
                         key={template.id}
                         className="bg-white border border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-lg transition-all"
@@ -279,8 +292,18 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                               className="text-gray-400 hover:text-gray-600 transition-colors"
                               title="Exporteer als JSON"
                             >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                              <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                />
                               </svg>
                             </button>
                             <button
@@ -288,8 +311,18 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                               className="text-red-400 hover:text-red-600 transition-colors"
                               title="Verwijder template"
                             >
-                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
                               </svg>
                             </button>
                           </div>
@@ -297,7 +330,8 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                         <h4 className="font-bold text-gray-900 mb-1">{template.name}</h4>
                         <p className="text-sm text-gray-600 mb-3">{template.description}</p>
                         <div className="text-xs text-gray-500 mb-3">
-                          {template.categories.length} categorieën • {template.createdAt.toLocaleDateString('nl-NL')}
+                          {template.categories.length} categorieën •{' '}
+                          {template.createdAt.toLocaleDateString('nl-NL')}
                         </div>
                         <div className="flex gap-2">
                           <button
@@ -318,12 +352,10 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                   </div>
                 </div>
               )}
-              
+
               {/* Import Template */}
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">
-                  📥 Template Importeren
-                </h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">📥 Template Importeren</h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Upload een eerder geëxporteerd template JSON bestand
                 </p>
@@ -341,7 +373,7 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TemplatePanel;
+export default TemplatePanel

@@ -1,6 +1,6 @@
-import React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import React from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '../../lib/utils'
 
 /**
  * Badge component for labels, status indicators, and tags
@@ -13,24 +13,15 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: 
-          'bg-neutral-100 text-neutral-700 border border-neutral-200',
-        primary: 
-          'bg-primary-100 text-primary-700 border border-primary-200',
-        secondary: 
-          'bg-secondary-100 text-secondary-400 border border-secondary-200',
-        accent: 
-          'bg-accent-light text-accent-dark border border-accent',
-        success: 
-          'bg-success-bg text-success-dark border border-success-light',
-        error: 
-          'bg-error-bg text-error-dark border border-error-light',
-        warning: 
-          'bg-warning-bg text-warning-dark border border-warning-light',
-        info: 
-          'bg-info-bg text-info-dark border border-info-light',
-        muted: 
-          'bg-muted-rose text-neutral-700 border border-neutral-200',
+        default: 'bg-neutral-100 text-neutral-700 border border-neutral-200',
+        primary: 'bg-primary-100 text-primary-700 border border-primary-200',
+        secondary: 'bg-secondary-100 text-secondary-400 border border-secondary-200',
+        accent: 'bg-accent-light text-accent-dark border border-accent',
+        success: 'bg-success-bg text-success-dark border border-success-light',
+        error: 'bg-error-bg text-error-dark border border-error-light',
+        warning: 'bg-warning-bg text-warning-dark border border-warning-light',
+        info: 'bg-info-bg text-info-dark border border-info-light',
+        muted: 'bg-muted-rose text-neutral-700 border border-neutral-200',
       },
       size: {
         sm: 'px-2 py-0.5 text-xs',
@@ -46,28 +37,28 @@ const badgeVariants = cva(
       size: 'md',
     },
   }
-);
+)
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {
-  onRemove?: () => void;
-  icon?: React.ReactNode;
+  onRemove?: () => void
+  icon?: React.ReactNode
 }
 
 /**
  * Badge component
- * 
+ *
  * @example
  * // Default badge
  * <Badge>Nieuw</Badge>
- * 
+ *
  * @example
  * // Success badge with icon
  * <Badge variant="success" icon={<Check size={14} />}>
  *   Beschikbaar
  * </Badge>
- * 
+ *
  * @example
  * // Removable badge
  * <Badge variant="primary" onRemove={() => console.log('removed')}>
@@ -76,7 +67,7 @@ export interface BadgeProps
  */
 const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
   ({ className, variant, size, onRemove, icon, children, ...props }, ref) => {
-    const removable = !!onRemove;
+    const removable = !!onRemove
 
     return (
       <div
@@ -110,10 +101,10 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
           </button>
         )}
       </div>
-    );
+    )
   }
-);
+)
 
-Badge.displayName = 'Badge';
+Badge.displayName = 'Badge'
 
-export { Badge, badgeVariants };
+export { Badge, badgeVariants }

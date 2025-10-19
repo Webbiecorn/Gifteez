@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { ChevronDownIcon } from './IconComponents';
+import React, { useState } from 'react'
+import { ChevronDownIcon } from './IconComponents'
 
 interface AccordionProps {
-  title: string;
-  children: React.ReactNode;
+  title: string
+  children: React.ReactNode
 }
 
 const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="border-b border-gray-200">
@@ -27,13 +27,11 @@ const Accordion: React.FC<AccordionProps> = ({ title, children }) => {
         }`}
       >
         <div className="overflow-hidden">
-            <div className="pb-4 text-gray-600">
-                {children}
-            </div>
+          <div className="pb-4 text-gray-600">{children}</div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Accordion;
+export default Accordion

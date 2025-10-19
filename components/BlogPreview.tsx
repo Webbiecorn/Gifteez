@@ -1,61 +1,69 @@
-import React from 'react';
-import { BlogPost } from '../types';
+import React from 'react'
+import type { BlogPost } from '../types'
 
 interface BlogPreviewProps {
-  post: BlogPost;
-  isOpen: boolean;
-  onClose: () => void;
+  post: BlogPost
+  isOpen: boolean
+  onClose: () => void
 }
 
 // Enhanced content renderer that handles both HTML and markdown
 const renderContent = (content: string): string => {
   // Check if content is already HTML (contains HTML tags)
-  const isHTML = /<[a-z][\s\S]*>/i.test(content);
-  
+  const isHTML = /<[a-z][\s\S]*>/i.test(content)
+
   if (isHTML) {
     // Content is already HTML from TinyMCE, just return it
-    return content;
+    return content
   }
-  
+
   // Content is markdown, convert it to HTML
-  return content
-    // Headers
-    .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mb-2 mt-6">$1</h3>')
-    .replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mb-3 mt-8">$1</h2>')
-    .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mb-4 mt-8">$1</h1>')
-    // Bold and italic
-    .replace(/\*\*\*(.*)\*\*\*/gim, '<strong><em>$1</em></strong>')
-    .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-    .replace(/\*(.*)\*/gim, '<em>$1</em>')
-    // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" class="text-rose-600 hover:text-rose-700 underline" target="_blank" rel="noopener noreferrer">$1</a>')
-    // Images
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/gim, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg my-4" />')
-    // Line breaks and paragraphs
-    .split('\n\n')
-    .map(paragraph => paragraph.trim())
-    .filter(paragraph => paragraph.length > 0)
-    .map(paragraph => {
-      // Check if it's already wrapped in HTML tags
-      if (paragraph.startsWith('<')) {
-        return paragraph;
-      }
-      return `<p class="mb-4 leading-relaxed">${paragraph}</p>`;
-    })
-    .join('')
-    // Lists
-    .replace(/^\* (.+)$/gim, '<li class="ml-4 mb-1">• $1</li>')
-    .replace(/(<li.*<\/li>)/gim, '<ul class="mb-4 space-y-1">$1</ul>');
-};
+  return (
+    content
+      // Headers
+      .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mb-2 mt-6">$1</h3>')
+      .replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mb-3 mt-8">$1</h2>')
+      .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mb-4 mt-8">$1</h1>')
+      // Bold and italic
+      .replace(/\*\*\*(.*)\*\*\*/gim, '<strong><em>$1</em></strong>')
+      .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+      .replace(/\*(.*)\*/gim, '<em>$1</em>')
+      // Links
+      .replace(
+        /\[([^\]]+)\]\(([^)]+)\)/gim,
+        '<a href="$2" class="text-rose-600 hover:text-rose-700 underline" target="_blank" rel="noopener noreferrer">$1</a>'
+      )
+      // Images
+      .replace(
+        /!\[([^\]]*)\]\(([^)]+)\)/gim,
+        '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg my-4" />'
+      )
+      // Line breaks and paragraphs
+      .split('\n\n')
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph.length > 0)
+      .map((paragraph) => {
+        // Check if it's already wrapped in HTML tags
+        if (paragraph.startsWith('<')) {
+          return paragraph
+        }
+        return `<p class="mb-4 leading-relaxed">${paragraph}</p>`
+      })
+      .join('')
+      // Lists
+      .replace(/^\* (.+)$/gim, '<li class="ml-4 mb-1">• $1</li>')
+      .replace(/(<li.*<\/li>)/gim, '<ul class="mb-4 space-y-1">$1</ul>')
+  )
+}
 
 export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose }) => {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   const formattedDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString('nl-NL', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
-  });
+    day: 'numeric',
+  })
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -102,31 +110,25 @@ export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose 
                   </span>
                 )}
               </div>
-              
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                {post.title}
-              </h1>
-              
+
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
+
               {post.excerpt && (
-                <p className="text-xl text-gray-600 leading-relaxed">
-                  {post.excerpt}
-                </p>
+                <p className="text-xl text-gray-600 leading-relaxed">{post.excerpt}</p>
               )}
-              
+
               <div className="flex items-center text-sm text-gray-500 mt-4 pt-4 border-t">
-                <time dateTime={post.publishedAt || post.createdAt}>
-                  {formattedDate}
-                </time>
+                <time dateTime={post.publishedAt || post.createdAt}>{formattedDate}</time>
                 <span className="mx-2">•</span>
                 <span>{Math.ceil(post.content.split(' ').length / 200)} min leestijd</span>
               </div>
             </header>
 
             {/* Article Content */}
-            <div 
+            <div
               className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ 
-                __html: renderContent(post.content) 
+              dangerouslySetInnerHTML={{
+                __html: renderContent(post.content),
               }}
             />
 
@@ -177,5 +179,5 @@ export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose 
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

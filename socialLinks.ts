@@ -4,12 +4,12 @@
 // VITE_INSTAGRAM_URL=https://www.instagram.com/ jouw-profiel
 // VITE_PINTEREST_URL=https://www.pinterest.com/ jouw-profiel
 
-const instagramEnv = import.meta.env?.VITE_INSTAGRAM_URL as string | undefined;
-const pinterestEnv = import.meta.env?.VITE_PINTEREST_URL as string | undefined;
+const instagramEnv = import.meta.env?.VITE_INSTAGRAM_URL as string | undefined
+const pinterestEnv = import.meta.env?.VITE_PINTEREST_URL as string | undefined
 
 export const socialLinks = {
   instagram: instagramEnv || 'https://www.instagram.com/gifteez.nl/',
   pinterest: pinterestEnv || 'https://nl.pinterest.com/gifteez01/',
-};
+}
 
-export type SocialKey = keyof typeof socialLinks;
+export type SocialKey = keyof typeof socialLinks

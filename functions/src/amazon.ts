@@ -1,39 +1,39 @@
-import aws4 from 'aws4';
+import aws4 from 'aws4'
 
 export interface AmazonItem {
-  asin: string;
-  title: string;
-  url: string;
-  images: { small?: string; medium?: string; large?: string };
-  price?: { value: number; currency: string; display: string };
-  prime?: boolean;
-  savings?: { amount?: number; percent?: number };
-  rating?: number;
-  reviewCount?: number;
-  features?: string[];
-  description?: string;
+  asin: string
+  title: string
+  url: string
+  images: { small?: string; medium?: string; large?: string }
+  price?: { value: number; currency: string; display: string }
+  prime?: boolean
+  savings?: { amount?: number; percent?: number }
+  rating?: number
+  reviewCount?: number
+  features?: string[]
+  description?: string
 }
 
 export function isPaapiConfigured() {
-  const accessKey = process.env.PAAPI_ACCESS_KEY || '';
-  const secretKey = process.env.PAAPI_SECRET_KEY || '';
-  const partnerTag = process.env.PAAPI_PARTNER_TAG || '';
-  return Boolean(accessKey && secretKey && partnerTag);
+  const accessKey = process.env.PAAPI_ACCESS_KEY || ''
+  const secretKey = process.env.PAAPI_SECRET_KEY || ''
+  const partnerTag = process.env.PAAPI_PARTNER_TAG || ''
+  return Boolean(accessKey && secretKey && partnerTag)
 }
 
 function cfg() {
-  const accessKey = process.env.PAAPI_ACCESS_KEY || '';
-  const secretKey = process.env.PAAPI_SECRET_KEY || '';
-  const partnerTag = process.env.PAAPI_PARTNER_TAG || '';
-  const host = process.env.PAAPI_HOST || 'webservices.amazon.nl';
-  const region = process.env.PAAPI_REGION || 'eu-west-1';
-  if (!accessKey || !secretKey || !partnerTag) throw new Error('PAAPI env not configured');
-  return { accessKey, secretKey, partnerTag, host, region };
+  const accessKey = process.env.PAAPI_ACCESS_KEY || ''
+  const secretKey = process.env.PAAPI_SECRET_KEY || ''
+  const partnerTag = process.env.PAAPI_PARTNER_TAG || ''
+  const host = process.env.PAAPI_HOST || 'webservices.amazon.nl'
+  const region = process.env.PAAPI_REGION || 'eu-west-1'
+  if (!accessKey || !secretKey || !partnerTag) throw new Error('PAAPI env not configured')
+  return { accessKey, secretKey, partnerTag, host, region }
 }
 
 async function signedFetch(path: string, body: any) {
-  const { accessKey, secretKey, host, region } = cfg();
-  const bodyStr = JSON.stringify(body);
+  const { accessKey, secretKey, host, region } = cfg()
+  const bodyStr = JSON.stringify(body)
   const opts: aws4.Request = {
     host,
     path,
@@ -42,35 +42,48 @@ async function signedFetch(path: string, body: any) {
     region,
     headers: {
       'content-type': 'application/json; charset=UTF-8',
-      'host': host,
+      host: host,
     },
     body: bodyStr,
-  } as any;
-  aws4.sign(opts, { accessKeyId: accessKey, secretAccessKey: secretKey } as any);
-  const url = `https://${host}${path}`;
-  const res = await fetch(url, { method: 'POST', headers: opts.headers as any, body: bodyStr });
+  } as any
+  aws4.sign(opts, { accessKeyId: accessKey, secretAccessKey: secretKey } as any)
+  const url = `https://${host}${path}`
+  const res = await fetch(url, { method: 'POST', headers: opts.headers as any, body: bodyStr })
   if (!res.ok) {
-    const txt = await res.text();
-    throw new Error(`PAAPI ${res.status}: ${txt}`);
+    const txt = await res.text()
+    throw new Error(`PAAPI ${res.status}: ${txt}`)
   }
-  return res.json();
+  return res.json()
 }
 
 function mapOffer(offer: any) {
-  const amount = offer?.Price?.Amount;
-  const currency = offer?.Price?.Currency;
-  const display = amount && currency ? new Intl.NumberFormat('nl-NL', { style: 'currency', currency }).format(amount) : undefined;
-  const savingsAmount = offer?.Savings?.Amount;
-  const savingsPercent = offer?.Savings?.Percentage;
+  const amount = offer?.Price?.Amount
+  const currency = offer?.Price?.Currency
+  const display =
+    amount && currency
+      ? new Intl.NumberFormat('nl-NL', { style: 'currency', currency }).format(amount)
+      : undefined
+  const savingsAmount = offer?.Savings?.Amount
+  const savingsPercent = offer?.Savings?.Percentage
   return {
     price: amount && currency ? { value: amount, currency, display: display! } : undefined,
-    savings: savingsAmount || savingsPercent ? { amount: savingsAmount, percent: savingsPercent } : undefined,
+    savings:
+      savingsAmount || savingsPercent
+        ? { amount: savingsAmount, percent: savingsPercent }
+        : undefined,
     prime: offer?.ProgramEligibility?.IsPrimeEligible === true,
-  };
+  }
 }
 
-export async function searchItems(params: { keywords: string; page?: number; minPrice?: number; maxPrice?: number; sort?: string; prime?: boolean; }) {
-  const { partnerTag } = cfg();
+export async function searchItems(params: {
+  keywords: string
+  page?: number
+  minPrice?: number
+  maxPrice?: number
+  sort?: string
+  prime?: boolean
+}) {
+  const { partnerTag } = cfg()
   const body = {
     PartnerType: 'Associates',
     PartnerTag: partnerTag,
@@ -89,24 +102,27 @@ export async function searchItems(params: { keywords: string; page?: number; min
       'CustomerReviews.StarRating',
       'Offers.Listings.Price',
       'Offers.Listings.SavingBasis',
-      'Offers.Listings.ProgramEligibility'
+      'Offers.Listings.ProgramEligibility',
     ],
     // Note: price filters differ per locale; in PA-API use MinPrice/MaxPrice in cents for some markets.
-  } as any;
-  if (typeof params.minPrice === 'number') body.MinPrice = Math.round(params.minPrice * 100);
-  if (typeof params.maxPrice === 'number') body.MaxPrice = Math.round(params.maxPrice * 100);
+  } as any
+  if (typeof params.minPrice === 'number') body.MinPrice = Math.round(params.minPrice * 100)
+  if (typeof params.maxPrice === 'number') body.MaxPrice = Math.round(params.maxPrice * 100)
 
-  const data = await signedFetch('/paapi5/searchitems', body);
+  const data = await signedFetch('/paapi5/searchitems', body)
   const items = (data.ItemsResult?.Items || []).map((it: any): AmazonItem => {
-    const listing = it?.Offers?.Listings?.[0];
-    const priceInfo = mapOffer(listing);
+    const listing = it?.Offers?.Listings?.[0]
+    const priceInfo = mapOffer(listing)
     const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
       ? it.ItemInfo.Features.DisplayValues.filter((value: any) => typeof value === 'string')
-      : undefined;
-    const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
-    const editorialContent = Array.isArray(editorialEntries) ? editorialEntries.find((entry: any) => entry?.Content)?.Content : undefined;
-    const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
-    const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
+      : undefined
+    const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries
+    const editorialContent = Array.isArray(editorialEntries)
+      ? editorialEntries.find((entry: any) => entry?.Content)?.Content
+      : undefined
+    const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating
+    const reviewCount =
+      typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined
     return {
       asin: it?.ASIN,
       title: it?.ItemInfo?.Title?.DisplayValue,
@@ -121,13 +137,13 @@ export async function searchItems(params: { keywords: string; page?: number; min
       reviewCount,
       features,
       description: typeof editorialContent === 'string' ? editorialContent : undefined,
-    };
-  });
-  return { items, fetchedAtISO: new Date().toISOString() };
+    }
+  })
+  return { items, fetchedAtISO: new Date().toISOString() }
 }
 
 export async function getItem(asin: string) {
-  const { partnerTag } = cfg();
+  const { partnerTag } = cfg()
   const body = {
     PartnerType: 'Associates',
     PartnerTag: partnerTag,
@@ -143,21 +159,24 @@ export async function getItem(asin: string) {
       'CustomerReviews.StarRating',
       'Offers.Listings.Price',
       'Offers.Listings.SavingBasis',
-      'Offers.Listings.ProgramEligibility'
-    ]
-  };
-  const data = await signedFetch('/paapi5/getitems', body);
-  const it = data.ItemsResult?.Items?.[0];
-  if (!it) return { item: null, fetchedAtISO: new Date().toISOString() };
-  const listing = it?.Offers?.Listings?.[0];
-  const priceInfo = mapOffer(listing);
+      'Offers.Listings.ProgramEligibility',
+    ],
+  }
+  const data = await signedFetch('/paapi5/getitems', body)
+  const it = data.ItemsResult?.Items?.[0]
+  if (!it) return { item: null, fetchedAtISO: new Date().toISOString() }
+  const listing = it?.Offers?.Listings?.[0]
+  const priceInfo = mapOffer(listing)
   const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
     ? it.ItemInfo.Features.DisplayValues.filter((value: any) => typeof value === 'string')
-    : undefined;
-  const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
-  const editorialContent = Array.isArray(editorialEntries) ? editorialEntries.find((entry: any) => entry?.Content)?.Content : undefined;
-  const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
-  const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
+    : undefined
+  const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries
+  const editorialContent = Array.isArray(editorialEntries)
+    ? editorialEntries.find((entry: any) => entry?.Content)?.Content
+    : undefined
+  const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating
+  const reviewCount =
+    typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined
   const item: AmazonItem = {
     asin: it?.ASIN,
     title: it?.ItemInfo?.Title?.DisplayValue,
@@ -172,6 +191,6 @@ export async function getItem(asin: string) {
     reviewCount,
     features,
     description: typeof editorialContent === 'string' ? editorialContent : undefined,
-  };
-  return { item, fetchedAtISO: new Date().toISOString() };
+  }
+  return { item, fetchedAtISO: new Date().toISOString() }
 }

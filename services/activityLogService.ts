@@ -1,7 +1,7 @@
-import { collection, addDoc, query, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore';
-import { db, firebaseEnabled } from './firebase';
+import { collection, addDoc, query, orderBy, limit, getDocs, Timestamp } from 'firebase/firestore'
+import { db, firebaseEnabled } from './firebase'
 
-export type ActivityType = 
+export type ActivityType =
   | 'category_created'
   | 'category_updated'
   | 'category_deleted'
@@ -12,22 +12,22 @@ export type ActivityType =
   | 'config_saved'
   | 'blog_created'
   | 'blog_updated'
-  | 'blog_deleted';
+  | 'blog_deleted'
 
 export interface ActivityLogEntry {
-  id?: string;
-  type: ActivityType;
-  description: string;
-  user?: string;
-  metadata?: Record<string, any>;
-  timestamp: Date;
-  createdAt?: Timestamp;
+  id?: string
+  type: ActivityType
+  description: string
+  user?: string
+  metadata?: Record<string, any>
+  timestamp: Date
+  createdAt?: Timestamp
 }
 
-const COLLECTION_NAME = 'adminActivityLog';
-const LOCAL_STORAGE_KEY = 'gifteez_activity_log_v1';
-const MAX_LOCAL_ENTRIES = 50;
-const MAX_LOAD_ENTRIES = 100;
+const COLLECTION_NAME = 'adminActivityLog'
+const LOCAL_STORAGE_KEY = 'gifteez_activity_log_v1'
+const MAX_LOCAL_ENTRIES = 50
+const MAX_LOAD_ENTRIES = 100
 
 class ActivityLogService {
   /**
@@ -45,7 +45,7 @@ class ActivityLogService {
       user: user || 'Admin',
       metadata,
       timestamp: new Date(),
-    };
+    }
 
     // Try Firebase first
     if (firebaseEnabled && db) {
@@ -53,15 +53,15 @@ class ActivityLogService {
         await addDoc(collection(db, COLLECTION_NAME), {
           ...entry,
           createdAt: Timestamp.now(),
-        });
-        console.log('✅ Activity logged to Firebase:', type);
+        })
+        console.log('✅ Activity logged to Firebase:', type)
       } catch (error) {
-        console.warn('⚠️ Could not log to Firebase, using localStorage:', error);
-        this.logToLocalStorage(entry);
+        console.warn('⚠️ Could not log to Firebase, using localStorage:', error)
+        this.logToLocalStorage(entry)
       }
     } else {
       // Fallback to localStorage
-      this.logToLocalStorage(entry);
+      this.logToLocalStorage(entry)
     }
   }
 
@@ -69,21 +69,21 @@ class ActivityLogService {
    * Log to localStorage as fallback
    */
   private static logToLocalStorage(entry: ActivityLogEntry): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return
 
     try {
-      const stored = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-      const entries: ActivityLogEntry[] = stored ? JSON.parse(stored) : [];
-      
-      entries.unshift(entry); // Add to beginning
-      
+      const stored = window.localStorage.getItem(LOCAL_STORAGE_KEY)
+      const entries: ActivityLogEntry[] = stored ? JSON.parse(stored) : []
+
+      entries.unshift(entry) // Add to beginning
+
       // Keep only last N entries
-      const trimmed = entries.slice(0, MAX_LOCAL_ENTRIES);
-      
-      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(trimmed));
-      console.log('✅ Activity logged to localStorage:', entry.type);
+      const trimmed = entries.slice(0, MAX_LOCAL_ENTRIES)
+
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(trimmed))
+      console.log('✅ Activity logged to localStorage:', entry.type)
     } catch (error) {
-      console.error('❌ Could not log to localStorage:', error);
+      console.error('❌ Could not log to localStorage:', error)
     }
   }
 
@@ -98,11 +98,11 @@ class ActivityLogService {
           collection(db, COLLECTION_NAME),
           orderBy('createdAt', 'desc'),
           limit(Math.min(maxEntries, MAX_LOAD_ENTRIES))
-        );
+        )
 
-        const snapshot = await getDocs(q);
-        const activities = snapshot.docs.map(doc => {
-          const data = doc.data();
+        const snapshot = await getDocs(q)
+        const activities = snapshot.docs.map((doc) => {
+          const data = doc.data()
           return {
             id: doc.id,
             type: data.type,
@@ -110,43 +110,43 @@ class ActivityLogService {
             user: data.user || 'Admin',
             metadata: data.metadata,
             timestamp: data.createdAt?.toDate() || new Date(data.timestamp),
-          } as ActivityLogEntry;
-        });
+          } as ActivityLogEntry
+        })
 
-        console.log(`✅ Loaded ${activities.length} activities from Firebase`);
-        return activities;
+        console.log(`✅ Loaded ${activities.length} activities from Firebase`)
+        return activities
       } catch (error) {
-        console.warn('⚠️ Could not load from Firebase, using localStorage:', error);
-        return this.getFromLocalStorage(maxEntries);
+        console.warn('⚠️ Could not load from Firebase, using localStorage:', error)
+        return this.getFromLocalStorage(maxEntries)
       }
     }
 
     // Fallback to localStorage
-    return this.getFromLocalStorage(maxEntries);
+    return this.getFromLocalStorage(maxEntries)
   }
 
   /**
    * Get from localStorage
    */
   private static getFromLocalStorage(maxEntries: number): ActivityLogEntry[] {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === 'undefined') return []
 
     try {
-      const stored = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (!stored) return [];
+      const stored = window.localStorage.getItem(LOCAL_STORAGE_KEY)
+      if (!stored) return []
 
-      const entries: ActivityLogEntry[] = JSON.parse(stored);
-      
+      const entries: ActivityLogEntry[] = JSON.parse(stored)
+
       // Convert string dates back to Date objects
-      const parsed = entries.map(entry => ({
+      const parsed = entries.map((entry) => ({
         ...entry,
         timestamp: new Date(entry.timestamp),
-      }));
+      }))
 
-      return parsed.slice(0, maxEntries);
+      return parsed.slice(0, maxEntries)
     } catch (error) {
-      console.error('❌ Could not load from localStorage:', error);
-      return [];
+      console.error('❌ Could not load from localStorage:', error)
+      return []
     }
   }
 
@@ -154,12 +154,12 @@ class ActivityLogService {
    * Clear all activities (for testing/admin)
    */
   static clearLocalStorage(): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return
     try {
-      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-      console.log('✅ Activity log cleared from localStorage');
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY)
+      console.log('✅ Activity log cleared from localStorage')
     } catch (error) {
-      console.error('❌ Could not clear localStorage:', error);
+      console.error('❌ Could not clear localStorage:', error)
     }
   }
 
@@ -179,19 +179,19 @@ class ActivityLogService {
       blog_created: '📝',
       blog_updated: '✏️',
       blog_deleted: '🗑️',
-    };
-    return icons[type] || '📌';
+    }
+    return icons[type] || '📌'
   }
 
   /**
    * Get activity color
    */
   static getActivityColor(type: ActivityType): string {
-    if (type.includes('delete') || type.includes('removed')) return 'red';
-    if (type.includes('add') || type.includes('created')) return 'green';
-    if (type.includes('update')) return 'blue';
-    return 'gray';
+    if (type.includes('delete') || type.includes('removed')) return 'red'
+    if (type.includes('add') || type.includes('created')) return 'green'
+    if (type.includes('update')) return 'blue'
+    return 'gray'
   }
 }
 
-export default ActivityLogService;
+export default ActivityLogService

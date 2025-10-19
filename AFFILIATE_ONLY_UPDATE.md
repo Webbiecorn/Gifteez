@@ -22,12 +22,14 @@
 ### 🔧 Technische details:
 
 #### Nieuwe service: `affiliateFilterService.ts`
+
 ```typescript
 // Filters gifts to only include Amazon and Coolblue
 export function processGiftsForAffiliateOnly(gifts: Gift[]): Gift[]
 ```
 
 #### Aangepaste files:
+
 - `services/geminiService.ts` - AI instructies voor alleen affiliate retailers en geen afbeeldingen
 - `components/GiftFinderPage.tsx` - Affiliate filtering toegepast
 - `components/GiftResultCard.tsx` - Conditionele afbeelding rendering

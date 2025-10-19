@@ -1,53 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { CheckIcon, XIcon } from './IconComponents';
+import React, { useState, useEffect } from 'react'
+import { CheckIcon, XIcon } from './IconComponents'
 
 interface CookieBannerProps {
-  onAccept: (preferences: CookiePreferences) => void;
-  onDecline: () => void;
+  onAccept: (preferences: CookiePreferences) => void
+  onDecline: () => void
 }
 
 export interface CookiePreferences {
-  necessary: boolean;
-  analytics: boolean;
-  marketing: boolean;
+  necessary: boolean
+  analytics: boolean
+  marketing: boolean
 }
 
 const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(false)
   const [preferences, setPreferences] = useState<CookiePreferences>({
     necessary: true, // Altijd waar, kan niet worden uitgeschakeld
     analytics: false,
     marketing: false,
-  });
+  })
 
   const handleAcceptAll = () => {
     const allPreferences: CookiePreferences = {
       necessary: true,
       analytics: true,
       marketing: true,
-    };
-    setPreferences(allPreferences);
-    onAccept(allPreferences);
-  };
+    }
+    setPreferences(allPreferences)
+    onAccept(allPreferences)
+  }
 
   const handleAcceptSelected = () => {
-    onAccept(preferences);
-  };
+    onAccept(preferences)
+  }
 
   const handleDecline = () => {
     const minimalPreferences: CookiePreferences = {
       necessary: true,
       analytics: false,
       marketing: false,
-    };
-    setPreferences(minimalPreferences);
-    onDecline();
-  };
+    }
+    setPreferences(minimalPreferences)
+    onDecline()
+  }
 
   const updatePreference = (type: keyof CookiePreferences, value: boolean) => {
-    if (type === 'necessary') return; // Necessary cookies kunnen niet worden uitgeschakeld
-    setPreferences(prev => ({ ...prev, [type]: value }));
-  };
+    if (type === 'necessary') return // Necessary cookies kunnen niet worden uitgeschakeld
+    setPreferences((prev) => ({ ...prev, [type]: value }))
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-4 border-primary shadow-2xl">
@@ -64,8 +64,8 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
           <div className="flex-grow">
             <h3 className="text-lg font-bold text-gray-900 mb-2">Cookie Voorkeuren</h3>
             <p className="text-gray-700 text-sm leading-relaxed mb-4">
-              Wij gebruiken cookies om uw ervaring te verbeteren en onze website te analyseren.
-              U kunt kiezen welke soorten cookies u wilt accepteren.
+              Wij gebruiken cookies om uw ervaring te verbeteren en onze website te analyseren. U
+              kunt kiezen welke soorten cookies u wilt accepteren.
             </p>
 
             {/* Quick Actions */}
@@ -104,10 +104,13 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
                   <div className="flex-grow">
                     <div className="flex items-center justify-between">
                       <h5 className="font-medium text-gray-900">Noodzakelijke Cookies</h5>
-                      <span className="text-xs bg-light-bg text-accent px-2 py-1 rounded-full">Altijd actief</span>
+                      <span className="text-xs bg-light-bg text-accent px-2 py-1 rounded-full">
+                        Altijd actief
+                      </span>
                     </div>
                     <p className="text-sm text-gray-600 mt-1">
-                      Deze cookies zijn essentieel voor de werking van de website en kunnen niet worden uitgeschakeld.
+                      Deze cookies zijn essentieel voor de werking van de website en kunnen niet
+                      worden uitgeschakeld.
                     </p>
                   </div>
                 </div>
@@ -125,7 +128,8 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
                     <label htmlFor="analytics" className="cursor-pointer">
                       <h5 className="font-medium text-gray-900">Analytische Cookies</h5>
                       <p className="text-sm text-gray-600 mt-1">
-                        Helpen ons te begrijpen hoe bezoekers de website gebruiken, zodat we de ervaring kunnen verbeteren.
+                        Helpen ons te begrijpen hoe bezoekers de website gebruiken, zodat we de
+                        ervaring kunnen verbeteren.
                       </p>
                     </label>
                   </div>
@@ -144,7 +148,8 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
                     <label htmlFor="marketing" className="cursor-pointer">
                       <h5 className="font-medium text-gray-900">Marketing Cookies</h5>
                       <p className="text-sm text-gray-600 mt-1">
-                        Gebruikt voor het tonen van relevante advertenties en het meten van marketing effectiviteit.
+                        Gebruikt voor het tonen van relevante advertenties en het meten van
+                        marketing effectiviteit.
                       </p>
                     </label>
                   </div>
@@ -190,7 +195,7 @@ const CookieBanner: React.FC<CookieBannerProps> = ({ onAccept, onDecline }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CookieBanner;
+export default CookieBanner

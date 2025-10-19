@@ -1,22 +1,20 @@
-import React from 'react';
-import { DealCategory, DealItem } from '../types';
-import ImageWithFallback from './ImageWithFallback';
-import { withAffiliate } from '../services/affiliate';
-import {
-  SparklesIcon,
-  TagIcon,
-  StarIcon,
-  BookmarkIcon,
-  CheckIcon
-} from './IconComponents';
+import React from 'react'
+import { withAffiliate } from '../services/affiliate'
+import { SparklesIcon, TagIcon, StarIcon, BookmarkIcon, CheckIcon } from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
+import type { DealCategory, DealItem } from '../types'
 
 interface DealsPreviewSectionsProps {
-  dealOfWeek: DealItem | null;
-  topDeals: DealItem[];
-  categories: DealCategory[];
+  dealOfWeek: DealItem | null
+  topDeals: DealItem[]
+  categories: DealCategory[]
 }
 
-const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({ dealOfWeek, topDeals, categories }) => {
+const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({
+  dealOfWeek,
+  topDeals,
+  categories,
+}) => {
   return (
     <div className="space-y-14">
       {dealOfWeek && (
@@ -66,9 +64,7 @@ const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({ dealOfWeek,
               >
                 Bekijk deal
               </a>
-              <span className="text-xs text-slate-400">
-                Link opent in een nieuw tabblad
-              </span>
+              <span className="text-xs text-slate-400">Link opent in een nieuw tabblad</span>
             </div>
           </div>
         </div>
@@ -87,21 +83,33 @@ const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({ dealOfWeek,
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
             {topDeals.map((deal, index) => (
-              <div key={deal.id} className="relative rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+              <div
+                key={deal.id}
+                className="relative rounded-2xl border border-slate-100 bg-white p-5 shadow-sm"
+              >
                 <span className="absolute -left-3 -top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-rose-500 text-xs font-semibold text-white shadow">
                   #{index + 1}
                 </span>
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-center overflow-hidden rounded-xl bg-slate-50">
-                    <ImageWithFallback src={deal.imageUrl} alt={deal.name} className="h-40 w-full object-contain" fit="contain" />
+                    <ImageWithFallback
+                      src={deal.imageUrl}
+                      alt={deal.name}
+                      className="h-40 w-full object-contain"
+                      fit="contain"
+                    />
                   </div>
                   <div className="space-y-2 text-sm text-slate-700">
                     <h4 className="font-semibold text-slate-900 line-clamp-2">{deal.name}</h4>
                     <p className="text-xs text-slate-500 line-clamp-3">{deal.description}</p>
                     <div className="flex flex-wrap items-center gap-2 text-xs">
-                      <span className="rounded-full bg-rose-50 px-2 py-0.5 font-semibold text-rose-500">{deal.price}</span>
+                      <span className="rounded-full bg-rose-50 px-2 py-0.5 font-semibold text-rose-500">
+                        {deal.price}
+                      </span>
                       {deal.giftScore && (
-                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-600">Score {deal.giftScore}</span>
+                        <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-600">
+                          Score {deal.giftScore}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -127,17 +135,29 @@ const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({ dealOfWeek,
               </div>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {category.items.map((item) => (
-                  <div key={item.id} className="flex flex-col gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+                  <div
+                    key={item.id}
+                    className="flex flex-col gap-4 rounded-2xl border border-slate-100 bg-white p-5 shadow-sm"
+                  >
                     <div className="flex items-center justify-center overflow-hidden rounded-xl bg-slate-50">
-                      <ImageWithFallback src={item.imageUrl} alt={item.name} className="h-40 w-full object-contain" fit="contain" />
+                      <ImageWithFallback
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="h-40 w-full object-contain"
+                        fit="contain"
+                      />
                     </div>
                     <div className="space-y-2 text-sm text-slate-700">
                       <h4 className="font-semibold text-slate-900 line-clamp-2">{item.name}</h4>
                       <p className="text-xs text-slate-500 line-clamp-3">{item.description}</p>
                       <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="rounded-full bg-rose-50 px-2 py-0.5 font-semibold text-rose-500">{item.price}</span>
+                        <span className="rounded-full bg-rose-50 px-2 py-0.5 font-semibold text-rose-500">
+                          {item.price}
+                        </span>
                         {item.giftScore && (
-                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-600">Score {item.giftScore}</span>
+                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-emerald-600">
+                            Score {item.giftScore}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -157,7 +177,7 @@ const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({ dealOfWeek,
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default DealsPreviewSections;
+export default DealsPreviewSections

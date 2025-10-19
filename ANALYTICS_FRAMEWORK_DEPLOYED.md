@@ -11,9 +11,11 @@
 ### **Core Services (3 files, ~1,180 lines)**
 
 #### 1. `services/analyticsEventService.ts` (380 lines)
+
 **Purpose:** Unified event tracking with consistent schema
 
 **Event Types:**
+
 - `view_product` - Product impressions
 - `click_affiliate` - Affiliate link clicks
 - `start_giftfinder` - GiftFinder starts
@@ -22,6 +24,7 @@
 - `funnel_step_complete` - Funnel progression
 
 **Key Functions:**
+
 ```typescript
 trackViewProduct(product, position, listName, variant?)
 trackClickAffiliate(product, source, funnelStep, position?)
@@ -33,6 +36,7 @@ trackProductImpressions(products[], listName, variant?) // Batch tracking
 ```
 
 **Features:**
+
 - ✅ Type-safe event definitions
 - ✅ Automatic GTM dataLayer push
 - ✅ Batch product impression tracking
@@ -42,15 +46,18 @@ trackProductImpressions(products[], listName, variant?) // Batch tracking
 ---
 
 #### 2. `services/funnelTrackingService.ts` (350 lines)
+
 **Purpose:** Track multi-step user journeys through conversion funnels
 
 **Predefined Funnels:**
+
 1. **giftfinder_flow**: Home → GiftFinder → Filters → Product → Affiliate → Outbound
 2. **deals_flow**: Deals Page → Deal View → Affiliate → Outbound
 3. **category_flow**: Category → Product → Affiliate → Outbound
 4. **blog_flow**: Blog Post → Product Link → Affiliate → Outbound
 
 **Key Functions:**
+
 ```typescript
 startFunnel(funnelName) // Start tracking session
 completeStep(funnelName, stepName) // Mark step complete
@@ -61,17 +68,19 @@ clearFunnelMetrics() // Clear all data
 ```
 
 **Metrics Provided:**
+
 - Total sessions & completed sessions
 - Completion rate (%)
 - Average time to complete (ms)
 - Per-step metrics:
-  * Reached count
-  * Completed count
-  * Drop-off count & rate
-  * Average time on step
+  - Reached count
+  - Completed count
+  - Drop-off count & rate
+  - Average time on step
 - Most common drop-off point
 
 **Storage:**
+
 - Session data: `sessionStorage` (active sessions)
 - Metrics: `localStorage` (last 100 sessions per funnel)
 - Retention: 90 days
@@ -79,9 +88,11 @@ clearFunnelMetrics() // Clear all data
 ---
 
 #### 3. `services/abTestingService.ts` (450 lines)
+
 **Purpose:** A/B testing with deterministic variant assignment
 
 **Key Functions:**
+
 ```typescript
 getVariant(testName, variants, weights?) // Get assigned variant key
 getVariantValue(testName, variants, weights?) // Get variant value
@@ -94,6 +105,7 @@ isStatisticallySignificant(testName) // Check significance
 ```
 
 **Features:**
+
 - ✅ **Deterministic assignment**: Same user always gets same variant (hash-based)
 - ✅ **Multi-variant support**: A/B/C/D/... tests
 - ✅ **Custom weights**: `{ A: 0.5, B: 0.3, C: 0.2 }`
@@ -102,17 +114,19 @@ isStatisticallySignificant(testName) // Check significance
 - ✅ **Winning variant**: Auto-identified by conversion rate
 
 **Metrics Provided:**
+
 - Total impressions & conversions
 - Overall conversion rate
 - Per-variant metrics:
-  * Impressions
-  * Conversions
-  * Conversion rate (%)
-  * Average conversion time (ms)
+  - Impressions
+  - Conversions
+  - Conversion rate (%)
+  - Average conversion time (ms)
 - Winning variant
 - Statistical significance (boolean)
 
 **Storage:**
+
 - Variant assignments: `localStorage` (persistent across sessions)
 - Test metrics: `localStorage` (60 day retention)
 
@@ -121,26 +135,29 @@ isStatisticallySignificant(testName) // Check significance
 ### **React Hooks (2 files, ~200 lines)**
 
 #### 1. `hooks/useFunnelTracking.ts` (100 lines)
+
 **Purpose:** React hook for easy funnel tracking
 
 **Usage:**
+
 ```typescript
 const { trackStep, getSession, start, end } = useFunnelTracking('giftfinder_flow', {
   autoStart: true, // Auto-start on mount
-  autoEnd: true // Auto-end on unmount
-});
+  autoEnd: true, // Auto-end on unmount
+})
 
 useEffect(() => {
-  trackStep('view_homepage');
-}, []);
+  trackStep('view_homepage')
+}, [])
 
 const handleGiftFinderClick = () => {
-  trackStep('start_giftfinder');
-  navigateTo('giftFinder');
-};
+  trackStep('start_giftfinder')
+  navigateTo('giftFinder')
+}
 ```
 
 **Features:**
+
 - ✅ Auto-lifecycle management (auto-start/end)
 - ✅ Step completion tracking
 - ✅ Current session retrieval
@@ -149,9 +166,11 @@ const handleGiftFinderClick = () => {
 ---
 
 #### 2. `hooks/useABTest.ts` (100 lines)
+
 **Purpose:** React hook for A/B testing
 
 **Usage:**
+
 ```typescript
 const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTest(
   'hero_cta_test',
@@ -175,6 +194,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 **Features:**
+
 - ✅ Auto variant assignment on mount
 - ✅ Auto impression tracking
 - ✅ Conversion tracking helper
@@ -186,7 +206,9 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ### **Documentation (2 files, ~1,100 lines)**
 
 #### 1. `ANALYTICS_EXPERIMENTATION_PLAN.md` (600 lines)
+
 **Contents:**
+
 - Complete architecture overview
 - Event schema definitions (6 event types)
 - Funnel definitions (4 funnels)
@@ -197,7 +219,9 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 - Success metrics
 
 #### 2. `ANALYTICS_DEPLOYMENT_GUIDE.md` (500 lines)
+
 **Contents:**
+
 - Step-by-step deployment guide
 - Phase-by-phase implementation plan (4 phases)
 - GTM tag/trigger configuration (detailed)
@@ -211,7 +235,9 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ### **Integration Examples (2 files, ~450 lines)**
 
 #### 1. `examples/HomePage_Integration_Example.tsx` (200 lines)
+
 **Demonstrates:**
+
 - Hero CTA text A/B test (3 variants)
 - Hero image style A/B test (3 variants)
 - Newsletter position A/B test (3 variants)
@@ -220,7 +246,9 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 - Conversion tracking on clicks
 
 #### 2. `examples/GiftFinderPage_Integration_Example.tsx` (250 lines)
+
 **Demonstrates:**
+
 - GiftFinder funnel tracking
 - Filter change tracking (occasion, budget, recipient, interests)
 - Product impression tracking (batch & individual)
@@ -233,6 +261,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ## 📊 Event Schema Reference
 
 ### **1. view_product**
+
 ```typescript
 {
   event: 'view_product',
@@ -249,6 +278,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **2. click_affiliate**
+
 ```typescript
 {
   event: 'click_affiliate',
@@ -266,6 +296,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **3. start_giftfinder**
+
 ```typescript
 {
   event: 'start_giftfinder',
@@ -275,6 +306,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **4. apply_filter**
+
 ```typescript
 {
   event: 'apply_filter',
@@ -286,6 +318,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **5. share_pin**
+
 ```typescript
 {
   event: 'share_pin',
@@ -297,6 +330,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **6. funnel_step_complete**
+
 ```typescript
 {
   event: 'funnel_step_complete',
@@ -309,6 +343,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **7. ab_variant_impression**
+
 ```typescript
 {
   event: 'ab_variant_impression',
@@ -319,6 +354,7 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ```
 
 ### **8. ab_variant_conversion**
+
 ```typescript
 {
   event: 'ab_variant_conversion',
@@ -334,9 +370,11 @@ const { variantKey, variant, trackConversion, getMetrics, isWinning } = useABTes
 ## 🚀 Quick Start Integration
 
 ### **Step 1: Install (Already Done)**
+
 All files are created and compiled successfully. No additional dependencies needed.
 
 ### **Step 2: Integrate in HomePage**
+
 ```typescript
 import { useABTest } from '../hooks/useABTest';
 import { useFunnelTracking } from '../hooks/useFunnelTracking';
@@ -348,21 +386,21 @@ const HomePage = ({ navigateTo }) => {
     A: 'Vind het perfecte cadeau',
     B: 'Start GiftFinder'
   });
-  
+
   // Funnel Tracking
   const { trackStep } = useFunnelTracking('giftfinder_flow');
-  
+
   useEffect(() => {
     trackStep('view_homepage');
   }, []);
-  
+
   const handleCTAClick = () => {
     trackConversion('click');
     trackStep('start_giftfinder');
     trackStartGiftFinder('homepage_hero');
     navigateTo('giftFinder');
   };
-  
+
   return (
     <Button onClick={handleCTAClick}>
       {heroCTA} →
@@ -372,6 +410,7 @@ const HomePage = ({ navigateTo }) => {
 ```
 
 ### **Step 3: Integrate in GiftFinderPage**
+
 ```typescript
 import { useFunnelTracking } from '../hooks/useFunnelTracking';
 import {
@@ -382,45 +421,46 @@ import {
 
 const GiftFinderPage = () => {
   const { trackStep } = useFunnelTracking('giftfinder_flow');
-  
+
   useEffect(() => {
     trackStartGiftFinder('page_visit');
     trackStep('start_giftfinder');
   }, []);
-  
+
   const handleFilterChange = (occasion) => {
     setOccasion(occasion);
     trackApplyFilter('occasion', occasion, 'giftfinder', results.length);
     trackStep('apply_filters');
   };
-  
+
   useEffect(() => {
     if (results.length > 0) {
       trackProductImpressions(results, 'giftfinder_results');
       trackStep('view_results');
     }
   }, [results]);
-  
+
   return (/* ... */);
 };
 ```
 
 ### **Step 4: Integrate in GiftResultCard**
+
 ```typescript
 import { trackClickAffiliate } from '../services/analyticsEventService';
 import { useFunnelTracking } from '../hooks/useFunnelTracking';
 
 const GiftResultCard = ({ product, position }) => {
   const { trackStep } = useFunnelTracking('giftfinder_flow');
-  
+
   const handleAffiliateClick = () => {
     trackClickAffiliate(product, 'giftfinder', 'result_card', position);
     trackStep('click_affiliate');
-    
+
     // Open affiliate link
     window.open(product.affiliateUrl, '_blank', 'noopener,noreferrer');
   };
-  
+
   return (
     <Button onClick={handleAffiliateClick}>
       Bekijk Product →
@@ -434,11 +474,12 @@ const GiftResultCard = ({ product, position }) => {
 ## 🧪 Testing in Browser Console
 
 ### **Check A/B Test Assignments**
-```typescript
-import { getAllTestMetrics } from './services/abTestingService';
 
-const tests = getAllTestMetrics();
-console.table(tests);
+```typescript
+import { getAllTestMetrics } from './services/abTestingService'
+
+const tests = getAllTestMetrics()
+console.table(tests)
 
 // Expected output:
 // testName          | totalImpressions | totalConversions | conversionRate | winningVariant
@@ -448,11 +489,12 @@ console.table(tests);
 ```
 
 ### **Check Funnel Metrics**
-```typescript
-import { getAllFunnelMetrics } from './services/funnelTrackingService';
 
-const funnels = getAllFunnelMetrics();
-console.log(JSON.stringify(funnels, null, 2));
+```typescript
+import { getAllFunnelMetrics } from './services/funnelTrackingService'
+
+const funnels = getAllFunnelMetrics()
+console.log(JSON.stringify(funnels, null, 2))
 
 // Expected output:
 // {
@@ -468,8 +510,9 @@ console.log(JSON.stringify(funnels, null, 2));
 ```
 
 ### **Check GTM DataLayer**
+
 ```typescript
-console.log(window.dataLayer);
+console.log(window.dataLayer)
 
 // Expected output: Array of events
 // [
@@ -485,17 +528,20 @@ console.log(window.dataLayer);
 ## 📈 Expected Impact
 
 ### **Week 1-2 (Baseline)**
+
 - ✅ Establish baseline conversion rates
 - ✅ Identify top 3 drop-off points in funnel
 - ✅ Measure average time per step
 
 ### **Week 3-4 (A/B Testing)**
+
 - 🎯 Run 3 simultaneous A/B tests
 - 🎯 Collect 1,000+ impressions per variant
 - 🎯 Achieve 95% statistical significance
 - 🎯 Pick winning variants
 
 ### **Month 2+ (Optimization)**
+
 - 📊 **Target**: +10% GiftFinder → Affiliate click rate
 - 📊 **Target**: -20% funnel drop-off rate
 - 📊 **Target**: +15% average session duration

@@ -1,6 +1,5 @@
-
-import { GoogleGenAI, Type } from "@google/genai";
-import { Gift } from '../types';
+import { GoogleGenAI, Type } from '@google/genai'
+import type { Gift } from '../types'
 
 const giftSchema = {
   type: Type.ARRAY,
@@ -25,30 +24,41 @@ const giftSchema = {
         items: {
           type: Type.OBJECT,
           properties: {
-            name: { type: Type.STRING, description: 'Name of the webshop, e.g., "Coolblue" or "Amazon".' },
-            affiliateLink: { type: Type.STRING, description: 'A plausible affiliate search link for that webshop.' },
+            name: {
+              type: Type.STRING,
+              description: 'Name of the webshop, e.g., "Coolblue" or "Amazon".',
+            },
+            affiliateLink: {
+              type: Type.STRING,
+              description: 'A plausible affiliate search link for that webshop.',
+            },
           },
           required: ['name', 'affiliateLink'],
         },
       },
       imageUrl: {
         type: Type.STRING,
-        description: 'Empty string "" as we do not have product image APIs yet'
-      }
+        description: 'Empty string "" as we do not have product image APIs yet',
+      },
     },
     required: ['productName', 'description', 'priceRange', 'retailers'],
   },
-};
+}
 
-export const findGifts = async (recipient: string, budget: number, occasion: string, interests?: string): Promise<Gift[]> => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined;
+export const findGifts = async (
+  recipient: string,
+  budget: number,
+  occasion: string,
+  interests?: string
+): Promise<Gift[]> => {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined
   if (!apiKey) {
-    throw new Error("VITE_GEMINI_API_KEY is not set.");
+    throw new Error('VITE_GEMINI_API_KEY is not set.')
   }
-  
-  const ai = new GoogleGenAI({ apiKey });
 
-  const interestsPrompt = interests ? `- Hobbies/Interests: ${interests}` : '';
+  const ai = new GoogleGenAI({ apiKey })
+
+  const interestsPrompt = interests ? `- Hobbies/Interests: ${interests}` : ''
 
   const prompt = `
     Find 3 to 5 perfect gift ideas for the following criteria:
@@ -71,39 +81,40 @@ export const findGifts = async (recipient: string, budget: number, occasion: str
        - For Amazon use format "https://www.amazon.nl/s?k=[product-keywords]"
        - Replace spaces with + in URLs
     5. NO IMAGE URL - set imageUrl to an empty string "" as we don't have product image APIs yet.
-  `;
+  `
 
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
-        responseMimeType: "application/json",
+        responseMimeType: 'application/json',
         responseSchema: giftSchema,
       },
-    });
+    })
 
-    const jsonText = response.text.trim();
+    const jsonText = response.text.trim()
     if (!jsonText) {
-        console.error("Gemini API returned an empty response.");
-        throw new Error("Received an empty response from the AI. Please try again.");
+      console.error('Gemini API returned an empty response.')
+      throw new Error('Received an empty response from the AI. Please try again.')
     }
 
     try {
-        const gifts: Gift[] = JSON.parse(jsonText);
-        return gifts;
+      const gifts: Gift[] = JSON.parse(jsonText)
+      return gifts
     } catch (jsonError) {
-        console.error("Error parsing JSON from Gemini API:", jsonError);
-        console.error("Raw response text:", jsonText);
-        throw new Error("The AI returned an unexpected format. Please try again.");
+      console.error('Error parsing JSON from Gemini API:', jsonError)
+      console.error('Raw response text:', jsonText)
+      throw new Error('The AI returned an unexpected format. Please try again.')
     }
-
-  } catch (error)
- {
-    console.error("Error calling Gemini API:", error);
-    if (error instanceof Error && (error.message.includes('API key not valid') || error.message.includes('API_KEY_INVALID'))) {
-         throw new Error("The configured API Key is not valid. Please check the server configuration.");
+  } catch (error) {
+    console.error('Error calling Gemini API:', error)
+    if (
+      error instanceof Error &&
+      (error.message.includes('API key not valid') || error.message.includes('API_KEY_INVALID'))
+    ) {
+      throw new Error('The configured API Key is not valid. Please check the server configuration.')
     }
-    throw new Error("Sorry, we couldn't find gifts at the moment. Please try again later.");
+    throw new Error("Sorry, we couldn't find gifts at the moment. Please try again later.")
   }
-};
+}

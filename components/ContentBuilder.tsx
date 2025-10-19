@@ -1,71 +1,71 @@
-import React, { useMemo } from 'react';
-import ImageUpload from './ImageUpload';
-import type { Gift } from '../types';
+import React, { useMemo } from 'react'
+import ImageUpload from './ImageUpload'
+import type { Gift } from '../types'
 
-export type ParagraphStyle = 'paragraph' | 'bullets' | 'numbered' | 'quote' | 'html';
+export type ParagraphStyle = 'paragraph' | 'bullets' | 'numbered' | 'quote' | 'html'
 
 export interface RetailerDraft {
-  id: string;
-  name: string;
-  affiliateLink: string;
+  id: string
+  name: string
+  affiliateLink: string
 }
 
 export interface GiftDraft {
-  productName: string;
-  description: string;
-  priceRange: string;
-  imageUrl: string;
-  retailers: RetailerDraft[];
-  tags: string;
-  giftType?: Gift['giftType'];
-  popularity?: number;
+  productName: string
+  description: string
+  priceRange: string
+  imageUrl: string
+  retailers: RetailerDraft[]
+  tags: string
+  giftType?: Gift['giftType']
+  popularity?: number
 }
 
 type BaseDraft<T extends string> = {
-  id: string;
-  type: T;
-};
+  id: string
+  type: T
+}
 
 export type ParagraphBlockDraft = BaseDraft<'paragraph'> & {
-  style: ParagraphStyle;
-  text: string;
-};
+  style: ParagraphStyle
+  text: string
+}
 
 export type HeadingBlockDraft = BaseDraft<'heading'> & {
-  text: string;
-};
+  text: string
+}
 
 export type ImageBlockDraft = BaseDraft<'image'> & {
-  src: string;
-  alt: string;
-  caption: string;
-  href: string;
-};
+  src: string
+  alt: string
+  caption: string
+  href: string
+}
 
 export type GiftBlockDraft = BaseDraft<'gift'> & {
-  gift: GiftDraft;
-};
+  gift: GiftDraft
+}
 
 export interface FAQItemDraft {
-  id: string;
-  question: string;
-  answer: string;
+  id: string
+  question: string
+  answer: string
 }
 
 export type FAQBlockDraft = BaseDraft<'faq'> & {
-  items: FAQItemDraft[];
-};
+  items: FAQItemDraft[]
+}
 
 export type VerdictBlockDraft = BaseDraft<'verdict'> & {
-  title: string;
-  text: string;
-};
+  title: string
+  text: string
+}
 
 export type UnsupportedBlockDraft = BaseDraft<'unsupported'> & {
-  label: string;
-  details?: string;
-  original?: unknown;
-};
+  label: string
+  details?: string
+  original?: unknown
+}
 
 export type ContentBlockDraft =
   | ParagraphBlockDraft
@@ -74,29 +74,29 @@ export type ContentBlockDraft =
   | GiftBlockDraft
   | FAQBlockDraft
   | VerdictBlockDraft
-  | UnsupportedBlockDraft;
+  | UnsupportedBlockDraft
 
 interface ContentBuilderProps {
-  value: ContentBlockDraft[];
-  onChange: (value: ContentBlockDraft[]) => void;
-  onMove?: (fromIndex: number, toIndex: number) => void;
+  value: ContentBlockDraft[]
+  onChange: (value: ContentBlockDraft[]) => void
+  onMove?: (fromIndex: number, toIndex: number) => void
 }
 
 const generateId = () => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
+    return crypto.randomUUID()
   }
-  return `block-${Math.random().toString(36).slice(2, 10)}`;
-};
+  return `block-${Math.random().toString(36).slice(2, 10)}`
+}
 
 const createEmptyDraft = (type: ContentBlockDraft['type']): ContentBlockDraft => {
   switch (type) {
     case 'heading':
-      return { id: generateId(), type: 'heading', text: '' };
+      return { id: generateId(), type: 'heading', text: '' }
     case 'paragraph':
-      return { id: generateId(), type: 'paragraph', style: 'paragraph', text: '' };
+      return { id: generateId(), type: 'paragraph', style: 'paragraph', text: '' }
     case 'image':
-      return { id: generateId(), type: 'image', src: '', alt: '', caption: '', href: '' };
+      return { id: generateId(), type: 'image', src: '', alt: '', caption: '', href: '' }
     case 'gift':
       return {
         id: generateId(),
@@ -106,31 +106,27 @@ const createEmptyDraft = (type: ContentBlockDraft['type']): ContentBlockDraft =>
           description: '',
           priceRange: '',
           imageUrl: '',
-          retailers: [
-            { id: generateId(), name: '', affiliateLink: '' }
-          ],
-          tags: ''
-        }
-      };
+          retailers: [{ id: generateId(), name: '', affiliateLink: '' }],
+          tags: '',
+        },
+      }
     case 'faq':
       return {
         id: generateId(),
         type: 'faq',
-        items: [
-          { id: generateId(), question: '', answer: '' }
-        ]
-      };
+        items: [{ id: generateId(), question: '', answer: '' }],
+      }
     case 'verdict':
       return {
         id: generateId(),
         type: 'verdict',
         title: '',
-        text: ''
-      };
+        text: '',
+      }
     default:
-      return { id: generateId(), type: 'unsupported', label: 'Onbekend blok' };
+      return { id: generateId(), type: 'unsupported', label: 'Onbekend blok' }
   }
-};
+}
 
 const styleOptions: { value: ParagraphStyle; label: string }[] = [
   { value: 'paragraph', label: 'Standaard paragraaf' },
@@ -138,7 +134,7 @@ const styleOptions: { value: ParagraphStyle; label: string }[] = [
   { value: 'numbered', label: 'Genummerde lijst' },
   { value: 'quote', label: 'Quote/Highlight' },
   { value: 'html', label: 'HTML (gevorderd)' },
-];
+]
 
 const blockTypeOptions: { value: ContentBlockDraft['type']; label: string }[] = [
   { value: 'heading', label: 'Koptekst' },
@@ -147,13 +143,13 @@ const blockTypeOptions: { value: ContentBlockDraft['type']; label: string }[] = 
   { value: 'gift', label: 'Product highlight' },
   { value: 'faq', label: 'FAQ sectie' },
   { value: 'verdict', label: 'Eindoordeel' },
-];
+]
 
 interface TemplateOption {
-  id: string;
-  label: string;
-  description: string;
-  build: () => ContentBlockDraft[];
+  id: string
+  label: string
+  description: string
+  build: () => ContentBlockDraft[]
 }
 
 const CONTENT_TEMPLATES: TemplateOption[] = [
@@ -162,39 +158,49 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
     label: 'Review basis',
     description: 'Intro, productblok, pluspunten en eindoordeel',
     build: () => {
-      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      introHeading.text = 'Waarom dit cadeau werkt';
+      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      introHeading.text = 'Waarom dit cadeau werkt'
 
-      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      introParagraph.style = 'paragraph';
-      introParagraph.text = 'Start met een korte introductie over voor wie dit cadeau bedoeld is en waarom het relevant is.';
+      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      introParagraph.style = 'paragraph'
+      introParagraph.text =
+        'Start met een korte introductie over voor wie dit cadeau bedoeld is en waarom het relevant is.'
 
-      const productHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      productHeading.text = 'Product highlight';
+      const productHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      productHeading.text = 'Product highlight'
 
-      const giftBlock = createEmptyDraft('gift') as GiftBlockDraft;
+      const giftBlock = createEmptyDraft('gift') as GiftBlockDraft
 
-      const prosHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      prosHeading.text = 'Pluspunten & aandachtspunten';
+      const prosHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      prosHeading.text = 'Pluspunten & aandachtspunten'
 
-      const prosParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      prosParagraph.style = 'bullets';
-      prosParagraph.text = 'Pluspunt 1\nPluspunt 2\nAandachtspunt 1';
+      const prosParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      prosParagraph.style = 'bullets'
+      prosParagraph.text = 'Pluspunt 1\nPluspunt 2\nAandachtspunt 1'
 
-      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft;
-      verdictBlock.title = 'Ons oordeel';
-      verdictBlock.text = 'Vat het cadeau samen in één krachtige alinea. Benoem voor wie het perfect is en wat de ervaring bijzonder maakt.';
+      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft
+      verdictBlock.title = 'Ons oordeel'
+      verdictBlock.text =
+        'Vat het cadeau samen in één krachtige alinea. Benoem voor wie het perfect is en wat de ervaring bijzonder maakt.'
 
-      return [introHeading, introParagraph, productHeading, giftBlock, prosHeading, prosParagraph, verdictBlock];
-    }
+      return [
+        introHeading,
+        introParagraph,
+        productHeading,
+        giftBlock,
+        prosHeading,
+        prosParagraph,
+        verdictBlock,
+      ]
+    },
   },
   {
     id: 'marketing-highlight',
     label: 'Marketing highlight blok',
     description: 'Hero-intro met chips en benefit bullets',
     build: () => {
-      const highlightBlock = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      highlightBlock.style = 'html';
+      const highlightBlock = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      highlightBlock.style = 'html'
       highlightBlock.text = `<div class="rounded-2xl border border-rose-100 bg-rose-50/80 p-4 md:p-5">
   <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-rose-500">Waarom dit cadeau werkt</p>
   <p class="mb-3 text-sm text-gray-700">Gebruik dit blok om in 2-3 zinnen de belofte van het cadeau samen te vatten. Benoem voor wie het ideaal is en welk probleem je oplost.</p>
@@ -203,56 +209,64 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
     <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-rose-600 shadow-sm">✔️ Benefit 2</span>
     <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-rose-600 shadow-sm">✔️ Benefit 3</span>
   </div>
-</div>`;
+</div>`
 
-      return [highlightBlock];
-    }
+      return [highlightBlock]
+    },
   },
   {
     id: 'dutch-gifts-2025',
     label: '8 NL cadeaus (2025)',
     description: 'Volledige gids met intro, thema’s en productblokken',
     build: () => {
-      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      introHeading.text = '8 originele Nederlandse cadeaus voor 2025';
+      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      introHeading.text = '8 originele Nederlandse cadeaus voor 2025'
 
-      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      introParagraph.text = 'Introduceer de gids in 3-4 zinnen. Benoem waarom Nederlandse makers, lokale beleving en duurzame keuzes in 2025 scoren.';
+      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      introParagraph.text =
+        'Introduceer de gids in 3-4 zinnen. Benoem waarom Nederlandse makers, lokale beleving en duurzame keuzes in 2025 scoren.'
 
-      const keyTakeaways = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      keyTakeaways.style = 'quote';
-      keyTakeaways.text = 'Tip: benoem per cadeau het verhaal van de maker en hoe de ontvanger er direct iets mee kan. Voeg een downloadbare checklist toe voor extra waarde.';
+      const keyTakeaways = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      keyTakeaways.style = 'quote'
+      keyTakeaways.text =
+        'Tip: benoem per cadeau het verhaal van de maker en hoe de ontvanger er direct iets mee kan. Voeg een downloadbare checklist toe voor extra waarde.'
 
-      const categoryHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      categoryHeading.text = 'Categorieën die je kunt uitlichten';
+      const categoryHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      categoryHeading.text = 'Categorieën die je kunt uitlichten'
 
-      const categoryList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      categoryList.style = 'bullets';
-      categoryList.text = 'Design & interieurcadeaus van Nederlandse bodem\nErvaring & uitjes (culinair, wellness, avontuur)\nDuurzame must-haves met circulaire roots\nTech & smart home gadgets met NL design\nKids & familie – lokaal gemaakte spellen en workshops';
+      const categoryList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      categoryList.style = 'bullets'
+      categoryList.text =
+        'Design & interieurcadeaus van Nederlandse bodem\nErvaring & uitjes (culinair, wellness, avontuur)\nDuurzame must-haves met circulaire roots\nTech & smart home gadgets met NL design\nKids & familie – lokaal gemaakte spellen en workshops'
 
-      const gift1 = createEmptyDraft('gift') as GiftBlockDraft;
-      gift1.gift.productName = 'Cadeau idee #1: Design-icon van een Nederlandse maker';
-      gift1.gift.description = 'Beschrijf waarom het product typisch Nederlands is, welke materialen worden gebruikt en voor welk type ontvanger het perfect is.';
+      const gift1 = createEmptyDraft('gift') as GiftBlockDraft
+      gift1.gift.productName = 'Cadeau idee #1: Design-icon van een Nederlandse maker'
+      gift1.gift.description =
+        'Beschrijf waarom het product typisch Nederlands is, welke materialen worden gebruikt en voor welk type ontvanger het perfect is.'
 
-      const gift2 = createEmptyDraft('gift') as GiftBlockDraft;
-      gift2.gift.productName = 'Cadeau idee #2: Lokaal foodie- of wellness-arrangement';
-      gift2.gift.description = 'Vertel hoe de ervaring verloopt, welke partnerbedrijven betrokken zijn en hoe je er een persoonlijk verhaal van maakt.';
+      const gift2 = createEmptyDraft('gift') as GiftBlockDraft
+      gift2.gift.productName = 'Cadeau idee #2: Lokaal foodie- of wellness-arrangement'
+      gift2.gift.description =
+        'Vertel hoe de ervaring verloopt, welke partnerbedrijven betrokken zijn en hoe je er een persoonlijk verhaal van maakt.'
 
-      const gift3 = createEmptyDraft('gift') as GiftBlockDraft;
-      gift3.gift.productName = 'Cadeau idee #3: Slimme gadget met Dutch twist';
-      gift3.gift.description = 'Leg uit wat de innovatie is, wanneer het cadeau het meest impact maakt en hoe je extra accessoires kunt toevoegen.';
+      const gift3 = createEmptyDraft('gift') as GiftBlockDraft
+      gift3.gift.productName = 'Cadeau idee #3: Slimme gadget met Dutch twist'
+      gift3.gift.description =
+        'Leg uit wat de innovatie is, wanneer het cadeau het meest impact maakt en hoe je extra accessoires kunt toevoegen.'
 
-      const bundleHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      bundleHeading.text = 'Zo vertel je het complete verhaal';
+      const bundleHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      bundleHeading.text = 'Zo vertel je het complete verhaal'
 
-      const bundleParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      bundleParagraph.text = 'Combineer elk cadeau met een mini “maak het af” pakket (bijv. kaartje, lokale lekkernij, printable roadmap). Voeg een tabel of bulletlijst toe met budget-range en levertijd om lezers te helpen kiezen.';
+      const bundleParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      bundleParagraph.text =
+        'Combineer elk cadeau met een mini “maak het af” pakket (bijv. kaartje, lokale lekkernij, printable roadmap). Voeg een tabel of bulletlijst toe met budget-range en levertijd om lezers te helpen kiezen.'
 
-      const ctaHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      ctaHeading.text = 'Klaar om je Nederlandse cadeaugids te publiceren?';
+      const ctaHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      ctaHeading.text = 'Klaar om je Nederlandse cadeaugids te publiceren?'
 
-      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      ctaParagraph.text = 'Sluit af met een duidelijke call-to-action: link naar de GiftFinder, een downloadbare lijst of het contactformulier voor maatwerk advies. Herinner de lezer eraan dat alle cadeaus lokaal beschikbaar zijn.';
+      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      ctaParagraph.text =
+        'Sluit af met een duidelijke call-to-action: link naar de GiftFinder, een downloadbare lijst of het contactformulier voor maatwerk advies. Herinner de lezer eraan dat alle cadeaus lokaal beschikbaar zijn.'
 
       return [
         introHeading,
@@ -267,56 +281,63 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         bundleParagraph,
         ctaHeading,
         ctaParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'smart-gifting-guide',
     label: 'Perfect cadeau kiezen gids',
     description: 'Stap-voor-stap handleiding voor slimme gevers',
     build: () => {
-      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heroHeading.text = 'Hoe kies je het perfecte cadeau? Een gids voor slimme gevers';
+      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      heroHeading.text = 'Hoe kies je het perfecte cadeau? Een gids voor slimme gevers'
 
-      const promiseParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      promiseParagraph.text = 'Start met een teaser: in deze gids leer je hoe je behoeften ontdekt, budget bewaakt en cadeaus persoonlijk maakt zonder stress.';
+      const promiseParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      promiseParagraph.text =
+        'Start met een teaser: in deze gids leer je hoe je behoeften ontdekt, budget bewaakt en cadeaus persoonlijk maakt zonder stress.'
 
-      const stepsHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      stepsHeading.text = '3 stappen om tot een wauw-moment te komen';
+      const stepsHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      stepsHeading.text = '3 stappen om tot een wauw-moment te komen'
 
-      const stepsList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      stepsList.style = 'numbered';
-      stepsList.text = 'Leer de ontvanger écht kennen (gebruik mini-interviews of signalen)\nBepaal het cadeau-profiel: praktisch, emotioneel of experimenteel\nVoeg een persoonlijke twist toe met een verhaal, kaart of mini-kit';
+      const stepsList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      stepsList.style = 'numbered'
+      stepsList.text =
+        'Leer de ontvanger écht kennen (gebruik mini-interviews of signalen)\nBepaal het cadeau-profiel: praktisch, emotioneel of experimenteel\nVoeg een persoonlijke twist toe met een verhaal, kaart of mini-kit'
 
-      const researchHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      researchHeading.text = 'Checklist: wat verzamel je vooraf?';
+      const researchHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      researchHeading.text = 'Checklist: wat verzamel je vooraf?'
 
-      const researchBullets = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      researchBullets.style = 'bullets';
-      researchBullets.text = 'Hobby’s en routines van de ontvanger\nBelangrijke data (jubilea, behaalde mijlpalen)\nFavoriete merken en duurzame voorkeuren\nBeschikbaar budget + opties om cadeaus te bundelen\nMoment waarop het cadeau wordt gegeven (intiem, zakelijk, groep)';
+      const researchBullets = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      researchBullets.style = 'bullets'
+      researchBullets.text =
+        'Hobby’s en routines van de ontvanger\nBelangrijke data (jubilea, behaalde mijlpalen)\nFavoriete merken en duurzame voorkeuren\nBeschikbaar budget + opties om cadeaus te bundelen\nMoment waarop het cadeau wordt gegeven (intiem, zakelijk, groep)'
 
-      const giftExample = createEmptyDraft('gift') as GiftBlockDraft;
-      giftExample.gift.productName = 'Voorbeeldcadeau: Slimme keuze met persoonlijke touch';
-      giftExample.gift.description = 'Beschrijf een concreet voorbeeld. Toon hoe het past bij de verzamelde inzichten en welke accessoires of downloadables je toevoegt.';
+      const giftExample = createEmptyDraft('gift') as GiftBlockDraft
+      giftExample.gift.productName = 'Voorbeeldcadeau: Slimme keuze met persoonlijke touch'
+      giftExample.gift.description =
+        'Beschrijf een concreet voorbeeld. Toon hoe het past bij de verzamelde inzichten en welke accessoires of downloadables je toevoegt.'
 
-      const personalizationHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      personalizationHeading.text = 'Maak het persoonlijk';
+      const personalizationHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      personalizationHeading.text = 'Maak het persoonlijk'
 
-      const personalizationParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      personalizationParagraph.text = 'Leg uit hoe je storytelling, handgeschreven notities, een thematische verpakking of een gedeelde ervaring toevoegt. Stimuleer de lezer om templates of checklist te downloaden.';
+      const personalizationParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      personalizationParagraph.text =
+        'Leg uit hoe je storytelling, handgeschreven notities, een thematische verpakking of een gedeelde ervaring toevoegt. Stimuleer de lezer om templates of checklist te downloaden.'
 
-      const pitfallsHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      pitfallsHeading.text = 'Veelgemaakte fouten om te vermijden';
+      const pitfallsHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      pitfallsHeading.text = 'Veelgemaakte fouten om te vermijden'
 
-      const pitfallsList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      pitfallsList.style = 'bullets';
-      pitfallsList.text = 'Laten leiden door je eigen smaak in plaats van die van de ontvanger\nTe laat beginnen waardoor keuze stressvol wordt\nGeen aandacht voor aftercare (garantie, retourneren, uitleg)\nVergeten te checken of cadeaus al in bezit zijn';
+      const pitfallsList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      pitfallsList.style = 'bullets'
+      pitfallsList.text =
+        'Laten leiden door je eigen smaak in plaats van die van de ontvanger\nTe laat beginnen waardoor keuze stressvol wordt\nGeen aandacht voor aftercare (garantie, retourneren, uitleg)\nVergeten te checken of cadeaus al in bezit zijn'
 
-      const summaryHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      summaryHeading.text = 'Van inzicht naar actie';
+      const summaryHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      summaryHeading.text = 'Van inzicht naar actie'
 
-      const summaryParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      summaryParagraph.text = 'Vat samen: plan 15 minuten voor research, kies een cadeau-profiel, test het idee bij een vertrouweling en voeg vervolgens een persoonlijke twist toe. Eindig met een uitnodiging naar de GiftFinder of een downloadbare briefingssheet.';
+      const summaryParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      summaryParagraph.text =
+        'Vat samen: plan 15 minuten voor research, kies een cadeau-profiel, test het idee bij een vertrouweling en voeg vervolgens een persoonlijke twist toe. Eindig met een uitnodiging naar de GiftFinder of een downloadbare briefingssheet.'
 
       return [
         heroHeading,
@@ -332,48 +353,54 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         pitfallsList,
         summaryHeading,
         summaryParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'trend-report-2025',
     label: 'Cadeautrends 2025',
     description: 'Trendrapport met highlights, data en call-to-actions',
     build: () => {
-      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heroHeading.text = 'Cadeautrends 2025: wat wordt populair?';
+      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      heroHeading.text = 'Cadeautrends 2025: wat wordt populair?'
 
-      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      introParagraph.text = 'Schets in 2-3 zinnen het cadeau-landschap van 2025. Gebruik data of observaties (bijv. duurzaamheid, AI, beleving) om de lezer direct te boeien.';
+      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      introParagraph.text =
+        'Schets in 2-3 zinnen het cadeau-landschap van 2025. Gebruik data of observaties (bijv. duurzaamheid, AI, beleving) om de lezer direct te boeien.'
 
-      const trendListHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      trendListHeading.text = 'Top 4 trends om nu op te letten';
+      const trendListHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      trendListHeading.text = 'Top 4 trends om nu op te letten'
 
-      const trendList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      trendList.style = 'bullets';
-      trendList.text = 'Bewuste luxe: duurzame materialen & lokale productie\nHybride experiences: fysiek cadeau + digitale bonus\nAI-personalisatie: cadeaus op maat met data en tools\nWell-being & focus: cadeaus voor herstel, ontspanning en concentratie';
+      const trendList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      trendList.style = 'bullets'
+      trendList.text =
+        'Bewuste luxe: duurzame materialen & lokale productie\nHybride experiences: fysiek cadeau + digitale bonus\nAI-personalisatie: cadeaus op maat met data en tools\nWell-being & focus: cadeaus voor herstel, ontspanning en concentratie'
 
-      const dataSpotlightHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      dataSpotlightHeading.text = 'Data spotlight of expertquote';
+      const dataSpotlightHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      dataSpotlightHeading.text = 'Data spotlight of expertquote'
 
-      const dataParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      dataParagraph.text = 'Voeg hier een quote van een expert, klant of onderzoek toe. Bijvoorbeeld: “71% van de cadeaukopers kiest in 2025 voor een experience-bundel.” Gebruik dit als bewijs voor de gekozen trends.';
+      const dataParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      dataParagraph.text =
+        'Voeg hier een quote van een expert, klant of onderzoek toe. Bijvoorbeeld: “71% van de cadeaukopers kiest in 2025 voor een experience-bundel.” Gebruik dit als bewijs voor de gekozen trends.'
 
-      const giftBundle = createEmptyDraft('gift') as GiftBlockDraft;
-      giftBundle.gift.productName = 'Trend voorbeeld: Experience + fysiek cadeau';
-      giftBundle.gift.description = 'Laat zien hoe je een trending bundle samenstelt (bijv. wellness retreat + giftbox). Beschrijf de doelgroep en het prijsniveau.';
+      const giftBundle = createEmptyDraft('gift') as GiftBlockDraft
+      giftBundle.gift.productName = 'Trend voorbeeld: Experience + fysiek cadeau'
+      giftBundle.gift.description =
+        'Laat zien hoe je een trending bundle samenstelt (bijv. wellness retreat + giftbox). Beschrijf de doelgroep en het prijsniveau.'
 
-      const playbookHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      playbookHeading.text = 'Zo vertaal je trends naar concrete cadeaus';
+      const playbookHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      playbookHeading.text = 'Zo vertaal je trends naar concrete cadeaus'
 
-      const playbookParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      playbookParagraph.text = 'Gebruik een korte mini-playbook: kies trend > bepaal doelgroep > selecteer product + ervaring > voeg persoonlijke twist toe. Geef tips voor upsells of limited editions.';
+      const playbookParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      playbookParagraph.text =
+        'Gebruik een korte mini-playbook: kies trend > bepaal doelgroep > selecteer product + ervaring > voeg persoonlijke twist toe. Geef tips voor upsells of limited editions.'
 
-      const forecastHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      forecastHeading.text = 'Vooruitblik & volgende stappen';
+      const forecastHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      forecastHeading.text = 'Vooruitblik & volgende stappen'
 
-      const forecastParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      forecastParagraph.text = 'Sluit af met een vooruitblik op Q2/Q3 2025 en link naar aanvullende resources: download rapport, abonneer op nieuwsbrief, probeer GiftFinder of plan een consult.';
+      const forecastParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      forecastParagraph.text =
+        'Sluit af met een vooruitblik op Q2/Q3 2025 en link naar aanvullende resources: download rapport, abonneer op nieuwsbrief, probeer GiftFinder of plan een consult.'
 
       return [
         heroHeading,
@@ -387,73 +414,84 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         playbookParagraph,
         forecastHeading,
         forecastParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'audience-gift-ideas',
     label: 'Cadeau-ideeën per ontvanger',
     description: 'Matrix met segmenten en ingevulde voorbeelden',
     build: () => {
-      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      introHeading.text = 'Cadeau-ideeën per type ontvanger';
+      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      introHeading.text = 'Cadeau-ideeën per type ontvanger'
 
-      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      introParagraph.text = 'Leg uit dat de gids vier doelgroepen behandelt (voor haar, voor hem, tech-liefhebbers, minimalisten) en hoe lezers snel kunnen filteren.';
+      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      introParagraph.text =
+        'Leg uit dat de gids vier doelgroepen behandelt (voor haar, voor hem, tech-liefhebbers, minimalisten) en hoe lezers snel kunnen filteren.'
 
-      const tableHint = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      tableHint.style = 'quote';
-      tableHint.text = 'Tip: overweeg een matrix of tabel zodat lezers in één oogopslag zien welk cadeau bij welk profiel past. Voeg kolommen toe voor prijsrange en leveringsopties.';
+      const tableHint = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      tableHint.style = 'quote'
+      tableHint.text =
+        'Tip: overweeg een matrix of tabel zodat lezers in één oogopslag zien welk cadeau bij welk profiel past. Voeg kolommen toe voor prijsrange en leveringsopties.'
 
-      const forHerHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      forHerHeading.text = 'Voor haar: betekenisvolle & belevinggerichte cadeaus';
+      const forHerHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      forHerHeading.text = 'Voor haar: betekenisvolle & belevinggerichte cadeaus'
 
-      const forHerList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      forHerList.style = 'bullets';
-      forHerList.text = 'Self-care of wellness kit met persoonlijke boodschap\nCreatieve workshop of cursus (bloemschikken, keramiek)\nPremium dagelijkse luxe upgrade (koffie, skincare, tech)';
+      const forHerList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      forHerList.style = 'bullets'
+      forHerList.text =
+        'Self-care of wellness kit met persoonlijke boodschap\nCreatieve workshop of cursus (bloemschikken, keramiek)\nPremium dagelijkse luxe upgrade (koffie, skincare, tech)'
 
-      const forHerGift = createEmptyDraft('gift') as GiftBlockDraft;
-      forHerGift.gift.productName = 'Voorbeeldcadeau voor haar';
-      forHerGift.gift.description = 'Beschrijf een concreet cadeau en hoe je het personaliseert (initialen, playlist, printables).';
+      const forHerGift = createEmptyDraft('gift') as GiftBlockDraft
+      forHerGift.gift.productName = 'Voorbeeldcadeau voor haar'
+      forHerGift.gift.description =
+        'Beschrijf een concreet cadeau en hoe je het personaliseert (initialen, playlist, printables).'
 
-      const forHimHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      forHimHeading.text = 'Voor hem: van smart upgrades tot smaakmakers';
+      const forHimHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      forHimHeading.text = 'Voor hem: van smart upgrades tot smaakmakers'
 
-      const forHimList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      forHimList.style = 'bullets';
-      forHimList.text = 'Smart home of productivity gadget\nErvaring: tasting, rally, workshop\nLimited edition accessoires (horloge, schoenen, tools)';
+      const forHimList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      forHimList.style = 'bullets'
+      forHimList.text =
+        'Smart home of productivity gadget\nErvaring: tasting, rally, workshop\nLimited edition accessoires (horloge, schoenen, tools)'
 
-      const forHimGift = createEmptyDraft('gift') as GiftBlockDraft;
-      forHimGift.gift.productName = 'Voorbeeldcadeau voor hem';
-      forHimGift.gift.description = 'Geef richting: benoem doel, bundels en hoe je alles stijlvol inpakt.';
+      const forHimGift = createEmptyDraft('gift') as GiftBlockDraft
+      forHimGift.gift.productName = 'Voorbeeldcadeau voor hem'
+      forHimGift.gift.description =
+        'Geef richting: benoem doel, bundels en hoe je alles stijlvol inpakt.'
 
-      const techHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      techHeading.text = 'Tech-liefhebbers: future-proof en fun';
+      const techHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      techHeading.text = 'Tech-liefhebbers: future-proof en fun'
 
-      const techList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      techList.style = 'bullets';
-      techList.text = 'AI-gestuurde gadgets of smart assistants\nModulaire setups (gaming, audio, fotografie)\nDIY kits (robotica, 3D-printing, elektronica)';
+      const techList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      techList.style = 'bullets'
+      techList.text =
+        'AI-gestuurde gadgets of smart assistants\nModulaire setups (gaming, audio, fotografie)\nDIY kits (robotica, 3D-printing, elektronica)'
 
-      const techGift = createEmptyDraft('gift') as GiftBlockDraft;
-      techGift.gift.productName = 'Voorbeeldcadeau tech-liefhebber';
-      techGift.gift.description = 'Beschrijf hoe het cadeau inspeelt op innovatie, en welke accessoires of abonnementen je kunt toevoegen.';
+      const techGift = createEmptyDraft('gift') as GiftBlockDraft
+      techGift.gift.productName = 'Voorbeeldcadeau tech-liefhebber'
+      techGift.gift.description =
+        'Beschrijf hoe het cadeau inspeelt op innovatie, en welke accessoires of abonnementen je kunt toevoegen.'
 
-      const minimalistHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      minimalistHeading.text = 'Minimalisten: functioneel, mindful en compact';
+      const minimalistHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      minimalistHeading.text = 'Minimalisten: functioneel, mindful en compact'
 
-      const minimalistList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      minimalistList.style = 'bullets';
-      minimalistList.text = 'Premium essentials met lange levensduur\nDigitale cadeaus (apps, memberships)\nExperience zonder spullen (micro-escapes, coaching)';
+      const minimalistList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      minimalistList.style = 'bullets'
+      minimalistList.text =
+        'Premium essentials met lange levensduur\nDigitale cadeaus (apps, memberships)\nExperience zonder spullen (micro-escapes, coaching)'
 
-      const minimalistGift = createEmptyDraft('gift') as GiftBlockDraft;
-      minimalistGift.gift.productName = 'Voorbeeldcadeau minimalist';
-      minimalistGift.gift.description = 'Toon hoe je het cadeau klein maar impactvol houdt. Voeg eventueel een downloadbare mindful routine toe.';
+      const minimalistGift = createEmptyDraft('gift') as GiftBlockDraft
+      minimalistGift.gift.productName = 'Voorbeeldcadeau minimalist'
+      minimalistGift.gift.description =
+        'Toon hoe je het cadeau klein maar impactvol houdt. Voeg eventueel een downloadbare mindful routine toe.'
 
-      const wrapUpHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      wrapUpHeading.text = 'Zo kies je snel het juiste segment';
+      const wrapUpHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      wrapUpHeading.text = 'Zo kies je snel het juiste segment'
 
-      const wrapUpParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      wrapUpParagraph.text = 'Geef lezers een korte beslisboom: kies de hoofdcategorie, check lifestyle en voeg één persoonlijk element toe. Verwijs naar GiftFinder of een intakeformulier voor maatwerk advies.';
+      const wrapUpParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      wrapUpParagraph.text =
+        'Geef lezers een korte beslisboom: kies de hoofdcategorie, check lifestyle en voeg één persoonlijk element toe. Verwijs naar GiftFinder of een intakeformulier voor maatwerk advies.'
 
       return [
         introHeading,
@@ -473,22 +511,23 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         minimalistGift,
         wrapUpHeading,
         wrapUpParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'lead-magnet-landing',
     label: 'Download / lead magnet',
     description: 'Landing voor checklists, e-books of printables',
     build: () => {
-      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heroHeading.text = 'Download: [Titel van je lead magnet]';
+      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      heroHeading.text = 'Download: [Titel van je lead magnet]'
 
-      const teaserParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      teaserParagraph.text = 'Introduceer in 2-3 zinnen welk probleem je oplost, hoeveel tijd het scheelt en waarom de download uniek is.';
+      const teaserParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      teaserParagraph.text =
+        'Introduceer in 2-3 zinnen welk probleem je oplost, hoeveel tijd het scheelt en waarom de download uniek is.'
 
-      const highlightBlock = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      highlightBlock.style = 'html';
+      const highlightBlock = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      highlightBlock.style = 'html'
       highlightBlock.text = `<div class="rounded-2xl border border-emerald-100 bg-emerald-50/80 p-4 md:p-5">
   <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-emerald-600">Wat je krijgt</p>
   <p class="mb-3 text-sm text-gray-700">Som kort de drie grootste voordelen of resultaten op die ontvangers direct ervaren.</p>
@@ -497,34 +536,39 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
     <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-600 shadow-sm">✔️ Resultaat 2</span>
     <span class="inline-flex items-center rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-600 shadow-sm">✔️ Resultaat 3</span>
   </div>
-</div>`;
+</div>`
 
-      const downloadGift = createEmptyDraft('gift') as GiftBlockDraft;
-      downloadGift.gift.productName = 'Lead magnet: naam van je download';
-      downloadGift.gift.description = 'Beschrijf het format (PDF, checklist, e-mailserie) en noem de belangrijkste hoofdstukken of modules.';
-      downloadGift.gift.priceRange = 'Gratis';
-      downloadGift.gift.tags = 'download, lead magnet';
+      const downloadGift = createEmptyDraft('gift') as GiftBlockDraft
+      downloadGift.gift.productName = 'Lead magnet: naam van je download'
+      downloadGift.gift.description =
+        'Beschrijf het format (PDF, checklist, e-mailserie) en noem de belangrijkste hoofdstukken of modules.'
+      downloadGift.gift.priceRange = 'Gratis'
+      downloadGift.gift.tags = 'download, lead magnet'
 
-      const socialProof = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      socialProof.style = 'quote';
-      socialProof.text = 'Plaats hier een korte testimonial of quote van iemand die dankzij de download sneller het perfecte cadeau vond.';
+      const socialProof = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      socialProof.style = 'quote'
+      socialProof.text =
+        'Plaats hier een korte testimonial of quote van iemand die dankzij de download sneller het perfecte cadeau vond.'
 
-      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft;
+      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft
       if (faqBlock.items.length) {
-        faqBlock.items[0].question = 'Hoe ontvang ik de download?';
-        faqBlock.items[0].answer = 'Leg uit of de lezer een e-mail ontvangt, direct kan downloaden of beiden. Verwijs naar je privacy-belofte.';
+        faqBlock.items[0].question = 'Hoe ontvang ik de download?'
+        faqBlock.items[0].answer =
+          'Leg uit of de lezer een e-mail ontvangt, direct kan downloaden of beiden. Verwijs naar je privacy-belofte.'
       }
       faqBlock.items.push({
         id: generateId(),
         question: 'Mag ik het materiaal delen?',
-        answer: 'Beschrijf of delen met vrienden/collega’s mag en of je een bronvermelding wilt. Stimuleer het delen vanaf je eigen landing.',
-      });
+        answer:
+          'Beschrijf of delen met vrienden/collega’s mag en of je een bronvermelding wilt. Stimuleer het delen vanaf je eigen landing.',
+      })
 
-      const ctaHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      ctaHeading.text = 'Download nu en begin direct';
+      const ctaHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      ctaHeading.text = 'Download nu en begin direct'
 
-      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      ctaParagraph.text = '👉 Voeg hier je downloadknop toe, eventueel met een veld voor e-mailadres of een link naar de nieuwsbrief. Benoem nogmaals het directe resultaat.';
+      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      ctaParagraph.text =
+        '👉 Voeg hier je downloadknop toe, eventueel met een veld voor e-mailadres of een link naar de nieuwsbrief. Benoem nogmaals het directe resultaat.'
 
       return [
         heroHeading,
@@ -535,34 +579,38 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         faqBlock,
         ctaHeading,
         ctaParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'gift-comparison',
     label: 'Cadeauvergelijker',
     description: 'Vergelijk twee toppers en help bij twijfel',
     build: () => {
-      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      introHeading.text = 'Cadeauvergelijker: kies tussen [Optie A] en [Optie B]';
+      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      introHeading.text = 'Cadeauvergelijker: kies tussen [Optie A] en [Optie B]'
 
-      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      introParagraph.text = 'Leg in 2-3 zinnen uit voor welk type koper deze keuze lastig is en wat de belangrijkste verschillen zijn.';
+      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      introParagraph.text =
+        'Leg in 2-3 zinnen uit voor welk type koper deze keuze lastig is en wat de belangrijkste verschillen zijn.'
 
-      const firstGift = createEmptyDraft('gift') as GiftBlockDraft;
-      firstGift.gift.productName = 'Optie A: noem het cadeau';
-      firstGift.gift.description = 'Beschrijf wat deze optie uniek maakt, inclusief prijsrange en situaties waarin hij het beste werkt.';
+      const firstGift = createEmptyDraft('gift') as GiftBlockDraft
+      firstGift.gift.productName = 'Optie A: noem het cadeau'
+      firstGift.gift.description =
+        'Beschrijf wat deze optie uniek maakt, inclusief prijsrange en situaties waarin hij het beste werkt.'
 
-      const secondGift = createEmptyDraft('gift') as GiftBlockDraft;
-      secondGift.gift.productName = 'Optie B: noem het cadeau';
-      secondGift.gift.description = 'Vertel wanneer je voor deze variant kiest en welke extra’s of accessoires het verschil maken.';
+      const secondGift = createEmptyDraft('gift') as GiftBlockDraft
+      secondGift.gift.productName = 'Optie B: noem het cadeau'
+      secondGift.gift.description =
+        'Vertel wanneer je voor deze variant kiest en welke extra’s of accessoires het verschil maken.'
 
-  const decisionSteps = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-  decisionSteps.style = 'numbered';
-  decisionSteps.text = 'Bepaal de hoofddoelstelling van de ontvanger\nCheck het budget en gewenste leveringsmoment\nBeslis: kies de optie die het grootste “nu gebruiken” effect heeft';
+      const decisionSteps = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      decisionSteps.style = 'numbered'
+      decisionSteps.text =
+        'Bepaal de hoofddoelstelling van de ontvanger\nCheck het budget en gewenste leveringsmoment\nBeslis: kies de optie die het grootste “nu gebruiken” effect heeft'
 
-      const comparisonTable = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      comparisonTable.style = 'html';
+      const comparisonTable = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      comparisonTable.style = 'html'
       comparisonTable.text = `<table class="w-full text-sm">
   <thead>
     <tr class="text-left text-gray-600">
@@ -588,14 +636,16 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
       <td class="py-2">Opsomming</td>
     </tr>
   </tbody>
-</table>`;
+</table>`
 
-      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft;
-      verdictBlock.title = 'Wie wint voor wie?';
-      verdictBlock.text = 'Vat samen welke optie je adviseert voor verschillende profielen (bijv. budget, luxe, snelheid). Zet de lezer aan tot kiezen.';
+      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft
+      verdictBlock.title = 'Wie wint voor wie?'
+      verdictBlock.text =
+        'Vat samen welke optie je adviseert voor verschillende profielen (bijv. budget, luxe, snelheid). Zet de lezer aan tot kiezen.'
 
-      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      ctaParagraph.text = '👉 Link naar beide producten, een GiftFinder quiz of een intakeformulier voor persoonlijk advies. Tip: voeg een kortingscode toe als die beschikbaar is.';
+      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      ctaParagraph.text =
+        '👉 Link naar beide producten, een GiftFinder quiz of een intakeformulier voor persoonlijk advies. Tip: voeg een kortingscode toe als die beschikbaar is.'
 
       return [
         introHeading,
@@ -606,56 +656,65 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         comparisonTable,
         verdictBlock,
         ctaParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'seasonal-campaign',
     label: 'Seizoenscampagne',
     description: 'Thematische gids voor piekperiodes',
     build: () => {
-      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heroHeading.text = 'Seizoenscampagne: [Naam van je moment] 2025';
+      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      heroHeading.text = 'Seizoenscampagne: [Naam van je moment] 2025'
 
-      const heroParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      heroParagraph.text = 'Introduceer het seizoen of event, benoem belangrijke data en waarom dit dé kans is om een memorabel cadeau te geven.';
+      const heroParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      heroParagraph.text =
+        'Introduceer het seizoen of event, benoem belangrijke data en waarom dit dé kans is om een memorabel cadeau te geven.'
 
-  const trendBullets = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-  trendBullets.style = 'bullets';
-  trendBullets.text = 'Trend of thema 1 met korte uitleg\nTrend of thema 2 met korte uitleg\nTrend of thema 3 met korte uitleg';
+      const trendBullets = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      trendBullets.style = 'bullets'
+      trendBullets.text =
+        'Trend of thema 1 met korte uitleg\nTrend of thema 2 met korte uitleg\nTrend of thema 3 met korte uitleg'
 
-      const giftOne = createEmptyDraft('gift') as GiftBlockDraft;
-      giftOne.gift.productName = 'Seizoenscadeau #1';
-      giftOne.gift.description = 'Beschrijf waarom dit cadeau perfect bij het thema past en hoe je het feestelijk presenteert.';
+      const giftOne = createEmptyDraft('gift') as GiftBlockDraft
+      giftOne.gift.productName = 'Seizoenscadeau #1'
+      giftOne.gift.description =
+        'Beschrijf waarom dit cadeau perfect bij het thema past en hoe je het feestelijk presenteert.'
 
-      const giftTwo = createEmptyDraft('gift') as GiftBlockDraft;
-      giftTwo.gift.productName = 'Seizoenscadeau #2';
-      giftTwo.gift.description = 'Noem varianten op verschillende budgetten en welke extra’s je kunt toevoegen.';
+      const giftTwo = createEmptyDraft('gift') as GiftBlockDraft
+      giftTwo.gift.productName = 'Seizoenscadeau #2'
+      giftTwo.gift.description =
+        'Noem varianten op verschillende budgetten en welke extra’s je kunt toevoegen.'
 
-      const giftThree = createEmptyDraft('gift') as GiftBlockDraft;
-      giftThree.gift.productName = 'Seizoenscadeau #3';
-      giftThree.gift.description = 'Focus op snelheid of last-minute mogelijkheden, inclusief digitale varianten indien relevant.';
+      const giftThree = createEmptyDraft('gift') as GiftBlockDraft
+      giftThree.gift.productName = 'Seizoenscadeau #3'
+      giftThree.gift.description =
+        'Focus op snelheid of last-minute mogelijkheden, inclusief digitale varianten indien relevant.'
 
-      const planningTip = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      planningTip.style = 'quote';
-      planningTip.text = 'Deel een slimme planningstip: bijv. “Bestel voor [datum] om levering op tijd te garanderen” of een checklist met verpakkingsideeën.';
+      const planningTip = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      planningTip.style = 'quote'
+      planningTip.text =
+        'Deel een slimme planningstip: bijv. “Bestel voor [datum] om levering op tijd te garanderen” of een checklist met verpakkingsideeën.'
 
-      const ctaHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      ctaHeading.text = 'Plan je seizoensverrassing';
+      const ctaHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      ctaHeading.text = 'Plan je seizoensverrassing'
 
-      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      ctaParagraph.text = '👉 Voeg links toe naar je GiftFinder, deals-pagina of een downloadbare cadeaugids. Benoem deadlines en mogelijke bundels.';
+      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      ctaParagraph.text =
+        '👉 Voeg links toe naar je GiftFinder, deals-pagina of een downloadbare cadeaugids. Benoem deadlines en mogelijke bundels.'
 
-      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft;
+      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft
       if (faqBlock.items.length) {
-        faqBlock.items[0].question = 'Hoe zit het met levertijden en drukte?';
-        faqBlock.items[0].answer = 'Geef advies over bestellen, personaliseren en retouren tijdens piekperiodes. Verwijs naar je klantenservice voor maatwerk.';
+        faqBlock.items[0].question = 'Hoe zit het met levertijden en drukte?'
+        faqBlock.items[0].answer =
+          'Geef advies over bestellen, personaliseren en retouren tijdens piekperiodes. Verwijs naar je klantenservice voor maatwerk.'
       }
       faqBlock.items.push({
         id: generateId(),
         question: 'Kan ik meerdere cadeaus bundelen?',
-        answer: 'Leg uit hoe je bundels samenstelt, of je cadeaukaarten toevoegt en welke verpakking je aanraadt voor een premium gevoel.',
-      });
+        answer:
+          'Leg uit hoe je bundels samenstelt, of je cadeaukaarten toevoegt en welke verpakking je aanraadt voor een premium gevoel.',
+      })
 
       return [
         heroHeading,
@@ -668,60 +727,69 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         ctaHeading,
         ctaParagraph,
         faqBlock,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'b2b-gift-program',
     label: 'Zakelijk cadeauprogramma',
     description: 'B2B verhaal voor relaties, teams of events',
     build: () => {
-      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      introHeading.text = 'Zakelijk cadeauprogramma: verhoog merkbeleving & retentie';
+      const introHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      introHeading.text = 'Zakelijk cadeauprogramma: verhoog merkbeleving & retentie'
 
-      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      introParagraph.text = 'Schets het scenario: klanten bedanken, medewerkers motiveren of leads nurture tijdens events. Benoem de gewenste impact.';
+      const introParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      introParagraph.text =
+        'Schets het scenario: klanten bedanken, medewerkers motiveren of leads nurture tijdens events. Benoem de gewenste impact.'
 
-  const goalsList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-  goalsList.style = 'bullets';
-  goalsList.text = 'Doel 1 – bijv. loyaliteit verhogen\nDoel 2 – bijv. merkvoorkeur versterken\nDoel 3 – bijv. ambassadeurs activeren';
+      const goalsList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      goalsList.style = 'bullets'
+      goalsList.text =
+        'Doel 1 – bijv. loyaliteit verhogen\nDoel 2 – bijv. merkvoorkeur versterken\nDoel 3 – bijv. ambassadeurs activeren'
 
-      const heroGift = createEmptyDraft('gift') as GiftBlockDraft;
-      heroGift.gift.productName = 'Signature cadeaupakket';
-      heroGift.gift.description = 'Beschrijf het hoofdproduct (bijv. premium box) en hoe je branding en personalisatie toevoegt.';
+      const heroGift = createEmptyDraft('gift') as GiftBlockDraft
+      heroGift.gift.productName = 'Signature cadeaupakket'
+      heroGift.gift.description =
+        'Beschrijf het hoofdproduct (bijv. premium box) en hoe je branding en personalisatie toevoegt.'
 
-      const experienceGift = createEmptyDraft('gift') as GiftBlockDraft;
-      experienceGift.gift.productName = 'Experience of teambuilding upgrade';
-      experienceGift.gift.description = 'Leg uit hoe een workshop, tasting of retreat het pakket memorabel maakt en welke follow-up je plant.';
+      const experienceGift = createEmptyDraft('gift') as GiftBlockDraft
+      experienceGift.gift.productName = 'Experience of teambuilding upgrade'
+      experienceGift.gift.description =
+        'Leg uit hoe een workshop, tasting of retreat het pakket memorabel maakt en welke follow-up je plant.'
 
-      const sustainableGift = createEmptyDraft('gift') as GiftBlockDraft;
-      sustainableGift.gift.productName = 'Duurzaam alternatief';
-      sustainableGift.gift.description = 'Noem materialen, MVO-initiatieven en manieren om impact te meten of te communiceren.';
+      const sustainableGift = createEmptyDraft('gift') as GiftBlockDraft
+      sustainableGift.gift.productName = 'Duurzaam alternatief'
+      sustainableGift.gift.description =
+        'Noem materialen, MVO-initiatieven en manieren om impact te meten of te communiceren.'
 
-      const impactHighlight = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      impactHighlight.style = 'html';
+      const impactHighlight = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      impactHighlight.style = 'html'
       impactHighlight.text = `<div class="rounded-xl border border-sky-100 bg-sky-50 p-4">
   <p class="text-sm font-semibold text-sky-700">Mini-case of KPI highlight</p>
   <p class="text-sm text-sky-700">Gebruik dit blok voor een korte case (bijv. 87% hogere tevredenheid) of een quote van een zakelijke klant.</p>
-</div>`;
+</div>`
 
-      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft;
+      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft
       if (faqBlock.items.length) {
-        faqBlock.items[0].question = 'Wat is het minimale afnamevolume?';
-        faqBlock.items[0].answer = 'Beschrijf ordergroottes, levertijd en personalisatieopties. Verwijs naar een contactpersoon voor maatwerk.';
+        faqBlock.items[0].question = 'Wat is het minimale afnamevolume?'
+        faqBlock.items[0].answer =
+          'Beschrijf ordergroottes, levertijd en personalisatieopties. Verwijs naar een contactpersoon voor maatwerk.'
       }
       faqBlock.items.push({
         id: generateId(),
         question: 'Hoe verloopt de logistiek?',
-        answer: 'Leg uit hoe je verzending, track & trace en internationale leveringen regelt. Noem mogelijkheden voor individuele adressering.',
-      });
+        answer:
+          'Leg uit hoe je verzending, track & trace en internationale leveringen regelt. Noem mogelijkheden voor individuele adressering.',
+      })
 
-      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft;
-      verdictBlock.title = 'Van idee naar lancering';
-      verdictBlock.text = 'Vat samen hoe je in drie stappen van concept naar realisatie gaat: strategie bepalen, pakketten samenstellen, logistiek inregelen. Nodig uit voor een intakegesprek of demo.';
+      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft
+      verdictBlock.title = 'Van idee naar lancering'
+      verdictBlock.text =
+        'Vat samen hoe je in drie stappen van concept naar realisatie gaat: strategie bepalen, pakketten samenstellen, logistiek inregelen. Nodig uit voor een intakegesprek of demo.'
 
-      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      ctaParagraph.text = '👉 Voeg een link toe naar je contactformulier, offerte-aanvraag of calendly. Benoem een concrete call-to-action zoals “Plan een 20-min callsessie”.';
+      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      ctaParagraph.text =
+        '👉 Voeg een link toe naar je contactformulier, offerte-aanvraag of calendly. Benoem een concrete call-to-action zoals “Plan een 20-min callsessie”.'
 
       return [
         introHeading,
@@ -734,41 +802,48 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         faqBlock,
         verdictBlock,
         ctaParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'gift-story-case',
     label: 'Case: cadeau in actie',
     description: 'Storytelling-template met praktijkvoorbeeld',
     build: () => {
-      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heroHeading.text = 'Case study: hoe [naam ontvanger] een onvergetelijk moment beleefde';
+      const heroHeading = createEmptyDraft('heading') as HeadingBlockDraft
+      heroHeading.text = 'Case study: hoe [naam ontvanger] een onvergetelijk moment beleefde'
 
-      const scenarioParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      scenarioParagraph.text = 'Schets in 2-3 zinnen de beginsituatie: wie is de ontvanger, wat was de gelegenheid en welke uitdaging wilde je oplossen?';
+      const scenarioParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      scenarioParagraph.text =
+        'Schets in 2-3 zinnen de beginsituatie: wie is de ontvanger, wat was de gelegenheid en welke uitdaging wilde je oplossen?'
 
-      const quoteHighlight = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      quoteHighlight.style = 'quote';
-      quoteHighlight.text = 'Voeg hier een directe quote toe van de gever of ontvanger voor emotionele impact.';
+      const quoteHighlight = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      quoteHighlight.style = 'quote'
+      quoteHighlight.text =
+        'Voeg hier een directe quote toe van de gever of ontvanger voor emotionele impact.'
 
-      const heroGift = createEmptyDraft('gift') as GiftBlockDraft;
-      heroGift.gift.productName = 'Het gekozen cadeau';
-      heroGift.gift.description = 'Beschrijf het cadeau, waarom het perfect paste en welke personalisaties of accessoires zijn toegevoegd.';
+      const heroGift = createEmptyDraft('gift') as GiftBlockDraft
+      heroGift.gift.productName = 'Het gekozen cadeau'
+      heroGift.gift.description =
+        'Beschrijf het cadeau, waarom het perfect paste en welke personalisaties of accessoires zijn toegevoegd.'
 
-  const outcomeList = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-  outcomeList.style = 'bullets';
-  outcomeList.text = 'Resultaat 1 – wat veranderde er direct?\nResultaat 2 – welke reactie gaf de ontvanger?\nResultaat 3 – welk langetermijneffect verwacht je?';
+      const outcomeList = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      outcomeList.style = 'bullets'
+      outcomeList.text =
+        'Resultaat 1 – wat veranderde er direct?\nResultaat 2 – welke reactie gaf de ontvanger?\nResultaat 3 – welk langetermijneffect verwacht je?'
 
-      const lessonParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      lessonParagraph.text = 'Deel de belangrijkste lessen of tips zodat lezers het scenario kunnen kopiëren voor hun eigen situatie. Verwijs naar ondersteunend materiaal (checklist, download, video).';
+      const lessonParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      lessonParagraph.text =
+        'Deel de belangrijkste lessen of tips zodat lezers het scenario kunnen kopiëren voor hun eigen situatie. Verwijs naar ondersteunend materiaal (checklist, download, video).'
 
-      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft;
-      verdictBlock.title = 'Wat jij hiervan kunt leren';
-      verdictBlock.text = 'Vat in één alinea samen voor wie dit cadeau-format werkt, welke fouten je vermijdt en hoe lezers het binnen 24 uur kunnen voorbereiden.';
+      const verdictBlock = createEmptyDraft('verdict') as VerdictBlockDraft
+      verdictBlock.title = 'Wat jij hiervan kunt leren'
+      verdictBlock.text =
+        'Vat in één alinea samen voor wie dit cadeau-format werkt, welke fouten je vermijdt en hoe lezers het binnen 24 uur kunnen voorbereiden.'
 
-      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      ctaParagraph.text = '👉 Voeg een call-to-action toe om je eigen case te plannen: link naar GiftFinder resultaten, een intakeformulier of gerelateerde gidsen.';
+      const ctaParagraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      ctaParagraph.text =
+        '👉 Voeg een call-to-action toe om je eigen case te plannen: link naar GiftFinder resultaten, een intakeformulier of gerelateerde gidsen.'
 
       return [
         heroHeading,
@@ -779,133 +854,143 @@ const CONTENT_TEMPLATES: TemplateOption[] = [
         lessonParagraph,
         verdictBlock,
         ctaParagraph,
-      ];
-    }
+      ]
+    },
   },
   {
     id: 'faq-section',
     label: 'FAQ sectie',
     description: 'Klaar voor snelle vragen & antwoorden',
     build: () => {
-      const heading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heading.text = 'Veelgestelde vragen';
+      const heading = createEmptyDraft('heading') as HeadingBlockDraft
+      heading.text = 'Veelgestelde vragen'
 
-      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft;
+      const faqBlock = createEmptyDraft('faq') as FAQBlockDraft
       if (faqBlock.items.length) {
-        faqBlock.items[0].question = 'Loopt dit cadeau goed in de praktijk?';
-        faqBlock.items[0].answer = 'Geef hier een kort antwoord dat onzekerheden wegneemt.';
+        faqBlock.items[0].question = 'Loopt dit cadeau goed in de praktijk?'
+        faqBlock.items[0].answer = 'Geef hier een kort antwoord dat onzekerheden wegneemt.'
       }
-      faqBlock.items.push({ id: generateId(), question: 'Hoe presenteer ik dit het beste?', answer: 'Beschrijf hoe je het cadeau extra persoonlijk maakt.' });
+      faqBlock.items.push({
+        id: generateId(),
+        question: 'Hoe presenteer ik dit het beste?',
+        answer: 'Beschrijf hoe je het cadeau extra persoonlijk maakt.',
+      })
 
-      return [heading, faqBlock];
-    }
+      return [heading, faqBlock]
+    },
   },
   {
     id: 'cta-closer',
     label: 'Call-to-action afsluiter',
     description: 'Sterke afsluiting met CTA en links',
     build: () => {
-      const heading = createEmptyDraft('heading') as HeadingBlockDraft;
-      heading.text = 'Klaar om iemand te verrassen?';
+      const heading = createEmptyDraft('heading') as HeadingBlockDraft
+      heading.text = 'Klaar om iemand te verrassen?'
 
-      const paragraph = createEmptyDraft('paragraph') as ParagraphBlockDraft;
-      paragraph.style = 'paragraph';
-      paragraph.text = '👉 Voeg je belangrijkste links toe (affiliate, checklist, giftfinder) en sluit af met een persoonlijke uitnodiging of challenge voor de lezer.';
+      const paragraph = createEmptyDraft('paragraph') as ParagraphBlockDraft
+      paragraph.style = 'paragraph'
+      paragraph.text =
+        '👉 Voeg je belangrijkste links toe (affiliate, checklist, giftfinder) en sluit af met een persoonlijke uitnodiging of challenge voor de lezer.'
 
-      return [heading, paragraph];
-    }
-  }
-];
+      return [heading, paragraph]
+    },
+  },
+]
 
 const labelForBlock = (block: ContentBlockDraft, index: number): string => {
   switch (block.type) {
     case 'heading':
-      return block.text ? `Kop: ${block.text}` : `Kop ${index + 1}`;
+      return block.text ? `Kop: ${block.text}` : `Kop ${index + 1}`
     case 'paragraph':
-      return block.text ? `Paragraaf: ${block.text.slice(0, 40)}…` : `Paragraaf ${index + 1}`;
+      return block.text ? `Paragraaf: ${block.text.slice(0, 40)}…` : `Paragraaf ${index + 1}`
     case 'image':
-      return block.alt ? `Afbeelding: ${block.alt}` : `Afbeelding ${index + 1}`;
+      return block.alt ? `Afbeelding: ${block.alt}` : `Afbeelding ${index + 1}`
     case 'gift':
-      return block.gift.productName ? `Product: ${block.gift.productName}` : `Productblok ${index + 1}`;
+      return block.gift.productName
+        ? `Product: ${block.gift.productName}`
+        : `Productblok ${index + 1}`
     case 'faq':
-      return `FAQ (${block.items.length} vragen)`;
+      return `FAQ (${block.items.length} vragen)`
     case 'verdict':
-      return block.title ? `Eindoordeel: ${block.title}` : `Eindoordeel`;
+      return block.title ? `Eindoordeel: ${block.title}` : `Eindoordeel`
     default:
-      return block.label || `Blok ${index + 1}`;
+      return block.label || `Blok ${index + 1}`
   }
-};
+}
 
 const ensureRetailerCount = (retailers: RetailerDraft[]): RetailerDraft[] => {
   if (!retailers.length) {
-    return [{ id: generateId(), name: '', affiliateLink: '' }];
+    return [{ id: generateId(), name: '', affiliateLink: '' }]
   }
-  return retailers;
-};
+  return retailers
+}
 
 const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
-  const blocks = useMemo(() => value, [value]);
+  const blocks = useMemo(() => value, [value])
 
   const updateBlock = (id: string, updater: (block: ContentBlockDraft) => ContentBlockDraft) => {
-    onChange(blocks.map((block) => (block.id === id ? updater(block) : block)));
-  };
+    onChange(blocks.map((block) => (block.id === id ? updater(block) : block)))
+  }
 
   const removeBlock = (id: string) => {
-    onChange(blocks.filter((block) => block.id !== id));
-  };
+    onChange(blocks.filter((block) => block.id !== id))
+  }
 
   const duplicateBlock = (id: string) => {
-    const index = blocks.findIndex((block) => block.id === id);
-    if (index === -1) return;
-    const block = blocks[index];
-    const cloned = JSON.parse(JSON.stringify(block)) as ContentBlockDraft;
-    cloned.id = generateId();
+    const index = blocks.findIndex((block) => block.id === id)
+    if (index === -1) return
+    const block = blocks[index]
+    const cloned = JSON.parse(JSON.stringify(block)) as ContentBlockDraft
+    cloned.id = generateId()
 
     if (cloned.type === 'gift') {
-      cloned.gift.retailers = cloned.gift.retailers.map((retailer) => ({ ...retailer, id: generateId() }));
+      cloned.gift.retailers = cloned.gift.retailers.map((retailer) => ({
+        ...retailer,
+        id: generateId(),
+      }))
     }
     if (cloned.type === 'faq') {
-      cloned.items = cloned.items.map((item) => ({ ...item, id: generateId() }));
+      cloned.items = cloned.items.map((item) => ({ ...item, id: generateId() }))
     }
 
-    const next = [...blocks];
-    next.splice(index + 1, 0, cloned);
-    onChange(next);
-  };
+    const next = [...blocks]
+    next.splice(index + 1, 0, cloned)
+    onChange(next)
+  }
 
   const moveBlock = (id: string, direction: -1 | 1) => {
-    const index = blocks.findIndex((block) => block.id === id);
-    if (index === -1) return;
-    const targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= blocks.length) return;
+    const index = blocks.findIndex((block) => block.id === id)
+    if (index === -1) return
+    const targetIndex = index + direction
+    if (targetIndex < 0 || targetIndex >= blocks.length) return
 
-    const next = [...blocks];
-    const [removed] = next.splice(index, 1);
-    next.splice(targetIndex, 0, removed);
-    onChange(next);
-  };
+    const next = [...blocks]
+    const [removed] = next.splice(index, 1)
+    next.splice(targetIndex, 0, removed)
+    onChange(next)
+  }
 
   const addBlock = (type: ContentBlockDraft['type']) => {
-    const next = [...blocks, createEmptyDraft(type)];
-    onChange(next);
-  };
+    const next = [...blocks, createEmptyDraft(type)]
+    onChange(next)
+  }
 
   const applyTemplate = (templateId: string) => {
-    const template = CONTENT_TEMPLATES.find((option) => option.id === templateId);
+    const template = CONTENT_TEMPLATES.find((option) => option.id === templateId)
     if (!template) {
-      return;
+      return
     }
-    const templateBlocks = template.build();
+    const templateBlocks = template.build()
     if (!templateBlocks.length) {
-      return;
+      return
     }
     const hasOnlyEmptyParagraph =
       blocks.length === 1 &&
       blocks[0].type === 'paragraph' &&
-      !(blocks[0] as ParagraphBlockDraft).text.trim();
-    const base = hasOnlyEmptyParagraph ? [] : blocks;
-    onChange([...base, ...templateBlocks]);
-  };
+      !(blocks[0] as ParagraphBlockDraft).text.trim()
+    const base = hasOnlyEmptyParagraph ? [] : blocks
+    onChange([...base, ...templateBlocks])
+  }
 
   const renderParagraphForm = (block: ParagraphBlockDraft) => (
     <div className="space-y-4">
@@ -924,12 +1009,12 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
             block.style === 'paragraph'
               ? 'Schrijf hier je paragraaf. Gebruik een nieuwe regel voor een zachte overgang.'
               : block.style === 'bullets'
-              ? 'Elke regel wordt een bullet point.'
-              : block.style === 'numbered'
-              ? 'Elke regel wordt een genummerd item.'
-              : block.style === 'quote'
-              ? 'Deze tekst wordt als quote / highlight weergegeven.'
-              : 'Plak of schrijf hier HTML voor gevorderde opmaak.'
+                ? 'Elke regel wordt een bullet point.'
+                : block.style === 'numbered'
+                  ? 'Elke regel wordt een genummerd item.'
+                  : block.style === 'quote'
+                    ? 'Deze tekst wordt als quote / highlight weergegeven.'
+                    : 'Plak of schrijf hier HTML voor gevorderde opmaak.'
           }
         />
         <div className="space-y-2">
@@ -956,7 +1041,7 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
         </div>
       </div>
     </div>
-  );
+  )
 
   const renderHeadingForm = (block: HeadingBlockDraft) => (
     <input
@@ -971,7 +1056,7 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
       placeholder="Bijv. Wat maakt dit cadeau speciaal?"
       className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
     />
-  );
+  )
 
   const renderImageForm = (block: ImageBlockDraft) => (
     <div className="space-y-4">
@@ -1043,7 +1128,9 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Affiliate link (optioneel)</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Affiliate link (optioneel)
+            </label>
             <input
               type="text"
               value={block.href}
@@ -1056,12 +1143,14 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
               placeholder="https://..."
               className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
             />
-            <p className="mt-1 text-xs text-gray-500">Als je een link invult wordt de afbeelding klikbaar gemaakt.</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Als je een link invult wordt de afbeelding klikbaar gemaakt.
+            </p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 
   const renderGiftForm = (block: GiftBlockDraft) => (
     <div className="space-y-5">
@@ -1155,16 +1244,14 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
                 value={retailer.name}
                 onChange={(event) =>
                   updateBlock(block.id, (current) => {
-                    const draft = current as GiftBlockDraft;
+                    const draft = current as GiftBlockDraft
                     const retailers = draft.gift.retailers.map((item) =>
-                      item.id === retailer.id
-                        ? { ...item, name: event.target.value }
-                        : item
-                    );
+                      item.id === retailer.id ? { ...item, name: event.target.value } : item
+                    )
                     return {
                       ...draft,
                       gift: { ...draft.gift, retailers },
-                    };
+                    }
                   })
                 }
                 placeholder="Naam winkel, bijv. Coolblue"
@@ -1176,16 +1263,16 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
                   value={retailer.affiliateLink}
                   onChange={(event) =>
                     updateBlock(block.id, (current) => {
-                      const draft = current as GiftBlockDraft;
+                      const draft = current as GiftBlockDraft
                       const retailers = draft.gift.retailers.map((item) =>
                         item.id === retailer.id
                           ? { ...item, affiliateLink: event.target.value }
                           : item
-                      );
+                      )
                       return {
                         ...draft,
                         gift: { ...draft.gift, retailers },
-                      };
+                      }
                     })
                   }
                   placeholder="https://..."
@@ -1196,14 +1283,16 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
                     type="button"
                     onClick={() =>
                       updateBlock(block.id, (current) => {
-                        const draft = current as GiftBlockDraft;
+                        const draft = current as GiftBlockDraft
                         return {
                           ...draft,
                           gift: {
                             ...draft.gift,
-                            retailers: draft.gift.retailers.filter((item) => item.id !== retailer.id),
+                            retailers: draft.gift.retailers.filter(
+                              (item) => item.id !== retailer.id
+                            ),
                           },
-                        };
+                        }
                       })
                     }
                     className="inline-flex h-10 items-center justify-center rounded-lg border border-red-200 px-2 text-xs font-medium text-red-500 hover:bg-red-50"
@@ -1218,7 +1307,7 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
             type="button"
             onClick={() =>
               updateBlock(block.id, (current) => {
-                const draft = current as GiftBlockDraft;
+                const draft = current as GiftBlockDraft
                 return {
                   ...draft,
                   gift: {
@@ -1228,7 +1317,7 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
                       { id: generateId(), name: '', affiliateLink: '' },
                     ].slice(0, 3),
                   },
-                };
+                }
               })
             }
             className="text-sm font-medium text-rose-600 hover:text-rose-700"
@@ -1255,10 +1344,12 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
           placeholder="Kommagescheiden, bijv. kantoor,productiviteit"
           className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
         />
-        <p className="mt-1 text-xs text-gray-500">Gebruik tags om productcategorieën te markeren. Dit helpt bij interne zoekfilters.</p>
+        <p className="mt-1 text-xs text-gray-500">
+          Gebruik tags om productcategorieën te markeren. Dit helpt bij interne zoekfilters.
+        </p>
       </div>
     </div>
-  );
+  )
 
   const renderFaqForm = (block: FAQBlockDraft) => (
     <div className="space-y-4">
@@ -1335,7 +1426,7 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
         + Nieuwe FAQ toevoegen
       </button>
     </div>
-  );
+  )
 
   const renderVerdictForm = (block: VerdictBlockDraft) => (
     <div className="space-y-3">
@@ -1370,14 +1461,17 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
         />
       </div>
     </div>
-  );
+  )
 
   const renderUnsupportedBlock = (block: UnsupportedBlockDraft) => (
     <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
       <p className="font-medium text-gray-700">{block.label || 'Niet-bewerkbaar blok'}</p>
-      <p className="text-xs text-gray-500 mt-1">Dit bloktype wordt nog niet ondersteund in de visuele editor. Je kunt het laten staan of verwijderen.</p>
+      <p className="text-xs text-gray-500 mt-1">
+        Dit bloktype wordt nog niet ondersteund in de visuele editor. Je kunt het laten staan of
+        verwijderen.
+      </p>
     </div>
-  );
+  )
 
   return (
     <div className="space-y-6">
@@ -1393,8 +1487,8 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
                 <select
                   value={block.type}
                   onChange={(event) => {
-                    const nextType = event.target.value as ContentBlockDraft['type'];
-                    updateBlock(block.id, () => ({ ...createEmptyDraft(nextType), id: block.id }));
+                    const nextType = event.target.value as ContentBlockDraft['type']
+                    updateBlock(block.id, () => ({ ...createEmptyDraft(nextType), id: block.id }))
                   }}
                   className="rounded-lg border border-gray-300 p-2 text-xs font-medium text-gray-600 focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
                 >
@@ -1465,7 +1559,10 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
             </button>
           ))}
         </div>
-        <p className="mt-3 text-xs text-gray-500">Elke sectie heeft een eigen formulier. Vul alles in en de editor bouwt automatisch een perfecte blogpost.</p>
+        <p className="mt-3 text-xs text-gray-500">
+          Elke sectie heeft een eigen formulier. Vul alles in en de editor bouwt automatisch een
+          perfecte blogpost.
+        </p>
         {CONTENT_TEMPLATES.length > 0 && (
           <div className="mt-5 rounded-xl border border-rose-100 bg-white p-4 text-left">
             <p className="text-sm font-semibold text-gray-700">Snelle templates</p>
@@ -1489,8 +1586,8 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { generateId, createEmptyDraft };
-export default ContentBuilder;
+export { generateId, createEmptyDraft }
+export default ContentBuilder

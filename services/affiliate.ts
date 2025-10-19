@@ -1,6 +1,6 @@
-import { CoolblueAffiliateService } from './coolblueAffiliateService';
+import { CoolblueAffiliateService } from './coolblueAffiliateService'
 
-export const AMAZON_ASSOCIATE_TAG = 'gifteez77-21';
+export const AMAZON_ASSOCIATE_TAG = 'gifteez77-21'
 
 /**
  * Add affiliate tracking to supported retailers
@@ -8,50 +8,50 @@ export const AMAZON_ASSOCIATE_TAG = 'gifteez77-21';
  */
 const ensureAbsoluteUrl = (rawUrl: string): string => {
   if (!rawUrl) {
-    return rawUrl;
+    return rawUrl
   }
 
-  const trimmed = rawUrl.trim();
+  const trimmed = rawUrl.trim()
   if (/^https?:\/\//i.test(trimmed)) {
-    return trimmed;
+    return trimmed
   }
 
   if (trimmed.startsWith('//')) {
-    return `https:${trimmed}`;
+    return `https:${trimmed}`
   }
 
-  return `https://${trimmed.replace(/^\/+/, '')}`;
-};
+  return `https://${trimmed.replace(/^\/+/, '')}`
+}
 
 export function withAffiliate(url: string, campaign?: string): string {
   try {
-    const absoluteUrl = ensureAbsoluteUrl(url);
-    const u = new URL(absoluteUrl);
-    
+    const absoluteUrl = ensureAbsoluteUrl(url)
+    const u = new URL(absoluteUrl)
+
     // Handle Amazon affiliate links
-    const isAmazonNl = /(^|\.)amazon\.nl$/i.test(u.hostname);
+    const isAmazonNl = /(^|\.)amazon\.nl$/i.test(u.hostname)
     if (isAmazonNl) {
       // already tagged?
-      if (u.searchParams.has('tag')) return u.toString();
-      u.searchParams.set('tag', AMAZON_ASSOCIATE_TAG);
-      return u.toString();
+      if (u.searchParams.has('tag')) return u.toString()
+      u.searchParams.set('tag', AMAZON_ASSOCIATE_TAG)
+      return u.toString()
     }
-    
+
     // Handle Coolblue affiliate links via Awin
     if (CoolblueAffiliateService.isCoolblueUrl(url)) {
       // Don't double-wrap already converted Awin links
       if (CoolblueAffiliateService.isAwinLink(absoluteUrl)) {
-        return absoluteUrl;
+        return absoluteUrl
       }
-      return campaign 
+      return campaign
         ? CoolblueAffiliateService.generateCampaignUrl(absoluteUrl, campaign)
-        : CoolblueAffiliateService.addAffiliateTracking(absoluteUrl);
+        : CoolblueAffiliateService.addAffiliateTracking(absoluteUrl)
     }
-    
+
     // Return other URLs unchanged
-    return absoluteUrl;
+    return absoluteUrl
   } catch {
-    return ensureAbsoluteUrl(url); // leave malformed URLs as-is but ensure scheme
+    return ensureAbsoluteUrl(url) // leave malformed URLs as-is but ensure scheme
   }
 }
 
@@ -59,5 +59,5 @@ export function withAffiliate(url: string, campaign?: string): string {
  * Enhanced affiliate function with campaign tracking
  */
 export function withAffiliateAndCampaign(url: string, campaign: string): string {
-  return withAffiliate(url, campaign);
+  return withAffiliate(url, campaign)
 }

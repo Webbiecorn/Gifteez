@@ -1,6 +1,6 @@
 /**
  * Route-specific Error Boundary with Recovery
- * 
+ *
  * Features:
  * - Catches React errors in component tree
  * - Fallback UI with recovery options
@@ -9,41 +9,41 @@
  * - User-friendly error messages
  */
 
-import React from 'react';
-import { logger } from '../lib/logger';
-import Button from './Button';
+import React from 'react'
+import { logger } from '../lib/logger'
+import Button from './Button'
 
 interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
-  routeName?: string;
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-  showDetails?: boolean;
+  children: React.ReactNode
+  fallback?: React.ReactNode
+  routeName?: string
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  showDetails?: boolean
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-  errorInfo: React.ErrorInfo | null;
-  errorCount: number;
+  hasError: boolean
+  error: Error | null
+  errorInfo: React.ErrorInfo | null
+  errorCount: number
 }
 
 class RouteErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
-    super(props);
+    super(props)
     this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorCount: 0
-    };
+      errorCount: 0,
+    }
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     return {
       hasError: true,
-      error
-    };
+      error,
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
@@ -51,64 +51,64 @@ class RouteErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBounda
       route: this.props.routeName || window.location.pathname,
       error: error.message,
       componentStack: errorInfo.componentStack,
-      errorCount: this.state.errorCount + 1
-    });
+      errorCount: this.state.errorCount + 1,
+    })
 
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       errorInfo,
-      errorCount: prevState.errorCount + 1
-    }));
+      errorCount: prevState.errorCount + 1,
+    }))
 
-    this.props.onError?.(error, errorInfo);
-    logger.flush();
+    this.props.onError?.(error, errorInfo)
+    logger.flush()
   }
 
   handleReset = () => {
     logger.info('Error boundary reset', {
-      route: this.props.routeName
-    });
+      route: this.props.routeName,
+    })
 
     this.setState({
       hasError: false,
       error: null,
-      errorInfo: null
-    });
-  };
+      errorInfo: null,
+    })
+  }
 
   handleReload = () => {
-    logger.info('Page reload triggered from error boundary');
-    window.location.reload();
-  };
+    logger.info('Page reload triggered from error boundary')
+    window.location.reload()
+  }
 
   handleGoHome = () => {
-    logger.info('Navigating to home from error boundary');
-    window.location.href = '/';
-  };
+    logger.info('Navigating to home from error boundary')
+    window.location.href = '/'
+  }
 
   handleCopyError = () => {
-    const { error, errorInfo } = this.state;
+    const { error, errorInfo } = this.state
     const errorText = `
 Error: ${error?.message}
 Route: ${this.props.routeName || window.location.pathname}
 Stack: ${error?.stack}
 Component Stack: ${errorInfo?.componentStack}
-    `.trim();
+    `.trim()
 
     navigator.clipboard.writeText(errorText).then(() => {
-      logger.info('Error details copied to clipboard');
-      alert('Foutdetails gekopieerd naar klembord');
-    });
-  };
+      logger.info('Error details copied to clipboard')
+      alert('Foutdetails gekopieerd naar klembord')
+    })
+  }
 
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback;
+        return this.props.fallback
       }
 
-      const { error, errorInfo, errorCount } = this.state;
-      const { routeName, showDetails } = this.props;
-      const isDevelopment = import.meta.env.DEV;
+      const { error, errorInfo, errorCount } = this.state
+      const { routeName, showDetails } = this.props
+      const isDevelopment = import.meta.env.DEV
 
       return (
         <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-orange-50 flex items-center justify-center p-4">
@@ -117,14 +117,26 @@ Component Stack: ${errorInfo?.componentStack}
               <div className="bg-gradient-to-r from-red-500 to-rose-600 p-6 text-white">
                 <div className="flex items-center gap-4">
                   <div className="flex-shrink-0">
-                    <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    <svg
+                      className="w-12 h-12"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
                     </svg>
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold mb-1">Er ging iets mis</h1>
                     <p className="text-red-100">
-                      {routeName ? `Fout in ${routeName}` : 'We hebben een onverwachte fout ontdekt'}
+                      {routeName
+                        ? `Fout in ${routeName}`
+                        : 'We hebben een onverwachte fout ontdekt'}
                     </p>
                   </div>
                 </div>
@@ -133,31 +145,19 @@ Component Stack: ${errorInfo?.componentStack}
               <div className="p-6 space-y-6">
                 <div>
                   <p className="text-gray-700 leading-relaxed">
-                    Excuses voor het ongemak. Onze foutdetectie heeft deze situatie automatisch gelogd 
-                    en we kijken er naar. Probeer een van de onderstaande opties:
+                    Excuses voor het ongemak. Onze foutdetectie heeft deze situatie automatisch
+                    gelogd en we kijken er naar. Probeer een van de onderstaande opties:
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <Button
-                    variant="primary"
-                    onClick={this.handleReset}
-                    className="w-full"
-                  >
+                  <Button variant="primary" onClick={this.handleReset} className="w-full">
                     🔄 Probeer Opnieuw
                   </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={this.handleReload}
-                    className="w-full"
-                  >
+                  <Button variant="secondary" onClick={this.handleReload} className="w-full">
                     ↻ Herlaad Pagina
                   </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={this.handleGoHome}
-                    className="w-full"
-                  >
+                  <Button variant="secondary" onClick={this.handleGoHome} className="w-full">
                     🏠 Naar Home
                   </Button>
                 </div>
@@ -173,13 +173,13 @@ Component Stack: ${errorInfo?.componentStack}
                         📋 Kopieer
                       </button>
                     </div>
-                    
+
                     <div className="space-y-2 text-sm">
                       <div>
                         <span className="font-medium text-gray-700">Fout:</span>
                         <p className="text-red-600 font-mono mt-1">{error.message}</p>
                       </div>
-                      
+
                       {errorCount > 1 && (
                         <div className="text-orange-600">
                           ⚠️ Deze fout is {errorCount}x voorgekomen
@@ -225,17 +225,18 @@ Component Stack: ${errorInfo?.componentStack}
             {isDevelopment && (
               <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <p className="text-sm text-yellow-800">
-                  <strong>Dev Mode:</strong> Dit foutscherm wordt alleen in productie getoond bij crashes.
+                  <strong>Dev Mode:</strong> Dit foutscherm wordt alleen in productie getoond bij
+                  crashes.
                 </p>
               </div>
             )}
           </div>
         </div>
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
-export default RouteErrorBoundary;
+export default RouteErrorBoundary

@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import SEOManager, { SEOData, SEOAnalysis } from '../services/seoManager';
+import React, { useState, useEffect, useCallback } from 'react'
+import SEOManager from '../services/seoManager'
+import type { SEOData, SEOAnalysis } from '../services/seoManager'
 
 interface SEOPanelProps {
-  title: string;
-  content: string;
-  excerpt: string;
-  imageUrl?: string;
-  slug?: string;
-  onSEOChange: (seoData: SEOData) => void;
+  title: string
+  content: string
+  excerpt: string
+  imageUrl?: string
+  slug?: string
+  onSEOChange: (seoData: SEOData) => void
 }
 
 const SEOPanel: React.FC<SEOPanelProps> = ({
@@ -16,80 +17,83 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
   excerpt,
   imageUrl,
   slug,
-  onSEOChange
+  onSEOChange,
 }) => {
-  const [seoData, setSeoData] = useState<SEOData | null>(null);
-  const [analysis, setAnalysis] = useState<SEOAnalysis | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [customSEO, setCustomSEO] = useState(false);
+  const [seoData, setSeoData] = useState<SEOData | null>(null)
+  const [analysis, setAnalysis] = useState<SEOAnalysis | null>(null)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const [customSEO, setCustomSEO] = useState(false)
 
-  const seoManager = SEOManager.getInstance();
+  const seoManager = SEOManager.getInstance()
 
   const regenerateSEO = useCallback(() => {
     if (!title && !content) {
-      return;
+      return
     }
-    const generatedSEO = seoManager.generateSEOData(title, content, excerpt, imageUrl, slug);
-    setSeoData(generatedSEO);
+    const generatedSEO = seoManager.generateSEOData(title, content, excerpt, imageUrl, slug)
+    setSeoData(generatedSEO)
 
-    const seoAnalysis = seoManager.analyzeSEO(generatedSEO, content);
-    setAnalysis(seoAnalysis);
+    const seoAnalysis = seoManager.analyzeSEO(generatedSEO, content)
+    setAnalysis(seoAnalysis)
 
-    onSEOChange(generatedSEO);
-    setCustomSEO(false);
-  }, [content, excerpt, imageUrl, onSEOChange, seoManager, slug, title]);
+    onSEOChange(generatedSEO)
+    setCustomSEO(false)
+  }, [content, excerpt, imageUrl, onSEOChange, seoManager, slug, title])
 
   useEffect(() => {
     if (customSEO) {
-      return;
+      return
     }
     if (title || content) {
-      const generatedSEO = seoManager.generateSEOData(title, content, excerpt, imageUrl, slug);
-      setSeoData(generatedSEO);
+      const generatedSEO = seoManager.generateSEOData(title, content, excerpt, imageUrl, slug)
+      setSeoData(generatedSEO)
 
-      const seoAnalysis = seoManager.analyzeSEO(generatedSEO, content);
-      setAnalysis(seoAnalysis);
+      const seoAnalysis = seoManager.analyzeSEO(generatedSEO, content)
+      setAnalysis(seoAnalysis)
 
-      onSEOChange(generatedSEO);
+      onSEOChange(generatedSEO)
     }
-  }, [title, content, excerpt, imageUrl, slug, onSEOChange, customSEO, seoManager]);
+  }, [title, content, excerpt, imageUrl, slug, onSEOChange, customSEO, seoManager])
 
   const handleSEOFieldChange = (field: keyof SEOData, value: string) => {
-    if (!seoData) return;
-    
-    const updatedSEO = { ...seoData, [field]: value };
-    setSeoData(updatedSEO);
-    
-    const seoAnalysis = seoManager.analyzeSEO(updatedSEO, content);
-    setAnalysis(seoAnalysis);
-    
-    onSEOChange(updatedSEO);
-  };
+    if (!seoData) return
+
+    const updatedSEO = { ...seoData, [field]: value }
+    setSeoData(updatedSEO)
+
+    const seoAnalysis = seoManager.analyzeSEO(updatedSEO, content)
+    setAnalysis(seoAnalysis)
+
+    onSEOChange(updatedSEO)
+  }
 
   const handleKeywordsChange = (keywords: string) => {
-    if (!seoData) return;
-    
-    const keywordArray = keywords.split(',').map(k => k.trim()).filter(k => k.length > 0);
-    const updatedSEO = { ...seoData, keywords: keywordArray };
-    setSeoData(updatedSEO);
-    
-    const seoAnalysis = seoManager.analyzeSEO(updatedSEO, content);
-    setAnalysis(seoAnalysis);
-    
-    onSEOChange(updatedSEO);
-  };
+    if (!seoData) return
+
+    const keywordArray = keywords
+      .split(',')
+      .map((k) => k.trim())
+      .filter((k) => k.length > 0)
+    const updatedSEO = { ...seoData, keywords: keywordArray }
+    setSeoData(updatedSEO)
+
+    const seoAnalysis = seoManager.analyzeSEO(updatedSEO, content)
+    setAnalysis(seoAnalysis)
+
+    onSEOChange(updatedSEO)
+  }
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
+    if (score >= 80) return 'text-green-600'
+    if (score >= 60) return 'text-yellow-600'
+    return 'text-red-600'
+  }
 
   const getScoreBg = (score: number) => {
-    if (score >= 80) return 'bg-green-100 border-green-200';
-    if (score >= 60) return 'bg-yellow-100 border-yellow-200';
-    return 'bg-red-100 border-red-200';
-  };
+    if (score >= 80) return 'bg-green-100 border-green-200'
+    if (score >= 60) return 'bg-yellow-100 border-yellow-200'
+    return 'bg-red-100 border-red-200'
+  }
 
   if (!seoData || !analysis) {
     return (
@@ -99,18 +103,20 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           <span className="text-sm text-gray-600">SEO analyse laden...</span>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="border border-gray-200 rounded-lg">
       {/* Header */}
-      <div 
+      <div
         className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center space-x-3">
-          <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${getScoreBg(analysis.score)}`}>
+          <div
+            className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${getScoreBg(analysis.score)}`}
+          >
             <span className={`text-sm font-bold ${getScoreColor(analysis.score)}`}>
               {analysis.score}
             </span>
@@ -118,15 +124,19 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           <div>
             <h3 className="font-medium text-gray-900">SEO Optimalisatie</h3>
             <p className="text-sm text-gray-600">
-              {analysis.score >= 80 ? 'Uitstekend' : analysis.score >= 60 ? 'Goed' : 'Heeft aandacht nodig'}
+              {analysis.score >= 80
+                ? 'Uitstekend'
+                : analysis.score >= 60
+                  ? 'Goed'
+                  : 'Heeft aandacht nodig'}
             </p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              regenerateSEO();
+              e.stopPropagation()
+              regenerateSEO()
             }}
             className="px-3 py-1 text-xs rounded-full border border-gray-200 font-medium text-gray-600 hover:bg-gray-100"
           >
@@ -134,21 +144,21 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           </button>
           <button
             onClick={(e) => {
-              e.stopPropagation();
-              setCustomSEO(!customSEO);
+              e.stopPropagation()
+              setCustomSEO(!customSEO)
             }}
             className={`px-3 py-1 text-xs rounded-full font-medium ${
-              customSEO 
-                ? 'bg-rose-100 text-rose-800' 
+              customSEO
+                ? 'bg-rose-100 text-rose-800'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
             {customSEO ? 'Automatisch' : 'Handmatig'}
           </button>
-          <svg 
+          <svg
             className={`w-5 h-5 text-gray-400 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-            fill="none" 
-            stroke="currentColor" 
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -162,7 +172,7 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           {/* SEO Analysis */}
           <div className="bg-gray-50 p-3 rounded-lg">
             <h4 className="font-medium text-gray-900 mb-2">SEO Analyse</h4>
-            
+
             {analysis.issues.length > 0 && (
               <div className="mb-2">
                 <span className="text-sm font-medium text-red-600">Problemen:</span>
@@ -173,7 +183,7 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
                 </ul>
               </div>
             )}
-            
+
             {analysis.warnings.length > 0 && (
               <div className="mb-2">
                 <span className="text-sm font-medium text-yellow-600">Waarschuwingen:</span>
@@ -184,7 +194,7 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
                 </ul>
               </div>
             )}
-            
+
             {analysis.suggestions.length > 0 && (
               <div>
                 <span className="text-sm font-medium text-blue-600">Suggesties:</span>
@@ -247,9 +257,9 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
                 <h4 className="font-medium text-gray-900 mb-2">Social Media Preview</h4>
                 <div className="border border-gray-200 rounded-lg bg-white p-3">
                   {seoData.ogImage && (
-                    <img 
-                      src={seoData.ogImage} 
-                      alt="Social preview" 
+                    <img
+                      src={seoData.ogImage}
+                      alt="Social preview"
                       className="w-full h-32 object-cover rounded mb-2"
                     />
                   )}
@@ -265,9 +275,9 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           <div>
             <button
               onClick={() => {
-                const metaTags = seoManager.generateMetaTags(seoData);
-                navigator.clipboard.writeText(metaTags);
-                alert('Meta tags gekopieerd naar klembord!');
+                const metaTags = seoManager.generateMetaTags(seoData)
+                navigator.clipboard.writeText(metaTags)
+                alert('Meta tags gekopieerd naar klembord!')
               }}
               className="text-sm text-rose-600 hover:text-rose-700 font-medium"
             >
@@ -277,7 +287,7 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default SEOPanel;
+export default SEOPanel

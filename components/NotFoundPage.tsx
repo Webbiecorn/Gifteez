@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { NavigateTo } from '../types';
-import { Button } from './ui/Button';
-import { EmptyState } from './ui/EmptyState';
+import React, { useEffect } from 'react'
+import { Button } from './ui/Button'
+import { EmptyState } from './ui/EmptyState'
+import type { NavigateTo } from '../types'
 
 interface NotFoundPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 /**
@@ -14,16 +14,16 @@ interface NotFoundPageProps {
  */
 const NotFoundPage: React.FC<NotFoundPageProps> = ({ navigateTo }) => {
   useEffect(() => {
-    document.title = '404 - Pagina niet gevonden | Gifteez';
-    
+    document.title = '404 - Pagina niet gevonden | Gifteez'
+
     // Track 404 in analytics (if consent given)
     if (window.dataLayer) {
       window.dataLayer.push({
         event: '404_error',
-        page_path: window.location.pathname
-      });
+        page_path: window.location.pathname,
+      })
     }
-  }, []);
+  }, [])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4 py-12">
@@ -34,7 +34,7 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ navigateTo }) => {
           description="De pagina die je zoekt is verplaatst of bestaat niet (meer). Geen zorgen, we helpen je terug op weg!"
           action={{
             label: '🏠 Terug naar Home',
-            onClick: () => navigateTo('home')
+            onClick: () => navigateTo('home'),
           }}
         >
           {/* Quick Navigation Grid */}
@@ -72,28 +72,18 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ navigateTo }) => {
               📝 Blog
             </Button>
           </div>
-          
+
           {/* Help Section */}
           <div className="mt-8 p-6 bg-white rounded-lg border border-neutral-200 text-center">
-            <h3 className="font-semibold text-neutral-900 mb-2">
-              Hulp nodig?
-            </h3>
+            <h3 className="font-semibold text-neutral-900 mb-2">Hulp nodig?</h3>
             <p className="text-sm text-neutral-600 mb-4">
               Kun je niet vinden wat je zoekt? We helpen je graag verder!
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigateTo('contact')}
-              >
+              <Button variant="ghost" size="sm" onClick={() => navigateTo('contact')}>
                 📧 Contact opnemen
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigateTo('about')}
-              >
+              <Button variant="ghost" size="sm" onClick={() => navigateTo('about')}>
                 ℹ️ Over Gifteez
               </Button>
             </div>
@@ -103,13 +93,14 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ navigateTo }) => {
           <div className="mt-6 text-center text-xs text-neutral-500">
             <p>Foutcode: 404 | Pagina niet gevonden</p>
             <p className="mt-1">
-              URL: <code className="bg-neutral-100 px-2 py-1 rounded">{window.location.pathname}</code>
+              URL:{' '}
+              <code className="bg-neutral-100 px-2 py-1 rounded">{window.location.pathname}</code>
             </p>
           </div>
         </EmptyState>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default NotFoundPage;
+export default NotFoundPage

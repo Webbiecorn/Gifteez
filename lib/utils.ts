@@ -1,24 +1,24 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 /**
  * Utility function to merge Tailwind CSS classes with proper precedence
  * Combines clsx for conditional classes and tailwind-merge for deduplication
- * 
+ *
  * @param inputs - Class values to merge
  * @returns Merged class string
- * 
+ *
  * @example
  * cn('px-4 py-2', isActive && 'bg-blue-500', 'text-white')
  * // Returns: "px-4 py-2 bg-blue-500 text-white" if isActive is true
- * 
+ *
  * @example
  * // Tailwind-merge handles conflicts properly
- * cn('px-2 py-1', 'px-4') 
+ * cn('px-2 py-1', 'px-4')
  * // Returns: "py-1 px-4" (later px-4 overrides px-2)
  */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 /**
@@ -30,7 +30,7 @@ export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat('nl-NL', {
     style: 'currency',
     currency: 'EUR',
-  }).format(amount / 100);
+  }).format(amount / 100)
 }
 
 /**
@@ -47,8 +47,8 @@ export function formatDate(
     day: 'numeric',
   }
 ): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('nl-NL', options).format(dateObj);
+  const dateObj = typeof date === 'string' ? new Date(date) : date
+  return new Intl.DateTimeFormat('nl-NL', options).format(dateObj)
 }
 
 /**
@@ -58,8 +58,8 @@ export function formatDate(
  * @returns Truncated string
  */
 export function truncate(str: string, maxLength: number): string {
-  if (str.length <= maxLength) return str;
-  return str.slice(0, maxLength - 3) + '...';
+  if (str.length <= maxLength) return str
+  return str.slice(0, maxLength - 3) + '...'
 }
 
 /**
@@ -72,11 +72,11 @@ export function debounce<T extends (...args: any[]) => any>(
   fn: T,
   delay: number
 ): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout>;
+  let timeoutId: ReturnType<typeof setTimeout>
   return function (this: any, ...args: Parameters<T>) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn.apply(this, args), delay)
+  }
 }
 
 /**
@@ -85,7 +85,7 @@ export function debounce<T extends (...args: any[]) => any>(
  * @returns Promise that resolves after the duration
  */
 export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 /**
@@ -94,7 +94,7 @@ export function sleep(ms: number): Promise<void> {
  * @returns True if value is not null or undefined
  */
 export function isDefined<T>(value: T | null | undefined): value is T {
-  return value !== null && value !== undefined;
+  return value !== null && value !== undefined
 }
 
 /**
@@ -103,5 +103,5 @@ export function isDefined<T>(value: T | null | undefined): value is T {
  * @returns Random ID string
  */
 export function generateId(prefix: string = 'id'): string {
-  return `${prefix}_${Math.random().toString(36).substr(2, 9)}`;
+  return `${prefix}_${Math.random().toString(36).substr(2, 9)}`
 }

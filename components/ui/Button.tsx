@@ -1,6 +1,6 @@
-import React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import React from 'react'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '../../lib/utils'
 
 /**
  * Button component with multiple variants and sizes
@@ -13,16 +13,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 
+        primary:
           'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 focus-visible:ring-primary-500 shadow-md hover:shadow-lg',
-        secondary: 
+        secondary:
           'bg-secondary-100 text-secondary-400 hover:bg-secondary-200 active:bg-secondary-300 focus-visible:ring-secondary-300 shadow-sm',
-        accent: 
+        accent:
           'bg-accent text-white hover:bg-accent-hover active:scale-95 focus-visible:ring-accent shadow-glow hover:shadow-glow-lg',
-        ghost: 
+        ghost:
           'bg-transparent text-neutral-700 hover:bg-neutral-100 active:bg-neutral-200 focus-visible:ring-neutral-400',
-        link: 
-          'bg-transparent text-primary-600 hover:text-primary-700 underline-offset-4 hover:underline focus-visible:ring-primary-500',
+        link: 'bg-transparent text-primary-600 hover:text-primary-700 underline-offset-4 hover:underline focus-visible:ring-primary-500',
         success:
           'bg-success text-white hover:bg-success-dark active:bg-success-dark focus-visible:ring-success shadow-md',
         error:
@@ -47,34 +46,34 @@ const buttonVariants = cva(
       size: 'md',
     },
   }
-);
+)
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  loading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  asChild?: boolean
+  loading?: boolean
+  leftIcon?: React.ReactNode
+  rightIcon?: React.ReactNode
 }
 
 /**
  * Button component
- * 
+ *
  * @example
  * // Primary button
  * <Button>Click me</Button>
- * 
+ *
  * @example
  * // Accent button with icon
  * <Button variant="accent" size="lg" leftIcon={<Heart />}>
  *   Toevoegen aan favorieten
  * </Button>
- * 
+ *
  * @example
  * // Loading state
  * <Button loading>Laden...</Button>
- * 
+ *
  * @example
  * // Full width
  * <Button fullWidth variant="secondary">
@@ -130,10 +129,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span>{children}</span>
         {!loading && rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
       </button>
-    );
+    )
   }
-);
+)
 
-Button.displayName = 'Button';
+Button.displayName = 'Button'
 
-export { Button, buttonVariants };
+export { Button, buttonVariants }

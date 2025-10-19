@@ -1,59 +1,60 @@
-import { User, BlogPost } from '../types';
+import { User } from '../types'
+import type { BlogPost } from '../types'
 
 export interface EmailTemplate {
-  subject: string;
-  htmlContent: string;
-  textContent: string;
+  subject: string
+  htmlContent: string
+  textContent: string
 }
 
 export interface NewsletterSubscriber {
-  id: string;
-  email: string;
-  name?: string;
-  subscribedAt: string;
+  id: string
+  email: string
+  name?: string
+  subscribedAt: string
   preferences: {
-    frequency: 'immediate' | 'daily' | 'weekly';
-    categories: string[];
-  };
-  isActive: boolean;
+    frequency: 'immediate' | 'daily' | 'weekly'
+    categories: string[]
+  }
+  isActive: boolean
 }
 
 export class EmailNotificationService {
-  private static apiEndpoint = 'https://api.emailjs.com/api/v1.0/email/send';
-  private static serviceId = 'service_gifteez'; // Replace with actual EmailJS service ID
-  private static templateId = 'template_blog_notification'; // Replace with actual template ID
-  private static publicKey = 'YOUR_EMAILJS_PUBLIC_KEY'; // Replace with actual key
+  private static apiEndpoint = 'https://api.emailjs.com/api/v1.0/email/send'
+  private static serviceId = 'service_gifteez' // Replace with actual EmailJS service ID
+  private static templateId = 'template_blog_notification' // Replace with actual template ID
+  private static publicKey = 'YOUR_EMAILJS_PUBLIC_KEY' // Replace with actual key
 
   static async sendNewBlogPostNotification(
-    post: BlogPost, 
+    post: BlogPost,
     subscribers: NewsletterSubscriber[]
   ): Promise<void> {
-    const template = this.createBlogPostTemplate(post);
-    
+    const template = this.createBlogPostTemplate(post)
+
     // Filter active subscribers who want blog notifications
-    const activeSubscribers = subscribers.filter(sub => 
-      sub.isActive && 
-      (sub.preferences.categories.length === 0 || sub.preferences.categories.includes(post.category))
-    );
+    const activeSubscribers = subscribers.filter(
+      (sub) =>
+        sub.isActive &&
+        (sub.preferences.categories.length === 0 ||
+          sub.preferences.categories.includes(post.category))
+    )
 
     // Send emails in batches to avoid rate limiting
-    const batchSize = 10;
+    const batchSize = 10
     for (let i = 0; i < activeSubscribers.length; i += batchSize) {
-      const batch = activeSubscribers.slice(i, i + batchSize);
-      await Promise.all(
-        batch.map(subscriber => this.sendEmail(subscriber, template))
-      );
-      
+      const batch = activeSubscribers.slice(i, i + batchSize)
+      await Promise.all(batch.map((subscriber) => this.sendEmail(subscriber, template)))
+
       // Small delay between batches
       if (i + batchSize < activeSubscribers.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000))
       }
     }
   }
 
   static createBlogPostTemplate(post: BlogPost): EmailTemplate {
-    const subject = `Nieuwe blog: ${post.title} - Gifteez`;
-    
+    const subject = `Nieuwe blog: ${post.title} - Gifteez`
+
     const htmlContent = `
       <!DOCTYPE html>
       <html>
@@ -125,7 +126,7 @@ export class EmailNotificationService {
         </div>
       </body>
       </html>
-    `;
+    `
 
     const textContent = `
 Nieuwe blog: ${post.title}
@@ -141,26 +142,26 @@ Lees het volledige artikel: https://gifteez.nl/blog/${post.slug}
 ---
 Gifteez - De perfecte cadeaus vinden
 Uitschrijven: https://gifteez.nl/unsubscribe?email={{EMAIL}}
-    `;
+    `
 
-    return { subject, htmlContent, textContent };
+    return { subject, htmlContent, textContent }
   }
 
   static async sendEmailToSubscriber(
-    subscriber: NewsletterSubscriber, 
+    subscriber: NewsletterSubscriber,
     template: EmailTemplate
   ): Promise<boolean> {
-    return this.sendEmail(subscriber, template);
+    return this.sendEmail(subscriber, template)
   }
 
   private static async sendEmail(
-    subscriber: NewsletterSubscriber, 
+    subscriber: NewsletterSubscriber,
     template: EmailTemplate
   ): Promise<boolean> {
     try {
       // Replace placeholder with actual email
-      const personalizedHtml = template.htmlContent.replace(/{{EMAIL}}/g, subscriber.email);
-      const personalizedText = template.textContent.replace(/{{EMAIL}}/g, subscriber.email);
+      const personalizedHtml = template.htmlContent.replace(/{{EMAIL}}/g, subscriber.email)
+      const personalizedText = template.textContent.replace(/{{EMAIL}}/g, subscriber.email)
 
       const emailData = {
         service_id: this.serviceId,
@@ -171,22 +172,22 @@ Uitschrijven: https://gifteez.nl/unsubscribe?email={{EMAIL}}
           to_name: subscriber.name || 'Gifteez lezer',
           subject: template.subject,
           html_content: personalizedHtml,
-          text_content: personalizedText
-        }
-      };
+          text_content: personalizedText,
+        },
+      }
 
       const response = await fetch(this.apiEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(emailData)
-      });
+        body: JSON.stringify(emailData),
+      })
 
-      return response.ok;
+      return response.ok
     } catch (error) {
-      console.error('Error sending email to:', subscriber.email, error);
-      return false;
+      console.error('Error sending email to:', subscriber.email, error)
+      return false
     }
   }
 
@@ -234,15 +235,15 @@ Bedankt voor je aanmelding bij Gifteez! Je ontvangt nu de nieuwste cadeau-tips e
 Bezoek ons: https://gifteez.nl
 
 Het Gifteez Team
-      `
-    };
+      `,
+    }
 
-    return this.sendEmail(subscriber, template);
+    return this.sendEmail(subscriber, template)
   }
 
   static async subscribeToNewsletter(
-    email: string, 
-    name?: string, 
+    email: string,
+    name?: string,
     preferences?: Partial<NewsletterSubscriber['preferences']>
   ): Promise<NewsletterSubscriber> {
     const subscriber: NewsletterSubscriber = {
@@ -253,28 +254,30 @@ Het Gifteez Team
       preferences: {
         frequency: 'weekly',
         categories: [],
-        ...preferences
+        ...preferences,
       },
-      isActive: true
-    };
+      isActive: true,
+    }
 
     // Send welcome email
-    await this.sendWelcomeEmail(subscriber);
+    await this.sendWelcomeEmail(subscriber)
 
-    return subscriber;
+    return subscriber
   }
 
   static async unsubscribe(email: string): Promise<boolean> {
     // This would update the subscriber's isActive status to false
     // In a real implementation, this would update the database
-    console.log(`Unsubscribing ${email} from newsletter`);
-    return true;
+    console.log(`Unsubscribing ${email} from newsletter`)
+    return true
   }
 
   static createWeeklyDigest(posts: BlogPost[]): EmailTemplate {
-    const subject = 'Je wekelijkse cadeau-inspiratie van Gifteez 🎁';
-    
-    const postsHtml = posts.map(post => `
+    const subject = 'Je wekelijkse cadeau-inspiratie van Gifteez 🎁'
+
+    const postsHtml = posts
+      .map(
+        (post) => `
       <div style="border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px; overflow: hidden;">
         <img src="${post.imageUrl}" alt="${post.title}" style="width: 100%; height: 150px; object-fit: cover;">
         <div style="padding: 15px;">
@@ -283,7 +286,9 @@ Het Gifteez Team
           <a href="https://gifteez.nl/blog/${post.slug}" style="color: #e11d48; text-decoration: none; font-weight: bold;">Lees meer →</a>
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join('')
 
     const htmlContent = `
       <!DOCTYPE html>
@@ -312,25 +317,29 @@ Het Gifteez Team
         </div>
       </body>
       </html>
-    `;
+    `
 
     const textContent = `
 Je wekelijkse Gifteez update
 
 Nieuwe blog posts deze week:
 
-${posts.map(post => `
+${posts
+  .map(
+    (post) => `
 ${post.title}
 ${post.excerpt}
 Lees meer: https://gifteez.nl/blog/${post.slug}
 ---
-`).join('\n')}
+`
+  )
+  .join('\n')}
 
 Het Gifteez Team
-    `;
+    `
 
-    return { subject, htmlContent, textContent };
+    return { subject, htmlContent, textContent }
   }
 }
 
-export default EmailNotificationService;
+export default EmailNotificationService

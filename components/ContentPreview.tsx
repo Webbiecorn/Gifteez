@@ -1,46 +1,49 @@
-import React, { useMemo } from 'react';
-import type { BlogPost, ContentBlock, Gift } from '../types';
+import React, { useMemo } from 'react'
+import type { BlogPost, ContentBlock, Gift } from '../types'
 
 interface ContentPreviewProps {
-  isOpen: boolean;
-  onClose: () => void;
-  post: Partial<BlogPost>;
-  title: string;
+  isOpen: boolean
+  onClose: () => void
+  post: Partial<BlogPost>
+  title: string
 }
 
 export default function ContentPreview({ isOpen, onClose, post, title }: ContentPreviewProps) {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   const previewBlocks = useMemo(() => {
     if (!post.content) {
-      return [] as Array<ContentBlock | { type: 'legacy'; content: string }>;
+      return [] as Array<ContentBlock | { type: 'legacy'; content: string }>
     }
 
     if (typeof post.content === 'string') {
-      return [{ type: 'legacy', content: post.content }];
+      return [{ type: 'legacy', content: post.content }]
     }
 
     if (Array.isArray(post.content)) {
-      return post.content;
+      return post.content
     }
 
-    return [] as Array<ContentBlock | { type: 'legacy'; content: string }>;
-  }, [post.content]);
+    return [] as Array<ContentBlock | { type: 'legacy'; content: string }>
+  }, [post.content])
 
-  const renderBlock = (block: ContentBlock | { type: 'legacy'; content: string }, index: number) => {
+  const renderBlock = (
+    block: ContentBlock | { type: 'legacy'; content: string },
+    index: number
+  ) => {
     switch (block.type) {
       case 'heading':
         return (
           <h2 key={index} className="mt-10 text-2xl font-semibold text-gray-900 first:mt-0">
             {block.content}
           </h2>
-        );
+        )
       case 'paragraph':
         return (
           <p key={index} className="mt-4 text-base leading-relaxed text-gray-700">
             {block.content}
           </p>
-        );
+        )
       case 'image':
         return (
           <figure key={index} className="my-8">
@@ -50,12 +53,14 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               className="mx-auto max-h-96 w-full rounded-lg object-contain"
             />
             {block.caption && (
-              <figcaption className="mt-2 text-center text-sm text-gray-500">{block.caption}</figcaption>
+              <figcaption className="mt-2 text-center text-sm text-gray-500">
+                {block.caption}
+              </figcaption>
             )}
           </figure>
-        );
+        )
       case 'gift': {
-        const gift = block.content as Gift;
+        const gift = block.content as Gift
         return (
           <div key={index} className="mt-6 rounded-xl border border-rose-100 bg-rose-50/50 p-4">
             <p className="text-sm font-semibold text-rose-600">Gift aanbeveling</p>
@@ -63,7 +68,7 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
             <p className="mt-1 text-sm text-gray-600">{gift.description}</p>
             <p className="mt-3 text-sm font-semibold text-gray-800">Prijs: {gift.priceRange}</p>
           </div>
-        );
+        )
       }
       case 'comparisonTable':
         return (
@@ -85,7 +90,10 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               <tbody className="divide-y divide-gray-100 bg-white">
                 {block.rows.map((row, rowIndex) => (
                   <tr key={rowIndex}>
-                    <th scope="row" className="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-700">
+                    <th
+                      scope="row"
+                      className="whitespace-nowrap px-4 py-2 text-sm font-medium text-gray-700"
+                    >
                       {row.feature}
                     </th>
                     {row.values.map((value, valueIndex) => (
@@ -98,7 +106,7 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               </tbody>
             </table>
           </div>
-        );
+        )
       case 'prosCons':
         return (
           <div key={index} className="mt-6 grid gap-4 md:grid-cols-2">
@@ -126,19 +134,26 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               </div>
             ))}
           </div>
-        );
+        )
       case 'verdict':
         return (
-          <div key={index} className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4">
-            <p className="text-sm font-semibold uppercase tracking-wide text-emerald-600">Verdict</p>
+          <div
+            key={index}
+            className="mt-6 rounded-xl border border-emerald-100 bg-emerald-50/60 p-4"
+          >
+            <p className="text-sm font-semibold uppercase tracking-wide text-emerald-600">
+              Verdict
+            </p>
             <p className="mt-2 text-lg font-semibold text-gray-900">{block.title}</p>
             <p className="mt-1 text-sm text-gray-700">{block.content}</p>
           </div>
-        );
+        )
       case 'faq':
         return (
           <div key={index} className="mt-6 space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">Veelgestelde vragen</p>
+            <p className="text-sm font-semibold uppercase tracking-wide text-gray-500">
+              Veelgestelde vragen
+            </p>
             {block.items.map((faqItem, faqIndex) => (
               <details key={faqIndex} className="rounded-lg border border-gray-200 bg-white p-4">
                 <summary className="cursor-pointer text-base font-semibold text-gray-900">
@@ -148,7 +163,7 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               </details>
             ))}
           </div>
-        );
+        )
       case 'legacy':
         return (
           <div key={index} className="mt-4 space-y-3 text-base leading-relaxed text-gray-700">
@@ -156,17 +171,20 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               <p key={paragraphIndex}>{paragraph}</p>
             ))}
           </div>
-        );
+        )
       default:
         return (
-          <pre key={index} className="mt-4 overflow-x-auto rounded-lg bg-gray-900/80 p-4 text-xs text-gray-100">
+          <pre
+            key={index}
+            className="mt-4 overflow-x-auto rounded-lg bg-gray-900/80 p-4 text-xs text-gray-100"
+          >
             {JSON.stringify(block, null, 2)}
           </pre>
-        );
+        )
     }
-  };
+  }
 
-  const isPublished = Boolean((post as Partial<BlogPost>).publishedDate);
+  const isPublished = Boolean((post as Partial<BlogPost>).publishedDate)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -174,10 +192,7 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
         {/* Header */}
         <div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold">Preview: {title}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-2xl"
-          >
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
             ×
           </button>
         </div>
@@ -202,7 +217,7 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 {post.title || 'Untitled Post'}
               </h1>
-              
+
               {/* Meta info */}
               <div className="flex items-center text-sm text-gray-600 space-x-4">
                 <span>Preview Mode</span>
@@ -269,5 +284,5 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
         </div>
       </div>
     </div>
-  );
+  )
 }

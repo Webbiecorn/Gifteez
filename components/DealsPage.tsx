@@ -1,14 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
-import { NavigateTo, DealCategory, DealItem } from '../types';
-import Meta from './Meta';
-import JsonLd from './JsonLd';
-import Button from './Button';
-import LoadingSpinner from './LoadingSpinner';
-import ImageWithFallback from './ImageWithFallback';
-import InternalLinkCTA from './InternalLinkCTA';
-import Breadcrumbs from './Breadcrumbs';
-import { Container } from './layout/Container';
-import ProductCarousel from './ProductCarousel';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { withAffiliate } from '../services/affiliate';
 import { DynamicProductService } from '../services/dynamicProductService';
 import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
@@ -17,6 +7,9 @@ import CoolblueFeedService from '../services/coolblueFeedService';
 import CoolblueAffiliateService from '../services/coolblueAffiliateService';
 import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton';
 import { PerformanceInsightsService } from '../services/performanceInsightsService';
+import { NavigateTo, DealCategory, DealItem } from '../types';
+import Breadcrumbs from './Breadcrumbs';
+import Button from './Button'
 import {
   SparklesIcon,
   TagIcon,
@@ -28,400 +21,439 @@ import {
   HeartIcon,
   GiftIcon,
   CakeIcon,
-  SnowflakeIcon
-} from './IconComponents';
+  SnowflakeIcon,
+} from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
+import InternalLinkCTA from './InternalLinkCTA'
+import JsonLd from './JsonLd'
+import { Container } from './layout/Container';
+import LoadingSpinner from './LoadingSpinner'
+import Meta from './Meta'
+import ProductCarousel from './ProductCarousel';
 
 type RetailerInfo = {
-  label: string;
-  shortLabel: string;
-  badgeClass: string;
-  accentClass: string;
-};
+  label: string
+  shortLabel: string
+  badgeClass: string
+  accentClass: string
+}
 
 const parseHost = (url: string): string | null => {
-  if (!url) return null;
+  if (!url) return null
   try {
-    const absolute = url.startsWith('http') ? url : `https://${url.replace(/^\/+/, '')}`;
-    const parsed = new URL(absolute);
+    const absolute = url.startsWith('http') ? url : `https://${url.replace(/^\/+/, '')}`
+    const parsed = new URL(absolute)
     if (parsed.hostname.includes('awin') && parsed.searchParams.has('p')) {
-      const original = CoolblueAffiliateService.extractOriginalUrl(absolute);
+      const original = CoolblueAffiliateService.extractOriginalUrl(absolute)
       if (original) {
-        return parseHost(original);
+        return parseHost(original)
       }
     }
-    return parsed.hostname;
+    return parsed.hostname
   } catch {
-    return null;
+    return null
   }
-};
+}
 
 const resolveRetailerInfo = (affiliateLink: string): RetailerInfo => {
-  const host = parseHost(affiliateLink) ?? '';
+  const host = parseHost(affiliateLink) ?? ''
   if (host.includes('amazon')) {
     return {
       label: 'Partner: Amazon.nl',
       shortLabel: 'Amazon.nl',
       badgeClass: 'bg-orange-500 text-white',
-      accentClass: 'text-orange-600'
-    };
+      accentClass: 'text-orange-600',
+    }
   }
   if (host.includes('coolblue')) {
     return {
       label: 'Partner: Coolblue',
       shortLabel: 'Coolblue',
       badgeClass: 'bg-sky-600 text-white',
-      accentClass: 'text-sky-600'
-    };
+      accentClass: 'text-sky-600',
+    }
   }
   if (host.includes('bol')) {
     return {
       label: 'Partner: Bol.com',
       shortLabel: 'Bol.com',
       badgeClass: 'bg-blue-500 text-white',
-      accentClass: 'text-blue-600'
-    };
+      accentClass: 'text-blue-600',
+    }
   }
   return {
     label: 'Partnerdeal',
     shortLabel: 'onze partner',
     badgeClass: 'bg-slate-200 text-slate-700',
-    accentClass: 'text-slate-600'
-  };
-};
+    accentClass: 'text-slate-600',
+  }
+}
 
 const formatCurrency = (value: number): string =>
   new Intl.NumberFormat('nl-NL', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  }).format(value);
+    maximumFractionDigits: 2,
+  }).format(value)
 
 interface DealsPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 interface DealsPageState {
-  dealOfWeek: DealItem | null;
-  topDeals: DealItem[];
-  categories: DealCategory[];
+  dealOfWeek: DealItem | null
+  topDeals: DealItem[]
+  categories: DealCategory[]
 }
 
 const DEFAULT_STATE: DealsPageState = {
   dealOfWeek: null,
   topDeals: [],
-  categories: []
-};
+  categories: [],
+}
 
 // Helper function to get icon based on category title
 const getCategoryIcon = (title: string) => {
-  const lowerTitle = title.toLowerCase();
-  
-  if (lowerTitle.includes('tech') || lowerTitle.includes('gadget') || lowerTitle.includes('electronica')) {
-    return <SparklesIcon className="h-5 w-5" />;
+  const lowerTitle = title.toLowerCase()
+
+  if (
+    lowerTitle.includes('tech') ||
+    lowerTitle.includes('gadget') ||
+    lowerTitle.includes('electronica')
+  ) {
+    return <SparklesIcon className="h-5 w-5" />
   }
   if (lowerTitle.includes('home') || lowerTitle.includes('woon') || lowerTitle.includes('huis')) {
-    return <HeartIcon className="h-5 w-5" />;
+    return <HeartIcon className="h-5 w-5" />
   }
-  if (lowerTitle.includes('food') || lowerTitle.includes('eten') || lowerTitle.includes('drinken')) {
-    return <CakeIcon className="h-5 w-5" />;
+  if (
+    lowerTitle.includes('food') ||
+    lowerTitle.includes('eten') ||
+    lowerTitle.includes('drinken')
+  ) {
+    return <CakeIcon className="h-5 w-5" />
   }
-  if (lowerTitle.includes('winter') || lowerTitle.includes('kerst') || lowerTitle.includes('feest')) {
-    return <SnowflakeIcon className="h-5 w-5" />;
+  if (
+    lowerTitle.includes('winter') ||
+    lowerTitle.includes('kerst') ||
+    lowerTitle.includes('feest')
+  ) {
+    return <SnowflakeIcon className="h-5 w-5" />
   }
   if (lowerTitle.includes('top') || lowerTitle.includes('best')) {
-    return <StarIcon className="h-5 w-5" />;
+    return <StarIcon className="h-5 w-5" />
   }
-  
+
   // Default fallback
-  return <GiftIcon className="h-5 w-5" />;
-};
+  return <GiftIcon className="h-5 w-5" />
+}
 
 // Helper function to generate social proof badges
-const getSocialProofBadge = (deal: DealItem, index: number): { text: string; icon: string; color: string } | null => {
-  const score = deal.giftScore || 0;
-  
+const getSocialProofBadge = (
+  deal: DealItem,
+  index: number
+): { text: string; icon: string; color: string } | null => {
+  const score = deal.giftScore || 0
+
   // Top 3 badge for first 3 items with high scores
   if (index < 3 && score >= 8) {
     return {
       text: `#${index + 1} Deze week`,
       icon: '🏆',
-      color: 'bg-amber-100 text-amber-700'
-    };
+      color: 'bg-amber-100 text-amber-700',
+    }
   }
-  
+
   // Trending badge for high score deals
   if (score >= 9) {
     return {
       text: '150+ bekeken vandaag',
       icon: '👀',
-      color: 'bg-purple-100 text-purple-700'
-    };
+      color: 'bg-purple-100 text-purple-700',
+    }
   }
-  
+
   // Popular badge for good score deals
   if (score >= 8) {
     return {
       text: '50+ mensen bekeken',
       icon: '🔥',
-      color: 'bg-orange-100 text-orange-700'
-    };
+      color: 'bg-orange-100 text-orange-700',
+    }
   }
-  
+
   // New badge for on-sale items
   if (deal.isOnSale) {
     return {
       text: 'Populaire deal',
       icon: '⚡',
-      color: 'bg-blue-100 text-blue-700'
-    };
+      color: 'bg-blue-100 text-blue-700',
+    }
   }
-  
-  return null;
-};
+
+  return null
+}
 
 const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
-  const [state, setState] = useState<DealsPageState>(DEFAULT_STATE);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null);
-  const [dealOfWeekIndex, setDealOfWeekIndex] = useState(0);
-  const [premiumDeals, setPremiumDeals] = useState<DealItem[]>([]);
-  const [pinnedDeals, setPinnedDeals] = useState<DealItem[]>([]);
-  
+  const [state, setState] = useState<DealsPageState>(DEFAULT_STATE)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null)
+  const [dealOfWeekIndex, setDealOfWeekIndex] = useState(0)
+  const [premiumDeals, setPremiumDeals] = useState<DealItem[]>([])
+  const [pinnedDeals, setPinnedDeals] = useState<DealItem[]>([])
+
   // Filter state
-  const [priceFilter, setPriceFilter] = useState<string>('all');
-  const [scoreFilter, setScoreFilter] = useState<number>(0);
+  const [priceFilter, setPriceFilter] = useState<string>('all')
+  const [scoreFilter, setScoreFilter] = useState<number>(0)
 
   // Track impressions for visible deals
-  const impressionTrackedRef = useRef<Set<string>>(new Set());
-  
+  const impressionTrackedRef = useRef<Set<string>>(new Set())
+
   const trackDealImpression = useCallback((dealId: string, retailer?: string) => {
     if (!impressionTrackedRef.current.has(dealId)) {
-      const source = retailer ? `deals-page:${retailer}` : 'deals-page';
-      PerformanceInsightsService.trackImpression(dealId, source);
-      impressionTrackedRef.current.add(dealId);
+      const source = retailer ? `deals-page:${retailer}` : 'deals-page'
+      PerformanceInsightsService.trackImpression(dealId, source)
+      impressionTrackedRef.current.add(dealId)
     }
-  }, []);
+  }, [])
 
   const trackDealClick = useCallback((dealId: string, retailer?: string) => {
-    const source = retailer ? `deals-page:${retailer}` : 'deals-page';
-    PerformanceInsightsService.trackClick(dealId, source);
-  }, []);
+    const source = retailer ? `deals-page:${retailer}` : 'deals-page'
+    PerformanceInsightsService.trackClick(dealId, source)
+  }, [])
 
   const formatPrice = useCallback((value: string | undefined) => {
     if (!value) {
-      return null;
+      return null
     }
-    return value.startsWith('€') ? value : `€${value}`;
-  }, []);
+    return value.startsWith('€') ? value : `€${value}`
+  }, [])
 
   const formatDate = useCallback((value?: Date | string | null) => {
     if (!value) {
-      return null;
+      return null
     }
-    const date = typeof value === 'string' ? new Date(value) : value;
+    const date = typeof value === 'string' ? new Date(value) : value
     if (Number.isNaN(date.getTime())) {
-      return null;
+      return null
     }
     return date.toLocaleString('nl-NL', {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    });
-  }, []);
+      minute: '2-digit',
+    })
+  }, [])
 
-  const loadDeals = useCallback(async ({ forceRefresh = false }: { forceRefresh?: boolean } = {}) => {
-    setIsLoading(true);
-    setError(null);
-    impressionTrackedRef.current = new Set();
+  const loadDeals = useCallback(
+    async ({ forceRefresh = false }: { forceRefresh?: boolean } = {}) => {
+      setIsLoading(true)
+      setError(null)
+      impressionTrackedRef.current = new Set()
 
-    try {
-      // Always force refresh on first load to ensure fresh data
-      const shouldForceRefresh = forceRefresh || !sessionStorage.getItem('deals_loaded_this_session');
-      
-      if (shouldForceRefresh) {
-        // Only invalidate caches when explicitly requested to avoid unnecessary cold starts
-        CoolblueFeedService.clearCache();
-        DealCategoryConfigService.clearCache();
-        console.log('🔄 Forcing fresh data load...');
-        sessionStorage.setItem('deals_loaded_this_session', 'true');
+      try {
+        // Always force refresh on first load to ensure fresh data
+        const shouldForceRefresh =
+          forceRefresh || !sessionStorage.getItem('deals_loaded_this_session')
+
+        if (shouldForceRefresh) {
+          // Only invalidate caches when explicitly requested to avoid unnecessary cold starts
+          CoolblueFeedService.clearCache()
+          DealCategoryConfigService.clearCache()
+          console.log('🔄 Forcing fresh data load...')
+          sessionStorage.setItem('deals_loaded_this_session', 'true')
+        }
+
+        const [dealOfWeek, topDeals, categories, config, pinnedEntries] = await Promise.all([
+          DynamicProductService.getDealOfTheWeek(),
+          DynamicProductService.getTop10Deals(),
+          DynamicProductService.getDealCategories(),
+          DealCategoryConfigService.load(),
+          PinnedDealsService.load(),
+        ])
+
+        const stats = DynamicProductService.getStats()
+        setLastUpdated(stats?.lastUpdated ?? null)
+        setManualConfigUpdatedAt(config?.updatedAt ?? null)
+
+        // Collect premium candidates (featured deal + high scoring top deals)
+        const premiumCandidates = [
+          dealOfWeek,
+          ...topDeals.filter((deal) => (deal.giftScore ?? 0) >= 7),
+        ].filter((candidate): candidate is DealItem => Boolean(candidate))
+        const uniquePremiums = Array.from(
+          new Map(premiumCandidates.map((item) => [item.id, item])).values()
+        )
+        const featuredDeal = dealOfWeek ?? uniquePremiums[0] ?? topDeals[0] ?? null
+        const premiumRotation =
+          uniquePremiums.length > 0
+            ? uniquePremiums.slice(0, 5)
+            : featuredDeal
+              ? [featuredDeal]
+              : []
+
+        setPremiumDeals(premiumRotation)
+        setDealOfWeekIndex(0)
+
+        const pinned = pinnedEntries
+          .map((entry) => entry?.deal)
+          .filter((deal): deal is DealItem => Boolean(deal?.id))
+
+        setPinnedDeals(pinned)
+
+        const hasManualCategories = Boolean(config?.categories?.length)
+        const categoriesToDisplay = hasManualCategories
+          ? categories.filter((category) => category.items.length > 0)
+          : []
+
+        setState({
+          dealOfWeek: featuredDeal,
+          topDeals,
+          categories: categoriesToDisplay,
+        })
+      } catch (loadError: any) {
+        console.error('Kon deals niet laden:', loadError)
+        setError(loadError?.message ?? 'Kon deals niet laden. Probeer het later opnieuw.')
+        setState(DEFAULT_STATE)
+      } finally {
+        setIsLoading(false)
       }
-      
-      const [dealOfWeek, topDeals, categories, config, pinnedEntries] = await Promise.all([
-        DynamicProductService.getDealOfTheWeek(),
-        DynamicProductService.getTop10Deals(),
-        DynamicProductService.getDealCategories(),
-        DealCategoryConfigService.load(),
-        PinnedDealsService.load()
-      ]);
-
-      const stats = DynamicProductService.getStats();
-      setLastUpdated(stats?.lastUpdated ?? null);
-      setManualConfigUpdatedAt(config?.updatedAt ?? null);
-
-      // Collect premium candidates (featured deal + high scoring top deals)
-      const premiumCandidates = [dealOfWeek, ...topDeals.filter(deal => (deal.giftScore ?? 0) >= 7)]
-        .filter((candidate): candidate is DealItem => Boolean(candidate));
-      const uniquePremiums = Array.from(new Map(premiumCandidates.map(item => [item.id, item])).values());
-      const featuredDeal = dealOfWeek ?? uniquePremiums[0] ?? topDeals[0] ?? null;
-      const premiumRotation = uniquePremiums.length > 0
-        ? uniquePremiums.slice(0, 5)
-        : featuredDeal
-          ? [featuredDeal]
-          : [];
-
-      setPremiumDeals(premiumRotation);
-      setDealOfWeekIndex(0);
-
-      const pinned = pinnedEntries
-        .map((entry) => entry?.deal)
-        .filter((deal): deal is DealItem => Boolean(deal?.id));
-
-      setPinnedDeals(pinned);
-
-      const hasManualCategories = Boolean(config?.categories?.length);
-      const categoriesToDisplay = hasManualCategories
-        ? categories.filter((category) => category.items.length > 0)
-        : [];
-
-      setState({
-        dealOfWeek: featuredDeal,
-        topDeals,
-        categories: categoriesToDisplay
-      });
-    } catch (loadError: any) {
-      console.error('Kon deals niet laden:', loadError);
-      setError(loadError?.message ?? 'Kon deals niet laden. Probeer het later opnieuw.');
-      setState(DEFAULT_STATE);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+    },
+    []
+  )
 
   useEffect(() => {
     // Force fresh data load on mount to prevent stale cache issues
-    void loadDeals({ forceRefresh: true });
-  }, [loadDeals]);
+    void loadDeals({ forceRefresh: true })
+  }, [loadDeals])
 
   // Function to rotate to the next premium deal
   const showNextDeal = useCallback(() => {
-    if (premiumDeals.length === 0) return;
-    
-    const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length;
-    setDealOfWeekIndex(nextIndex);
-    
-    setState(prev => ({
+    if (premiumDeals.length === 0) return
+
+    const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length
+    setDealOfWeekIndex(nextIndex)
+
+    setState((prev) => ({
       ...prev,
-      dealOfWeek: premiumDeals[nextIndex]
-    }));
-  }, [premiumDeals, dealOfWeekIndex]);
+      dealOfWeek: premiumDeals[nextIndex],
+    }))
+  }, [premiumDeals, dealOfWeekIndex])
 
   // Filter deals based on selected filters
-  const filterDeals = useCallback((deals: DealItem[]) => {
-    return deals.filter(deal => {
-      const normalizedPrice = deal.price ? deal.price.replace(/[^0-9,\.]/g, '').replace(',', '.') : '';
-      const parsedPrice = normalizedPrice ? Number.parseFloat(normalizedPrice) : Number.NaN;
+  const filterDeals = useCallback(
+    (deals: DealItem[]) => {
+      return deals.filter((deal) => {
+        const normalizedPrice = deal.price
+          ? deal.price.replace(/[^0-9,\.]/g, '').replace(',', '.')
+          : ''
+        const parsedPrice = normalizedPrice ? Number.parseFloat(normalizedPrice) : Number.NaN
 
-      let priceMatch = true;
-      if (priceFilter !== 'all') {
-        if (Number.isNaN(parsedPrice)) {
-          return false;
+        let priceMatch = true
+        if (priceFilter !== 'all') {
+          if (Number.isNaN(parsedPrice)) {
+            return false
+          }
+
+          if (priceFilter === '0-50') priceMatch = parsedPrice <= 50
+          else if (priceFilter === '50-100') priceMatch = parsedPrice > 50 && parsedPrice <= 100
+          else if (priceFilter === '100-200') priceMatch = parsedPrice > 100 && parsedPrice <= 200
+          else if (priceFilter === '200+') priceMatch = parsedPrice > 200
         }
 
-        if (priceFilter === '0-50') priceMatch = parsedPrice <= 50;
-        else if (priceFilter === '50-100') priceMatch = parsedPrice > 50 && parsedPrice <= 100;
-        else if (priceFilter === '100-200') priceMatch = parsedPrice > 100 && parsedPrice <= 200;
-        else if (priceFilter === '200+') priceMatch = parsedPrice > 200;
-      }
+        const scoreValue = deal.giftScore ?? 0
+        const scoreMatch = scoreFilter === 0 || scoreValue >= scoreFilter
 
-      const scoreValue = deal.giftScore ?? 0;
-      const scoreMatch = scoreFilter === 0 || scoreValue >= scoreFilter;
-
-      return priceMatch && scoreMatch;
-    });
-  }, [priceFilter, scoreFilter]);
+        return priceMatch && scoreMatch
+      })
+    },
+    [priceFilter, scoreFilter]
+  )
 
   const handleRefresh = useCallback(() => {
-    void loadDeals({ forceRefresh: true });
-  }, [loadDeals]);
+    void loadDeals({ forceRefresh: true })
+  }, [loadDeals])
 
   const structuredData = useMemo(() => {
     const topList = state.topDeals.map((deal, index) => {
-      const retailer = resolveRetailerInfo(deal.affiliateLink);
-      const sellerName = retailer.shortLabel || 'Partnerwinkel';
+      const retailer = resolveRetailerInfo(deal.affiliateLink)
+      const sellerName = retailer.shortLabel || 'Partnerwinkel'
 
-      return ({
-      '@type': 'ListItem',
-      position: index + 1,
-      url: withAffiliate(deal.affiliateLink),
-      name: deal.name,
-      image: deal.imageUrl,
-      description: deal.description,
-      offers: {
-        '@type': 'Offer',
-        priceCurrency: 'EUR',
-        price: deal.price?.replace(/[^0-9,\.]/g, '').replace(',', '.') ?? '',
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        url: withAffiliate(deal.affiliateLink),
+        name: deal.name,
+        image: deal.imageUrl,
+        description: deal.description,
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'EUR',
+          price: deal.price?.replace(/[^0-9,\.]/g, '').replace(',', '.') ?? '',
           url: withAffiliate(deal.affiliateLink),
           seller: {
             '@type': 'Organization',
-            name: sellerName
-          }
-        }
-      });
-    });
+            name: sellerName,
+          },
+        },
+      }
+    })
 
     return {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
       name: 'Gifteez deals overzicht',
-      description: 'Ontdek de scherpste cadeaudeals van deze week, samengesteld uit Coolblue en Amazon.',
-      itemListElement: topList
-    };
-  }, [state.topDeals]);
+      description:
+        'Ontdek de scherpste cadeaudeals van deze week, samengesteld uit Coolblue en Amazon.',
+      itemListElement: topList,
+    }
+  }, [state.topDeals])
 
   const featuredRetailer = useMemo(() => {
-    if (!state.dealOfWeek) return null;
-    return resolveRetailerInfo(state.dealOfWeek.affiliateLink);
-  }, [state.dealOfWeek]);
+    if (!state.dealOfWeek) return null
+    return resolveRetailerInfo(state.dealOfWeek.affiliateLink)
+  }, [state.dealOfWeek])
 
-  const featuredRetailerShortLabel = featuredRetailer?.shortLabel ?? null;
+  const featuredRetailerShortLabel = featuredRetailer?.shortLabel ?? null
 
   const handleFeaturedClick = useCallback(() => {
     if (state.dealOfWeek) {
-      trackDealClick(state.dealOfWeek.id, featuredRetailerShortLabel ?? undefined);
+      trackDealClick(state.dealOfWeek.id, featuredRetailerShortLabel ?? undefined)
     }
-  }, [state.dealOfWeek, trackDealClick, featuredRetailerShortLabel]);
+  }, [state.dealOfWeek, trackDealClick, featuredRetailerShortLabel])
 
   const partnerBadges = useMemo(() => {
-    const unique = new Map<string, string>();
-    const sampleDeals = [state.dealOfWeek, ...state.topDeals];
+    const unique = new Map<string, string>()
+    const sampleDeals = [state.dealOfWeek, ...state.topDeals]
     sampleDeals.forEach((deal) => {
-      if (!deal) return;
-      const info = resolveRetailerInfo(deal.affiliateLink);
-      unique.set(info.shortLabel, info.shortLabel);
-    });
-    const labels = Array.from(unique.keys()).filter(label => label !== 'onze partner');
-    return labels.slice(0, 4);
-  }, [state.dealOfWeek, state.topDeals]);
+      if (!deal) return
+      const info = resolveRetailerInfo(deal.affiliateLink)
+      unique.set(info.shortLabel, info.shortLabel)
+    })
+    const labels = Array.from(unique.keys()).filter((label) => label !== 'onze partner')
+    return labels.slice(0, 4)
+  }, [state.dealOfWeek, state.topDeals])
 
   // Filter Bar Component
   const FilterBar: React.FC = () => {
-    const activeFilters = priceFilter !== 'all' || scoreFilter > 0;
-    
+    const activeFilters = priceFilter !== 'all' || scoreFilter > 0
+
     return (
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-slate-700">Filters:</span>
           </div>
-          
+
           {/* Price Filter */}
           <div className="flex items-center gap-2">
-            <label htmlFor="price-filter" className="text-sm text-slate-600">Prijs:</label>
+            <label htmlFor="price-filter" className="text-sm text-slate-600">
+              Prijs:
+            </label>
             <select
               id="price-filter"
               value={priceFilter}
@@ -438,7 +470,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
           {/* Score Filter */}
           <div className="flex items-center gap-2">
-            <label htmlFor="score-filter" className="text-sm text-slate-600">Min. score:</label>
+            <label htmlFor="score-filter" className="text-sm text-slate-600">
+              Min. score:
+            </label>
             <select
               id="score-filter"
               value={scoreFilter}
@@ -456,8 +490,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           {activeFilters && (
             <button
               onClick={() => {
-                setPriceFilter('all');
-                setScoreFilter(0);
+                setPriceFilter('all')
+                setScoreFilter(0)
               }}
               className="ml-auto rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-200"
             >
@@ -466,73 +500,77 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           )}
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   // Carousel Component
-  const Carousel: React.FC<{ items: DealItem[], title: string, badge?: string }> = ({ items, title, badge }) => {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(true);
-    
+  const Carousel: React.FC<{ items: DealItem[]; title: string; badge?: string }> = ({
+    items,
+    title,
+    badge,
+  }) => {
+    const scrollRef = useRef<HTMLDivElement>(null)
+    const [canScrollLeft, setCanScrollLeft] = useState(false)
+    const [canScrollRight, setCanScrollRight] = useState(true)
+
     // Touch swipe state
-    const [touchStart, setTouchStart] = useState(0);
-    const [touchEnd, setTouchEnd] = useState(0);
+    const [touchStart, setTouchStart] = useState(0)
+    const [touchEnd, setTouchEnd] = useState(0)
 
     const checkScroll = useCallback(() => {
       if (scrollRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-        setCanScrollLeft(scrollLeft > 0);
-        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+        setCanScrollLeft(scrollLeft > 0)
+        setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
       }
-    }, []);
+    }, [])
 
     useEffect(() => {
-      checkScroll();
-      const ref = scrollRef.current;
+      checkScroll()
+      const ref = scrollRef.current
       if (ref) {
-        ref.addEventListener('scroll', checkScroll);
-        return () => ref.removeEventListener('scroll', checkScroll);
+        ref.addEventListener('scroll', checkScroll)
+        return () => ref.removeEventListener('scroll', checkScroll)
       }
-    }, [checkScroll, items]);
+    }, [checkScroll, items])
 
     const scroll = (direction: 'left' | 'right') => {
       if (scrollRef.current) {
-        const scrollAmount = 320;
+        const scrollAmount = 320
         scrollRef.current.scrollBy({
           left: direction === 'left' ? -scrollAmount : scrollAmount,
-          behavior: 'smooth'
-        });
+          behavior: 'smooth',
+        })
       }
-    };
+    }
 
     // Touch handlers for swipe gestures
     const handleTouchStart = (e: React.TouchEvent) => {
-      setTouchStart(e.targetTouches[0].clientX);
-    };
+      setTouchStart(e.targetTouches[0].clientX)
+    }
 
     const handleTouchMove = (e: React.TouchEvent) => {
-      setTouchEnd(e.targetTouches[0].clientX);
-    };
+      setTouchEnd(e.targetTouches[0].clientX)
+    }
 
     const handleTouchEnd = () => {
-      if (!touchStart || !touchEnd) return;
-      
-      const distance = touchStart - touchEnd;
-      const isLeftSwipe = distance > 50;
-      const isRightSwipe = distance < -50;
+      if (!touchStart || !touchEnd) return
+
+      const distance = touchStart - touchEnd
+      const isLeftSwipe = distance > 50
+      const isRightSwipe = distance < -50
 
       if (isLeftSwipe && canScrollRight) {
-        scroll('right');
+        scroll('right')
       }
       if (isRightSwipe && canScrollLeft) {
-        scroll('left');
+        scroll('left')
       }
 
       // Reset
-      setTouchStart(0);
-      setTouchEnd(0);
-    };
+      setTouchStart(0)
+      setTouchEnd(0)
+    }
 
     return (
       <div className="relative">
@@ -541,9 +579,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 to-orange-500 text-white shadow-md">
               {getCategoryIcon(title)}
             </div>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
-              {title}
-            </h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900">{title}</h2>
             {badge && (
               <span className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
                 {badge}
@@ -569,12 +605,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </button>
           </div>
         </div>
-        
+
         {/* Mobile swipe indicator */}
         <div className="md:hidden mb-3 flex items-center justify-center gap-2 text-xs text-slate-500">
           <span className="animate-pulse">👈 Swipe 👉</span>
         </div>
-        
+
         <div
           ref={scrollRef}
           onTouchStart={handleTouchStart}
@@ -590,251 +626,269 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           ))}
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   // Deal Card Component
   const DealCard: React.FC<{
-    deal: DealItem;
-    index?: number;
-    variant?: 'carousel' | 'grid' | 'feature';
+    deal: DealItem
+    index?: number
+    variant?: 'carousel' | 'grid' | 'feature'
   }> = ({ deal, index = 0, variant = 'carousel' }) => {
     // Check if this is a top deal (score 9+) or hot deal (sale + score 8+)
-    const isTopDeal = deal.giftScore && deal.giftScore >= 9;
-    const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8;
-    const socialProof = getSocialProofBadge(deal, index);
-    const retailerInfo = useMemo(() => resolveRetailerInfo(deal.affiliateLink), [deal.affiliateLink]);
-    const imageHeightClass = variant === 'feature' ? 'h-64 md:h-72' : variant === 'grid' ? 'h-44' : 'h-48';
-    const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4';
-    const priceBadgeClass = variant === 'feature' ? 'px-4 py-2 text-base' : 'px-3 py-1.5 text-sm';
-    const buttonPaddingClass = variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm';
-    
+    const isTopDeal = deal.giftScore && deal.giftScore >= 9
+    const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8
+    const socialProof = getSocialProofBadge(deal, index)
+    const retailerInfo = useMemo(
+      () => resolveRetailerInfo(deal.affiliateLink),
+      [deal.affiliateLink]
+    )
+    const imageHeightClass =
+      variant === 'feature' ? 'h-64 md:h-72' : variant === 'grid' ? 'h-44' : 'h-48'
+    const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4'
+    const priceBadgeClass = variant === 'feature' ? 'px-4 py-2 text-base' : 'px-3 py-1.5 text-sm'
+    const buttonPaddingClass =
+      variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm'
+
     // Track impression when card becomes visible
-    const cardRef = useRef<HTMLDivElement>(null);
-    
+    const cardRef = useRef<HTMLDivElement>(null)
+
     useEffect(() => {
-      let hasTrackedImpression = false;
+      let hasTrackedImpression = false
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting && deal.id && !hasTrackedImpression) {
-              trackDealImpression(deal.id, retailerInfo?.shortLabel);
-              hasTrackedImpression = true;
+              trackDealImpression(deal.id, retailerInfo?.shortLabel)
+              hasTrackedImpression = true
             }
-          });
+          })
         },
         { threshold: 0.1, rootMargin: '50px' }
-      );
+      )
 
-      const node = cardRef.current;
+      const node = cardRef.current
       if (node) {
-        observer.observe(node);
+        observer.observe(node)
       }
 
       return () => {
         if (node) {
-          observer.unobserve(node);
+          observer.unobserve(node)
         }
-      };
-    }, [deal.id, retailerInfo?.shortLabel, trackDealImpression]);
-    
+      }
+    }, [deal.id, retailerInfo?.shortLabel, trackDealImpression])
+
     const handleClick = () => {
       if (deal.id) {
-        trackDealClick(deal.id, retailerInfo?.shortLabel);
+        trackDealClick(deal.id, retailerInfo?.shortLabel)
       }
-    };
-    
+    }
+
     return (
-      <div
-        ref={cardRef}
-        className="h-full"
-      >
+      <div ref={cardRef} className="h-full">
         <div
           className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
-          isTopDeal 
-            ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy' 
-            : 'border border-slate-200'
-        }`}
+            isTopDeal
+              ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy'
+              : 'border border-slate-200'
+          }`}
         >
-        {/* Inner card wrapper for TOP deals (creates gradient border effect) */}
-        <div className={isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'}>
-          <div className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white ${imageHeightClass}`}>
-            <ImageWithFallback
-              src={deal.imageUrl}
-              alt={deal.name}
-              className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
-              fit="contain"
-            />
-            
-            {/* Badges - stacked in top-right corner */}
-            <div className="absolute top-2 right-2 flex flex-col gap-1">
-              {isTopDeal && (
-                <div className="rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 px-2 py-1 text-xs font-bold text-white shadow-md animate-pulse">
-                  ⭐ TOP
-                </div>
-              )}
-              {isHotDeal && !isTopDeal && (
-                <div className="rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-2 py-1 text-xs font-bold text-white shadow-md">
-                  🔥 HOT
-                </div>
-              )}
-              {deal.isOnSale && !isHotDeal && !isTopDeal && (
-                <div className="rounded-lg bg-amber-500 px-2 py-1 text-xs font-bold text-white shadow-md">
-                  SALE
-                </div>
-              )}
-            </div>
-          </div>
-          <div className={`flex flex-1 flex-col gap-3 ${bodyPaddingClass}`}>
-            {/* Social Proof Badge */}
-            {socialProof && (
-              <div className={`inline-flex items-center gap-1.5 self-start rounded-full ${socialProof.color} px-3 py-1 text-xs font-semibold`}>
-                <span>{socialProof.icon}</span>
-                <span>{socialProof.text}</span>
-              </div>
-            )}
-            {retailerInfo && (
-              <div className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}>
-                {retailerInfo.label}
-              </div>
-            )}
-            
-            <div className="space-y-1.5">
-              <h3 className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug">
-                {deal.name}
-              </h3>
-              {variant === 'feature' && deal.description && (
-                <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">{deal.description}</p>
-              )}
-            </div>
-            <div className="mt-auto space-y-2.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className={`rounded-lg bg-rose-500 font-bold text-white ${priceBadgeClass}`}>
-                  {formatPrice(deal.price) ?? 'Prijs op aanvraag'}
-                </span>
-                {deal.originalPrice && (
-                  <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs text-slate-500">
-                    <s>{deal.originalPrice}</s>
-                  </span>
+          {/* Inner card wrapper for TOP deals (creates gradient border effect) */}
+          <div
+            className={
+              isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'
+            }
+          >
+            <div
+              className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white ${imageHeightClass}`}
+            >
+              <ImageWithFallback
+                src={deal.imageUrl}
+                alt={deal.name}
+                className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+                fit="contain"
+              />
+
+              {/* Badges - stacked in top-right corner */}
+              <div className="absolute top-2 right-2 flex flex-col gap-1">
+                {isTopDeal && (
+                  <div className="rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 px-2 py-1 text-xs font-bold text-white shadow-md animate-pulse">
+                    ⭐ TOP
+                  </div>
+                )}
+                {isHotDeal && !isTopDeal && (
+                  <div className="rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                    🔥 HOT
+                  </div>
+                )}
+                {deal.isOnSale && !isHotDeal && !isTopDeal && (
+                  <div className="rounded-lg bg-amber-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                    SALE
+                  </div>
                 )}
               </div>
-              {deal.giftScore && (
-                <div className="flex items-center gap-1.5 text-xs text-emerald-600">
-                  <CheckIcon className="h-3.5 w-3.5" />
-                  <span className="font-semibold">Cadeauscore: {deal.giftScore}/10</span>
+            </div>
+            <div className={`flex flex-1 flex-col gap-3 ${bodyPaddingClass}`}>
+              {/* Social Proof Badge */}
+              {socialProof && (
+                <div
+                  className={`inline-flex items-center gap-1.5 self-start rounded-full ${socialProof.color} px-3 py-1 text-xs font-semibold`}
+                >
+                  <span>{socialProof.icon}</span>
+                  <span>{socialProof.text}</span>
                 </div>
               )}
-              <a
-                href={withAffiliate(deal.affiliateLink)}
-                target="_blank"
-                rel="sponsored nofollow noopener noreferrer"
-                onClick={handleClick}
-                className={`block w-full rounded-lg bg-accent text-center font-bold text-white shadow-md transition-all hover:bg-accent-hover hover:shadow-lg hover:scale-105 ${buttonPaddingClass}`}
-              >
-                Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'} →
-              </a>
+              {retailerInfo && (
+                <div
+                  className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}
+                >
+                  {retailerInfo.label}
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <h3 className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug">
+                  {deal.name}
+                </h3>
+                {variant === 'feature' && deal.description && (
+                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">
+                    {deal.description}
+                  </p>
+                )}
+              </div>
+              <div className="mt-auto space-y-2.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className={`rounded-lg bg-rose-500 font-bold text-white ${priceBadgeClass}`}
+                  >
+                    {formatPrice(deal.price) ?? 'Prijs op aanvraag'}
+                  </span>
+                  {deal.originalPrice && (
+                    <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs text-slate-500">
+                      <s>{deal.originalPrice}</s>
+                    </span>
+                  )}
+                </div>
+                {deal.giftScore && (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+                    <CheckIcon className="h-3.5 w-3.5" />
+                    <span className="font-semibold">Cadeauscore: {deal.giftScore}/10</span>
+                  </div>
+                )}
+                <a
+                  href={withAffiliate(deal.affiliateLink)}
+                  target="_blank"
+                  rel="sponsored nofollow noopener noreferrer"
+                  onClick={handleClick}
+                  className={`block w-full rounded-lg bg-accent text-center font-bold text-white shadow-md transition-all hover:bg-accent-hover hover:shadow-lg hover:scale-105 ${buttonPaddingClass}`}
+                >
+                  Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'} →
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        </div>
       </div>
-    );
-  };
+    )
+  }
 
   const getDisplayTitle = useCallback((title: string) => {
-    const lowerTitle = title.toLowerCase();
+    const lowerTitle = title.toLowerCase()
 
     if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
-      return 'Amazon Gift Sets die indruk maken';
+      return 'Amazon Gift Sets die indruk maken'
     }
 
     if (lowerTitle.includes('keuken')) {
-      return 'Beste keukenaccessoires van nu';
+      return 'Beste keukenaccessoires van nu'
     }
 
     if (lowerTitle.includes('tech')) {
-      return 'Top tech gadgets & smart upgrades';
+      return 'Top tech gadgets & smart upgrades'
     }
 
     if (lowerTitle.includes('lifestyle')) {
-      return 'Lifestyle cadeaus voor verwenmomenten';
+      return 'Lifestyle cadeaus voor verwenmomenten'
     }
 
-    return title;
-  }, []);
+    return title
+  }, [])
 
-  const getCategoryDescription = useCallback((title: string, displayTitle: string, count: number) => {
-    const lowerTitle = title.toLowerCase();
+  const getCategoryDescription = useCallback(
+    (title: string, displayTitle: string, count: number) => {
+      const lowerTitle = title.toLowerCase()
 
-    if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
-      return `Onze selectie van ${count} Amazon gift sets geeft direct het wow-effect. Perfect als last-minute cadeau: luxe verpakkingen, prime-levering en klaar om te geven.`;
-    }
+      if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
+        return `Onze selectie van ${count} Amazon gift sets geeft direct het wow-effect. Perfect als last-minute cadeau: luxe verpakkingen, prime-levering en klaar om te geven.`
+      }
 
-    if (lowerTitle.includes('keuken')) {
-      return `Handige keukenhulpen en smaakvolle cadeaus: ${count} toppers die koken leuker maken en bij foodies meteen in de smaak vallen.`;
-    }
+      if (lowerTitle.includes('keuken')) {
+        return `Handige keukenhulpen en smaakvolle cadeaus: ${count} toppers die koken leuker maken en bij foodies meteen in de smaak vallen.`
+      }
 
-    if (lowerTitle.includes('tech')) {
-      return `${count} slimme gadgets en audio-upgrades waarmee je gadgetfans verrast. Mix van bestsellers en nieuwe releases, allemaal snel leverbaar.`;
-    }
+      if (lowerTitle.includes('tech')) {
+        return `${count} slimme gadgets en audio-upgrades waarmee je gadgetfans verrast. Mix van bestsellers en nieuwe releases, allemaal snel leverbaar.`
+      }
 
-    if (lowerTitle.includes('lifestyle')) {
-      return `${count} lifestylecadeaus om iemand te verwennen – van wellness tot stijl. Ideaal voor persoonlijke momenten of self-care surprises.`;
-    }
+      if (lowerTitle.includes('lifestyle')) {
+        return `${count} lifestylecadeaus om iemand te verwennen – van wellness tot stijl. Ideaal voor persoonlijke momenten of self-care surprises.`
+      }
 
-    return `Onze redactie selecteerde ${count} cadeaus binnen ${displayTitle}. Geen eindeloze scroll, maar direct inspiratie.`;
-  }, []);
+      return `Onze redactie selecteerde ${count} cadeaus binnen ${displayTitle}. Geen eindeloze scroll, maar direct inspiratie.`
+    },
+    []
+  )
 
-  const CategorySection: React.FC<{ category: DealCategory; index: number; navigateTo: NavigateTo }> = ({ category, index, navigateTo }) => {
-    const items = category.items;
+  const CategorySection: React.FC<{
+    category: DealCategory
+    index: number
+    navigateTo: NavigateTo
+  }> = ({ category, index, navigateTo }) => {
+    const items = category.items
 
     if (!items.length) {
-      return null;
+      return null
     }
 
-  const displayTitle = getDisplayTitle(category.title);
-  const description = getCategoryDescription(category.title, displayTitle, items.length);
+    const displayTitle = getDisplayTitle(category.title)
+    const description = getCategoryDescription(category.title, displayTitle, items.length)
 
     const retailerLabels = useMemo(() => {
-      const unique = new Set<string>();
+      const unique = new Set<string>()
       items.forEach((item) => {
-        const info = resolveRetailerInfo(item.affiliateLink);
+        const info = resolveRetailerInfo(item.affiliateLink)
         if (info.shortLabel) {
-          unique.add(info.shortLabel);
+          unique.add(info.shortLabel)
         }
-      });
-      return Array.from(unique);
-    }, [items]);
+      })
+      return Array.from(unique)
+    }, [items])
 
     const priceRange = useMemo(() => {
       const parsed = items
         .map((item) => {
-          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.');
-          const value = Number.parseFloat(normalised);
-          return Number.isFinite(value) ? value : null;
+          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.')
+          const value = Number.parseFloat(normalised)
+          return Number.isFinite(value) ? value : null
         })
-        .filter((value): value is number => value !== null);
+        .filter((value): value is number => value !== null)
 
       if (!parsed.length) {
-        return null;
+        return null
       }
 
-      const min = Math.min(...parsed);
-      const max = Math.max(...parsed);
+      const min = Math.min(...parsed)
+      const max = Math.max(...parsed)
       if (min === max) {
-        return formatCurrency(min);
+        return formatCurrency(min)
       }
-      return `${formatCurrency(min)} – ${formatCurrency(max)}`;
-    }, [items]);
+      return `${formatCurrency(min)} – ${formatCurrency(max)}`
+    }, [items])
 
     const renderProductCard = (deal: DealItem, dealIndex: number) => (
-      <DealCard 
-        key={deal.id}
-        deal={deal} 
-        index={dealIndex} 
-        variant="grid"
-      />
-    );
+      <DealCard key={deal.id} deal={deal} index={dealIndex} variant="grid" />
+    )
 
     return (
       <article
@@ -854,12 +908,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
             </div>
             <Button
-              onClick={() => navigateTo('categoryDetail', { 
-                categoryId: category.id,
-                categoryTitle: displayTitle,
-                categoryDescription: description,
-                products: items
-              })}
+              onClick={() =>
+                navigateTo('categoryDetail', {
+                  categoryId: category.id,
+                  categoryTitle: displayTitle,
+                  categoryDescription: description,
+                  products: items,
+                })
+              }
               variant="secondary"
               className="shrink-0"
             >
@@ -883,48 +939,45 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </header>
 
-        <ProductCarousel 
-          products={items}
-          renderProduct={renderProductCard}
-        />
+        <ProductCarousel products={items} renderProduct={renderProductCard} />
       </article>
-    );
-  };
+    )
+  }
 
   const PinnedDealsSection: React.FC<{ deals: DealItem[] }> = ({ deals }) => {
     if (!deals.length) {
-      return null;
+      return null
     }
 
-    const featured = deals[0];
-    const supporting = deals.slice(1);
+    const featured = deals[0]
+    const supporting = deals.slice(1)
 
     const priceRange = useMemo(() => {
       const parsed = deals
         .map((item) => {
-          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.');
-          const value = Number.parseFloat(normalised);
-          return Number.isFinite(value) ? value : null;
+          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.')
+          const value = Number.parseFloat(normalised)
+          return Number.isFinite(value) ? value : null
         })
-        .filter((value): value is number => value !== null);
+        .filter((value): value is number => value !== null)
 
       if (!parsed.length) {
-        return null;
+        return null
       }
 
-      const min = Math.min(...parsed);
-      const max = Math.max(...parsed);
-      return min === max ? formatCurrency(min) : `${formatCurrency(min)} – ${formatCurrency(max)}`;
-    }, [deals]);
+      const min = Math.min(...parsed)
+      const max = Math.max(...parsed)
+      return min === max ? formatCurrency(min) : `${formatCurrency(min)} – ${formatCurrency(max)}`
+    }, [deals])
 
     const partnerLabels = useMemo(() => {
-      const labels = new Set<string>();
+      const labels = new Set<string>()
       deals.forEach((deal) => {
-        const info = resolveRetailerInfo(deal.affiliateLink);
-        labels.add(info.shortLabel);
-      });
-      return Array.from(labels);
-    }, [deals]);
+        const info = resolveRetailerInfo(deal.affiliateLink)
+        labels.add(info.shortLabel)
+      })
+      return Array.from(labels)
+    }, [deals])
 
     return (
       <section className="space-y-8">
@@ -937,7 +990,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             Luxe cadeauboxen die direct klaar zijn om te geven
           </h2>
           <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-600">
-            Deze edit bestaat uit {deals.length} zorgvuldig geselecteerde gift sets. Stuk voor stuk Amazon Prime toppers met snelle levering, opvallende verpakkingen en een hoge cadeauscore.
+            Deze edit bestaat uit {deals.length} zorgvuldig geselecteerde gift sets. Stuk voor stuk
+            Amazon Prime toppers met snelle levering, opvallende verpakkingen en een hoge
+            cadeauscore.
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-xs font-semibold text-slate-500">
             {priceRange && (
@@ -964,8 +1019,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </div>
       </section>
-    );
-  };
+    )
+  }
 
   return (
     <>
@@ -976,39 +1031,33 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       <JsonLd data={structuredData} />
 
       <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
-      
-      <Breadcrumbs 
-        items={[
-          { label: 'Home', href: '/' },
-          { label: 'Deals' }
-        ]}
-      />
-      
+        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Deals' }]} />
+
         {/* Hero Section - Compact & Modern */}
         <section className="relative overflow-hidden bg-gradient-to-br from-rose-500 via-rose-600 to-orange-600">
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
           </div>
-          
+
           <Container size="xl" padded className="relative py-12 md:py-16">
             <div className="max-w-4xl mx-auto text-center text-white">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 mb-4 text-sm font-semibold">
                 <SparklesIcon className="h-4 w-4" />
                 <span>Dagelijks bijgewerkt</span>
               </div>
-              
+
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
                 De beste cadeaudeals
                 <span className="block text-yellow-300 mt-1">van deze week</span>
               </h1>
-              
+
               <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl mx-auto">
                 Ontdek scherpe deals van Coolblue en Amazon, perfect voor elk cadeau moment
               </p>
 
               <div className="flex flex-wrap items-center justify-center gap-3">
-                <Button 
-                  variant="accent" 
+                <Button
+                  variant="accent"
                   onClick={() => navigateTo('giftFinder')}
                   className="shadow-lg"
                 >
@@ -1045,7 +1094,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 </div>
               )}
               <p className="mt-3 text-xs text-white/70">
-                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor jou.
+                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor
+                jou.
               </p>
             </div>
           </Container>
@@ -1062,10 +1112,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             <div className="space-y-12">
               {/* Featured deal skeleton */}
               <FeaturedDealSkeleton />
-              
+
               {/* Top 10 carousel skeleton */}
               <CarouselSkeleton />
-              
+
               {/* Category carousels skeletons */}
               <CarouselSkeleton />
               <CarouselSkeleton />
@@ -1091,7 +1141,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                           Deal van de week
                         </div>
                         {featuredRetailer && (
-                          <div className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${featuredRetailer.badgeClass}`}>
+                          <div
+                            className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${featuredRetailer.badgeClass}`}
+                          >
                             {featuredRetailer.label}
                           </div>
                         )}
@@ -1127,11 +1179,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                           >
                             Naar {featuredRetailer ? featuredRetailer.shortLabel : 'de winkel'} →
                           </a>
-                          <Button
-                            variant="secondary"
-                            className="bg-white"
-                            onClick={showNextDeal}
-                          >
+                          <Button variant="secondary" className="bg-white" onClick={showNextDeal}>
                             Toon andere deal
                           </Button>
                         </div>
@@ -1149,8 +1197,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               {/* Top 10 Deals Carousel */}
               {state.topDeals.length > 0 && (
                 <section className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                  <Carousel 
-                    items={filterDeals(state.topDeals)} 
+                  <Carousel
+                    items={filterDeals(state.topDeals)}
                     title="🏆 Top 10 Cadeaus"
                     badge={`${filterDeals(state.topDeals).length} deals`}
                   />
@@ -1164,7 +1212,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               )}
 
               {state.categories.length > 0 && (
-                <section className="space-y-14 animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+                <section
+                  className="space-y-14 animate-fade-in-up"
+                  style={{ animationDelay: '120ms' }}
+                >
                   <div className="text-center space-y-3">
                     <span className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
                       <SparklesIcon className="h-4 w-4 text-rose-500" />
@@ -1174,31 +1225,45 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       Handmatig samengestelde cadeaucollecties
                     </h2>
                     <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-600">
-                      We vullen deze blokken met actuele Amazon- en Coolblue-deals die direct cadeauproof zijn. Ideaal wanneer je snel een thematische selectie wilt zonder eindeloos zoeken.
+                      We vullen deze blokken met actuele Amazon- en Coolblue-deals die direct
+                      cadeauproof zijn. Ideaal wanneer je snel een thematische selectie wilt zonder
+                      eindeloos zoeken.
                     </p>
                   </div>
                   <div className="space-y-16">
                     {state.categories.map((category, index) => (
-                      <CategorySection key={`${category.title}-${index}`} category={category} index={index} navigateTo={navigateTo} />
+                      <CategorySection
+                        key={`${category.title}-${index}`}
+                        category={category}
+                        index={index}
+                        navigateTo={navigateTo}
+                      />
                     ))}
                   </div>
                 </section>
               )}
 
               {/* Empty State */}
-              {!state.dealOfWeek && state.topDeals.length === 0 && state.categories.length === 0 && !error && (
-                <div className="text-center py-16">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
-                    <TagIcon className="h-8 w-8 text-slate-400" />
+              {!state.dealOfWeek &&
+                state.topDeals.length === 0 &&
+                state.categories.length === 0 &&
+                !error && (
+                  <div className="text-center py-16">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
+                      <TagIcon className="h-8 w-8 text-slate-400" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                      Nog geen deals beschikbaar
+                    </h3>
+                    <p className="text-slate-500 mb-6">
+                      Controleer later opnieuw voor de nieuwste cadeaudeals
+                    </p>
+                    <Button variant="primary" onClick={handleRefresh}>
+                      Vernieuw nu
+                    </Button>
                   </div>
-                  <h3 className="text-xl font-semibold text-slate-700 mb-2">Nog geen deals beschikbaar</h3>
-                  <p className="text-slate-500 mb-6">Controleer later opnieuw voor de nieuwste cadeaudeals</p>
-                  <Button variant="primary" onClick={handleRefresh}>
-                    Vernieuw nu
-                  </Button>
-                </div>
-              )}
-              
+                )}
+
               {/* Internal Links - Related Content */}
               <div className="mt-16">
                 <h3 className="font-display text-2xl font-bold text-primary mb-6 text-center">
@@ -1232,7 +1297,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         }
       `}</style>
     </>
-  );
-};
+  )
+}
 
-export default DealsPage;
+export default DealsPage

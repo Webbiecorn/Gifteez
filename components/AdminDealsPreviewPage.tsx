@@ -1,23 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { NavigateTo, DealCategory, DealItem } from '../types';
-import { useAuth } from '../contexts/AuthContext';
-import { DynamicProductService } from '../services/dynamicProductService';
-import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
-import Button from './Button';
-import LoadingSpinner from './LoadingSpinner';
-import DealsPreviewSections from './DealsPreviewSections';
-import { Container } from './layout/Container';
-import Meta from './Meta';
-import {
-  SparklesIcon,
-  TagIcon,
-  BookmarkFilledIcon,
-  SpinnerIcon,
-  LinkIcon
-} from './IconComponents';
+import React, { useCallback, useEffect, useState } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
+import { DynamicProductService } from '../services/dynamicProductService'
+import Button from './Button'
+import DealsPreviewSections from './DealsPreviewSections'
+import { SparklesIcon, TagIcon, BookmarkFilledIcon, SpinnerIcon, LinkIcon } from './IconComponents'
+import { Container } from './layout/Container'
+import LoadingSpinner from './LoadingSpinner'
+import Meta from './Meta'
+import type { NavigateTo, DealCategory, DealItem } from '../types'
 
 interface AdminDealsPreviewPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
 const ADMIN_EMAILS = [
@@ -25,59 +19,59 @@ const ADMIN_EMAILS = [
   'kevin@gifteez.nl',
   'beheer@gifteez.nl',
   'test@gifteez.nl',
-];
+]
 
 const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateTo }) => {
-  const auth = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [dealOfWeek, setDealOfWeek] = useState<DealItem | null>(null);
-  const [topDeals, setTopDeals] = useState<DealItem[]>([]);
-  const [categories, setCategories] = useState<DealCategory[]>([]);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null);
+  const auth = useAuth()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [dealOfWeek, setDealOfWeek] = useState<DealItem | null>(null)
+  const [topDeals, setTopDeals] = useState<DealItem[]>([])
+  const [categories, setCategories] = useState<DealCategory[]>([])
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null)
 
   const isAuthorized = auth?.currentUser?.email
     ? ADMIN_EMAILS.includes(auth.currentUser.email.toLowerCase())
-    : false;
+    : false
 
   const loadPreview = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
       const [weekly, top, categoryData, manualConfig] = await Promise.all([
         DynamicProductService.getDealOfTheWeek(),
         DynamicProductService.getTop10Deals(),
         DynamicProductService.getDealCategories(),
-        DealCategoryConfigService.load()
-      ]);
+        DealCategoryConfigService.load(),
+      ])
 
-      setDealOfWeek(weekly);
-      setTopDeals(top);
-      setCategories(categoryData);
-      setLastUpdated(DynamicProductService.getStats()?.lastUpdated ?? null);
-      setManualConfigUpdatedAt(manualConfig?.updatedAt ?? null);
+      setDealOfWeek(weekly)
+      setTopDeals(top)
+      setCategories(categoryData)
+      setLastUpdated(DynamicProductService.getStats()?.lastUpdated ?? null)
+      setManualConfigUpdatedAt(manualConfig?.updatedAt ?? null)
     } catch (previewError: any) {
-      console.error('Kon preview niet laden:', previewError);
-      setError(previewError?.message ?? 'Kon preview niet laden. Probeer het opnieuw.');
-      setDealOfWeek(null);
-      setTopDeals([]);
-      setCategories([]);
+      console.error('Kon preview niet laden:', previewError)
+      setError(previewError?.message ?? 'Kon preview niet laden. Probeer het opnieuw.')
+      setDealOfWeek(null)
+      setTopDeals([])
+      setCategories([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    void loadPreview();
-  }, [loadPreview]);
+    void loadPreview()
+  }, [loadPreview])
 
   if (!auth || auth.loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <LoadingSpinner size="lg" message="Authenticatie controleren…" />
       </div>
-    );
+    )
   }
 
   if (!auth.currentUser) {
@@ -87,14 +81,16 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
           <SparklesIcon className="mx-auto h-12 w-12 text-rose-500" aria-hidden="true" />
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Admin login vereist</h1>
-            <p className="mt-2 text-gray-600">Log in met je admin account om de deals-preview te bekijken.</p>
+            <p className="mt-2 text-gray-600">
+              Log in met je admin account om de deals-preview te bekijken.
+            </p>
           </div>
           <Button onClick={() => navigateTo('login')} className="w-full">
             Ga naar login
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   if (!isAuthorized) {
@@ -104,14 +100,15 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
           <BookmarkFilledIcon className="mx-auto h-12 w-12 text-rose-500" aria-hidden="true" />
           <h1 className="text-2xl font-bold text-gray-900">Geen toegang</h1>
           <p className="text-gray-600">
-            Je account heeft geen toegang tot de deals-preview. Neem contact op met het team als je denkt dat dit een vergissing is.
+            Je account heeft geen toegang tot de deals-preview. Neem contact op met het team als je
+            denkt dat dit een vergissing is.
           </p>
           <Button variant="secondary" onClick={() => navigateTo('home')} className="w-full">
             Terug naar homepage
           </Button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -132,7 +129,8 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
                   Controleer de deals zoals bezoekers ze zien
                 </h1>
                 <p className="max-w-2xl text-base text-white/85 sm:text-lg">
-                  Deze pagina toont dezelfde selectie als de publieke deals-pagina, zodat je snel kunt zien welke producten live staan en wanneer de laatste update plaatsvond.
+                  Deze pagina toont dezelfde selectie als de publieke deals-pagina, zodat je snel
+                  kunt zien welke producten live staan en wanneer de laatste update plaatsvond.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <Button variant="accent" onClick={() => navigateTo('admin')}>
@@ -159,11 +157,16 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
                   </div>
                   <div className="flex items-center justify-between">
                     <dt>Handmatige categorieën</dt>
-                    <dd>{manualConfigUpdatedAt ? new Date(manualConfigUpdatedAt).toLocaleString('nl-NL') : 'Automatisch'}</dd>
+                    <dd>
+                      {manualConfigUpdatedAt
+                        ? new Date(manualConfigUpdatedAt).toLocaleString('nl-NL')
+                        : 'Automatisch'}
+                    </dd>
                   </div>
                 </dl>
                 <div className="mt-6 rounded-xl border border-white/30 bg-white/10 p-4 text-xs text-white/70">
-                  Voor conceptblokken met niet-opgeslagen wijzigingen blijft de in-app preview in het admin panel beschikbaar.
+                  Voor conceptblokken met niet-opgeslagen wijzigingen blijft de in-app preview in
+                  het admin panel beschikbaar.
                 </div>
               </div>
             </div>
@@ -201,7 +204,8 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
                   </button>
                 </div>
                 <p className="mt-3 text-xs sm:text-sm text-slate-500">
-                  Deze preview gebruikt opgeslagen categorieblokken. Conceptwijzigingen die nog niet zijn gepubliceerd zijn alleen zichtbaar in het admin dashboard.
+                  Deze preview gebruikt opgeslagen categorieblokken. Conceptwijzigingen die nog niet
+                  zijn gepubliceerd zijn alleen zichtbaar in het admin dashboard.
                 </p>
               </div>
 
@@ -215,7 +219,7 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
         </Container>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default AdminDealsPreviewPage;
+export default AdminDealsPreviewPage

@@ -10,14 +10,17 @@
 ## 🎯 What's Now Live
 
 ### 1. **AI-Powered Gift Scoring** ✅ LIVE
+
 Elke GiftFinder zoekopdracht gebruikt nu AI om cadeaus te ranken:
 
 **Scoring Formula:**
+
 ```
 Total Score = (35% × budget_fit) + (25% × occasion_fit) + (30% × persona_fit) + (10% × trend_score)
 ```
 
 **Components:**
+
 - **Budget Fit (35%)**: Perfect score wanneer prijs in midden van budget range
 - **Occasion Fit (25%)**: Matcht gelegenheid (Valentijn, Kerst, Verjaardag)
 - **Persona Fit (30%)**: Semantische matching tussen cadeau en gebruiker
@@ -28,9 +31,11 @@ Total Score = (35% × budget_fit) + (25% × occasion_fit) + (30% × persona_fit)
 ---
 
 ### 2. **Semantic Label System** ✅ LIVE
+
 Elk cadeau krijgt automatisch een semantisch profiel:
 
 **10 Dimensions:**
+
 - 💝 **Romantic** (17 keywords): love, valentine, couple, roses, champagne...
 - 🌱 **Sustainable** (14 keywords): eco, bio, vegan, recycled, fair trade...
 - 💻 **Tech** (19 keywords): smart, digital, wireless, bluetooth, gaming...
@@ -45,6 +50,7 @@ Elk cadeau krijgt automatisch een semantisch profiel:
 **Total Keywords:** 117+ carefully selected Dutch/English keywords
 
 **Analysis Method:**
+
 - Title match = 3× weight
 - Category/Tags = 2× weight
 - Description = 1× weight
@@ -54,9 +60,11 @@ Elk cadeau krijgt automatisch een semantisch profiel:
 ---
 
 ### 3. **"Waarom dit cadeau?" Explainer** ✅ LIVE
+
 Elke aanbeveling toont nu transparante uitleg:
 
 **Example Explanations:**
+
 - ✨ "Past perfect binnen jouw budget van €25-€50"
 - 💝 "Romantisch cadeau perfect voor Valentijnsdag"
 - 🌟 "Matcht met jouw interesse in wellness cadeaus"
@@ -64,6 +72,7 @@ Elke aanbeveling toont nu transparante uitleg:
 - 🚚 "Snelle levering via Coolblue"
 
 **UI Components:**
+
 - **Compact Version** (in gift cards): Top reden + badge
 - **Full Version** (in modals): Alle redenen + score breakdown
 - **Confidence Badges**: "Top match" (≥80%), "Goede match" (≥60%)
@@ -74,14 +83,17 @@ Elke aanbeveling toont nu transparante uitleg:
 ---
 
 ### 4. **Privacy-Friendly Analytics** ✅ LIVE
+
 Alle user behavior wordt lokaal gelogd (100% GDPR compliant):
 
 **What We Track:**
+
 - **Filter Events**: Occasion, recipient, budget, interests
 - **Click Events**: Product, position, AI scores
 - **Session Data**: 30 min session IDs (random, non-identifying)
 
 **Where It's Stored:**
+
 - ✅ Browser localStorage (NOT external servers)
 - ✅ Last 100 events per type (auto-cleanup)
 - ✅ No cookies, no tracking pixels
@@ -89,8 +101,9 @@ Alle user behavior wordt lokaal gelogd (100% GDPR compliant):
 - ✅ User can clear anytime
 
 **Analytics Insights** (for admin only):
+
 ```javascript
-const insights = getAnalyticsInsights();
+const insights = getAnalyticsInsights()
 // Returns:
 // - Top occasions, recipients, interests
 // - Average budget
@@ -105,6 +118,7 @@ const insights = getAnalyticsInsights();
 ## 📊 Technical Implementation
 
 ### New Files Created:
+
 1. **services/semanticLabelService.ts** (380 lines)
    - `generateSemanticLabels()`: Analyze product → semantic profile
    - `calculateSemanticSimilarity()`: Cosine similarity algorithm
@@ -134,6 +148,7 @@ const insights = getAnalyticsInsights();
    - Expandable UI with smooth animations
 
 ### Files Modified:
+
 - **types.ts**: Added AI fields to Gift interface
   - `explanations?: string[]`
   - `budgetFit?: number`
@@ -154,6 +169,7 @@ const insights = getAnalyticsInsights();
   - Log click events with AI scores
 
 ### Dependencies Added:
+
 - **lucide-react**: Icons for explainer UI (Lightbulb, ChevronDown, ChevronUp)
 
 ---
@@ -161,12 +177,14 @@ const insights = getAnalyticsInsights();
 ## 🎨 User Experience Flow
 
 ### Before (Old GiftFinder):
+
 1. User fills form → Generic filtering
 2. Random sort order
 3. No explanation why gifts match
 4. No analytics, no improvements
 
 ### After (AI GiftFinder):
+
 1. User fills form → **AI generates preference profile**
 2. **Semantic analysis** of all gifts
 3. **Weighted scoring** per gift
@@ -180,6 +198,7 @@ const insights = getAnalyticsInsights();
 ## 🔒 Privacy & GDPR Compliance
 
 **✅ Fully GDPR Compliant:**
+
 - No personal data collected
 - All data in browser localStorage
 - Random session IDs (non-identifying)
@@ -189,9 +208,10 @@ const insights = getAnalyticsInsights();
 - User can clear data anytime
 
 **Cookie Banner Update Recommendation:**
+
 ```
-"Wij gebruiken alleen technisch noodzakelijke lokale opslag om jouw 
-GiftFinder-ervaring te verbeteren. Geen tracking, geen externe partijen, 
+"Wij gebruiken alleen technisch noodzakelijke lokale opslag om jouw
+GiftFinder-ervaring te verbeteren. Geen tracking, geen externe partijen,
 volledige controle bij jou."
 ```
 
@@ -200,17 +220,20 @@ volledige controle bij jou."
 ## 📈 Performance Metrics
 
 **Build Stats:**
+
 - New bundle: `ai-services-CaxQoQca.js` (231.72 kB gzipped: 36.61 kB)
 - Total build time: 9.21s
 - No performance degradation
 
 **Runtime Performance:**
+
 - `generateSemanticLabels()`: ~2ms per product
 - `calculateGiftScore()`: ~1ms per product
 - **Score 100 products: ~300ms total** ⚡
 - localStorage operations: <1ms
 
 **Optimization:**
+
 - Semantic profiles generated on-demand (client-side)
 - Future: Pre-compute labels during import (offline)
 - Future: Web Worker for 200+ products
@@ -220,23 +243,26 @@ volledige controle bij jou."
 ## 🎯 Success Metrics to Track
 
 ### Primary KPIs:
+
 1. **CTR Improvement**: Clicks on gifts with vs without explainer
 2. **Conversion Rate**: % of sessions resulting in click
 3. **Engagement**: Average time on GiftFinder
 4. **Trust**: Bounce rate reduction
 
 ### Secondary Metrics:
+
 1. **Score Validation**: Correlation between high scores (>0.8) and clicks
 2. **Explanation Quality**: Which explanation types get most clicks
 3. **Position Bias**: Do top 3 positions dominate clicks?
 4. **Budget Accuracy**: Do users click within stated budget?
 
 ### How to Check:
+
 ```javascript
 // In browser console on GiftFinder page:
-import { getAnalyticsInsights } from './services/giftFinderAnalyticsService';
-const insights = getAnalyticsInsights();
-console.log(insights);
+import { getAnalyticsInsights } from './services/giftFinderAnalyticsService'
+const insights = getAnalyticsInsights()
+console.log(insights)
 ```
 
 ---
@@ -244,6 +270,7 @@ console.log(insights);
 ## 🚀 What's Next (Future Enhancements)
 
 ### Phase 2 (After Launch Analytics):
+
 - [ ] A/B test scoring weights (35% budget vs 40% budget)
 - [ ] Optimize explanation templates based on CTR
 - [ ] Add "Lijkt op eerder bekeken" suggestions
@@ -251,6 +278,7 @@ console.log(insights);
 - [ ] Seasonal label adjustments (Q4 → festive boost)
 
 ### Phase 3 (6+ months):
+
 - [ ] Machine learning weight optimization
 - [ ] Collaborative filtering (users with similar taste)
 - [ ] Multi-modal embeddings (text + images)
@@ -258,6 +286,7 @@ console.log(insights);
 - [ ] Conversational refinement ("Liever romantischer")
 
 ### Optimization Ideas:
+
 - [ ] Pre-compute semantic labels during import
 - [ ] Store profiles in Firestore (faster loading)
 - [ ] Web Worker for scoring 200+ products
@@ -320,6 +349,7 @@ Compared to competitors (Bol.com, Amazon, Coolblue):
 ## 📝 Testing Instructions
 
 ### Manual Testing:
+
 1. Go to https://gifteez-7533b.web.app
 2. Navigate to GiftFinder
 3. Fill in form:
@@ -336,6 +366,7 @@ Compared to competitors (Bol.com, Amazon, Coolblue):
    - Clicking gift logs analytics event (check localStorage)
 
 ### Check Analytics Data:
+
 ```javascript
 // Open browser console on GiftFinder page
 localStorage.getItem('gifteez_giftfinder_analytics')
@@ -343,17 +374,18 @@ localStorage.getItem('gifteez_giftfinder_analytics')
 ```
 
 ### Verify Scoring:
+
 ```javascript
 // In browser console
-import { generateSemanticLabels } from './services/semanticLabelService';
+import { generateSemanticLabels } from './services/semanticLabelService'
 const profile = generateSemanticLabels(
-  "Spa dagje voor twee",
-  "Romantische wellness ervaring...",
-  "Wellness",
+  'Spa dagje voor twee',
+  'Romantische wellness ervaring...',
+  'Wellness',
   75,
-  ["romantic", "wellness"]
-);
-console.log(profile);
+  ['romantic', 'wellness']
+)
+console.log(profile)
 // Should show high romantic + wellness scores
 ```
 
@@ -362,6 +394,7 @@ console.log(profile);
 ## 🎯 Summary
 
 **What We Built:**
+
 - Complete AI recommendation engine (1,217 lines)
 - Semantic understanding with 10 dimensions
 - Weighted scoring model (35/25/30/10 split)
@@ -369,6 +402,7 @@ console.log(profile);
 - Privacy-friendly analytics
 
 **What's Different:**
+
 - 100% privacy-first (no external tracking)
 - Transparent AI (users see WHY)
 - Performance optimized (300ms for 100 products)
@@ -376,12 +410,14 @@ console.log(profile);
 - User preference over popularity
 
 **Current Status:**
+
 - ✅ Deployed to production
 - ✅ Zero compilation errors
 - ✅ Build successful
 - ✅ Ready for real user traffic
 
 **Next Steps:**
+
 1. Monitor real user behavior
 2. Collect analytics insights
 3. A/B test explainer component

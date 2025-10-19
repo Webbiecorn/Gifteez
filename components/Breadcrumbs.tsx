@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 
 interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  onClick?: () => void;
+  label: string
+  href?: string
+  onClick?: () => void
 }
 
 interface BreadcrumbsProps {
-  items: BreadcrumbItem[];
-  className?: string;
+  items: BreadcrumbItem[]
+  className?: string
 }
 
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
@@ -20,9 +20,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
       '@type': 'ListItem',
       position: index + 1,
       name: item.label,
-      ...(item.href && { item: `https://gifteez.nl${item.href}` })
-    }))
-  };
+      ...(item.href && { item: `https://gifteez.nl${item.href}` }),
+    })),
+  }
 
   return (
     <>
@@ -41,10 +41,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
               )}
               <li>
                 {item.href ? (
-                  <a
-                    href={item.href}
-                    className="transition-colors hover:text-primary"
-                  >
+                  <a href={item.href} className="transition-colors hover:text-primary">
                     {item.label}
                   </a>
                 ) : item.onClick ? (
@@ -64,7 +61,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
         </ol>
       </nav>
     </>
-  );
-};
+  )
+}
 
-export default Breadcrumbs;
+export default Breadcrumbs

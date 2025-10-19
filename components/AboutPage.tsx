@@ -1,75 +1,81 @@
-import React from 'react';
-import { NavigateTo } from '../types';
-import Button from './Button';
+import React from 'react'
+import { socialLinks } from '../socialLinks'
+import Breadcrumbs from './Breadcrumbs'
+import Button from './Button'
+import FAQSchema from './FAQSchema'
 import {
   TargetIcon,
   SparklesIcon,
   CheckCircleIcon,
   GiftIcon,
   UserIcon,
-  HeartIcon
-} from './IconComponents';
-import ImageWithFallback from './ImageWithFallback';
-import Meta from './Meta';
-import JsonLd from './JsonLd';
-import FAQSchema from './FAQSchema';
-import Breadcrumbs from './Breadcrumbs';
-import { socialLinks } from '../socialLinks';
+  HeartIcon,
+} from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
+import JsonLd from './JsonLd'
+import Meta from './Meta'
+import type { NavigateTo } from '../types'
 
 interface AboutPageProps {
-  navigateTo: NavigateTo;
+  navigateTo: NavigateTo
 }
 
-type IconType = React.ComponentType<{ className?: string }>;
+type IconType = React.ComponentType<{ className?: string }>
 
-const pageTitle = 'Over Gifteez | Cadeaus geven zonder stress';
+const pageTitle = 'Over Gifteez | Cadeaus geven zonder stress'
 const pageDescription =
-  'Leer het verhaal achter Gifteez kennen, ontdek hoe onze AI GiftFinder cadeaustress wegneemt en ontmoet het team dat dagelijks werkt aan verrassende cadeau-inspiratie.';
-const canonicalUrl = 'https://gifteez.nl/over-ons';
-const heroImageUrl = 'https://gifteez.nl/images/gifteez-over-ons-blij.png';
-const stressImageUrl = 'https://gifteez.nl/images/gifteez-over-ons-stress.png';
+  'Leer het verhaal achter Gifteez kennen, ontdek hoe onze AI GiftFinder cadeaustress wegneemt en ontmoet het team dat dagelijks werkt aan verrassende cadeau-inspiratie.'
+const canonicalUrl = 'https://gifteez.nl/over-ons'
+const heroImageUrl = 'https://gifteez.nl/images/gifteez-over-ons-blij.png'
+const stressImageUrl = 'https://gifteez.nl/images/gifteez-over-ons-stress.png'
 
 const differentiators: Array<{ title: string; description: string; icon: IconType }> = [
   {
     title: 'Superslimme GiftFinder',
-    description: 'Onze AI scant continu meer dan 15.000 cadeaus en rekent meteen af met keuzestress.',
-    icon: SparklesIcon
+    description:
+      'Onze AI scant continu meer dan 15.000 cadeaus en rekent meteen af met keuzestress.',
+    icon: SparklesIcon,
   },
   {
     title: 'Persoonlijk op maat',
-    description: 'We combineren data met menselijke input, zodat elke suggestie voelt alsof jij hem zelf hebt uitgezocht.',
-    icon: HeartIcon
+    description:
+      'We combineren data met menselijke input, zodat elke suggestie voelt alsof jij hem zelf hebt uitgezocht.',
+    icon: HeartIcon,
   },
   {
     title: 'Binnen 3 minuten klaar',
-    description: 'Van vraag tot kant-en-klare cadeaulijst met winkel links — razendsnel en moeiteloos.',
-    icon: TargetIcon
-  }
-];
+    description:
+      'Van vraag tot kant-en-klare cadeaulijst met winkel links — razendsnel en moeiteloos.',
+    icon: TargetIcon,
+  },
+]
 
 const stats: Array<{ label: string; description: string }> = [
   { label: '15.000+', description: 'cadeaus gescreend en dagelijks geüpdatet' },
   { label: '92%', description: 'van testers vindt binnen 5 voorstellen een match' },
-  { label: '30+', description: 'gepersonaliseerde categorieën voor iedere gelegenheid' }
-];
+  { label: '30+', description: 'gepersonaliseerde categorieën voor iedere gelegenheid' },
+]
 
 const milestones: Array<{ year: string; title: string; description: string }> = [
   {
     year: '2024',
     title: 'Start van Gifteez',
-    description: 'We begonnen als side-project om onze eigen cadeaustress aan te pakken — en bleven bouwen toen vrienden enthousiast werden.'
+    description:
+      'We begonnen als side-project om onze eigen cadeaustress aan te pakken — en bleven bouwen toen vrienden enthousiast werden.',
   },
   {
     year: '2025',
     title: 'GiftFinder 2.0',
-    description: 'We koppelden realtime productfeeds en slimme filters zodat de AI altijd frisse inspiratie serveert.'
+    description:
+      'We koppelden realtime productfeeds en slimme filters zodat de AI altijd frisse inspiratie serveert.',
   },
   {
     year: 'Vandaag',
     title: 'Jij staat centraal',
-    description: 'Feedback van gebruikers stuurt onze roadmap. Elke week testen we verbeteringen om cadeaus nog persoonlijker te maken.'
-  }
-];
+    description:
+      'Feedback van gebruikers stuurt onze roadmap. Elke week testen we verbeteringen om cadeaus nog persoonlijker te maken.',
+  },
+]
 
 const teamMembers = [
   {
@@ -77,63 +83,66 @@ const teamMembers = [
     role: 'Oprichter & Lead AI Developer',
     initial: 'K',
     color: 'from-blue-500 to-indigo-600',
-    bio: 'Kevin is het technische brein achter de GiftFinder. Hij bouwt slimme algoritmes die duizenden cadeaus in seconden matchen met de perfecte ontvanger.'
+    bio: 'Kevin is het technische brein achter de GiftFinder. Hij bouwt slimme algoritmes die duizenden cadeaus in seconden matchen met de perfecte ontvanger.',
   },
   {
     name: 'Bianca',
     role: 'Content & Inspiratiemanager',
     initial: 'B',
     color: 'from-pink-500 to-rose-600',
-    bio: 'Bianca curateert cadeaucollecties en schrijft inspirerende gidsen. Ze werkt nauw samen met retailers en trendwatchers om je altijd de beste ideeën te geven.'
+    bio: 'Bianca curateert cadeaucollecties en schrijft inspirerende gidsen. Ze werkt nauw samen met retailers en trendwatchers om je altijd de beste ideeën te geven.',
   },
   {
     name: 'Anna',
     role: 'Cadeau-strateeg',
     initial: 'A',
     color: 'from-purple-500 to-violet-600',
-    bio: 'Anna vertaalt gebruikersfeedback naar nieuwe features. Ze bewaakt de merkervaring en zorgt dat Gifteez blijft focussen op wat jij écht nodig hebt.'
-  }
-];
+    bio: 'Anna vertaalt gebruikersfeedback naar nieuwe features. Ze bewaakt de merkervaring en zorgt dat Gifteez blijft focussen op wat jij écht nodig hebt.',
+  },
+]
 
 const steps: Array<{
-  number: string;
-  title: string;
-  description: string;
-  accentClass: string;
-  iconTint: string;
-  iconBg: string;
-  icon: IconType;
+  number: string
+  title: string
+  description: string
+  accentClass: string
+  iconTint: string
+  iconBg: string
+  icon: IconType
 }> = [
   {
     number: '1',
     title: 'Vertel wie je wilt verrassen',
-    description: 'Kies relatie, budget, gelegenheid en hobby\'s. Hoe specifieker, hoe scherper de aanbevelingen.',
+    description:
+      "Kies relatie, budget, gelegenheid en hobby's. Hoe specifieker, hoe scherper de aanbevelingen.",
     accentClass: 'from-primary to-accent',
     iconTint: 'text-primary',
     iconBg: 'bg-primary/10',
-    icon: TargetIcon
+    icon: TargetIcon,
   },
   {
     number: '2',
     title: 'Laat AI het voorwerk doen',
-    description: 'De GiftFinder weegt duizenden cadeaus af op relevantie, persoonlijkheid en beschikbaarheid in realtime.',
+    description:
+      'De GiftFinder weegt duizenden cadeaus af op relevantie, persoonlijkheid en beschikbaarheid in realtime.',
     accentClass: 'from-blue-500 to-indigo-600',
     iconTint: 'text-blue-600',
     iconBg: 'bg-blue-500/10',
-    icon: SparklesIcon
+    icon: SparklesIcon,
   },
   {
     number: '3',
     title: 'Kies het perfecte cadeau',
-    description: 'Je ontvangt een shortlist met direct te bestellen cadeaus en alternatieven voor verschillende prijspunten.',
+    description:
+      'Je ontvangt een shortlist met direct te bestellen cadeaus en alternatieven voor verschillende prijspunten.',
     accentClass: 'from-pink-500 to-purple-500',
     iconTint: 'text-pink-600',
     iconBg: 'bg-pink-100',
-    icon: CheckCircleIcon
-  }
-];
+    icon: CheckCircleIcon,
+  },
+]
 
-const sameAsLinks = Object.values(socialLinks).filter(Boolean);
+const sameAsLinks = Object.values(socialLinks).filter(Boolean)
 
 const structuredData = {
   '@context': 'https://schema.org',
@@ -146,19 +155,19 @@ const structuredData = {
     '@type': 'ImageObject',
     url: heroImageUrl,
     width: 1152,
-    height: 768
+    height: 768,
   },
   breadcrumb: {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://gifteez.nl' },
-      { '@type': 'ListItem', position: 2, name: 'Over ons', item: canonicalUrl }
-    ]
+      { '@type': 'ListItem', position: 2, name: 'Over ons', item: canonicalUrl },
+    ],
   },
   about: differentiators.map((item) => ({
     '@type': 'Thing',
     name: item.title,
-    description: item.description
+    description: item.description,
   })),
   publisher: {
     '@type': 'Organization',
@@ -169,46 +178,53 @@ const structuredData = {
       '@type': 'ImageObject',
       url: 'https://gifteez.nl/android-chrome-512x512.png',
       width: 512,
-      height: 512
-    }
-  }
-};
+      height: 512,
+    },
+  },
+}
 
 const aboutFAQs = [
   {
-    question: "Wat is Gifteez en hoe werkt het?",
-    answer: "Gifteez is een slimme AI-powered gift finder die je helpt het perfecte cadeau te vinden. Je vult simpelweg je budget, gelegenheid en interesses in, en onze AI scant 1000+ cadeaus om je een persoonlijke shortlist te geven met directe kooplinks."
+    question: 'Wat is Gifteez en hoe werkt het?',
+    answer:
+      'Gifteez is een slimme AI-powered gift finder die je helpt het perfecte cadeau te vinden. Je vult simpelweg je budget, gelegenheid en interesses in, en onze AI scant 1000+ cadeaus om je een persoonlijke shortlist te geven met directe kooplinks.',
   },
   {
-    question: "Is Gifteez gratis te gebruiken?",
-    answer: "Ja, Gifteez is volledig gratis te gebruiken. We verdienen commissie op verkopen via onze affiliate partners (Coolblue en Amazon), maar dit heeft geen invloed op de prijs die jij betaalt."
+    question: 'Is Gifteez gratis te gebruiken?',
+    answer:
+      'Ja, Gifteez is volledig gratis te gebruiken. We verdienen commissie op verkopen via onze affiliate partners (Coolblue en Amazon), maar dit heeft geen invloed op de prijs die jij betaalt.',
   },
   {
-    question: "Waar komen de producten vandaan?",
-    answer: "We tonen producten van gerenommeerde online retailers zoals Coolblue en Amazon. Alle producten worden dagelijks bijgewerkt met de nieuwste prijzen en deals."
+    question: 'Waar komen de producten vandaan?',
+    answer:
+      'We tonen producten van gerenommeerde online retailers zoals Coolblue en Amazon. Alle producten worden dagelijks bijgewerkt met de nieuwste prijzen en deals.',
   },
   {
-    question: "Hoe werkt de AI GiftFinder precies?",
-    answer: "Onze AI analyseert je input (budget, gelegenheid, interesses) en match dit met productkenmerken, reviews, populariteit en seizoenstrends. Zo krijg je binnen 30 seconden een gepersonaliseerde shortlist van cadeaus die het beste passen."
+    question: 'Hoe werkt de AI GiftFinder precies?',
+    answer:
+      'Onze AI analyseert je input (budget, gelegenheid, interesses) en match dit met productkenmerken, reviews, populariteit en seizoenstrends. Zo krijg je binnen 30 seconden een gepersonaliseerde shortlist van cadeaus die het beste passen.',
   },
   {
-    question: "Kan ik mijn favoriete cadeaus opslaan?",
-    answer: "Ja! Je kunt cadeaus toevoegen aan je favorieten en deze later terugvinden. Als je ingelogd bent, worden je favorieten automatisch gesynchroniseerd."
-  }
-];
+    question: 'Kan ik mijn favoriete cadeaus opslaan?',
+    answer:
+      'Ja! Je kunt cadeaus toevoegen aan je favorieten en deze later terugvinden. Als je ingelogd bent, worden je favorieten automatisch gesynchroniseerd.',
+  },
+]
 
 const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
-      <Meta title={pageTitle} description={pageDescription} canonical={canonicalUrl} ogImage={heroImageUrl} />
+      <Meta
+        title={pageTitle}
+        description={pageDescription}
+        canonical={canonicalUrl}
+        ogImage={heroImageUrl}
+      />
       <JsonLd data={structuredData} id="about-page-jsonld" />
       <FAQSchema faqs={aboutFAQs} />
 
-      <Breadcrumbs 
-        items={[
-          { label: 'Home', onClick: () => navigateTo('home') },
-          { label: 'Over ons' }
-        ]}
+      <Breadcrumbs
+        items={[{ label: 'Home', onClick: () => navigateTo('home') }, { label: 'Over ons' }]}
       />
 
       {/* Hero */}
@@ -231,7 +247,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               </span>
             </h1>
             <p className="typo-lead text-gray-700">
-              We bouwen aan de slimste cadeau-assistent van Nederland. Bij Gifteez combineren we empathie, data en design om voor iedereen de perfecte verrassing te vinden.
+              We bouwen aan de slimste cadeau-assistent van Nederland. Bij Gifteez combineren we
+              empathie, data en design om voor iedereen de perfecte verrassing te vinden.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -254,7 +271,10 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
 
             <dl className="grid gap-6 sm:grid-cols-3">
               {stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/70 bg-white/70 p-4 shadow-sm backdrop-blur">
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-white/70 bg-white/70 p-4 shadow-sm backdrop-blur"
+                >
                   <dt className="text-2xl font-bold text-primary">{stat.label}</dt>
                   <dd className="text-sm text-gray-600">{stat.description}</dd>
                 </div>
@@ -292,7 +312,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               Slimme technologie, menselijke empathie en eindeloze inspiratie.
             </h2>
             <p className="mt-4 text-gray-600">
-              We geven je niet zomaar een lijst met cadeaus. We bouwen een cadeau-assistent die past bij je situatie, timing en budget — zonder eindeloos scrollen.
+              We geven je niet zomaar een lijst met cadeaus. We bouwen een cadeau-assistent die past
+              bij je situatie, timing en budget — zonder eindeloos scrollen.
             </p>
           </div>
 
@@ -341,20 +362,29 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               Cadeaus kiezen hoort leuk te zijn. Wij maken het weer eenvoudig én verrassend.
             </h2>
             <p className="text-gray-600">
-              Cadeaustress kennen we als geen ander: beperkte tijd, eindeloze opties en de druk om origineel te zijn. Met onze AI, curatie en persoonlijke tone-of-voice begeleiden we je stap voor stap naar een cadeau dat past als gegoten.
+              Cadeaustress kennen we als geen ander: beperkte tijd, eindeloze opties en de druk om
+              origineel te zijn. Met onze AI, curatie en persoonlijke tone-of-voice begeleiden we je
+              stap voor stap naar een cadeau dat past als gegoten.
             </p>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
                 <CheckCircleIcon className="mt-1 h-5 w-5 text-primary" />
-                <span>Realtime voorraad- en prijscheck zodat je nooit op een dood spoor belandt.</span>
+                <span>
+                  Realtime voorraad- en prijscheck zodat je nooit op een dood spoor belandt.
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircleIcon className="mt-1 h-5 w-5 text-primary" />
-                <span>Duidelijke cadeautypes: duurzaam, gepersonaliseerd, last-minute of juist luxe.</span>
+                <span>
+                  Duidelijke cadeautypes: duurzaam, gepersonaliseerd, last-minute of juist luxe.
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircleIcon className="mt-1 h-5 w-5 text-primary" />
-                <span>Onze content- en inspiratiebench zorgt dat je altijd een verhaal vertelt bij je cadeau.</span>
+                <span>
+                  Onze content- en inspiratiebench zorgt dat je altijd een verhaal vertelt bij je
+                  cadeau.
+                </span>
               </li>
             </ul>
             <Button
@@ -380,28 +410,33 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               In drie stappen van idee naar cadeau dat raakt.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-              Je hoeft geen research-marathon te lopen. Onze AI vertaalt jouw input direct naar een shortlist met cadeaus die kloppen voor het moment.
+              Je hoeft geen research-marathon te lopen. Onze AI vertaalt jouw input direct naar een
+              shortlist met cadeaus die kloppen voor het moment.
             </p>
           </div>
 
           <div className="mt-16 grid gap-8 md:grid-cols-3">
-            {steps.map(({ number, title, description, accentClass, iconTint, iconBg, icon: Icon }) => (
-              <article
-                key={number}
-                className="group rounded-3xl border border-gray-100 bg-white p-8 text-center shadow-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl"
-              >
-                <div
-                  className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br ${accentClass} text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}
+            {steps.map(
+              ({ number, title, description, accentClass, iconTint, iconBg, icon: Icon }) => (
+                <article
+                  key={number}
+                  className="group rounded-3xl border border-gray-100 bg-white p-8 text-center shadow-xl transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl"
                 >
-                  <span className="text-2xl font-bold">{number}</span>
-                </div>
-                <div className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full ${iconBg}`}>
-                  <Icon className={`h-8 w-8 ${iconTint}`} />
-                </div>
-                <h3 className="font-display text-2xl font-semibold text-gray-900">{title}</h3>
-                <p className="mt-3 text-gray-600">{description}</p>
-              </article>
-            ))}
+                  <div
+                    className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br ${accentClass} text-white shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                  >
+                    <span className="text-2xl font-bold">{number}</span>
+                  </div>
+                  <div
+                    className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full ${iconBg}`}
+                  >
+                    <Icon className={`h-8 w-8 ${iconTint}`} />
+                  </div>
+                  <h3 className="font-display text-2xl font-semibold text-gray-900">{title}</h3>
+                  <p className="mt-3 text-gray-600">{description}</p>
+                </article>
+              )
+            )}
           </div>
         </div>
       </section>
@@ -414,16 +449,24 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               <GiftIcon className="h-5 w-5" />
               Onze reis
             </div>
-            <h2 className="typo-h2 mt-5 text-gray-900">Van idee aan de keukentafel tot jouw digitale cadeaucollega.</h2>
+            <h2 className="typo-h2 mt-5 text-gray-900">
+              Van idee aan de keukentafel tot jouw digitale cadeaucollega.
+            </h2>
             <p className="mt-4 text-gray-600">
-              Elke mijlpaal kwam dankzij feedback van cadeauliefhebbers zoals jij. En we zijn nog lang niet klaar.
+              Elke mijlpaal kwam dankzij feedback van cadeauliefhebbers zoals jij. En we zijn nog
+              lang niet klaar.
             </p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-3">
             {milestones.map((milestone) => (
-              <article key={milestone.year} className="rounded-3xl border border-white/80 bg-white/80 p-8 shadow-xl backdrop-blur">
-                <span className="text-sm font-semibold uppercase tracking-wide text-primary/80">{milestone.year}</span>
+              <article
+                key={milestone.year}
+                className="rounded-3xl border border-white/80 bg-white/80 p-8 shadow-xl backdrop-blur"
+              >
+                <span className="text-sm font-semibold uppercase tracking-wide text-primary/80">
+                  {milestone.year}
+                </span>
                 <h3 className="mt-2 text-xl font-semibold text-gray-900">{milestone.title}</h3>
                 <p className="mt-3 text-gray-600">{milestone.description}</p>
               </article>
@@ -439,9 +482,12 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg">
               Het team achter de GiftFinder
             </div>
-            <h2 className="typo-h2 mt-6 text-gray-900">Wij combineren tech met warme cadeaulogica.</h2>
+            <h2 className="typo-h2 mt-6 text-gray-900">
+              Wij combineren tech met warme cadeaulogica.
+            </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-              Een compacte crew met een groot hart voor cadeaus. We werken remote, testen veel en vieren elk succes met iets lekkers.
+              Een compacte crew met een groot hart voor cadeaus. We werken remote, testen veel en
+              vieren elk succes met iets lekkers.
             </p>
           </div>
 
@@ -453,18 +499,20 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               >
                 {/* Initiaal cirkel met gradient */}
                 <div className="relative mx-auto mb-6 h-28 w-28">
-                  <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${member.color} opacity-90 shadow-lg transition-transform duration-300 group-hover:scale-110`} />
+                  <div
+                    className={`absolute inset-0 rounded-full bg-gradient-to-br ${member.color} opacity-90 shadow-lg transition-transform duration-300 group-hover:scale-110`}
+                  />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-5xl font-bold text-white drop-shadow-lg">
                       {member.initial}
                     </span>
                   </div>
                 </div>
-                
+
                 <h3 className="text-xl font-semibold text-gray-900">{member.name}</h3>
                 <p className="text-primary/80 font-medium mt-1">{member.role}</p>
                 <p className="mt-4 text-sm leading-relaxed text-gray-600">{member.bio}</p>
-                
+
                 <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-secondary/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-primary">
                   <HeartIcon className="h-4 w-4" />
                   Teamlid
@@ -494,41 +542,66 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                   <SparklesIcon className="h-4 w-4" />
                   Klaar om te beginnen?
                 </div>
-                
+
                 <h2 className="typo-h1 mt-6 bg-gradient-to-r from-primary via-rose-600 to-purple-600 bg-clip-text text-transparent">
                   Vind het perfecte cadeau in 30 seconden
                 </h2>
-                
+
                 <p className="typo-body mt-6 text-gray-700">
-                  Geen eindeloos scrollen meer. Onze AI GiftFinder vraagt jou 5 simpele vragen en matcht direct met duizenden cadeaus. 
-                  Gepersonaliseerd, snel en altijd passend bij jouw budget.
+                  Geen eindeloos scrollen meer. Onze AI GiftFinder vraagt jou 5 simpele vragen en
+                  matcht direct met duizenden cadeaus. Gepersonaliseerd, snel en altijd passend bij
+                  jouw budget.
                 </p>
 
                 {/* Features list */}
                 <ul className="mt-8 space-y-3">
                   <li className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-600">
-                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg
+                        className="h-3.5 w-3.5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Slimme vragen die direct tot matches leiden</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Slimme vragen die direct tot matches leiden
+                    </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-600">
-                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg
+                        className="h-3.5 w-3.5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Dagelijks verse deals van betrouwbare retailers</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Dagelijks verse deals van betrouwbare retailers
+                    </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-rose-600">
-                      <svg className="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg
+                        className="h-3.5 w-3.5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={3}
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-sm font-medium text-gray-700">Gratis en zonder inloggen direct bruikbaar</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      Gratis en zonder inloggen direct bruikbaar
+                    </span>
                   </li>
                 </ul>
 
@@ -557,7 +630,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                 <div className="relative rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-900/5">
                   {/* Decorative gradient border */}
                   <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-br from-primary via-rose-500 to-purple-500 opacity-20 blur" />
-                  
+
                   <div className="relative space-y-6">
                     <div className="flex items-center gap-4">
                       <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-rose-600 shadow-lg">
@@ -573,7 +646,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
 
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-600">Cadeaus beschikbaar</span>
+                        <span className="text-sm font-medium text-gray-600">
+                          Cadeaus beschikbaar
+                        </span>
                         <span className="text-lg font-bold text-primary">5.000+</span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -581,7 +656,9 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                         <span className="text-lg font-bold text-primary">50+</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-600">Tevreden gebruikers</span>
+                        <span className="text-sm font-medium text-gray-600">
+                          Tevreden gebruikers
+                        </span>
                         <span className="text-lg font-bold text-primary">10.000+</span>
                       </div>
                     </div>
@@ -589,7 +666,11 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                     <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-purple-50 p-4">
                       <div className="flex items-start gap-3">
                         <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
-                          <svg className="h-5 w-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                          <svg
+                            className="h-5 w-5 text-primary"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                         </div>
@@ -609,7 +690,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
         </div>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default AboutPage;
+export default AboutPage
