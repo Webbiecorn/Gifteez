@@ -39,25 +39,43 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 } as any
 
-// Mock localStorage
+// Mock localStorage with actual storage (for services that persist data)
+const localStorageData: Record<string, string> = {}
 const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-  key: vi.fn(),
-  length: 0,
+  getItem: vi.fn((key: string) => localStorageData[key] || null),
+  setItem: vi.fn((key: string, value: string) => {
+    localStorageData[key] = value
+  }),
+  removeItem: vi.fn((key: string) => {
+    delete localStorageData[key]
+  }),
+  clear: vi.fn(() => {
+    Object.keys(localStorageData).forEach((key) => delete localStorageData[key])
+  }),
+  key: vi.fn((index: number) => Object.keys(localStorageData)[index] || null),
+  get length() {
+    return Object.keys(localStorageData).length
+  },
 }
 global.localStorage = localStorageMock as Storage
 
-// Mock sessionStorage
+// Mock sessionStorage with actual storage (for services that persist data)
+const sessionStorageData: Record<string, string> = {}
 const sessionStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-  key: vi.fn(),
-  length: 0,
+  getItem: vi.fn((key: string) => sessionStorageData[key] || null),
+  setItem: vi.fn((key: string, value: string) => {
+    sessionStorageData[key] = value
+  }),
+  removeItem: vi.fn((key: string) => {
+    delete sessionStorageData[key]
+  }),
+  clear: vi.fn(() => {
+    Object.keys(sessionStorageData).forEach((key) => delete sessionStorageData[key])
+  }),
+  key: vi.fn((index: number) => Object.keys(sessionStorageData)[index] || null),
+  get length() {
+    return Object.keys(sessionStorageData).length
+  },
 }
 global.sessionStorage = sessionStorageMock as Storage
 
