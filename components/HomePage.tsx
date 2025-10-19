@@ -949,9 +949,8 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
         </div>
       </section>
 
-
       {/* Testimonials - Enhanced with 6 testimonials */}
-      <section className="bg-gradient-to-b from-white to-light-bg">
+      <section className="bg-gradient-to-b from-white to-light-bg pb-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 opacity-0 animate-fade-in-up" style={{ animationDelay: '1600ms' }}>
           <div className="text-center mb-8">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Wat Gebruikers Zeggen</h2>
