@@ -2,8 +2,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container } from './layout/Container';
 import { Page, NavigateTo } from '../types';
-import { GiftIcon, HeartIcon, HeartIconFilled, MenuIcon, XIcon, UserCircleIcon, LogOutIcon, QuestionMarkCircleIcon, TagIcon, BookOpenIcon, MailIcon } from './IconComponents';
+import { GiftIcon, HeartIcon, HeartIconFilled, MenuIcon, XIcon, UserCircleIcon, LogOutIcon, QuestionMarkCircleIcon, TagIcon, BookOpenIcon, MailIcon, SparklesIcon } from './IconComponents';
 import Button from './Button';
+import { Button as UIButton } from './ui/Button';
 import { AuthContext } from '../contexts/AuthContext';
 import { CartContext } from '../contexts/CartContext';
 import Logo from './Logo';
@@ -37,7 +38,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   const navItems: { page: Page; label: string, icon?: React.ElementType }[] = [
     { page: 'giftFinder', label: 'GiftFinder', icon: GiftIcon },
     { page: 'deals', label: 'Deals', icon: TagIcon },
-    { page: 'quiz', label: 'Cadeau Quiz', icon: QuestionMarkCircleIcon },
+    { page: 'categories', label: 'Duurzaam', icon: SparklesIcon },
     { page: 'blog', label: 'Blog', icon: BookOpenIcon },
     { page: 'about', label: 'Over Ons', icon: UserCircleIcon },
     { page: 'contact', label: 'Contact', icon: MailIcon },
@@ -98,9 +99,18 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   );
 
   return (
-    <header className={headerClasses}>
-      <Container size="xl" className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-6 py-3.5">
+    <>
+      {/* Skip to content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:shadow-lg focus:font-semibold"
+      >
+        Spring naar hoofdinhoud
+      </a>
+      
+      <header className={headerClasses}>
+        <Container size="xl" className="px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-6 py-3.5">
           {/* Logo & Tagline */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <div
@@ -120,8 +130,20 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex flex-1 justify-center">
+          <div className="hidden lg:flex flex-1 justify-center items-center gap-4">
             {desktopNav}
+            
+            {/* Accent CTA - Start GiftFinder */}
+            <UIButton
+              variant="accent"
+              size="md"
+              onClick={() => handleNavClick('giftFinder')}
+              leftIcon={<GiftIcon className="w-4 h-4" />}
+              className="ml-2"
+              aria-label="Start de GiftFinder"
+            >
+              Start GiftFinder
+            </UIButton>
           </div>
 
           {/* Action Buttons */}
@@ -310,7 +332,8 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
           </div>
         </div>
       )}
-    </header>
+      </header>
+    </>
   );
 };
 

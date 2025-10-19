@@ -21,17 +21,9 @@ const Layout: React.FC<LayoutProps> = ({ children, title, description }) => {
   }, [title, description]);
 
   return (
-    <>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-accent text-white px-4 py-2 rounded-lg shadow-lg"
-      >
-        Skip to content
-      </a>
-      <main id="main" className="outline-none focus:outline-none">
-        {children}
-      </main>
-    </>
+    <main id="main-content" className="outline-none focus:outline-none" tabIndex={-1}>
+      {children}
+    </main>
   );
 };
 

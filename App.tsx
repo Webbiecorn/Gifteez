@@ -29,6 +29,7 @@ const AffiliateDisclosurePage = ReactLazy(() => import('./components/AffiliateDi
 const AdminPage = ReactLazy(() => import('./components/AdminPage'));
 const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'));
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
+const FloatingCTA = ReactLazy(() => import('./components/FloatingCTA'));
 import ErrorBoundary from './components/ErrorBoundary';
 import { useSEO } from './hooks/useSEO';
 import { BlogCardSkeleton, TextSkeleton } from './components/SkeletonLoader';
@@ -382,6 +383,14 @@ const App: React.FC = () => {
         }>
           <Footer navigateTo={navigateTo} showToast={showToast} />
         </React.Suspense>
+        
+        {/* FloatingCTA - Show on content pages, hide on giftFinder/checkout/admin */}
+        {!['giftFinder', 'cart', 'checkoutSuccess', 'admin', 'adminDealsPreview', 'login', 'signup'].includes(currentPage) && (
+          <React.Suspense fallback={null}>
+            <FloatingCTA navigateTo={navigateTo} />
+          </React.Suspense>
+        )}
+        
         <Toast message={toastMessage} />
         {showBanner && (
           <React.Suspense fallback={null}>
