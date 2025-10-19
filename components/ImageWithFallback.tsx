@@ -13,6 +13,15 @@ type Props = {
    * Use 'contain' when you want the entire image visible without cropping.
    */
   fit?: 'cover' | 'contain';
+  /**
+   * Loading strategy. Use 'eager' for LCP images, 'lazy' for others.
+   * Defaults to 'lazy' for better performance.
+   */
+  loading?: 'lazy' | 'eager';
+  /**
+   * Fetch priority hint. Use 'high' for LCP images.
+   */
+  fetchPriority?: 'high' | 'low' | 'auto';
 };
 
 /**
@@ -20,7 +29,18 @@ type Props = {
  * Shows the provided src, and if it fails to load, swaps to a safe fallback.
  * Default fallback uses Picsum which is generally reliable.
  */
-const ImageWithFallback: React.FC<Props> = ({ src, alt, className, fallbackSrc, width, height, showSkeleton, fit = 'cover' }) => {
+const ImageWithFallback: React.FC<Props> = ({ 
+  src, 
+  alt, 
+  className, 
+  fallbackSrc, 
+  width, 
+  height, 
+  showSkeleton, 
+  fit = 'cover',
+  loading = 'lazy',
+  fetchPriority = 'auto'
+}) => {
   const defaultFallback = fallbackSrc || 'https://picsum.photos/800/600?blur=2&random=5';
   const [currentSrc, setCurrentSrc] = useState(src || defaultFallback);
   const [loaded, setLoaded] = useState(false);
@@ -41,7 +61,8 @@ const ImageWithFallback: React.FC<Props> = ({ src, alt, className, fallbackSrc, 
         alt={alt}
         width={width}
         height={height}
-        loading="lazy"
+        loading={loading}
+        fetchPriority={fetchPriority}
         decoding="async"
         className={"w-full h-full object-" + fit + ' ' + (showSkeleton ? (loaded ? 'opacity-100 transition-opacity duration-300' : 'opacity-0') : '')}
         onLoad={() => setLoaded(true)}

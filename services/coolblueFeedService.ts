@@ -1,4 +1,5 @@
 import BlogService, { BlogPostData } from './blogService';
+import { productCache } from './productCacheService';
 
 export interface CoolblueProduct {
   id: string;
@@ -244,10 +245,31 @@ export class CoolblueFeedService {
       return normalised;
     }
 
+    // Check IndexedDB cache first (60 min TTL)
+    const cacheKey = 'coolblue-products';
+    const cached = await productCache.get<CoolblueProduct[]>(cacheKey);
+    if (cached) {
+      const normalised = cached.map(normaliseProduct);
+      this.applyCache(normalised, {
+        source: 'cache',
+        importedAt: new Date().toISOString(),
+        total: normalised.length,
+        hasCustomFeed: false,
+      });
+      return normalised;
+    }
+
     try {
-      const module = await import('../data/importedProducts.json');
-      const rawProducts = Array.isArray(module.default) ? module.default : [];
-      const normalised = rawProducts.map(normaliseProduct);
+      // Fetch from public folder instead of bundling (saves ~2MB in bundle)
+      const response = await fetch('/data/importedProducts.json');
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const rawProducts = await response.json();
+      const products = Array.isArray(rawProducts) ? rawProducts : [];
+      
+      // Cache for 60 minutes
+      await productCache.set(cacheKey, products, 60);
+      
+      const normalised = products.map(normaliseProduct);
       this.applyCache(normalised, {
         source: 'bundled-feed',
         importedAt: new Date().toISOString(),

@@ -339,8 +339,12 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                   <ImageWithFallback
                     src="/images/mascotte-hero-final2.png"
                     alt="Gifteez mascotte - vrolijk cadeau karakter"
-                    className="w-full h-auto drop-shadow-2xl"
+                    className="w-full drop-shadow-2xl"
+                    width={800}
+                    height={800}
                     fit="contain"
+                    loading="eager"
+                    fetchPriority="high"
                   />
                 </div>
               </animated.div>

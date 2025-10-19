@@ -199,10 +199,19 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
               src={gift.imageUrl}
               alt={gift.productName}
               className="max-h-full max-w-full w-auto h-auto mx-auto"
+              width={400}
+              height={400}
               fit={imageFit}
             />
           ) : (
-            <ImageWithFallback src={gift.imageUrl} alt={gift.productName} className="w-full h-full bg-white" fit={imageFit} />
+            <ImageWithFallback 
+              src={gift.imageUrl} 
+              alt={gift.productName} 
+              className="w-full h-full bg-white" 
+              width={400}
+              height={300}
+              fit={imageFit} 
+            />
           )}
           
           {/* Trending Badge */}

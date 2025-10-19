@@ -10,9 +10,39 @@
     <!-- End Google Tag Manager -->
     
     <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
-    <!-- Critical hero style (minimal) -->
+    <!-- Preload LCP image (hero mascot) for faster First Contentful Paint -->
+    <link rel="preload" as="image" href="/images/mascotte-hero-final2.png" fetchpriority="high">
+    <!-- Critical CSS for faster First Paint (hero + buttons) -->
     <style>
+      /* Hero styles */
       .hero-title{font-weight:700;line-height:1.1}
+      .hero-container{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:2rem 1rem}
+      
+      /* Button styles (most common CTAs) */
+      .btn-primary{
+        background:linear-gradient(135deg,#e11d48 0%,#be123c 100%);
+        color:#fff;
+        padding:0.75rem 1.5rem;
+        border-radius:0.5rem;
+        font-weight:600;
+        transition:transform 0.2s,box-shadow 0.2s;
+        border:none;
+        cursor:pointer;
+        display:inline-flex;
+        align-items:center;
+        gap:0.5rem
+      }
+      .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(225,29,72,0.3)}
+      
+      /* Typography - Inter font fallback */
+      body{
+        font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
+        -webkit-font-smoothing:antialiased;
+        -moz-osx-font-smoothing:grayscale
+      }
+      
+      /* Layout skeleton */
+      #root{min-height:100vh;display:flex;flex-direction:column}
     </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

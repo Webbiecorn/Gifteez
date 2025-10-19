@@ -1,5 +1,6 @@
 import { db } from './firebase';
 import { collection, getDocs, query, where, limit as firestoreLimit } from 'firebase/firestore';
+import { productCache } from './productCacheService';
 
 export interface SLYGADProduct {
   id: string;
@@ -55,6 +56,17 @@ export class ShopLikeYouGiveADamnService {
 
     this.isLoading = true;
 
+    // Check IndexedDB cache first (60 min TTL)
+    const cacheKey = 'slygad-products';
+    const cached = await productCache.get<SLYGADProduct[]>(cacheKey);
+    if (cached && cached.length > 0) {
+      this.products = cached;
+      this.lastLoaded = new Date();
+      this.isLoading = false;
+      console.log(`✅ Loaded ${cached.length} SLYGAD products from cache`);
+      return;
+    }
+
     try {
       console.log('🌱 Loading Shop Like You Give A Damn products from Firebase...');
 
@@ -98,6 +110,10 @@ export class ShopLikeYouGiveADamnService {
       });
 
       this.lastLoaded = new Date();
+      
+      // Cache for 60 minutes
+      await productCache.set(cacheKey, this.products, 60);
+      
       console.log(`✅ Loaded ${this.products.length} Shop Like You Give A Damn products`);
       
       // Log some stats
@@ -110,14 +126,19 @@ export class ShopLikeYouGiveADamnService {
     } catch (error) {
       console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error);
       
-      // If Firebase fails, try to load from local JSON as fallback
+      // If Firebase fails, try to load from public folder (no bundle bloat)
       try {
-        const { default: localProducts } = await import('../data/shop-like-you-give-a-damn-import-ready.json');
+        const response = await fetch('/data/shop-like-you-give-a-damn-import-ready.json');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const localProducts = await response.json();
         
         this.products = (localProducts as any[]).map(p => ({
           ...p,
           source: 'shop-like-you-give-a-damn' as const
         }));
+        
+        // Cache fallback data for 60 minutes
+        await productCache.set(cacheKey, this.products, 60);
         
         this.lastLoaded = new Date();
         console.log(`📦 Loaded ${this.products.length} SLYGAD products from local fallback`);
