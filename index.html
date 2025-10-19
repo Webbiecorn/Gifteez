@@ -14,6 +14,9 @@
     <link rel="preload" as="image" href="/images/mascotte-hero-final2.png" fetchpriority="high">
     <!-- Critical CSS for faster First Paint (hero + buttons) -->
     <style>
+      /* Reset & base */
+      *{box-sizing:border-box;margin:0;padding:0}
+      
       /* Hero styles */
       .hero-title{font-weight:700;line-height:1.1}
       .hero-container{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:2rem 1rem}
@@ -38,11 +41,12 @@
       body{
         font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;
         -webkit-font-smoothing:antialiased;
-        -moz-osx-font-smoothing:grayscale
+        -moz-osx-font-smoothing:grayscale;
+        margin:0
       }
       
-      /* Layout skeleton */
-      #root{min-height:100vh;display:flex;flex-direction:column}
+      /* Layout skeleton - removed flex that broke footer */
+      #root{min-height:100vh}
     </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
