@@ -727,7 +727,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <a
                 href={withAffiliate(deal.affiliateLink)}
                 target="_blank"
-                rel="noopener noreferrer sponsored"
+                rel="sponsored nofollow noopener noreferrer"
                 onClick={handleClick}
                 className={`block w-full rounded-lg bg-accent text-center font-bold text-white shadow-md transition-all hover:bg-accent-hover hover:shadow-lg hover:scale-105 ${buttonPaddingClass}`}
               >
@@ -1018,7 +1018,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   <a
                     href={withAffiliate(state.dealOfWeek.affiliateLink)}
                     target="_blank"
-                    rel="noopener noreferrer sponsored"
+                    rel="sponsored nofollow noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl border border-white/60 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/20"
                     onClick={handleFeaturedClick}
                   >
@@ -1121,7 +1121,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                           <a
                             href={withAffiliate(state.dealOfWeek.affiliateLink)}
                             target="_blank"
-                            rel="noopener noreferrer sponsored"
+                            rel="sponsored nofollow noopener noreferrer"
                             onClick={handleFeaturedClick}
                             className="inline-flex items-center gap-2 rounded-xl bg-accent px-8 py-3.5 text-base font-bold text-white shadow-lg transition-all hover:bg-accent-hover hover:shadow-xl hover:scale-105"
                           >

@@ -830,7 +830,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     <a
                       href={amazonFallbackUrl}
                       target="_blank"
-                      rel="noopener noreferrer sponsored"
+                      rel="sponsored nofollow noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 text-white font-semibold shadow-lg hover:shadow-xl transition-transform hover:scale-105"
                     >
                       🛒 Zoeken op Amazon
@@ -838,7 +838,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     <a
                       href={coolblueFallbackUrl}
                       target="_blank"
-                      rel="noopener noreferrer sponsored"
+                      rel="sponsored nofollow noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-xl bg-sky-500 px-6 py-3 text-white font-semibold shadow-lg hover:shadow-xl transition-transform hover:scale-105"
                     >
                       💡 Zoeken op Coolblue

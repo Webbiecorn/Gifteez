@@ -26,6 +26,8 @@ const CategoryDetailPage = ReactLazy(() => import('./components/CategoryDetailPa
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'));
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'));
 const AffiliateDisclosurePage = ReactLazy(() => import('./components/AffiliateDisclosurePage'));
+const NotFoundPage = ReactLazy(() => import('./components/NotFoundPage'));
+const ErrorPage = ReactLazy(() => import('./components/ErrorPage'));
 const AdminPage = ReactLazy(() => import('./components/AdminPage'));
 const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'));
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'));
@@ -99,7 +101,9 @@ const App: React.FC = () => {
       case 'disclaimer': return '/disclaimer';
       case 'privacy': return '/privacy';
       case 'affiliateDisclosure': return '/affiliate-disclosure';
-  case 'admin': return '/admin';
+      case 'notFound': return '/404';
+      case 'error': return '/500';
+      case 'admin': return '/admin';
   case 'adminDealsPreview': return '/admin/deals-preview';
       default: return '/';
     }
@@ -149,7 +153,9 @@ const App: React.FC = () => {
       case 'disclaimer': setCurrentPage('disclaimer'); break;
       case 'privacy': setCurrentPage('privacy'); break;
       case 'affiliate-disclosure': setCurrentPage('affiliateDisclosure'); break;
-      default: setCurrentPage('home'); setCurrentPostSlug(null); break;
+      case '404': setCurrentPage('notFound'); break;
+      case '500': setCurrentPage('error'); break;
+      default: setCurrentPage('notFound'); setCurrentPostSlug(null); break;
     }
   }, []);
 
@@ -322,7 +328,7 @@ const App: React.FC = () => {
                 <a 
                   href={product.affiliateLink}
                   target="_blank"
-                  rel="noopener noreferrer sponsored"
+                  rel="sponsored nofollow noopener noreferrer"
                   className="mt-auto inline-block bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors text-center"
                 >
                   Bekijk deal
@@ -337,8 +343,12 @@ const App: React.FC = () => {
         return <PrivacyPage navigateTo={navigateTo} />;
       case 'affiliateDisclosure':
         return <AffiliateDisclosurePage navigateTo={navigateTo} />;
+      case 'notFound':
+        return <NotFoundPage navigateTo={navigateTo} />;
+      case 'error':
+        return <ErrorPage navigateTo={navigateTo} />;
       default:
-        return <HomePage navigateTo={navigateTo} />;
+        return <NotFoundPage navigateTo={navigateTo} />;
     }
   };
 
