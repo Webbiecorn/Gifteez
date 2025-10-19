@@ -1,4 +1,7 @@
-// Google Analytics Utility
+// Google Analytics Utility - MIGRATED TO GTM
+// All events now push to dataLayer for GTM to handle
+import DataLayerService from './dataLayerService';
+
 declare global {
   interface Window {
     gtag?: (...args: any[]) => void;
@@ -6,43 +9,41 @@ declare global {
   }
 }
 
+// Legacy gtag function (kept for backwards compatibility)
 export const sendGtag = (...args: any[]) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag(...args);
   }
 };
 
+// Page View - Now uses DataLayer
 export const gaPageView = (pagePath: string, pageTitle?: string) => {
-  sendGtag('config', 'G-Y697MJEN2H', {
-    page_path: pagePath,
-    page_title: pageTitle
-  });
+  DataLayerService.pageView(pagePath, pageTitle || 'Unknown');
 };
 
+// Generic Event - Now uses DataLayer
 export const gaEvent = (eventName: string, parameters?: any) => {
-  sendGtag('event', eventName, parameters);
+  DataLayerService.customEvent(eventName, parameters);
 };
 
+// Search - Now uses DataLayer
 export const gaSearch = (searchTerm: string) => {
-  gaEvent('search', {
-    search_term: searchTerm
-  });
+  DataLayerService.search(searchTerm);
 };
 
+// Signup - Now uses DataLayer
 export const gaSignup = (method: string = 'form') => {
-  gaEvent('sign_up', {
-    method: method
-  });
+  DataLayerService.signup(method);
 };
 
+// Lead - Now uses DataLayer
 export const gaLead = (leadType: string) => {
-  gaEvent('generate_lead', {
-    lead_type: leadType
-  });
+  DataLayerService.lead(leadType);
 };
 
+// Purchase - Uses custom event
 export const gaPurchase = (transactionId: string, value: number, currency: string = 'EUR') => {
-  gaEvent('purchase', {
+  DataLayerService.customEvent('purchase', {
     transaction_id: transactionId,
     value: value,
     currency: currency
@@ -55,6 +56,7 @@ interface DownloadMetadata {
   title?: string;
 }
 
+// Download Resource - Uses custom event
 export const gaDownloadResource = (resourcePath: string, metadata?: DownloadMetadata) => {
   if (!resourcePath) {
     return;
@@ -74,5 +76,5 @@ export const gaDownloadResource = (resourcePath: string, metadata?: DownloadMeta
     params.page_title = metadata.title;
   }
 
-  gaEvent('download_resource', params);
+  DataLayerService.customEvent('download_resource', params);
 };
