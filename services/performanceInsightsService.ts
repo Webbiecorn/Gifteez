@@ -43,11 +43,52 @@ interface LocalCache {
   [productId: string]: LocalCacheData;
 }
 
+interface PendingEvent {
+  productId: string;
+  eventType: 'impression' | 'click';
+  source?: string;
+  userId?: string;
+  timestamp: number;
+}
+
 /**
  * Performance Insights Service
  * Tracks product impressions, clicks, and calculates trending products
  */
 export class PerformanceInsightsService {
+  private static pendingEvents: PendingEvent[] = [];
+  private static flushTimer: ReturnType<typeof setTimeout> | null = null;
+  private static readonly BATCH_SIZE = 10;
+  private static readonly FLUSH_INTERVAL = 5000; // 5 seconds
+  private static isProcessing = false;
+  private static isInitialized = false;
+
+  /**
+   * Initialize the service (sets up page unload handler)
+   */
+  static init(): void {
+    if (this.isInitialized) return;
+    this.isInitialized = true;
+
+    // Flush pending events when page is about to unload
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', () => {
+        // Use sendBeacon for reliable delivery on page unload
+        if (this.pendingEvents.length > 0 && navigator.sendBeacon) {
+          // For now, just mark as processed so they don't pile up
+          // You could implement a beacon endpoint if needed
+          this.pendingEvents = [];
+        }
+      });
+
+      // Flush on visibility change (tab switch)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && this.pendingEvents.length > 0) {
+          this.flushEvents();
+        }
+      });
+    }
+  }
   /**
    * Track a product impression (view)
    */
@@ -59,22 +100,15 @@ export class PerformanceInsightsService {
     // Always track locally for immediate updates
     this.trackEventLocally(productId, 'impression');
     
-    // Try Firebase if enabled
+    // Add to batch queue instead of immediate write
     if (firebaseEnabled && db) {
-      try {
-        await addDoc(collection(db, COLLECTION_EVENTS), {
-          productId,
-          eventType: 'impression',
-          timestamp: Timestamp.now(),
-          source: source || 'unknown',
-          userId: userId || 'anonymous'
-        });
-        
-        // Update metrics counter
-        await this.updateMetrics(productId, 'impression');
-      } catch (error) {
-        console.error('Error tracking impression:', error);
-      }
+      this.queueEvent({
+        productId,
+        eventType: 'impression',
+        source: source || 'unknown',
+        userId: userId || 'anonymous',
+        timestamp: Date.now()
+      });
     }
   }
   
@@ -89,21 +123,150 @@ export class PerformanceInsightsService {
     // Always track locally
     this.trackEventLocally(productId, 'click');
     
-    // Try Firebase if enabled
+    // Add to batch queue instead of immediate write
     if (firebaseEnabled && db) {
-      try {
-        await addDoc(collection(db, COLLECTION_EVENTS), {
-          productId,
-          eventType: 'click',
-          timestamp: Timestamp.now(),
-          source: source || 'unknown',
-          userId: userId || 'anonymous'
-        });
+      this.queueEvent({
+        productId,
+        eventType: 'click',
+        source: source || 'unknown',
+        userId: userId || 'anonymous',
+        timestamp: Date.now()
+      });
+    }
+  }
+
+  /**
+   * Queue an event for batched processing
+   */
+  private static queueEvent(event: PendingEvent): void {
+    this.pendingEvents.push(event);
+
+    // Log for debugging
+    if (this.pendingEvents.length === 1) {
+      console.log('[PerformanceInsights] Batching enabled - events will be flushed in', this.FLUSH_INTERVAL / 1000, 'seconds or when batch reaches', this.BATCH_SIZE);
+    }
+
+    // Schedule flush if not already scheduled
+    if (!this.flushTimer) {
+      this.flushTimer = setTimeout(() => {
+        this.flushEvents();
+      }, this.FLUSH_INTERVAL);
+    }
+
+    // Flush immediately if batch is full
+    if (this.pendingEvents.length >= this.BATCH_SIZE) {
+      if (this.flushTimer) {
+        clearTimeout(this.flushTimer);
+        this.flushTimer = null;
+      }
+      console.log('[PerformanceInsights] Batch full, flushing', this.pendingEvents.length, 'events now');
+      this.flushEvents();
+    }
+  }
+
+  /**
+   * Flush pending events to Firestore
+   */
+  private static async flushEvents(): Promise<void> {
+    if (this.isProcessing || this.pendingEvents.length === 0) {
+      return;
+    }
+
+    this.isProcessing = true;
+    const eventsToProcess = [...this.pendingEvents];
+    this.pendingEvents = [];
+
+    console.log('[PerformanceInsights] Flushing', eventsToProcess.length, 'events to Firestore');
+
+    try {
+      // Write events in smaller batches to avoid overwhelming Firestore
+      const batchSize = 5;
+      for (let i = 0; i < eventsToProcess.length; i += batchSize) {
+        const batch = eventsToProcess.slice(i, i + batchSize);
         
-        // Update metrics counter
-        await this.updateMetrics(productId, 'click');
+        await Promise.all(
+          batch.map(async (event) => {
+            try {
+              await addDoc(collection(db!, COLLECTION_EVENTS), {
+                productId: event.productId,
+                eventType: event.eventType,
+                timestamp: Timestamp.fromMillis(event.timestamp),
+                source: event.source,
+                userId: event.userId
+              });
+            } catch (error) {
+              // Silently fail individual events to not block the batch
+              console.warn('Failed to write event:', error);
+            }
+          })
+        );
+
+        // Small delay between batches to respect rate limits
+        if (i + batchSize < eventsToProcess.length) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+      }
+
+      // Update metrics in aggregate (less writes)
+      await this.updateMetricsBatch(eventsToProcess);
+    } catch (error) {
+      console.error('Error flushing events:', error);
+    } finally {
+      this.isProcessing = false;
+      this.flushTimer = null;
+    }
+  }
+
+  /**
+   * Update metrics for multiple events in batch
+   */
+  private static async updateMetricsBatch(events: PendingEvent[]): Promise<void> {
+    if (!firebaseEnabled || !db) return;
+
+    // Aggregate events by product
+    const productCounts = new Map<string, { impressions: number; clicks: number }>();
+    
+    for (const event of events) {
+      const counts = productCounts.get(event.productId) || { impressions: 0, clicks: 0 };
+      if (event.eventType === 'impression') {
+        counts.impressions++;
+      } else {
+        counts.clicks++;
+      }
+      productCounts.set(event.productId, counts);
+    }
+
+    // Update each product's metrics
+    for (const [productId, counts] of productCounts.entries()) {
+      try {
+        const q = query(
+          collection(db, COLLECTION_METRICS),
+          where('productId', '==', productId),
+          limit(1)
+        );
+        
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+          await addDoc(collection(db, COLLECTION_METRICS), {
+            productId,
+            impressions: counts.impressions,
+            clicks: counts.clicks,
+            lastUpdated: Timestamp.now()
+          });
+        } else {
+          const docRef = doc(db, COLLECTION_METRICS, snapshot.docs[0].id);
+          const updates: any = { lastUpdated: Timestamp.now() };
+          if (counts.impressions > 0) {
+            updates.impressions = increment(counts.impressions);
+          }
+          if (counts.clicks > 0) {
+            updates.clicks = increment(counts.clicks);
+          }
+          await updateDoc(docRef, updates);
+        }
       } catch (error) {
-        console.error('Error tracking click:', error);
+        console.warn(`Failed to update metrics for ${productId}:`, error);
       }
     }
   }
@@ -263,45 +426,6 @@ export class PerformanceInsightsService {
     } catch (error) {
       console.error('Error getting all metrics:', error);
       return this.getAllLocalMetrics();
-    }
-  }
-  
-  /**
-   * Update metrics counters (internal)
-   */
-  private static async updateMetrics(
-    productId: string,
-    eventType: 'impression' | 'click'
-  ): Promise<void> {
-    if (!firebaseEnabled || !db) return;
-    
-    try {
-      const q = query(
-        collection(db, COLLECTION_METRICS),
-        where('productId', '==', productId),
-        limit(1)
-      );
-      
-      const snapshot = await getDocs(q);
-      
-      if (snapshot.empty) {
-        // Create new metrics document
-        await addDoc(collection(db, COLLECTION_METRICS), {
-          productId,
-          impressions: eventType === 'impression' ? 1 : 0,
-          clicks: eventType === 'click' ? 1 : 0,
-          lastUpdated: Timestamp.now()
-        });
-      } else {
-        // Update existing document
-        const docRef = doc(db, COLLECTION_METRICS, snapshot.docs[0].id);
-        await updateDoc(docRef, {
-          [eventType === 'impression' ? 'impressions' : 'clicks']: increment(1),
-          lastUpdated: Timestamp.now()
-        });
-      }
-    } catch (error) {
-      console.error('Error updating metrics:', error);
     }
   }
   

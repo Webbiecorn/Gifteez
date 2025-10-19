@@ -40,12 +40,18 @@ import LoadingSpinner from './components/LoadingSpinner';
 import { useCookieConsent } from './hooks/useCookieConsent';
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor';
 import Layout from './components/layout/Layout';
+import { PerformanceInsightsService } from './services/performanceInsightsService';
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null);
   const auth = useContext(AuthContext);
   const { showBanner, acceptCookies, declineCookies } = useCookieConsent();
   const { logMetrics } = usePerformanceMonitor();
+  
+  // Initialize performance tracking
+  useEffect(() => {
+    PerformanceInsightsService.init();
+  }, []);
   
   useEffect(() => {
     // Log performance metrics after initial load

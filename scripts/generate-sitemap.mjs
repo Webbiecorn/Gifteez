@@ -9,10 +9,11 @@ const BLOG_DATA_FILE = path.resolve("data/blogData.ts");
 const SITE = "https://gifteez.nl";
 const OUT_FILE = path.resolve("public/sitemap.xml");
 
-// Handmatige “vaste routes” (passen bij jouw app)
+// Handmatige "vaste routes" (passen bij jouw app)
 const staticRoutes = [
   { loc: `${SITE}/`, changefreq: "daily", priority: "0.9" },
   { loc: `${SITE}/giftfinder`, changefreq: "daily", priority: "0.8" },
+  { loc: `${SITE}/deals`, changefreq: "daily", priority: "0.8" },
   { loc: `${SITE}/blog`, changefreq: "daily", priority: "0.7" },
   { loc: `${SITE}/categories`, changefreq: "weekly", priority: "0.6" },
 ];

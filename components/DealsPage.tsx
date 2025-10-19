@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
-import { animated, useSpring } from '@react-spring/web';
 import { NavigateTo, DealCategory, DealItem } from '../types';
 import Meta from './Meta';
 import JsonLd from './JsonLd';
@@ -612,35 +611,19 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     
     // Track impression when card becomes visible
     const cardRef = useRef<HTMLDivElement>(null);
-    const prefersReducedMotion = useMemo(() => {
-      if (typeof window === 'undefined' || !('matchMedia' in window)) {
-        return false;
-      }
-      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }, []);
-    const [isVisible, setIsVisible] = useState(prefersReducedMotion);
-    const [styles, api] = useSpring(() => ({
-      opacity: prefersReducedMotion ? 1 : 0,
-      transform: prefersReducedMotion
-        ? 'translate3d(0, 0, 0) scale(1)'
-        : 'translate3d(0, 24px, 0) scale(0.95)'
-    }));
     
     useEffect(() => {
+      let hasTrackedImpression = false;
       const observer = new IntersectionObserver(
-        (entries, obs) => {
+        (entries) => {
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) {
-              return;
-            }
-            if (deal.id) {
+            if (entry.isIntersecting && deal.id && !hasTrackedImpression) {
               trackDealImpression(deal.id, retailerInfo?.shortLabel);
+              hasTrackedImpression = true;
             }
-            setIsVisible(true);
-            obs.unobserve(entry.target);
           });
         },
-        { threshold: 0.4, rootMargin: '0px 0px -10% 0px' }
+        { threshold: 0.1, rootMargin: '50px' }
       );
 
       const node = cardRef.current;
@@ -654,18 +637,6 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         }
       };
     }, [deal.id, retailerInfo?.shortLabel, trackDealImpression]);
-
-    useEffect(() => {
-      if (!isVisible) {
-        return;
-      }
-      api.start({
-        opacity: 1,
-        transform: 'translate3d(0, 0, 0) scale(1)',
-        config: prefersReducedMotion ? undefined : { tension: 260, friction: 22 },
-        immediate: prefersReducedMotion
-      });
-    }, [api, isVisible, prefersReducedMotion]);
     
     const handleClick = () => {
       if (deal.id) {
@@ -674,13 +645,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     };
     
     return (
-      <animated.div
+      <div
         ref={cardRef}
-        style={{
-          opacity: styles.opacity,
-          transform: styles.transform,
-          willChange: 'transform, opacity'
-        }}
         className="h-full"
       >
         <div
@@ -771,7 +737,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </div>
         </div>
-      </animated.div>
+      </div>
     );
   };
 

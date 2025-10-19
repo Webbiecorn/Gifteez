@@ -507,16 +507,18 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       });
       
       const affiliateResults = processGiftsForAffiliateOnly(resultsWithReasons);
-      setAllGifts(affiliateResults);
+      const finalResults = affiliateResults.length > 0 ? affiliateResults : resultsWithReasons;
 
-      if (affiliateResults.length === 0) {
-        setNoAffiliateResults(true);
+      setAllGifts(finalResults);
+
+      if (finalResults.length === 0) {
+        setNoAffiliateResults(resultsWithReasons.length > 0);
         setGifts([]);
         return;
       }
 
-      setNoAffiliateResults(false);
-      const sortedResults = sortGifts(affiliateResults, sortBy);
+      setNoAffiliateResults(affiliateResults.length === 0);
+      const sortedResults = sortGifts(finalResults, sortBy);
       setGifts(sortedResults);
       
       // Generate personalized intro message

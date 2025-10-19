@@ -34,6 +34,9 @@
     ],
     "redirects": [
       { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 },
+      { "source": "/shop", "destination": "/deals", "type": 301 },
+      { "source": "/shop/**", "destination": "/deals", "type": 301 },
+      { "source": "/api/visit", "destination": "/deals", "type": 301 },
       { "source": "/blog/cadeaus-voor-tech-liefhebbers", "destination": "/blog", "type": 301 },
       { "source": "/blog/beste-ervaringscadeaus-2025", "destination": "/blog", "type": 301 },
       { "source": "/blog/vergelijking-draadloze-oordopjes", "destination": "/blog", "type": 301 },

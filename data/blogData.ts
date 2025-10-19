@@ -804,8 +804,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: 'duurzame-eco-vriendelijke-cadeaus',
-    title: 'Duurzame & Eco‑vriendelijke Cadeaus: Ideeën die Echt Verschil Maken (2025)',
-    excerpt: 'Bewust geven? Ontdek duurzame cadeaus die niet alleen mooi zijn, maar ook écht impact maken. Van herbruikbare producten tot energie-besparende gadgets: kies voor een cadeau met betekenis.',
+    title: 'Duurzame Gadgets & Eco-vriendelijke Cadeaus 2025 | Gifteez',
+    excerpt: 'Ontdek 50+ duurzame gadgets en eco-vriendelijke cadeaus die écht verschil maken. Van energie-besparende tech tot herbruikbare producten. Bewust geven in 2025.',
     imageUrl: '/images/trending-eco.png',
     category: 'Duurzaam',
     author: { name: 'Linda Groen', avatarUrl: 'https://i.pravatar.cc/150?u=lindagroen' },
@@ -960,20 +960,20 @@ export const blogPosts: BlogPost[] = [
       }
     ],
     seo: {
-      metaTitle: 'Duurzame & Eco-vriendelijke Cadeaus 2025: Gids voor Bewust Geven',
-      metaDescription: 'Ontdek duurzame cadeaus die écht verschil maken. Van herbruikbare producten tot energie-besparende gadgets: bewust geven zonder concessies aan stijl of functionaliteit.',
-      keywords: ['duurzame cadeaus', 'eco-vriendelijk', 'herbruikbaar', 'duurzaam geven', 'groene cadeaus', 'zero waste', 'milieuvriendelijk', 'bewust consumeren'],
-      ogTitle: 'Duurzame Cadeaus 2025: Bewust Geven met Impact',
-      ogDescription: 'Complete gids voor eco-vriendelijke cadeaus die écht gebruikt worden. Herbruikbaar, energiebesparend en stijlvol – geef met betekenis.',
+      metaTitle: 'Duurzame Gadgets & Eco-vriendelijke Cadeaus 2025 | Gifteez',
+      metaDescription: 'Ontdek 50+ duurzame gadgets en ecologische cadeaus. Van slimme energie-besparende tech tot herbruikbare producten. Bewust geven met impact.',
+      keywords: ['duurzame gadgets', 'ecologische gadgets', 'duurzame cadeaus', 'eco-vriendelijk', 'herbruikbaar', 'energie besparen', 'groene cadeaus', 'zero waste', 'milieuvriendelijk', 'bewust consumeren', 'duurzame tech'],
+      ogTitle: 'Duurzame Gadgets & Eco Cadeaus 2025: Gids voor Bewust Geven',
+      ogDescription: 'Complete gids voor duurzame gadgets en eco-vriendelijke cadeaus. Energie-besparend, herbruikbaar en stijlvol – geef met betekenis.',
       ogImage: 'https://gifteez.nl/images/trending-eco.png',
       ogType: 'article',
       twitterCard: 'summary_large_image',
-      twitterTitle: 'Duurzame Cadeaus die Echt Verschil Maken',
-      twitterDescription: 'Van herbruikbare bekers tot smart plugs: ontdek eco-vriendelijke cadeaus met meetbare impact op milieu én portemonnee.',
+      twitterTitle: 'Duurzame Gadgets die Echt Verschil Maken',
+      twitterDescription: 'Van smart plugs tot herbruikbare tech: ontdek duurzame gadgets met meetbare impact op milieu én portemonnee.',
       twitterImage: 'https://gifteez.nl/images/trending-eco.png',
       canonicalUrl: 'https://gifteez.nl/blog/duurzame-eco-vriendelijke-cadeaus'
     },
-    tags: ['duurzaam', 'eco-vriendelijk', 'herbruikbaar', 'zero waste', 'groen', 'milieu', 'bewust']
+    tags: ['duurzame gadgets', 'ecologische gadgets', 'duurzaam', 'eco-vriendelijk', 'herbruikbaar', 'zero waste', 'groen', 'milieu', 'bewust', 'tech']
   }
   
   ,

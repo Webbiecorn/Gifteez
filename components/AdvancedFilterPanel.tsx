@@ -48,6 +48,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
       <button
+        type="button"
         onClick={onToggle}
         className="w-full px-6 py-4 flex items-center justify-between bg-gradient-to-r from-secondary/10 to-secondary/5 hover:from-secondary/20 hover:to-secondary/10 transition-all duration-300"
       >
@@ -268,6 +269,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           {/* Clear Filters */}
           <div className="pt-4 border-t border-gray-200">
             <button
+              type="button"
               onClick={() => onFiltersChange({})}
               className="w-full px-4 py-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >

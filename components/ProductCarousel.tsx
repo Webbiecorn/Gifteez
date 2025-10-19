@@ -1,5 +1,4 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { animated, useTrail } from '@react-spring/web';
+import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { DealItem } from '../types';
 import { ChevronLeftIcon, ChevronRightIcon } from './IconComponents';
 
@@ -13,31 +12,35 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
-  const [showTrail, setShowTrail] = useState(false);
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined' || !('matchMedia' in window)) {
+      return false;
+    }
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+  const [hasAnimatedIn, setHasAnimatedIn] = useState(prefersReducedMotion);
 
   const productKey = useMemo(() => products.map((product) => product.id).join('|'), [products]);
 
   useEffect(() => {
-    setShowTrail(false);
-    const animationFrame = requestAnimationFrame(() => setShowTrail(true));
+    if (prefersReducedMotion) {
+      setHasAnimatedIn(true);
+      return;
+    }
+
+    setHasAnimatedIn(false);
+    const animationFrame = requestAnimationFrame(() => setHasAnimatedIn(true));
     return () => cancelAnimationFrame(animationFrame);
-  }, [productKey]);
+  }, [productKey, prefersReducedMotion]);
 
-  const trail = useTrail(products.length, {
-    opacity: showTrail ? 1 : 0,
-    y: showTrail ? 0 : 24,
-    config: { tension: 220, friction: 24, mass: 1.1 },
-    immediate: products.length > 12, // skip animation for large batches to keep scroll responsive
-  });
-
-  const updateScrollButtons = () => {
+  const updateScrollButtons = useCallback(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
     const { scrollLeft, scrollWidth, clientWidth } = container;
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-  };
+  }, []);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -51,7 +54,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
       container.removeEventListener('scroll', updateScrollButtons);
       window.removeEventListener('resize', updateScrollButtons);
     };
-  }, [products]);
+  }, [productKey, updateScrollButtons]);
 
   const scroll = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
@@ -102,21 +105,25 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
           msOverflowStyle: 'none',
         }}
       >
-        {trail.map((styles, index) => {
-          const product = products[index];
+        {products.map((product, index) => {
           if (!product) return null;
 
+          const animationStyle = prefersReducedMotion
+            ? undefined
+            : {
+                opacity: hasAnimatedIn ? 1 : 0,
+                transition: 'opacity 260ms ease-out',
+                transitionDelay: `${Math.min(index, 10) * 40}ms`,
+              } as React.CSSProperties;
+
           return (
-            <animated.div
-              key={product.id}
+            <div
+              key={product.id ?? `${index}`}
               className="flex-shrink-0 w-[280px] sm:w-[320px] snap-start"
-              style={{
-                opacity: styles.opacity,
-                transform: styles.y.to((value) => `translate3d(0, ${value}px, 0)`),
-              }}
+              style={animationStyle}
             >
               {renderProduct(product, index)}
-            </animated.div>
+            </div>
           );
         })}
       </div>
