@@ -8,6 +8,7 @@ import { pinterestPageVisit, pinterestLead } from '../services/pinterestTracking
 import { gaLead, gaPageView } from '../services/googleAnalytics';
 import Meta from './Meta';
 import Breadcrumbs from './Breadcrumbs';
+import FAQSchema from './FAQSchema';
 import rateLimitService from '../services/rateLimitService';
 
 interface ContactPageProps {
@@ -108,6 +109,33 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
 
   const inputClass = (fieldName: keyof typeof formData) => `w-full p-4 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all duration-300 bg-white shadow-sm ${errors[fieldName] ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-200 focus:ring-primary focus:border-primary'}`;
 
+  const contactFAQs = [
+    {
+      question: "Hoe werkt de AI GiftFinder?",
+      answer: "De GiftFinder gebruikt een geavanceerd AI-model (Gemini) om jouw input over de ontvanger, gelegenheid en budget te analyseren. Op basis daarvan genereert het een lijst met passende en creatieve cadeau-suggesties uit duizenden producten van verschillende webshops."
+    },
+    {
+      question: "Zijn jullie aanbevelingen onafhankelijk?",
+      answer: "Ja, onze AI is getraind om de best mogelijke cadeaus te vinden op basis van jouw criteria. We werken samen met webshops via affiliate links, wat betekent dat wij een kleine commissie kunnen verdienen als je iets koopt via onze site. Dit heeft echter geen invloed op de suggesties die je krijgt - we tonen altijd de meest relevante cadeaus voor jouw situatie."
+    },
+    {
+      question: "Hoe kan ik adverteren op Gifteez.nl?",
+      answer: "Voor samenwerkingen of advertentiemogelijkheden kun je het beste contact met ons opnemen via het formulier hierboven of door een e-mail te sturen naar info@gifteez.nl. We bespreken graag de mogelijkheden voor partnerships met merken, webshops of andere bedrijven in de cadeau-industrie."
+    },
+    {
+      question: "Kan ik cadeausuggesties opslaan of delen?",
+      answer: "Absoluut! Je kunt cadeausuggesties opslaan in je persoonlijke verlanglijstje door in te loggen op je account. Ook kun je suggesties eenvoudig delen met vrienden en familie via social media of door een directe link te kopiëren. Zo kun je anderen helpen met het vinden van het perfecte cadeau."
+    },
+    {
+      question: "Wat als ik niet tevreden ben met de suggesties?",
+      answer: "Geen probleem! Je kunt de GiftFinder zo vaak gebruiken als je wilt met verschillende criteria. Probeer bijvoorbeeld andere interesses, een ander budget of meer details over de ontvanger toe te voegen. Als je nog steeds niet tevreden bent, neem dan contact met ons op - we helpen je graag persoonlijk verder."
+    },
+    {
+      question: "Is Gifteez.nl gratis te gebruiken?",
+      answer: "Ja! Het gebruik van onze AI GiftFinder is volledig gratis. We verdienen alleen een kleine commissie wanneer je via onze affiliate links een cadeau koopt bij een van de partnerwebshops. Dit stelt ons in staat om de service gratis aan te bieden en continu te verbeteren."
+    }
+  ];
+
 
   return (
     <>
@@ -115,6 +143,7 @@ const ContactPage: React.FC<ContactPageProps> = ({ showToast }) => {
         title="Contact - Neem contact op met Gifteez | Vragen & Support"
         description="Heb je vragen over Gifteez? Neem contact met ons op via het contactformulier of sociale media. We helpen je graag met cadeau-advies, technische vragen of feedback."
       />
+      <FAQSchema faqs={contactFAQs} />
       <div className="min-h-screen bg-gradient-to-br from-light-bg via-white to-secondary/20">
       
       <Breadcrumbs 

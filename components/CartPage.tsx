@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { NavigateTo, ShowToast, CartItem } from '../types';
 import { CartContext } from '../contexts/CartContext';
 import Button from './Button';
+import Breadcrumbs from './Breadcrumbs';
 import { TrashIcon, ShoppingCartIcon } from './IconComponents';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -28,7 +29,15 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-white via-muted-rose/40 to-white">
+      <Breadcrumbs 
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Winkelwagen' }
+        ]}
+      />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="font-display text-4xl font-bold text-primary">Mijn Winkelwagen</h1>
@@ -96,6 +105,7 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
             </div>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

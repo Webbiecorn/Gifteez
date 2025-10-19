@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Gift, NavigateTo, ShowToast } from '../types';
 import GiftResultCard from './GiftResultCard';
 import Button from './Button';
+import Breadcrumbs from './Breadcrumbs';
 import { HeartIcon, ShareIcon } from './IconComponents';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -86,7 +87,15 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ navigateTo, showToast }) 
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-white via-muted-rose/40 to-white">
+      <Breadcrumbs 
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Favorieten' }
+        ]}
+      />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-6">
         <h1 className="font-display text-4xl font-bold text-primary">Mijn Opgeslagen Favorieten</h1>
         <p className="mt-2 text-lg text-gray-600">Jouw persoonlijke lijst met de beste cadeau-ideeën.</p>
@@ -120,6 +129,7 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ navigateTo, showToast }) 
       ) : (
         <EmptyFavoritesMessage />
       )}
+      </div>
     </div>
   );
 };
