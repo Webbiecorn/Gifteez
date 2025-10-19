@@ -952,16 +952,16 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
       {/* Testimonials - Enhanced with 6 testimonials */}
       <section className="bg-gradient-to-b from-white to-light-bg">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 opacity-0 animate-fade-in-up" style={{ animationDelay: '1600ms' }}>
-          <div className="text-center mb-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 opacity-0 animate-fade-in-up" style={{ animationDelay: '1600ms' }}>
+          <div className="text-center mb-8">
             <h2 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Wat Gebruikers Zeggen</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">Ontdek waarom duizenden mensen Gifteez gebruiken voor hun cadeau-ideeën</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 max-w-7xl mx-auto">
             {testimonials.map((testimonial, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl p-8 border border-gray-100 opacity-0 animate-fade-in-up transform hover:scale-105 transition-all duration-300"
+                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl p-6 border border-gray-100 opacity-0 animate-fade-in-up transform hover:scale-105 transition-all duration-300"
                 style={{ animationDelay: `${1600 + index * 100}ms` }}
               >
                 <TestimonialCard testimonial={testimonial} />
