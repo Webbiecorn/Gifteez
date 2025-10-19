@@ -1,7 +1,7 @@
 # 🏗️ Code Architectuur Verbetering - Implementatieplan
 
 **Datum:** 19 oktober 2025  
-**Status:** In Progress (6/7 voltooid)
+**Status:** In Progress (7/7 voltooid)
 
 ---
 
@@ -266,6 +266,11 @@ const variant = featureFlags.getABTestVariant('quiz-redesign');
 - **Clear APIs**: Easy to use, hard to misuse
 - **Good defaults**: Works out of the box
 
+### Analytics & Experimentation
+- **Unified event schema**: Consistente tracking
+- **Funnel tracking**: Begrijp user journey
+- **A/B testing**: Optimize conversions
+
 ---
 
 ## 📊 Impact Schatting
@@ -278,15 +283,143 @@ const variant = featureFlags.getABTestVariant('quiz-redesign');
 | Env Management | ⭐⭐⭐ Medium | Laag | P1 |
 | Feature Flags | ⭐⭐⭐⭐ Hoog | Medium | P1 |
 | Error Boundaries | ⭐⭐⭐ Medium | Medium | P1 |
+| Analytics & A/B | ⭐⭐⭐⭐⭐ Zeer Hoog | Medium | P0 |
+
+---
+
+## ✅ Geïmplementeerd (7/7)
+
+### 7. Analytics & Experimentation Framework (~1,400 lines)
+
+**Services:**
+- ✅ `services/analyticsEventService.ts` (380 lines)
+  * Unified event schema (view_product, click_affiliate, start_giftfinder, apply_filter, share_pin)
+  * Batch product impression tracking
+  * Session management
+  * GTM dataLayer integration
+
+- ✅ `services/funnelTrackingService.ts` (350 lines)
+  * Multi-step funnel tracking (giftfinder_flow, deals_flow, category_flow, blog_flow)
+  * Drop-off rate calculation
+  * Time-per-step measurement
+  * Conversion metrics & analytics
+  * Session lifecycle management
+
+- ✅ `services/abTestingService.ts` (450 lines)
+  * Deterministic variant assignment (hash-based)
+  * Multi-variant support (A/B/C/D/...)
+  * Conversion tracking with time measurement
+  * Statistical significance testing
+  * Winning variant identification
+
+**Hooks:**
+- ✅ `hooks/useFunnelTracking.ts` (100 lines)
+  * React hook for funnel tracking
+  * Auto-lifecycle management (auto-start/end)
+  * Step completion tracking
+  * Session retrieval
+
+- ✅ `hooks/useABTest.ts` (100 lines)
+  * React hook for A/B tests
+  * Auto variant assignment on mount
+  * Conversion tracking helper
+  * Metrics retrieval
+  * Winning variant check
+
+**Documentation:**
+- ✅ `ANALYTICS_EXPERIMENTATION_PLAN.md` (600 lines)
+  * Complete architecture overview
+  * Event schema definitions (6 event types)
+  * Funnel definitions (4 funnels)
+  * GTM configuration guide
+  * Testing procedures
+
+- ✅ `ANALYTICS_DEPLOYMENT_GUIDE.md` (500 lines)
+  * Step-by-step deployment guide
+  * GTM tag/trigger configuration
+  * Testing checklist
+  * Success metrics
+  * Privacy & GDPR compliance
+
+**Examples:**
+- ✅ `examples/HomePage_Integration_Example.tsx` (200 lines)
+  * Real-world A/B test examples
+  * Hero CTA text variants
+  * Hero image style variants
+  * Newsletter position variants
+  * Funnel tracking integration
+
+- ✅ `examples/GiftFinderPage_Integration_Example.tsx` (250 lines)
+  * GiftFinder-specific analytics
+  * Filter tracking (occasion, budget, recipient, interests)
+  * Product impression tracking
+  * Affiliate click tracking
+  * GTM event structure documentation
+
+**Features:**
+- **Event Schema**: 6 unified event types (view_product, click_affiliate, start_giftfinder, apply_filter, share_pin, funnel_step_complete)
+- **Funnel Tracking**: 4 predefined funnels with drop-off analysis
+- **A/B Testing**: Hash-based deterministic assignment, multi-variant support, conversion tracking
+- **Privacy**: GDPR compliant, localStorage-based, non-identifying session IDs
+- **GTM Integration**: Complete dataLayer support, 13 custom variables, 8 custom events
+
+**Gebruik:**
+```typescript
+// A/B Testing
+import { useABTest } from '../hooks/useABTest';
+
+const { variant, trackConversion } = useABTest('hero_cta_test', {
+  A: 'Vind het perfecte cadeau',
+  B: 'Start GiftFinder',
+  C: 'Ontdek jouw ideale cadeau'
+});
+
+<Button onClick={() => {
+  trackConversion('click');
+  navigateTo('giftFinder');
+}}>
+  {variant} →
+</Button>
+
+// Funnel Tracking
+import { useFunnelTracking } from '../hooks/useFunnelTracking';
+
+const { trackStep } = useFunnelTracking('giftfinder_flow');
+
+useEffect(() => {
+  trackStep('start_giftfinder');
+}, []);
+
+const handleFilterChange = (filter) => {
+  setFilter(filter);
+  trackStep('apply_filters');
+};
+
+// Analytics Events
+import { 
+  trackViewProduct, 
+  trackClickAffiliate,
+  trackProductImpressions 
+} from '../services/analyticsEventService';
+
+// Track product view
+trackViewProduct(product, 1, 'giftfinder_results');
+
+// Track affiliate click
+trackClickAffiliate(product, 'giftfinder', 'result_card', 1);
+
+// Batch track product impressions
+trackProductImpressions(products, 'deals_page');
+```
 
 ---
 
 ## 🚀 Deployment Plan
 
-### Phase 1: Infrastructure (Week 1)
-- Deploy logger, cache, env management
-- Test in development
-- Monitor for issues
+### Phase 1: Infrastructure (Week 1) ✅ COMPLEET
+- ✅ Deploy logger, cache, env management
+- ✅ Test in development
+- ✅ Monitor for issues
 
 ### Phase 2: API Migration (Week 2)
 - Migrate affiliate services to ApiClient
@@ -298,28 +431,67 @@ const variant = featureFlags.getABTestVariant('quiz-redesign');
 - Setup error boundaries
 - Integrate analytics
 
-### Phase 4: Optimization (Week 4)
+### Phase 4: Analytics & A/B Testing (Week 4) 🆕
+- Integrate analytics events in GiftFinderPage
+- Setup A/B tests on HomePage (hero CTA, image style)
+- Configure GTM tags & triggers (13 variables, 8 events)
+- Test funnel tracking in production
+- Monitor conversion metrics
+
+### Phase 5: Optimization (Week 5)
 - Fine-tune cache TTLs
 - Adjust rate limits
-- A/B test rollouts
+- Analyze A/B test results
+- Pick winning variants
+- Optimize funnel drop-off points
 
 ---
 
-## 📝 Documentatie TODO
+## 📝 Documentatie
 
-- [ ] API Client usage guide
-- [ ] Logger best practices
-- [ ] Cache strategy document
-- [ ] Feature flag workflow
+**Compleet:**
+- ✅ API Client usage guide → `lib/apiClient.ts` (comments)
+- ✅ Logger best practices → `lib/logger.ts` (comments)
+- ✅ Cache strategy document → `lib/cache.ts` (comments)
+- ✅ Feature flag workflow → `lib/featureFlags.ts` (comments)
+- ✅ Environment setup guide → `.env.example`
+- ✅ Analytics & Experimentation → `ANALYTICS_EXPERIMENTATION_PLAN.md`
+- ✅ Analytics Deployment → `ANALYTICS_DEPLOYMENT_GUIDE.md`
+
+**TODO:**
 - [ ] Error handling guidelines
-- [ ] Environment setup guide
+- [ ] Integration tests voor analytics
+- [ ] A/B test results dashboard component
+- [ ] Funnel visualization component
+
+---
+
+## 🎯 Success Metrics
+
+### **Week 1-2 (Baseline)**
+- Establish baseline funnel metrics
+- Track current drop-off rates
+- Measure average time per step
+
+### **Week 3-4 (A/B Testing)**
+- Run 3 A/B tests: Hero CTA (3 variants), Hero image (3 variants), Newsletter position (3 variants)
+- Collect 1,000+ impressions per variant
+- Achieve 95% statistical significance
+
+### **Month 2+ (Optimization)**
+- **Target**: 10% increase in GiftFinder → Affiliate click rate
+- **Target**: 20% reduction in funnel drop-off
+- **Target**: 15% increase in average session duration
+- **Target**: 5% increase in overall conversion rate
 
 ---
 
 **Next Actions:**
-1. Fix Error Boundary TypeScript issues
-2. Test all new services in development
-3. Create integration tests
-4. Write migration guide voor bestaande code
-5. Deploy to staging environment
+1. ✅ Analytics & Experimentation Framework
+2. Integrate analytics in GiftFinderPage
+3. Setup A/B tests on HomePage
+4. Configure GTM tags (13 variables, 8 events)
+5. Deploy to staging & test
+6. Monitor metrics & iterate
+
 
