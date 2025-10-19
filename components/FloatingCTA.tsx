@@ -9,12 +9,13 @@ interface FloatingCTAProps {
 
 /**
  * FloatingCTA - Persistent call-to-action that appears at the bottom of content pages
- * Shows after user has scrolled 300px down the page
+ * Shows after user has navigated to 5 different pages AND scrolled 300px down
  * Can be dismissed, preference stored in localStorage
  */
 const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+  const [hasEnoughPageViews, setHasEnoughPageViews] = useState(false);
 
   useEffect(() => {
     // Check if user has previously dismissed
@@ -24,9 +25,32 @@ const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
       return;
     }
 
+    // Track page navigation count
+    const trackPageNavigation = () => {
+      const navigationKey = 'floatingCTA_pageNavigations';
+      const currentCount = parseInt(localStorage.getItem(navigationKey) || '0', 10);
+      const newCount = currentCount + 1;
+      
+      localStorage.setItem(navigationKey, newCount.toString());
+      
+      // Show CTA after 5 page navigations
+      if (newCount >= 5) {
+        setHasEnoughPageViews(true);
+      }
+    };
+
+    // Check current count on mount
+    const currentCount = parseInt(localStorage.getItem('floatingCTA_pageNavigations') || '0', 10);
+    if (currentCount >= 5) {
+      setHasEnoughPageViews(true);
+    } else {
+      // Track this page view
+      trackPageNavigation();
+    }
+
     const handleScroll = () => {
-      // Show CTA after scrolling 300px
-      const shouldShow = window.scrollY > 300;
+      // Show CTA after scrolling 300px AND having 5+ page views
+      const shouldShow = window.scrollY > 300 && hasEnoughPageViews;
       setIsVisible(shouldShow);
     };
 
@@ -34,7 +58,7 @@ const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [hasEnoughPageViews]);
 
   const handleDismiss = () => {
     setIsDismissed(true);
@@ -93,9 +117,9 @@ const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
               onClick={() => navigateTo('categories')}
               leftIcon={<SparklesIcon className="w-4 h-4" />}
               fullWidth
-              aria-label="Bekijk duurzame cadeaus"
+              aria-label="Bekijk categorieën"
             >
-              Bekijk Duurzame Cadeaus
+              Bekijk Categorieën
             </Button>
           </div>
         </div>
