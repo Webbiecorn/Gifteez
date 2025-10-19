@@ -803,7 +803,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               )
             )}
             {gifts.length > 0 && (
-              <div className="motion-safe:opacity-0 motion-safe:animate-fade-in">
+              <div className="animate-fade-in">
                 {/* Personalized AI Intro */}
                 {personalizedIntro && (
                   <div className="mb-8 p-6 bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/20 rounded-xl border-2 border-primary/20 shadow-lg">

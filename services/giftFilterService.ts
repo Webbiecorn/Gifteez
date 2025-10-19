@@ -4,6 +4,7 @@ import { findGifts as originalFindGifts } from './geminiService';
 
 const MAX_RESULT_COUNT = 6;
 const MIN_PARTNER_RESULTS = 3;
+const MIN_SLYGAD_RESULTS = 3;
 
 const normalizeRetailerName = (name?: string): string => (name ? name.toLowerCase() : '');
 
@@ -153,6 +154,31 @@ const selectPartnerGifts = (
     return selected;
   }
 
+  const slygadRanking = groups.slygad
+    .filter(gift => !usedNames.has(gift.productName))
+    .map(gift => ({ gift, score: computePartnerScore(gift) }))
+    .sort((a, b) => b.score - a.score);
+
+  const guaranteedSlygadCount = Math.min(
+    MIN_SLYGAD_RESULTS,
+    slygadRanking.length,
+    remaining
+  );
+
+  if (guaranteedSlygadCount > 0) {
+    const guaranteedNames = new Set<string>();
+    slygadRanking.slice(0, guaranteedSlygadCount).forEach(entry => {
+      selected.push(entry.gift);
+      usedNames.add(entry.gift.productName);
+      guaranteedNames.add(entry.gift.productName);
+      remaining -= 1;
+    });
+
+    if (guaranteedNames.size > 0) {
+      groups.slygad = groups.slygad.filter(gift => !guaranteedNames.has(gift.productName));
+    }
+  }
+
   const states = initialiseGroupStates(groups, preferredPartner);
 
   const consumeFromState = (state: PartnerGroupState) => {
@@ -262,10 +288,56 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       })
     ).length;
 
-    const combinedResults = [...limitedAmazonGifts, ...partnerSelections].slice(0, MAX_RESULT_COUNT);
+    let combinedResults = [...limitedAmazonGifts, ...partnerSelections];
+
+    if (combinedResults.length < MAX_RESULT_COUNT) {
+      const usedNamesForFill = new Set(combinedResults.map(gift => gift.productName));
+
+      const additionalAmazon = pureAmazonGifts
+        .filter(gift => !usedNamesForFill.has(gift.productName))
+        .slice(0, MAX_RESULT_COUNT - combinedResults.length);
+
+      additionalAmazon.forEach(gift => {
+        combinedResults.push(gift);
+        usedNamesForFill.add(gift.productName);
+      });
+
+      if (combinedResults.length < MAX_RESULT_COUNT) {
+        const partnerFallbackPool = allProductBasedGifts
+          .filter(gift => gift.retailers && gift.retailers.length > 0 && !usedNamesForFill.has(gift.productName))
+          .map(gift => ({ gift, score: computePartnerScore(gift) }))
+          .sort((a, b) => b.score - a.score);
+
+        partnerFallbackPool
+          .slice(0, MAX_RESULT_COUNT - combinedResults.length)
+          .forEach(entry => {
+            combinedResults.push(entry.gift);
+            usedNamesForFill.add(entry.gift.productName);
+          });
+      }
+    }
+
+    if (combinedResults.length > MAX_RESULT_COUNT) {
+      combinedResults = combinedResults.slice(0, MAX_RESULT_COUNT);
+    }
+
+    const finalAmazonCount = combinedResults.filter(gift =>
+      gift.retailers?.some(retailer => normalizeRetailerName(retailer.name).includes('amazon'))
+    ).length;
+
+    const finalCoolblueCount = combinedResults.filter(gift =>
+      gift.retailers?.some(retailer => normalizeRetailerName(retailer.name).includes('coolblue'))
+    ).length;
+
+    const finalSlygadCount = combinedResults.filter(gift =>
+      gift.retailers?.some(retailer => {
+        const name = normalizeRetailerName(retailer.name);
+        return name.includes('shop like you give a damn') || name.includes('slygad');
+      })
+    ).length;
 
     console.log(
-      `🎯 Resultaat mix: ${combinedResults.length} totaal -> Amazon: ${limitedAmazonGifts.length}, Coolblue: ${coolblueSelectedCount}, SLYGAD: ${slygadSelectedCount}`
+      `🎯 Resultaat mix: ${combinedResults.length} totaal -> Amazon: ${finalAmazonCount}, Coolblue: ${finalCoolblueCount}, SLYGAD: ${finalSlygadCount}`
     );
 
     const sanitizedResults = combinedResults.map(gift => ({
