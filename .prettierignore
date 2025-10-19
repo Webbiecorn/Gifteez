@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build output
+dist
+build
+.firebase
+functions/lib
+
+# Coverage
+coverage
+.nyc_output
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated files
+public/sitemap.xml
+public/rss.xml
+public/favicon*.png
+public/apple-touch-icon*.png
+public/manifest.webmanifest
+
+# Lock files (generated)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Scripts
+scripts/*.mjs
