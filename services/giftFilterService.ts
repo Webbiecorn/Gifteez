@@ -248,7 +248,8 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       searchParams.recipient,
       searchParams.budget,
       searchParams.occasion,
-      searchParams.interests
+      searchParams.interests,
+      searchParams.gender
     )
 
     const pureAmazonGifts = amazonGifts

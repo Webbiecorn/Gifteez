@@ -31,24 +31,31 @@ import {
 } from '../services/semanticLabelService'
 
 const occasions = ['Verjaardag', 'Kerstmis', 'Valentijnsdag', 'Jubileum', 'Zomaar']
+const genders = ['Man', 'Vrouw', 'Anders']
 const recipients = ['Partner', 'Vriend(in)', 'Familielid', 'Collega', 'Kind', 'Iemand bijzonder']
+
+// Interests with gender relevance
 const baseSuggestedInterests = [
-  { name: 'Koken', icon: '🍳' },
-  { name: 'Tech', icon: '💻' },
-  { name: 'Boeken', icon: '📚' },
-  { name: 'Reizen', icon: '✈️' },
-  { name: 'Sport', icon: '⚽' },
-  { name: 'Duurzaamheid', icon: '🌱' },
-  { name: 'Wellness', icon: '🧘' },
-  { name: 'Gaming', icon: '🎮' },
-  { name: 'Mode', icon: '👗' },
-  { name: 'Muziek', icon: '🎵' },
-  { name: 'Grooming', icon: '🪒' },
-  { name: 'BBQ', icon: '🔥' },
-  { name: 'Gadgets', icon: '🛠️' },
-  { name: 'Sieraden', icon: '💍' },
-  { name: 'Selfcare', icon: '💆' },
-  { name: 'Creatief', icon: '🎨' },
+  { name: 'Koken', icon: '🍳', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Tech', icon: '💻', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Boeken', icon: '📚', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Reizen', icon: '✈️', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Sport', icon: '⚽', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Duurzaamheid', icon: '🌱', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Wellness', icon: '🧘', genders: ['Vrouw', 'Anders'] },
+  { name: 'Gaming', icon: '🎮', genders: ['Man', 'Anders'] },
+  { name: 'Mode', icon: '👗', genders: ['Vrouw', 'Anders'] },
+  { name: 'Muziek', icon: '🎵', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Grooming', icon: '🪒', genders: ['Man', 'Anders'] },
+  { name: 'BBQ', icon: '🔥', genders: ['Man', 'Anders'] },
+  { name: 'Gadgets', icon: '🛠️', genders: ['Man', 'Anders'] },
+  { name: 'Sieraden', icon: '💍', genders: ['Vrouw', 'Anders'] },
+  { name: 'Selfcare', icon: '💆', genders: ['Vrouw', 'Anders'] },
+  { name: 'Creatief', icon: '🎨', genders: ['Vrouw', 'Anders'] },
+  { name: 'Auto', icon: '🚗', genders: ['Man', 'Anders'] },
+  { name: 'Beauty', icon: '💄', genders: ['Vrouw', 'Anders'] },
+  { name: 'Fietsen', icon: '🚴', genders: ['Man', 'Vrouw', 'Anders'] },
+  { name: 'Fotografie', icon: '📷', genders: ['Man', 'Vrouw', 'Anders'] },
 ]
 
 const getRecipientNarrative = (recipient: string) => {
@@ -170,6 +177,7 @@ interface GiftFinderPageProps {
 }
 
 const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast }) => {
+  const [gender, setGender] = useState<string>(genders[0])
   const [recipient, setRecipient] = useState<string>(recipients[0])
   const [budget, setBudget] = useState<number>(50)
   const [occasion, setOccasion] = useState<string>(occasions[0])
@@ -192,11 +200,13 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const auth = useContext(AuthContext)
 
   const suggestedInterests = useMemo(() => {
-    // All interests are now available to everyone - no gender-based filtering
-    return baseSuggestedInterests.filter(
-      (interest, index, array) => array.findIndex((item) => item.name === interest.name) === index
-    )
-  }, [])
+    // Filter interests based on selected gender
+    return baseSuggestedInterests
+      .filter((interest) => interest.genders.includes(gender))
+      .filter(
+        (interest, index, array) => array.findIndex((item) => item.name === interest.name) === index
+      )
+  }, [gender])
 
   const fallbackSearchQuery = useMemo(() => {
     const base = [recipient, occasion].filter(Boolean).join(' ')
@@ -411,11 +421,11 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       setFeedbackSubmitted(false)
       setRelevanceFeedback('')
       setFeedbackSubmitting(false)
-      const searchQuery = `${recipient} ${occasion} ${interests} budget:€${budget}`
+      const searchQuery = `${gender} ${recipient} ${occasion} ${interests} budget:€${budget}`
       pinterestSearch(searchQuery, `search_${Date.now()}`)
       gaSearch(searchQuery)
       try {
-        const searchParams: GiftSearchParams = { recipient, budget, occasion, interests }
+        const searchParams: GiftSearchParams = { recipient, budget, occasion, interests, gender }
         const results = await findGiftsWithFilters(searchParams)
         const enhancedResults = enhanceGiftsWithMetadata(results)
 
@@ -726,6 +736,33 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     </option>
                   ))}
                 </select>
+              </div>
+
+              {/* Gender Selection */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-purple-500/10 rounded-lg">
+                    <span className="text-2xl">👤</span>
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-bold text-primary">
+                      Man of vrouw?
+                    </h3>
+                    <p className="text-sm text-gray-600">Help ons betere suggesties te geven</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {genders.map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      onClick={() => setGender(g)}
+                      className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${gender === g ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'}`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Budget Slider */}

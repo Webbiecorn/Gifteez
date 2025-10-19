@@ -57,6 +57,7 @@ export interface GiftSearchParams {
   budget: number
   occasion: string
   interests: string
+  gender?: string
   filters?: Partial<AdvancedFilters>
 }
 

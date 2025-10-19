@@ -49,7 +49,8 @@ export const findGifts = async (
   recipient: string,
   budget: number,
   occasion: string,
-  interests?: string
+  interests?: string,
+  gender?: string
 ): Promise<Gift[]> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined
   if (!apiKey) {
@@ -59,6 +60,7 @@ export const findGifts = async (
   const ai = new GoogleGenAI({ apiKey })
 
   const interestsPrompt = interests ? `- Hobbies/Interests: ${interests}` : ''
+  const genderPrompt = gender ? `- Gender: ${gender}` : ''
 
   const prompt = `
     Find 3 to 5 perfect gift ideas for the following criteria:
@@ -66,6 +68,11 @@ export const findGifts = async (
     - Budget: Up to ${budget} euros
     - Occasion: ${occasion}
     ${interestsPrompt}
+    ${genderPrompt}
+
+    ${gender === 'Man' ? 'Focus on gifts typically preferred by men such as tech gadgets, tools, grooming products, sports equipment, etc.' : ''}
+    ${gender === 'Vrouw' ? 'Focus on gifts typically preferred by women such as jewelry, beauty products, wellness items, fashion accessories, etc.' : ''}
+    ${gender === 'Anders' ? 'Provide gender-neutral gift suggestions suitable for anyone.' : ''}
 
     Provide modern, popular, and thoughtful gift suggestions available in the Netherlands.
     For each gift, provide:
