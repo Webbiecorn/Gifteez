@@ -9,60 +9,79 @@ interface FloatingCTAProps {
 
 /**
  * FloatingCTA - Persistent call-to-action that appears at the bottom of content pages
- * Shows after user has navigated to 5 different pages AND scrolled 300px down
- * Can be dismissed, preference stored in localStorage
+ * Shows after user has clicked 5 times OR after 2 minutes without using GiftFinder
+ * Can be dismissed once - never shows again after dismissal
  */
 const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [isDismissed, setIsDismissed] = useState(false)
-  const [hasEnoughPageViews, setHasEnoughPageViews] = useState(false)
+  const [shouldShow, setShouldShow] = useState(false)
 
   useEffect(() => {
-    // Check if user has previously dismissed
+    // Check if user has previously dismissed (permanent)
     const dismissed = localStorage.getItem('floatingCTA_dismissed')
     if (dismissed === 'true') {
       setIsDismissed(true)
       return
     }
 
-    // Track page navigation count
-    const trackPageNavigation = () => {
-      const navigationKey = 'floatingCTA_pageNavigations'
-      const currentCount = parseInt(localStorage.getItem(navigationKey) || '0', 10)
-      const newCount = currentCount + 1
+    // Check if already shown once this session
+    const alreadyShown = sessionStorage.getItem('floatingCTA_shown')
+    if (alreadyShown === 'true') {
+      return
+    }
 
-      localStorage.setItem(navigationKey, newCount.toString())
-
-      // Show CTA after 5 page navigations
-      if (newCount >= 5) {
-        setHasEnoughPageViews(true)
+    // Check if user has used GiftFinder recently (within last 24h)
+    const lastGiftFinderUse = localStorage.getItem('giftFinder_lastUse')
+    if (lastGiftFinderUse) {
+      const timeSinceUse = Date.now() - parseInt(lastGiftFinderUse, 10)
+      const oneDayInMs = 24 * 60 * 60 * 1000
+      if (timeSinceUse < oneDayInMs) {
+        // User used GiftFinder recently, don't show CTA
+        return
       }
     }
 
-    // Check current count on mount
-    const currentCount = parseInt(localStorage.getItem('floatingCTA_pageNavigations') || '0', 10)
-    if (currentCount >= 5) {
-      setHasEnoughPageViews(true)
-    } else {
-      // Track this page view
-      trackPageNavigation()
+    // Track clicks (any click on the page)
+    let clickCount = 0
+    const handleClick = () => {
+      clickCount++
+      if (clickCount >= 5) {
+        setShouldShow(true)
+      }
     }
 
-    const handleScroll = () => {
-      // Show CTA after scrolling 300px AND having 5+ page views
-      const shouldShow = window.scrollY > 300 && hasEnoughPageViews
-      setIsVisible(shouldShow)
+    // Timer: show after 2 minutes (120 seconds)
+    const timer = setTimeout(() => {
+      setShouldShow(true)
+    }, 120000) // 2 minutes
+
+    document.addEventListener('click', handleClick, { passive: true })
+
+    return () => {
+      document.removeEventListener('click', handleClick)
+      clearTimeout(timer)
     }
+  }, [])
 
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [hasEnoughPageViews])
+  // Show the CTA when shouldShow becomes true
+  useEffect(() => {
+    if (shouldShow && !isDismissed) {
+      setIsVisible(true)
+      sessionStorage.setItem('floatingCTA_shown', 'true')
+    }
+  }, [shouldShow, isDismissed])
 
   const handleDismiss = () => {
     setIsDismissed(true)
+    setIsVisible(false)
     localStorage.setItem('floatingCTA_dismissed', 'true')
+  }
+
+  const handleGiftFinderClick = () => {
+    // Track that user used GiftFinder
+    localStorage.setItem('giftFinder_lastUse', Date.now().toString())
+    navigateTo('giftFinder')
   }
 
   if (isDismissed || !isVisible) return null
@@ -103,7 +122,7 @@ const FloatingCTA: React.FC<FloatingCTAProps> = ({ navigateTo }) => {
             <Button
               variant="accent"
               size="sm"
-              onClick={() => navigateTo('giftFinder')}
+              onClick={handleGiftFinderClick}
               leftIcon={<GiftIcon className="w-4 h-4" />}
               fullWidth
               aria-label="Start de GiftFinder"

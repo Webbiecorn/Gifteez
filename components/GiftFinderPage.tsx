@@ -401,6 +401,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
     async (e: React.FormEvent) => {
       e.preventDefault()
 
+      // Track GiftFinder usage for FloatingCTA
+      localStorage.setItem('giftFinder_lastUse', Date.now().toString())
+
       // Rate limiting check
       const userId = auth?.currentUser?.email || 'anonymous'
       const rateLimitKey = `search:${userId}`
