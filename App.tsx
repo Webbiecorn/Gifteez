@@ -299,7 +299,7 @@ const App: React.FC = () => {
             <div key={product.id} className="h-full">
               {/* Placeholder for product card - the actual component will be imported */}
               <div className="bg-white rounded-lg shadow-sm p-4 h-full flex flex-col">
-                <h3 className="font-semibold text-lg">{product.title}</h3>
+                <h3 className="font-semibold text-lg">{product.name}</h3>
                 <p className="text-accent font-bold mt-2">{product.price}</p>
                 <a 
                   href={product.affiliateLink}
