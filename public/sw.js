@@ -1,5 +1,5 @@
 // Gifteez PWA Service Worker - Enhanced
-const CACHE_VERSION = 'gifteez-v2-2025-10-19';
+const CACHE_VERSION = 'gifteez-v3-2025-10-19-17u30';
 const CACHE_NAMES = {
   static: `${CACHE_VERSION}-static`,
   dynamic: `${CACHE_VERSION}-dynamic`,
