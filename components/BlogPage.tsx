@@ -416,8 +416,21 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
   const handleCategoryQuickSelect = (category: string) => {
     setSelectedCategory(category)
     if (typeof window !== 'undefined') {
-      const filtersEl = document.getElementById('blog-filters')
-      filtersEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      // Small delay to ensure state update and re-render
+      setTimeout(() => {
+        const resultsEl = document.getElementById('blog-results')
+        resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+    }
+  }
+
+  const handleCategoryFilterClick = (category: string) => {
+    setSelectedCategory(category)
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        const resultsEl = document.getElementById('blog-results')
+        resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
     }
   }
 
@@ -711,7 +724,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
                   <button
                     key={category}
                     type="button"
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => handleCategoryFilterClick(category)}
                     aria-pressed={selectedCategory === category}
                     className={`rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${selectedCategory === category ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                   >
@@ -789,7 +802,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
           </div>
         </section>
 
-        <section className="space-y-8">
+        <section id="blog-results" className="space-y-8">
           <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">
