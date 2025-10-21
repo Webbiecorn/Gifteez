@@ -1000,7 +1000,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         className="space-y-6 animate-fade-in-up"
         style={{ animationDelay: `${120 + index * 70}ms` }}
       >
-        <header className="space-y-3 relative">
+        <header className="space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
             <GiftIcon className="h-4 w-4" />
             Curated selectie
@@ -1012,7 +1012,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               </h3>
               <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
             </div>
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex flex-col items-end gap-3 shrink-0">
               <button
                 onClick={() =>
                   navigateTo('categoryDetail', {
@@ -1047,6 +1047,44 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   </svg>
                 </span>
               </button>
+              
+              {/* Navigation buttons onder de knop */}
+              <div className="hidden md:flex items-center gap-2">
+                {/* Progress dots */}
+                {items.length > 3 && (
+                  <div className="flex items-center gap-1.5 mr-2">
+                    {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+                      const isActive = Math.floor(currentIndex / itemsPerView) === idx
+                      return (
+                        <div
+                          key={idx}
+                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                            isActive ? 'w-6 bg-rose-500' : 'w-1.5 bg-slate-300'
+                          }`}
+                        />
+                      )
+                    })}
+                  </div>
+                )}
+                
+                {/* Navigation buttons */}
+                <button
+                  onClick={() => carouselRef.current?.scroll('left')}
+                  disabled={!canScrollLeft}
+                  className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+                  aria-label="Vorige items"
+                >
+                  <ChevronLeftIcon className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => carouselRef.current?.scroll('right')}
+                  disabled={!canScrollRight}
+                  className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+                  aria-label="Volgende items"
+                >
+                  <ChevronRightIcon className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
@@ -1077,44 +1115,6 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             setCurrentIndex(controls.currentIndex)
           }}
         />
-
-        {/* Custom navigation in header - positioned absolutely */}
-        <div className="hidden md:flex items-center gap-2 absolute top-3 right-0" style={{ zIndex: 10 }}>
-          {/* Progress dots */}
-          {items.length > 3 && (
-            <div className="flex items-center gap-1.5 mr-2">
-              {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
-                const isActive = Math.floor(currentIndex / itemsPerView) === idx
-                return (
-                  <div
-                    key={idx}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      isActive ? 'w-6 bg-rose-500' : 'w-1.5 bg-slate-300'
-                    }`}
-                  />
-                )
-              })}
-            </div>
-          )}
-          
-          {/* Navigation buttons */}
-          <button
-            onClick={() => carouselRef.current?.scroll('left')}
-            disabled={!canScrollLeft}
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
-            aria-label="Vorige items"
-          >
-            <ChevronLeftIcon className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => carouselRef.current?.scroll('right')}
-            disabled={!canScrollRight}
-            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
-            aria-label="Volgende items"
-          >
-            <ChevronRightIcon className="w-5 h-5" />
-          </button>
-        </div>
       </article>
     )
   }
