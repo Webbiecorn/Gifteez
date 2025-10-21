@@ -816,7 +816,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <div className="mt-auto space-y-2.5">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
-                    className={`rounded-lg bg-rose-500 font-bold text-white ${priceBadgeClass}`}
+                    className={`rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 font-bold text-white shadow-md ${priceBadgeClass}`}
                   >
                     {formatPrice(deal.price) ?? 'Prijs op aanvraag'}
                   </span>
