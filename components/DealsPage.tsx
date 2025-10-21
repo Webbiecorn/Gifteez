@@ -652,6 +652,27 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const buttonPaddingClass =
       variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm'
 
+    // Enhance product name for gift sets
+    const enhanceProductName = (name: string): string => {
+      const lower = name.toLowerCase()
+      // If it's a gift set for women, make it more appealing
+      if (lower.includes('set') || lower.includes('box') || lower.includes('kit')) {
+        // Don't modify if already has "voor haar" or similar
+        if (lower.includes('voor haar') || lower.includes('vrouwen') || lower.includes('dames')) {
+          return name
+        }
+        // Add female-focused language for beauty/wellness/spa sets
+        if (lower.includes('beauty') || lower.includes('spa') || lower.includes('skincare') || 
+            lower.includes('wellness') || lower.includes('bath') || lower.includes('badolie') ||
+            lower.includes('body') || lower.includes('verzorging')) {
+          return `${name} - Luxe Verwenset voor Haar`
+        }
+      }
+      return name
+    }
+
+    const displayName = enhanceProductName(deal.name)
+
     // Track impression when card becomes visible
     const cardRef = useRef<HTMLDivElement>(null)
 
@@ -688,7 +709,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     }
 
     return (
-      <div ref={cardRef} className="h-full">
+      <div ref={cardRef} className="h-full group/card">
+        {/* Glow effect voor gift set producten */}
+        {deal.name.toLowerCase().includes('set') && (
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-400 via-purple-400 to-rose-400 rounded-2xl blur opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" />
+        )}
+        
         <div
           className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
             isTopDeal
@@ -751,7 +777,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
               <div className="space-y-1.5">
                 <h3 className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug">
-                  {deal.name}
+                  {displayName}
                 </h3>
                 {variant === 'feature' && deal.description && (
                   <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">
@@ -840,7 +866,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const lowerTitle = title.toLowerCase()
 
     if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
-      return 'Amazon Gift Sets die indruk maken'
+      return 'Luxe Gift Sets voor Vrouwen - Direct Indruk Maken'
     }
 
     if (lowerTitle.includes('keuken')) {
@@ -863,7 +889,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       const lowerTitle = title.toLowerCase()
 
       if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
-        return `Onze selectie van ${count} Amazon gift sets geeft direct het wow-effect. Perfect als last-minute cadeau: luxe verpakkingen, prime-levering en klaar om te geven.`
+        return `✨ Speciaal samengestelde cadeauboxen voor haar. ${count} prachtige sets met beauty, wellness en lifestyle producten. Luxe verpakkingen, snelle levering via Amazon Prime, en direct klaar om cadeau te geven. Perfect voor vriendinnen, moeders, zussen of een verwenmoment voor jezelf.`
       }
 
       if (lowerTitle.includes('keuken')) {
@@ -935,10 +961,15 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
     return (
       <article
-        className="space-y-6 animate-fade-in-up"
+        className="space-y-6 animate-fade-in-up relative"
         style={{ animationDelay: `${120 + index * 70}ms` }}
       >
-        <header className="space-y-3">
+        {/* Glow effect background voor gift sets */}
+        {category.title.toLowerCase().includes('gift') && category.title.toLowerCase().includes('set') && (
+          <div className="absolute -inset-4 bg-gradient-to-r from-pink-300/20 via-purple-300/20 to-rose-300/20 rounded-3xl blur-xl animate-pulse-slow" />
+        )}
+        
+        <header className="space-y-3 relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
             <GiftIcon className="h-4 w-4" />
             Curated selectie
@@ -950,7 +981,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               </h3>
               <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
             </div>
-            <Button
+            <button
               onClick={() =>
                 navigateTo('categoryDetail', {
                   categoryId: category.id,
@@ -959,11 +990,31 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   products: items,
                 })
               }
-              variant="secondary"
-              className="shrink-0"
+              className="group relative shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
             >
-              Bekijk alles
-            </Button>
+              {/* Animated gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+              </div>
+              
+              {/* Glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
+              
+              {/* Button content */}
+              <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Bekijk onze collectie
+                <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </button>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
