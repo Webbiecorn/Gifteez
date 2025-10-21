@@ -7,13 +7,35 @@
     <link>https://gifteez.nl</link>
     <description>Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.</description>
     <language>nl-NL</language>
-    <lastBuildDate>Sat, 18 Oct 2025 10:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 21 Oct 2025 10:00:00 GMT</lastBuildDate>
     <atom:link href="https://gifteez.nl/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://gifteez.nl/logo.png</url>
       <title>Gifteez</title>
       <link>https://gifteez.nl</link>
     </image>
+    <item>
+      <title>Deal Hunting 101: Zo scoor je altijd de beste cadeaudeals</title>
+      <link>https://gifteez.nl/blog/deal-hunting-tips-tricks</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/deal-hunting-tips-tricks</guid>
+      <description>Van Black Friday tot Prime Day: onze ultieme gids vol tips en tricks om scherpe cadeaudeals te vinden. Leer wanneer je moet shoppen, welke tools je nodig hebt en hoe je nooit meer te veel betaalt.</description>
+      <pubDate>Tue, 21 Oct 2025 10:00:00 GMT</pubDate>
+      <category>tips</category>
+      <enclosure url="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&amp;q=80" type="image/jpeg" />
+      <media:content url="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&amp;q=80" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&amp;q=80" />
+    </item>
+    <item>
+      <title>KOOLTHO Cocktail Shaker Set: Cadeauhit voor Thuisshakers</title>
+      <link>https://gifteez.nl/blog/kooltho-cocktail-shaker-set-review</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/kooltho-cocktail-shaker-set-review</guid>
+      <description>Deze 12-delige KOOLTHO cocktailset met personaliseerbare geschenkdoos tovert elke keuken om tot cocktailbar. Ideaal cadeau voor feestgangers, koppels en hobby-bartenders.</description>
+      <pubDate>Mon, 20 Oct 2025 10:00:00 GMT</pubDate>
+      <category>Cadeaugids</category>
+      <enclosure url="https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg" type="image/jpeg" />
+      <media:content url="https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg" />
+    </item>
     <item>
       <title>Shop Like You Give A Damn: Duurzame Cadeaus Met Impact</title>
       <link>https://gifteez.nl/blog/shop-like-you-give-a-damn-duurzame-cadeaus</link>

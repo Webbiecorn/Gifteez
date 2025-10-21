@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from '../services/firebase'
+import Breadcrumbs from './Breadcrumbs'
 import { MailIcon, CheckCircleIcon, UserIcon } from './IconComponents'
 import Meta from './Meta'
-import Breadcrumbs from './Breadcrumbs'
 import type { NavigateTo, ContactMessage } from '../types'
 
 interface ContactPageProps {
@@ -88,25 +88,41 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
             {/* Floating sparkles */}
             <div className="absolute top-[20%] left-[12%] animate-float-slow">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#a855f7" fillOpacity="0.3"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#a855f7"
+                  fillOpacity="0.3"
+                />
               </svg>
             </div>
             <div className="absolute top-[15%] right-[18%] animate-float-delayed">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#ec4899" fillOpacity="0.35"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#ec4899"
+                  fillOpacity="0.35"
+                />
               </svg>
             </div>
             <div className="absolute bottom-[25%] left-[15%] animate-float-slow">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#f43f5e" fillOpacity="0.4"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#f43f5e"
+                  fillOpacity="0.4"
+                />
               </svg>
             </div>
             <div className="absolute top-[35%] right-[10%] animate-float-delayed">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#a855f7" fillOpacity="0.35"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#a855f7"
+                  fillOpacity="0.35"
+                />
               </svg>
             </div>
-            
+
             {/* Gradient glows */}
             <div className="absolute top-[15%] right-[25%] w-80 h-80 bg-purple-300/20 rounded-full blur-3xl animate-pulse-slow" />
             <div className="absolute bottom-[20%] left-[20%] w-72 h-72 bg-pink-300/20 rounded-full blur-3xl animate-pulse-slower" />
@@ -132,7 +148,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
 
               {/* Description */}
               <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
-                Heb je een vraag, suggestie of opmerking? 
+                Heb je een vraag, suggestie of opmerking?
                 <span className="font-semibold text-purple-600"> We horen graag van je!</span>
               </p>
 
@@ -173,15 +189,12 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
 
         {/* Form Section */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
           {success ? (
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-12 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
                 <CheckCircleIcon className="w-10 h-10 text-green-600" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Bericht verzonden! 🎉
-              </h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Bericht verzonden! 🎉</h2>
               <p className="text-lg text-gray-600 mb-6">
                 Bedankt voor je bericht. We nemen zo snel mogelijk contact met je op.
               </p>
@@ -193,7 +206,10 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-12">
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 md:p-12"
+            >
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -257,9 +273,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
                   className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all resize-none"
                   disabled={loading}
                 />
-                <p className="mt-2 text-sm text-gray-500">
-                  Minimaal 10 karakters
-                </p>
+                <p className="mt-2 text-sm text-gray-500">Minimaal 10 karakters</p>
               </div>
 
               {error && (
@@ -301,7 +315,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
                   🎁 Hoe werkt de GiftFinder?
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Onze AI-aangedreven GiftFinder helpt je in 30 seconden het perfecte cadeau vinden. Vul simpelweg je voorkeuren in en krijg gepersonaliseerde suggesties.
+                  Onze AI-aangedreven GiftFinder helpt je in 30 seconden het perfecte cadeau vinden.
+                  Vul simpelweg je voorkeuren in en krijg gepersonaliseerde suggesties.
                 </p>
               </div>
 
@@ -310,7 +325,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
                   💰 Zijn jullie producten goedkoper?
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  We tonen producten van diverse retailers inclusief affiliate links. De prijs is hetzelfde, maar wij verdienen een kleine commissie die ons helpt gratis te blijven.
+                  We tonen producten van diverse retailers inclusief affiliate links. De prijs is
+                  hetzelfde, maar wij verdienen een kleine commissie die ons helpt gratis te
+                  blijven.
                 </p>
               </div>
 
@@ -319,7 +336,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
                   📦 Leveren jullie zelf?
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Nee, wij zijn een inspiratie platform. Je bestelt direct bij de retailer (zoals Amazon of Coolblue) waar je het product hebt gevonden.
+                  Nee, wij zijn een inspiratie platform. Je bestelt direct bij de retailer (zoals
+                  Amazon of Coolblue) waar je het product hebt gevonden.
                 </p>
               </div>
 
@@ -328,7 +346,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
                   ✉️ Nieuwsbrief aanmelden?
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Scroll naar de footer en meld je aan voor wekelijkse cadeau-tips, deals en inspiratie direct in je inbox!
+                  Scroll naar de footer en meld je aan voor wekelijkse cadeau-tips, deals en
+                  inspiratie direct in je inbox!
                 </p>
               </div>
             </div>

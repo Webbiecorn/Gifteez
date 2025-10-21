@@ -126,10 +126,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
           <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 py-3.5 lg:grid-cols-[minmax(200px,1fr)_auto_minmax(200px,1fr)]">
             {/* Left: Logo */}
             <div className="flex items-center">
-              <div
-                className="relative cursor-pointer group"
-                onClick={() => handleNavClick('home')}
-              >
+              <div className="relative cursor-pointer group" onClick={() => handleNavClick('home')}>
                 <Logo
                   alt="Gifteez.nl - AI Gift Finder voor het perfecte cadeau"
                   className="h-11 w-auto transition-transform duration-200 group-hover:scale-105"
@@ -139,9 +136,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
             </div>
 
             {/* Center: Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-4">
-              {desktopNav}
-            </div>
+            <div className="hidden lg:flex items-center gap-4">{desktopNav}</div>
 
             {/* Right: Action Buttons */}
             <div className="flex items-center gap-2 justify-end">

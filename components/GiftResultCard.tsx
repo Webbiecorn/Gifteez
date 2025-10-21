@@ -369,7 +369,9 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           </div>
         )}
 
-        <p className={`mt-2 text-gray-600 leading-relaxed ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>
+        <p
+          className={`mt-2 text-gray-600 leading-relaxed ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}
+        >
           {gift.description}
         </p>
 

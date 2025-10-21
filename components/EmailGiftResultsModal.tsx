@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { getFunctions, httpsCallable } from 'firebase/functions'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 import { db } from '../services/firebase'
 import { XIcon, MailIcon, CheckCircleIcon } from './IconComponents'
 
@@ -133,9 +133,7 @@ export const EmailGiftResultsModal: React.FC<EmailGiftResultsModalProps> = ({
               <CheckCircleIcon className="w-8 h-8 text-green-600" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Email verzonden! 🎉</h3>
-            <p className="text-gray-600">
-              Check je inbox voor je persoonlijke cadeau-suggesties.
-            </p>
+            <p className="text-gray-600">Check je inbox voor je persoonlijke cadeau-suggesties.</p>
           </div>
         ) : (
           // Form state

@@ -54,14 +54,14 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
           height={860}
         />
       </picture>
-      
+
       {/* Gradient fade aan beide zijkanten */}
       <div className="absolute inset-0 bg-gradient-to-r from-secondary-100 via-transparent via-50% to-secondary-100" />
-      
+
       {/* Gradient overlay voor tekstcontrast - links donkerder */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary-900/50 via-primary-900/10 via-40% to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-secondary-100/20" />
-      
+
       {/* Decoratieve gloed rond mascotte */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 right-1/3 -translate-y-1/2 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl animate-pulse-slow" />
@@ -75,9 +75,7 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
           <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-white drop-shadow-2xl">
             {headingLines.map((line, index) => (
               <React.Fragment key={index}>
-                <span className="block">
-                  {line}
-                </span>
+                <span className="block">{line}</span>
               </React.Fragment>
             ))}
           </h1>

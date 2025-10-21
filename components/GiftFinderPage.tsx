@@ -13,23 +13,30 @@ import { logFilterEvent } from '../services/giftFinderAnalyticsService'
 import { calculateGiftScore, extractPriceFromRange } from '../services/giftScoringService'
 import { gaSearch, gaPageView } from '../services/googleAnalytics'
 import { pinterestPageVisit, pinterestSearch } from '../services/pinterestTracking'
-import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, GiftSearchParams, RetailerBadge } from '../types';
-import HeroSection from './HeroSection';
-import Button from './Button'
-import GiftResultCard from './GiftResultCard'
-import EmailGiftResultsModal from './EmailGiftResultsModal'
-import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents'
-import InternalLinkCTA from './InternalLinkCTA'
-import Breadcrumbs from './Breadcrumbs'
-import Meta from './Meta'
 import rateLimitService from '../services/rateLimitService'
 import { submitRelevanceFeedback } from '../services/scoringFeedbackService'
-// AI Enhancement imports
 import {
   generateSemanticLabels,
   generateUserPreferenceProfile,
   SemanticProfile,
 } from '../services/semanticLabelService'
+import Breadcrumbs from './Breadcrumbs'
+import Button from './Button'
+import EmailGiftResultsModal from './EmailGiftResultsModal'
+import GiftResultCard from './GiftResultCard'
+import HeroSection from './HeroSection'
+import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents'
+import InternalLinkCTA from './InternalLinkCTA'
+import Meta from './Meta'
+import type {
+  Gift,
+  InitialGiftFinderData,
+  ShowToast,
+  GiftProfile,
+  GiftSearchParams,
+  RetailerBadge,
+} from '../types'
+// AI Enhancement imports
 
 const occasions = ['Verjaardag', 'Kerstmis', 'Valentijnsdag', 'Jubileum', 'Zomaar']
 const genders = ['Man', 'Vrouw', 'Anders']
@@ -677,7 +684,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 In 3 simpele stappen vind je het perfecte cadeau met onze AI
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-3 gap-8 mb-16">
               {/* Step 1 */}
               <div className="relative group">
@@ -687,7 +694,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                   </div>
                   <div className="mt-4">
                     <div className="text-5xl mb-4">🎯</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">Vertel ons over de ontvanger</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      Vertel ons over de ontvanger
+                    </h3>
                     <p className="text-gray-600">
                       Kies de relatie, geslacht en budget voor het perfecte cadeau
                     </p>
@@ -719,7 +728,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                   </div>
                   <div className="mt-4">
                     <div className="text-5xl mb-4">🎁</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">Krijg gepersonaliseerde tips</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
+                      Krijg gepersonaliseerde tips
+                    </h3>
                     <p className="text-gray-600">
                       Ontvang handgeplukte cadeaus die perfect bij de ontvanger passen
                     </p>
@@ -808,7 +819,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     <h3 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                       Man of vrouw?
                     </h3>
-                    <p className="text-sm text-gray-600 mt-1">Help ons betere suggesties te geven</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Help ons betere suggesties te geven
+                    </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
@@ -818,8 +831,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       type="button"
                       onClick={() => setGender(g)}
                       className={`py-4 px-6 rounded-xl text-base font-bold transition-all duration-300 transform hover:scale-105 ${
-                        gender === g 
-                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-xl ring-4 ring-purple-200' 
+                        gender === g
+                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-xl ring-4 ring-purple-200'
                           : 'bg-white border-2 border-purple-200 text-gray-700 hover:border-purple-400 hover:shadow-lg'
                       }`}
                     >
@@ -842,10 +855,14 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     >
                       Wat is je budget?
                     </label>
-                    <p className="text-sm text-gray-600 mt-1">Versleep de slider naar je ideale bedrag</p>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Versleep de slider naar je ideale bedrag
+                    </p>
                   </div>
                   <div className="text-right bg-white px-6 py-3 rounded-xl shadow-lg border-2 border-emerald-200">
-                    <span className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">€{budget}</span>
+                    <span className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                      €{budget}
+                    </span>
                   </div>
                 </div>
                 <div className="pt-4">
@@ -859,12 +876,12 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     onChange={(e) => setBudget(Number(e.target.value))}
                     className="w-full h-4 bg-gradient-to-r from-emerald-200 to-teal-200 rounded-lg appearance-none cursor-pointer slider-emerald"
                     style={{
-                      background: `linear-gradient(to right, #10b981 0%, #10b981 ${((budget - 5) / 495) * 100}%, #d1fae5 ${((budget - 5) / 495) * 100}%, #d1fae5 100%)`
+                      background: `linear-gradient(to right, #10b981 0%, #10b981 ${((budget - 5) / 495) * 100}%, #d1fae5 ${((budget - 5) / 495) * 100}%, #d1fae5 100%)`,
                     }}
                   />
                   <div className="flex justify-between text-sm font-medium text-gray-600 mt-3">
                     <span>€5</span>
-                    <span className="text-emerald-600">€{Math.round(500/2)}</span>
+                    <span className="text-emerald-600">€{Math.round(500 / 2)}</span>
                     <span>€500</span>
                   </div>
                 </div>
@@ -890,8 +907,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       type="button"
                       onClick={() => setOccasion(o)}
                       className={`py-4 px-4 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 ${
-                        occasion === o 
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xl ring-4 ring-amber-200' 
+                        occasion === o
+                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xl ring-4 ring-amber-200'
                           : 'bg-white border-2 border-amber-200 text-gray-700 hover:border-amber-400 hover:shadow-lg'
                       }`}
                     >
@@ -970,10 +987,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 >
                   {/* Gradient background */}
                   <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 transition-transform group-hover:scale-110 duration-500"></div>
-                  
+
                   {/* Shine effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  
+
                   {/* Content */}
                   <span className="relative z-10 flex items-center justify-center text-white">
                     {isLoading ? (
@@ -985,30 +1002,52 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       <>
                         <span className="text-3xl mr-3">🎁</span>
                         <span>Vind Perfecte Cadeaus</span>
-                        <svg className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        <svg
+                          className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                          />
                         </svg>
                       </>
                     )}
                   </span>
                 </button>
-                
+
                 {/* Trust badges below button */}
                 <div className="mt-6 flex items-center justify-center gap-6 text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span className="font-medium">100% Gratis</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     <span className="font-medium">Binnen 30 sec</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-5 h-5 text-purple-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                     <span className="font-medium">AI-powered</span>

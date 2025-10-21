@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, orderBy, updateDoc, doc } from 'firebase/firestore'
 import { db } from '../services/firebase'
-import type { ContactMessage } from '../types'
 import { MailIcon, CheckCircleIcon, XCircleIcon } from './IconComponents'
+import type { ContactMessage } from '../types'
 
 export const AdminContactMessages: React.FC = () => {
   const [messages, setMessages] = useState<(ContactMessage & { id: string })[]>([])

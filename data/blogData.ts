@@ -1705,4 +1705,150 @@ export const blogPosts: BlogPost[] = [
     },
     tags: ['cocktails', 'cadeau voor hem', 'cadeau voor haar', 'feestdagen', 'bar', 'amazon'],
   },
+  {
+    slug: 'deal-hunting-tips-tricks',
+    title: 'Deal Hunting 101: Zo scoor je altijd de beste cadeaudeals',
+    excerpt:
+      'Van Black Friday tot Prime Day: onze ultieme gids vol tips en tricks om scherpe cadeaudeals te vinden. Leer wanneer je moet shoppen, welke tools je nodig hebt en hoe je nooit meer te veel betaalt.',
+    imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80',
+    author: {
+      name: 'Kevin Stickler',
+      avatarUrl: '',
+    },
+    publishedDate: '2025-10-21',
+    category: 'tips',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          "Ben je het zat om altijd net te laat te zijn voor de beste deals? Of twijfel je of iets wel écht een koopje is? In deze ultieme deal hunting gids deel ik alle tips en tricks die ik in 3+ jaar heb geleerd. Van timing tot tools: na het lezen weet je precies hoe je altijd de beste cadeaudeals scoort – zonder uren te zoeken.",
+      },
+      {
+        type: 'heading',
+        content: '⏰ Timing is Everything: De Beste Deal Momenten',
+      },
+      {
+        type: 'paragraph',
+        content:
+          "De nummer 1 fout bij deal hunting? Shoppen op het verkeerde moment. Dit zijn de periodes waarin retailers de scherpste kortingen geven:<br><br><strong>🛍️ Black Friday & Cyber Monday (November):</strong> Tot 70% korting op tech, fashion en home. Beste moment voor dure cadeaus.<br><br><strong>⚡ Prime Day (Juli):</strong> Amazon-exclusieve deals op duizenden producten. Perfect voor last-minute cadeaus.<br><br><strong>🎄 Kerst Sale (December):</strong> Cadeausets en bundels met extra korting. Ideaal voor meerdere cadeaus tegelijk.<br><br><strong>🎉 Nieuwjaarsuitverkoop (Januari):</strong> Opruiming van kerstvoorraad tegen bodemprijzen. Beste deals op beauty & fashion.<br><br><strong>💝 Valentijnsdag (Februari):</strong> Romantische cadeaus met hoge kortingen op chocola, bloemen en sieraden.<br><br><strong>📱 Product Launches:</strong> Bij nieuwe modellen dalen oude versies vaak 20-40%. Wacht op nieuwe iPhone = goedkopere oude!",
+      },
+      {
+        type: 'heading',
+        content: '🔍 Echte Deals vs. Nepdeals: Zo herken je het verschil',
+      },
+      {
+        type: 'paragraph',
+        content:
+          "Niet elke \"korting\" is een echte deal. Zo check je of iets écht goedkoper is:<br><br>✅ <strong>Gebruik prijshistorie tools:</strong> CamelCamelCamel (Amazon) en Pricewatch.nl tonen of de prijs echt gedaald is<br>✅ <strong>Check meerdere retailers:</strong> Vergelijk altijd Amazon, Bol.com én Coolblue – prijzen verschillen vaak 10-30%<br>✅ <strong>Let op 'van-voor' prijzen:</strong> Een streepprijs van €199,99 die altijd €99,99 is = geen echte korting<br>✅ <strong>Bereken prijs per stuk:</strong> Bij bundels is de prijs per item vaak hoger dan los kopen<br>✅ <strong>Lees reviews eerst:</strong> 50% korting op een slecht product is geen deal",
+      },
+      {
+        type: 'heading',
+        content: '🛠️ Onmisbare Tools voor Serieuze Deal Hunters',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Deze tools besparen je uren zoekwerk en zorgen dat je nooit meer een deal mist:<br><br>🎯 <strong>Gifteez Deals:</strong> Wij selecteren dagelijks de beste cadeaudeals van Amazon en Coolblue (gratis!)<br>📊 <strong>CamelCamelCamel:</strong> Amazon prijshistorie + price drop alerts via email<br>🔥 <strong>Pepper.com:</strong> Community-driven deal platform met stemmen en reviews<br>🛒 <strong>Browser extensies:</strong> Honey en Capital One Shopping vergelijken automatisch prijzen<br>🔔 <strong>Google Alerts:</strong> Stel alerts in voor "[productnaam] deal" om direct notificaties te krijgen<br>📱 <strong>Retailer apps:</strong> Amazon, Coolblue en Bol.com apps hebben vaak exclusive app-only deals',
+      },
+      {
+        type: 'heading',
+        content: '💡 Community Wishlist: Laat ons weten wat jij wilt zien',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Mis je een specifiek product in onze deals? Via onze <a href="/deals" class="text-rose-600 underline">Community Wishlist op de deals pagina</a> kun je aangeven welke producten of categorieën je graag als deal zou willen zien. We sturen je een mail zodra je gewenste product als deal verschijnt! Zo mis je nooit meer een deal op producten die je echt wilt.',
+      },
+      {
+        type: 'heading',
+        content: '📧 Email Alerts: Nooit meer een Deal Missen',
+      },
+      {
+        type: 'paragraph',
+        content:
+          "Deals verdwijnen vaak binnen uren. Zo zorg je dat je altijd op tijd bent:<br><br>📬 <strong>Activeer Amazon Watchlist:</strong> Voeg producten toe aan je verlanglijst en krijg notificaties bij prijsdalingen<br>✉️ <strong>Deal alerts:</strong> Meld je aan voor Gifteez nieuwsbrieven (max 1x per week)<br>🔔 <strong>Push notificaties:</strong> Download retailer apps en enable push voor flash sales<br>⚙️ <strong>IFTTT recepten:</strong> Automatiseer alerts met \"If [product] drops below [prijs] then email me\"",
+      },
+      {
+        type: 'heading',
+        content: '💳 Betaaltiming: Maximaliseer je Voordeel',
+      },
+      {
+        type: 'paragraph',
+        content:
+          "Het juiste betaalmiddel kan je nóg meer korting opleveren:<br><br>💰 <strong>Cashback credit cards:</strong> Extra 1-5% terug op alle aankopen<br>🎁 <strong>Retailer gift cards:</strong> Koop discounted gift cards op Cardify (tot 10% korting)<br>🎓 <strong>Student kortingen:</strong> Amazon Prime Student = 50% korting op Prime (gratis verzending)<br>📧 <strong>Nieuwsbrief kortingscodes:</strong> Eerste aankoop = vaak 10-15% extra korting<br>🤝 <strong>Affiliate cashback:</strong> Via Gifteez links support je ons zonder extra kosten",
+      },
+      {
+        type: 'heading',
+        content: '🎁 Deel Deals met Vrienden',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Zie je een geweldige deal? Deel hem direct met vrienden! Op elke deal vind je nu een \"Deel deze deal\" knop waarmee je deals kunt doorsturen via WhatsApp, Facebook, of gewoon de link kunt kopiëren. Zo help je je vrienden ook om geld te besparen – en wie weet krijg je er zelf ook een kadootje van terug! 😉',
+      },
+      {
+        type: 'verdict',
+        title: 'Word een Slimme Deal Hunter',
+        content:
+          "Deal hunting is een vaardigheid die je leert. Met de juiste tools, timing en strategieën bespaar je honderden euro's per jaar – zonder in te leveren op kwaliteit. Begin vandaag: check onze <a href=\"/deals\" class=\"text-rose-600 underline\">actuele Deal van de Week</a>, voeg je wishlist toe aan de Community Wishlist, en deel geweldige deals met je vrienden. Elke aankoop kan een slimme deal zijn!",
+      },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Wanneer zijn de beste momenten om cadeaus te kopen?',
+            answer:
+              'De beste periodes zijn: Black Friday (november), Prime Day (juli), kerst sales (december), en nieuwjaarsuitverkoop (januari). Ook zijn de 3e, 6e en 9e maand van het jaar (maart, juni, september) goed omdat retailers dan voorraad opruimen.',
+          },
+          {
+            question: 'Hoe weet ik of een deal echt goed is?',
+            answer:
+              'Gebruik prijshistorie tools zoals CamelCamelCamel voor Amazon producten. Vergelijk altijd minstens 3 retailers (Amazon, Bol.com, Coolblue). Check of de streepprijs realistisch is en lees reviews om te zien of het product de prijs waard is.',
+          },
+          {
+            question: 'Wat is de beste manier om deals niet te missen?',
+            answer:
+              'Combineer meerdere strategieën: (1) Check Gifteez deals pagina dagelijks, (2) Installeer CamelCamelCamel browser extensie, (3) Activeer push notificaties bij retailer apps, (4) Stel Google Alerts in voor specifieke producten, (5) Volg deal sites zoals Pepper.com, (6) Voeg je wishlist toe aan onze Community Wishlist voor notificaties.',
+          },
+          {
+            question: 'Kan ik kortingen stapelen voor extra besparing?',
+            answer:
+              'Ja! Combineer verschillende kortingen: sale prijzen + nieuwsbrief kortingscodes + cashback credit cards + discounted gift cards. Zo kun je soms 40-50% totale korting krijgen. Let wel op voorwaarden per retailer.',
+          },
+          {
+            question: 'Hoe werkt de Gifteez Community Wishlist?',
+            answer:
+              'Op onze deals pagina kun je aangeven welke producten of categorieën je graag als deal zou zien. Vul je email in en we sturen je een notificatie zodra je gewenste product als deal verschijnt. Zo mis je nooit meer een deal op producten die je echt wilt!',
+          },
+        ],
+      },
+    ],
+    seo: {
+      metaTitle: 'Deal Hunting Tips & Tricks: Zo Scoor je Altijd de Beste Cadeaudeals',
+      metaDescription:
+        'Leer hoe je de beste cadeaudeals scoort. Van Black Friday tot Prime Day: ultieme gids met timing tips, tools en tricks om nooit meer te veel te betalen.',
+      keywords: [
+        'deal hunting tips',
+        'beste deals vinden',
+        'cadeaudeals',
+        'black friday tips',
+        'prime day strategie',
+        'geld besparen cadeaus',
+        'deal alert tools',
+        'prijsvergelijking tips',
+      ],
+      ogTitle: 'Deal Hunting 101: Scoor Altijd de Scherpste Cadeaudeals',
+      ogDescription:
+        'Van timing tot tools: onze ultieme gids vol tips en tricks om de beste cadeaudeals te vinden. Leer hoe je nooit meer te veel betaalt.',
+      ogImage: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Masterclass Deal Hunting: Bespaar Honderden Euros op Cadeaus',
+      twitterDescription:
+        'Alle geheimen van succesvolle deal hunters in één gids. Van Black Friday hacks tot price tracking tools.',
+      twitterImage: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80',
+      canonicalUrl: 'https://gifteez.nl/blog/deal-hunting-tips-tricks',
+    },
+    tags: ['tips', 'besparen', 'deals', 'shopping', 'black friday', 'prime day'],
+  },
 ]

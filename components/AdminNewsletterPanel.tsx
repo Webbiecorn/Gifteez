@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, orderBy, where } from 'firebase/firestore'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { db } from '../services/firebase'
-import type { NewsletterSubscriber, EmailCampaign } from '../types'
 import { MailIcon, UserCircleIcon, ShareIcon, CheckCircleIcon } from './IconComponents'
+import type { NewsletterSubscriber, EmailCampaign } from '../types'
 
 export const AdminNewsletterPanel: React.FC = () => {
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([])
@@ -25,26 +25,29 @@ export const AdminNewsletterPanel: React.FC = () => {
       setLoading(true)
       // Don't use orderBy - subscribedAt might be a string
       const snapshot = await getDocs(collection(db, 'newsletter_subscribers'))
-      
+
       const data = snapshot.docs.map((doc) => {
         const docData = doc.data()
         return {
           ...docData,
           id: doc.id,
           // Parse subscribedAt if it's a string
-          subscribedAt: typeof docData.subscribedAt === 'string' 
-            ? new Date(docData.subscribedAt) 
-            : docData.subscribedAt?.toDate?.() || new Date(),
+          subscribedAt:
+            typeof docData.subscribedAt === 'string'
+              ? new Date(docData.subscribedAt)
+              : docData.subscribedAt?.toDate?.() || new Date(),
         }
       }) as NewsletterSubscriber[]
-      
+
       // Sort in JavaScript instead
       data.sort((a, b) => {
-        const dateA = a.subscribedAt instanceof Date ? a.subscribedAt : new Date(a.subscribedAt as any)
-        const dateB = b.subscribedAt instanceof Date ? b.subscribedAt : new Date(b.subscribedAt as any)
+        const dateA =
+          a.subscribedAt instanceof Date ? a.subscribedAt : new Date(a.subscribedAt as any)
+        const dateB =
+          b.subscribedAt instanceof Date ? b.subscribedAt : new Date(b.subscribedAt as any)
         return dateB.getTime() - dateA.getTime()
       })
-      
+
       console.log('Loaded subscribers:', data)
       setSubscribers(data)
     } catch (error) {
@@ -64,7 +67,7 @@ export const AdminNewsletterPanel: React.FC = () => {
       setSending(true)
       const functions = getFunctions()
       const sendCampaign = httpsCallable(functions, 'sendNewsletterCampaign')
-      
+
       await sendCampaign({
         subject,
         htmlContent,
@@ -151,9 +154,7 @@ export const AdminNewsletterPanel: React.FC = () => {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Onderwerp *
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Onderwerp *</label>
             <input
               type="text"
               value={subject}
@@ -164,9 +165,7 @@ export const AdminNewsletterPanel: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              HTML Content *
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">HTML Content *</label>
             <textarea
               value={htmlContent}
               onChange={(e) => setHtmlContent(e.target.value)}
