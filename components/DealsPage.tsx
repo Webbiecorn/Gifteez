@@ -1252,141 +1252,6 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </Container>
         </section>
 
-        {/* Community Wishlist Section - Wat wil jij in de deals zien? */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 py-16 md:py-20">
-          <Container size="lg" padded>
-            <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white shadow-lg border border-purple-200 px-5 py-2.5 mb-4">
-                <HeartIcon className="h-5 w-5 text-purple-500" />
-                <span className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Community
-                </span>
-              </div>
-              <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-                Wat wil <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">jij</span> in de deals zien?
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Jouw wensen zijn belangrijk! Laat ons weten welke producten of categorieën je graag als deal zou willen zien.
-              </p>
-            </div>
-
-            <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-purple-100 p-8">
-              <form onSubmit={(e) => {
-                e.preventDefault()
-                const form = e.currentTarget
-                const formData = new FormData(form)
-                const wishData = {
-                  product: formData.get('product'),
-                  category: formData.get('category'),
-                  description: formData.get('description'),
-                  email: formData.get('email'),
-                  timestamp: new Date().toISOString()
-                }
-                console.log('Community wishlist submission:', wishData)
-                // TODO: Add Firebase backend to store wishes
-                alert('Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜')
-                form.reset()
-              }}>
-                <div className="space-y-5">
-                  <div>
-                    <label htmlFor="product" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Welk product zou je graag willen zien?
-                    </label>
-                    <input
-                      type="text"
-                      id="product"
-                      name="product"
-                      placeholder="Bijv. iPhone 15, PlayStation 5, LEGO set..."
-                      className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Categorie
-                    </label>
-                    <select
-                      id="category"
-                      name="category"
-                      className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
-                    >
-                      <option value="">Kies een categorie...</option>
-                      <option value="tech">Tech & Gadgets</option>
-                      <option value="home">Home & Living</option>
-                      <option value="fashion">Mode & Accessoires</option>
-                      <option value="beauty">Beauty & Wellness</option>
-                      <option value="games">Gaming & Entertainment</option>
-                      <option value="kitchen">Keuken & Koken</option>
-                      <option value="sports">Sport & Outdoor</option>
-                      <option value="kids">Kids & Baby</option>
-                      <option value="other">Anders</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Extra toelichting (optioneel)
-                    </label>
-                    <textarea
-                      id="description"
-                      name="description"
-                      rows={3}
-                      placeholder="Vertel ons meer over waarom je dit product graag zou zien..."
-                      className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                      E-mail (optioneel - voor notificaties)
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="jouw@email.nl"
-                      className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
-                    />
-                    <p className="mt-1 text-xs text-gray-500">
-                      We sturen je een mailtje als je gewenste product als deal verschijnt
-                    </p>
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 px-6 py-4 font-bold text-white shadow-lg transition-all hover:shadow-2xl hover:scale-[1.02]"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      <HeartIcon className="h-5 w-5" />
-                      <span>Verstuur je wens</span>
-                    </span>
-                  </button>
-                </div>
-              </form>
-
-              {/* Stats */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-purple-600">127</div>
-                    <div className="text-xs text-gray-600">Wensen ingediend</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-pink-600">23</div>
-                    <div className="text-xs text-gray-600">Deze week toegevoegd</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-rose-600">89%</div>
-                    <div className="text-xs text-gray-600">Wensen vervuld</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Container>
-        </section>
-
         <Container size="xl" padded className="py-12 space-y-12">
           {error && (
             <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
@@ -1549,6 +1414,141 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     </Button>
                   </div>
                 )}
+
+              {/* Community Wishlist Section - Wat wil jij in de deals zien? */}
+              <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 py-12 md:py-16 px-6 md:px-8 animate-fade-in-up" style={{ animationDelay: '140ms' }}>
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white shadow-lg border border-purple-200 px-5 py-2.5 mb-4">
+                      <HeartIcon className="h-5 w-5 text-purple-500" />
+                      <span className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Community
+                      </span>
+                    </div>
+                    <h2 className="font-display text-3xl md:text-4xl font-bold mb-3 text-gray-900">
+                      Wat wil <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">jij</span> in de deals zien?
+                    </h2>
+                    <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+                      Jouw wensen zijn belangrijk! Laat ons weten welke producten of categorieën je graag als deal zou willen zien.
+                    </p>
+                  </div>
+
+                  <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-purple-100 p-6 md:p-8">
+                    <form onSubmit={(e) => {
+                      e.preventDefault()
+                      const form = e.currentTarget
+                      const formData = new FormData(form)
+                      const wishData = {
+                        product: formData.get('product'),
+                        category: formData.get('category'),
+                        description: formData.get('description'),
+                        email: formData.get('email'),
+                        timestamp: new Date().toISOString()
+                      }
+                      console.log('Community wishlist submission:', wishData)
+                      // TODO: Add Firebase backend to store wishes
+                      alert('Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜')
+                      form.reset()
+                    }}>
+                      <div className="space-y-5">
+                        <div>
+                          <label htmlFor="product" className="block text-sm font-semibold text-gray-700 mb-2">
+                            Welk product zou je graag willen zien?
+                          </label>
+                          <input
+                            type="text"
+                            id="product"
+                            name="product"
+                            placeholder="Bijv. iPhone 15, PlayStation 5, LEGO set..."
+                            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">
+                            Categorie
+                          </label>
+                          <select
+                            id="category"
+                            name="category"
+                            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
+                          >
+                            <option value="">Kies een categorie...</option>
+                            <option value="tech">Tech & Gadgets</option>
+                            <option value="home">Home & Living</option>
+                            <option value="fashion">Mode & Accessoires</option>
+                            <option value="beauty">Beauty & Wellness</option>
+                            <option value="games">Gaming & Entertainment</option>
+                            <option value="kitchen">Keuken & Koken</option>
+                            <option value="sports">Sport & Outdoor</option>
+                            <option value="kids">Kids & Baby</option>
+                            <option value="other">Anders</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
+                            Extra toelichting (optioneel)
+                          </label>
+                          <textarea
+                            id="description"
+                            name="description"
+                            rows={3}
+                            placeholder="Vertel ons meer over waarom je dit product graag zou zien..."
+                            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all resize-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                            E-mail (optioneel - voor notificaties)
+                          </label>
+                          <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="jouw@email.nl"
+                            className="w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-200 transition-all"
+                          />
+                          <p className="mt-1 text-xs text-gray-500">
+                            We sturen je een mailtje als je gewenste product als deal verschijnt
+                          </p>
+                        </div>
+
+                        <button
+                          type="submit"
+                          className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 px-6 py-4 font-bold text-white shadow-lg transition-all hover:shadow-2xl hover:scale-[1.02]"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 opacity-0 transition-opacity group-hover:opacity-100"></div>
+                          <span className="relative z-10 flex items-center justify-center gap-2">
+                            <HeartIcon className="h-5 w-5" />
+                            <span>Verstuur je wens</span>
+                          </span>
+                        </button>
+                      </div>
+                    </form>
+
+                    {/* Stats */}
+                    <div className="mt-8 pt-6 border-t border-gray-200">
+                      <div className="grid grid-cols-3 gap-4 text-center">
+                        <div>
+                          <div className="text-2xl font-bold text-purple-600">127</div>
+                          <div className="text-xs text-gray-600">Wensen ingediend</div>
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-pink-600">23</div>
+                          <div className="text-xs text-gray-600">Deze week toegevoegd</div>
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold text-rose-600">89%</div>
+                          <div className="text-xs text-gray-600">Wensen vervuld</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
 
               {/* Internal Links - Related Content */}
               <div className="mt-16">
