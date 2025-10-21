@@ -709,12 +709,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     }
 
     return (
-      <div ref={cardRef} className="h-full group/card">
-        {/* Glow effect voor gift set producten */}
-        {deal.name.toLowerCase().includes('set') && (
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-400 via-purple-400 to-rose-400 rounded-2xl blur opacity-20 group-hover/card:opacity-60 transition-opacity duration-500" />
-        )}
-        
+      <div ref={cardRef} className="h-full">
         <div
           className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
             isTopDeal
@@ -961,15 +956,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
     return (
       <article
-        className="space-y-6 animate-fade-in-up relative"
+        className="space-y-6 animate-fade-in-up"
         style={{ animationDelay: `${120 + index * 70}ms` }}
       >
-        {/* Glow effect background voor gift sets */}
-        {category.title.toLowerCase().includes('gift') && category.title.toLowerCase().includes('set') && (
-          <div className="absolute -inset-4 bg-gradient-to-r from-pink-300/20 via-purple-300/20 to-rose-300/20 rounded-3xl blur-xl animate-pulse-slow" />
-        )}
-        
-        <header className="space-y-3 relative z-10">
+        <header className="space-y-3">
           <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
             <GiftIcon className="h-4 w-4" />
             Curated selectie
@@ -990,18 +980,18 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   products: items,
                 })
               }
-              className="group relative shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
+              className="group relative shrink-0 overflow-visible rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
             >
+              {/* Glow effect achter de knop bij hover */}
+              <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+              
               {/* Animated gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl" />
               
               {/* Shimmer effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden">
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
               </div>
-              
-              {/* Glow effect */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 via-rose-500 to-purple-500 rounded-2xl blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
               
               {/* Button content */}
               <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">

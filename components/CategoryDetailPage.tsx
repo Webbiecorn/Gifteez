@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
+import { withAffiliate } from '../services/affiliate'
 import Breadcrumbs from './Breadcrumbs'
 import Button from './Button'
-import { ChevronLeftIcon, GiftIcon, SparklesIcon, HeartIcon } from './IconComponents'
+import { ChevronLeftIcon, GiftIcon, SparklesIcon, HeartIcon, CheckIcon } from './IconComponents'
+import ImageWithFallback from './ImageWithFallback'
 import { Container } from './layout/Container'
 import LoadingSpinner from './LoadingSpinner'
 import Meta from './Meta'
@@ -13,7 +15,37 @@ interface CategoryDetailPageProps {
   categoryTitle: string
   categoryDescription?: string
   products: DealItem[]
-  renderProductCard: (product: DealItem, index: number) => React.ReactNode
+  renderProductCard?: (product: DealItem, index: number) => React.ReactNode
+}
+
+// Helper function to resolve retailer info
+const resolveRetailerInfo = (affiliateLink: string) => {
+  if (!affiliateLink) {
+    return { label: 'Partner', shortLabel: 'Partner', badgeClass: 'bg-slate-100 text-slate-600' }
+  }
+  const lower = affiliateLink.toLowerCase()
+  if (lower.includes('amazon') || lower.includes('amzn')) {
+    return { label: 'Amazon.nl', shortLabel: 'Amazon', badgeClass: 'bg-orange-100 text-orange-700' }
+  }
+  if (lower.includes('bol.com')) {
+    return { label: 'Bol.com', shortLabel: 'Bol.com', badgeClass: 'bg-blue-100 text-blue-700' }
+  }
+  if (lower.includes('coolblue')) {
+    return { label: 'Coolblue', shortLabel: 'Coolblue', badgeClass: 'bg-sky-100 text-sky-700' }
+  }
+  return { label: 'Partner', shortLabel: 'Partner', badgeClass: 'bg-slate-100 text-slate-600' }
+}
+
+// Helper function to format price
+const formatPrice = (value: string | undefined) => {
+  if (!value) return null
+  const cleanValue = value.replace(/[^0-9,.]/g, '')
+  const normalized = cleanValue.replace(',', '.')
+  const num = Number.parseFloat(normalized)
+  if (Number.isFinite(num)) {
+    return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(num)
+  }
+  return value
 }
 
 const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
@@ -30,6 +62,135 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     document.title = `${categoryTitle} | Gifteez.nl Deals`
     window.scrollTo(0, 0)
   }, [categoryTitle])
+
+  // Enhanced product name for gift sets
+  const enhanceProductName = (name: string): string => {
+    const lower = name.toLowerCase()
+    if (lower.includes('set') || lower.includes('box') || lower.includes('kit')) {
+      if (lower.includes('voor haar') || lower.includes('vrouwen') || lower.includes('dames')) {
+        return name
+      }
+      if (lower.includes('beauty') || lower.includes('spa') || lower.includes('skincare') || 
+          lower.includes('wellness') || lower.includes('bath') || lower.includes('badolie') ||
+          lower.includes('body') || lower.includes('verzorging')) {
+        return `${name} - Luxe Verwenset voor Haar`
+      }
+    }
+    return name
+  }
+
+  // Product Card Component - matches DealsPage styling
+  const ProductCard: React.FC<{ deal: DealItem; index: number }> = ({ deal, index }) => {
+    const retailerInfo = useMemo(() => resolveRetailerInfo(deal.affiliateLink), [deal.affiliateLink])
+    const isTopDeal = deal.giftScore && deal.giftScore >= 9
+    const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8
+    const displayName = enhanceProductName(deal.name)
+
+    return (
+      <div className="h-full">
+        <div
+          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
+            isTopDeal
+              ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px]'
+              : 'border border-slate-200'
+          }`}
+        >
+          {/* Inner card wrapper for TOP deals */}
+          <div className={isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'}>
+            {/* Image */}
+            <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white h-44">
+              <ImageWithFallback
+                src={deal.imageUrl}
+                alt={displayName}
+                className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
+                fit="contain"
+              />
+              
+              {/* Badges */}
+              <div className="absolute top-2 right-2 flex flex-col gap-1">
+                {isTopDeal && (
+                  <div className="rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 px-2 py-1 text-xs font-bold text-white shadow-md">
+                    ⭐ TOP
+                  </div>
+                )}
+                {isHotDeal && !isTopDeal && (
+                  <div className="rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                    🔥 HOT
+                  </div>
+                )}
+                {deal.isOnSale && !isHotDeal && !isTopDeal && (
+                  <div className="rounded-lg bg-amber-500 px-2 py-1 text-xs font-bold text-white shadow-md">
+                    SALE
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex flex-1 flex-col gap-3 p-5">
+              {retailerInfo && (
+                <div className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}>
+                  {retailerInfo.label}
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <h3 className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug">
+                  {displayName}
+                </h3>
+              </div>
+
+              <div className="mt-auto space-y-2.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-lg bg-rose-500 px-3 py-1.5 font-bold text-white text-sm">
+                    {formatPrice(deal.price) ?? 'Prijs op aanvraag'}
+                  </span>
+                  {deal.originalPrice && (
+                    <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-xs text-slate-500">
+                      <s>{deal.originalPrice}</s>
+                    </span>
+                  )}
+                </div>
+
+                {deal.giftScore && (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+                    <CheckIcon className="h-3.5 w-3.5" />
+                    <span className="font-semibold">Cadeauscore: {deal.giftScore}/10</span>
+                  </div>
+                )}
+
+                <a
+                  href={withAffiliate(deal.affiliateLink)}
+                  target="_blank"
+                  rel="sponsored nofollow noopener noreferrer"
+                  className="group/btn relative block w-full overflow-visible rounded-xl text-center font-bold text-white shadow-lg transition-all hover:shadow-2xl hover:scale-105 px-4 py-2.5 text-sm"
+                >
+                  {/* Glow effect achter de knop bij hover */}
+                  <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover/btn:opacity-70 transition-opacity duration-500" />
+                  
+                  {/* Gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 rounded-xl transition-all duration-300 group-hover/btn:from-rose-600 group-hover/btn:via-pink-600 group-hover/btn:to-rose-700" />
+                  
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-xl overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                  </div>
+                  
+                  {/* Button content */}
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span>Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'}</span>
+                    <svg className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // Check if this is the gift sets category
   const isGiftSetsCategory = categoryTitle.toLowerCase().includes('gift set')
@@ -169,7 +330,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           ) : products.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {products.map((product, index) => (
-                <div key={product.id}>{renderProductCard(product, index)}</div>
+                <ProductCard key={product.id} deal={product} index={index} />
               ))}
             </div>
           ) : (
