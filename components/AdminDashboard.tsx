@@ -42,11 +42,20 @@ const AdminDashboard: React.FC = () => {
     const loadStats = async () => {
       setLoading(true)
       try {
-        // Load all data
-        await DynamicProductService.loadProducts()
+        // Load all data with error handling
+        await DynamicProductService.loadProducts().catch((err) => {
+          console.warn('Could not load products:', err)
+        })
+
         const [config, blogPosts] = await Promise.all([
-          DealCategoryConfigService.load(),
-          BlogService.getPosts(),
+          DealCategoryConfigService.load().catch((err) => {
+            console.warn('Could not load deal config:', err)
+            return null
+          }),
+          BlogService.getPosts().catch((err) => {
+            console.warn('Could not load blog posts:', err)
+            return []
+          }),
         ])
 
         const products = DynamicProductService.getProducts()
@@ -108,12 +117,12 @@ const AdminDashboard: React.FC = () => {
 
         setStats({
           blogPosts: {
-            total: blogPosts.length,
+            total: blogPosts?.length || 0,
             published,
             drafts,
           },
           deals: {
-            total: products.length,
+            total: products?.length || 0,
             categories: config?.categories?.length || 0,
             averageScore: productStats?.averageGiftScore || 0,
             lastUpdated: productStats?.lastUpdated || null,
@@ -274,41 +283,6 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Top Performers */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <TrendingUpIcon className="h-5 w-5 text-rose-500" />
-          <h3 className="text-lg font-semibold text-gray-900">Top 5 Presterende Producten</h3>
-        </div>
-
-        {stats.topPerformers.length === 0 ? (
-          <p className="text-gray-600 text-sm">Geen top performers beschikbaar</p>
-        ) : (
-          <div className="space-y-3">
-            {stats.topPerformers.map((product, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-rose-200 transition-colors"
-              >
-                <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                  #{index + 1}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">{product.name}</p>
-                  <p className="text-xs text-gray-600">{product.category}</p>
-                </div>
-                <div className="flex-shrink-0">
-                  <div className="flex items-center gap-1 px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-sm font-semibold">
-                    <SparklesIcon className="h-4 w-4" />
-                    {product.score.toFixed(1)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   )

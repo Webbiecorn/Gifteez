@@ -259,8 +259,8 @@ Het Gifteez Team
       isActive: true,
     }
 
-    // Send welcome email
-    await this.sendWelcomeEmail(subscriber)
+    // Welcome email wordt automatisch verstuurd door Firebase Function onNewsletterSubscribe
+    // wanneer het document wordt toegevoegd aan Firestore
 
     return subscriber
   }

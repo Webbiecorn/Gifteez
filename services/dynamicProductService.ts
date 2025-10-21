@@ -5,6 +5,11 @@ import { PinnedDealsService } from './pinnedDealsService'
 import { ShopLikeYouGiveADamnService, type SLYGADProduct } from './shopLikeYouGiveADamnService'
 import type { CoolblueProduct } from './coolblueFeedService'
 import type { DealItem, DealCategory } from '../types'
+import {
+  dealOfTheWeek as curatedDealOfTheWeek,
+  top10Deals as curatedTop10Deals,
+  dealCategories as curatedDealCategories,
+} from '../data/dealsData'
 
 const DEFAULT_PRODUCT_PLACEHOLDER = '/images/amazon-placeholder.png'
 
@@ -36,7 +41,7 @@ export class DynamicProductService {
         console.log('📦 Loading products from multiple sources...')
 
         // Check if we need to force refresh (e.g., after deployment)
-        const CACHE_VERSION = '2025-10-18-v3' // Update this after each deployment
+        const CACHE_VERSION = '2025-10-21-v4' // Update this after each deployment
         const lastCacheVersion = localStorage.getItem('gifteez_cache_version')
 
         if (lastCacheVersion !== CACHE_VERSION) {
@@ -96,7 +101,7 @@ export class DynamicProductService {
         // Load Shop Like You Give A Damn products (sustainable/vegan)
         try {
           const slygadData = await ShopLikeYouGiveADamnService.loadProducts()
-          this.slygadProducts = slygadData
+          this.slygadProducts = Array.isArray(slygadData) ? slygadData : []
           console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`)
         } catch (error) {
           console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error)
@@ -166,7 +171,10 @@ export class DynamicProductService {
    * Get all products from both sources (internal method)
    */
   private static getAllProducts(): any[] {
-    return [...this.coolblueProducts, ...this.amazonProducts, ...this.slygadProducts]
+    const coolblue = Array.isArray(this.coolblueProducts) ? this.coolblueProducts : []
+    const amazon = Array.isArray(this.amazonProducts) ? this.amazonProducts : []
+    const slygad = Array.isArray(this.slygadProducts) ? this.slygadProducts : []
+    return [...coolblue, ...amazon, ...slygad]
   }
 
   /**
@@ -175,11 +183,11 @@ export class DynamicProductService {
   static getProductsBySource(source: 'coolblue' | 'amazon' | 'slygad' | 'all' = 'all'): any[] {
     switch (source) {
       case 'coolblue':
-        return this.coolblueProducts
+        return Array.isArray(this.coolblueProducts) ? this.coolblueProducts : []
       case 'amazon':
-        return this.amazonProducts
+        return Array.isArray(this.amazonProducts) ? this.amazonProducts : []
       case 'slygad':
-        return this.slygadProducts
+        return Array.isArray(this.slygadProducts) ? this.slygadProducts : []
       case 'all':
       default:
         return this.getAllProducts()
@@ -302,6 +310,15 @@ export class DynamicProductService {
   static async getDealOfTheWeek(): Promise<DealItem> {
     await this.loadProducts()
 
+    const pinnedHero = this.getPinnedDeals(1)[0]
+    if (pinnedHero) {
+      return { ...pinnedHero }
+    }
+
+    if (curatedDealOfTheWeek?.id) {
+      return { ...curatedDealOfTheWeek }
+    }
+
     const allProducts = this.getAllProducts()
 
     if (allProducts.length === 0) {
@@ -346,13 +363,16 @@ export class DynamicProductService {
   static async getTop10Deals(): Promise<DealItem[]> {
     await this.loadProducts()
 
+    const MAX_TOTAL = 10
+    const curatedSeed = Array.isArray(curatedTop10Deals)
+      ? curatedTop10Deals.map((deal) => ({ ...deal }))
+      : []
+
     const allProducts = this.getAllProducts()
 
     if (!allProducts.length) {
-      return this.getFallbackTop10Deals()
+      return curatedSeed.length ? curatedSeed.slice(0, MAX_TOTAL) : this.getFallbackTop10Deals()
     }
-
-    const MAX_TOTAL = 10
     const DEFAULT_GROUP_LIMIT = 2
     const GROUP_LIMITS: Record<string, number> = {
       tech: 3,
@@ -781,10 +801,13 @@ export class DynamicProductService {
     }
 
     if (!selected.length) {
+      if (curatedSeed.length) {
+        return curatedSeed.slice(0, MAX_TOTAL)
+      }
       return this.getFallbackTop10Deals()
     }
 
-    const finalDeals = selected
+    const dynamicDeals = selected
       .sort((a, b) => {
         if (a.domain !== b.domain) {
           if (a.domain === 'amazon') return -1
@@ -801,22 +824,38 @@ export class DynamicProductService {
       .slice(0, MAX_TOTAL)
       .map((meta) => this.convertToDealItem(meta.product))
 
-    if (finalDeals.length < MAX_TOTAL) {
-      const fallback = this.getFallbackTop10Deals()
-      const seen = new Set(finalDeals.map((deal) => deal.id))
-      for (const item of fallback) {
-        if (finalDeals.length >= MAX_TOTAL) {
-          break
-        }
-        if (seen.has(item.id)) {
-          continue
-        }
-        finalDeals.push(item)
-        seen.add(item.id)
+    const combinedDeals: DealItem[] = []
+    const seenIds = new Set<string>()
+    const pushUnique = (deal: DealItem | null | undefined) => {
+      if (!deal) {
+        return
       }
+      const id = typeof deal.id === 'string' && deal.id.trim().length ? deal.id.trim() : deal.name
+      if (!id || seenIds.has(id)) {
+        return
+      }
+      combinedDeals.push({ ...deal })
+      seenIds.add(id)
     }
 
-    return finalDeals
+    curatedSeed.forEach((deal) => pushUnique(deal))
+    dynamicDeals.forEach((deal) => pushUnique(deal))
+
+    if (combinedDeals.length < MAX_TOTAL) {
+      this.getFallbackTop10Deals().forEach((deal) => pushUnique(deal))
+    }
+
+    if (combinedDeals.length < MAX_TOTAL) {
+      this.getAdditionalCoolblueDeals(Array.from(seenIds), MAX_TOTAL - combinedDeals.length).forEach(
+        (deal) => pushUnique(deal)
+      )
+    }
+
+    if (!combinedDeals.length) {
+      return this.getFallbackTop10Deals()
+    }
+
+    return combinedDeals.slice(0, MAX_TOTAL)
   }
 
   /**
@@ -1282,113 +1321,17 @@ export class DynamicProductService {
 
   // Fallback methods for when dynamic data is not available
   private static getFallbackDealOfTheWeek(): DealItem {
-    return {
-      id: 'deal-001',
-      name: 'Whirlpool WH7IPC15BM60 Maxispace',
-      description: 'Inbouw vaatwasser met Maxi Space technologie en PowerClean sproeiarm.',
-      imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781',
-      price: '€629,00',
-      affiliateLink: 'https://www.coolblue.nl/product/966434/whirlpool-wh7ipc15bm60-maxispace.html',
-    }
+    return { ...curatedDealOfTheWeek }
   }
 
   private static getFallbackTop10Deals(): DealItem[] {
-    return [
-      {
-        id: 'top-01',
-        name: 'Sonos Roam SL Speaker',
-        description:
-          'Compacte Bluetooth-speaker met verrassend vol geluid en waterdichte behuizing.',
-        imageUrl: 'https://m.media-amazon.com/images/I/51x24PzVnoL._AC_SL1000_.jpg',
-        price: '€234,95',
-        affiliateLink: 'https://www.amazon.nl/dp/B09PNSV48L/?tag=gifteez77-21',
-      },
-      {
-        id: 'top-02',
-        name: 'JBL Live 770NC Koptelefoon',
-        description:
-          'Comfortabele over-ear koptelefoon met adaptieve noise cancelling en 65 uur speeltijd.',
-        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1962259',
-        price: '€118,00',
-        affiliateLink: 'https://www.coolblue.nl/product/934400/jbl-live-770nc-zwart.html',
-      },
-      {
-        id: 'top-03',
-        name: 'Nintendo Switch Lite Turquoise',
-        description: 'Lichtgewicht handheld console om overal je favoriete games te spelen.',
-        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1433030',
-        price: '€219,00',
-        affiliateLink: 'https://www.coolblue.nl/product/840605/nintendo-switch-lite-turquoise.html',
-      },
-      {
-        id: 'top-04',
-        name: 'Philips Hue White & Color Ambiance Starter Kit',
-        description:
-          'Smart verlichting met bridge en 3 lampen voor sfeervolle verlichting in huis.',
-        imageUrl: 'https://m.media-amazon.com/images/I/81Md1GZ9vXL._AC_SL1500_.jpg',
-        price: '€189,99',
-        affiliateLink: 'https://www.amazon.nl/dp/B09G9LGQY3/?tag=gifteez77-21',
-      },
-      {
-        id: 'top-05',
-        name: 'Sage Barista Express Espressomachine',
-        description:
-          'Volautomatische espressomachine met ingebouwde molen voor versgemalen koffie.',
-        imageUrl: 'https://m.media-amazon.com/images/I/71gxdTM5WDL._AC_SL1500_.jpg',
-        price: '€649,00',
-        affiliateLink: 'https://www.amazon.nl/dp/B00G6IJ5NI/?tag=gifteez77-21',
-      },
-      {
-        id: 'top-06',
-        name: 'Garmin Venu Sq 2 Smartwatch',
-        description: 'Stijlvolle smartwatch met AMOLED-scherm en uitgebreide health tracking.',
-        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1990337',
-        price: '€259,00',
-        affiliateLink: 'https://www.coolblue.nl/product/939902/garmin-venu-sq-2-zwart.html',
-      },
-      {
-        id: 'top-07',
-        name: 'Theragun Mini Massage Gun',
-        description: 'Krachtige compacte massagegun voor spierherstel en ontspanning onderweg.',
-        imageUrl: 'https://m.media-amazon.com/images/I/61iydRki0KL._AC_SL1500_.jpg',
-        price: '€199,00',
-        affiliateLink: 'https://www.amazon.nl/dp/B08HS45D69/?tag=gifteez77-21',
-      },
-      {
-        id: 'top-08',
-        name: 'LEGO Icons Bloemenboeket',
-        description: 'Creatief bouwproject en blijvend boeket in één – ideaal cadeau voor thuis.',
-        imageUrl: 'https://m.media-amazon.com/images/I/81tf-fY2FuL._AC_SL1500_.jpg',
-        price: '€49,99',
-        affiliateLink: 'https://www.amazon.nl/dp/B08HVXZW5K/?tag=gifteez77-21',
-      },
-      {
-        id: 'top-09',
-        name: 'Weber Spirit II E-210 GBS',
-        description:
-          'Duurzame 2-pits gasbarbecue met gietijzeren rooster voor zomerse grillavonden.',
-        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1105189',
-        price: '€499,00',
-        affiliateLink:
-          'https://www.coolblue.nl/product/810743/weber-spirit-ii-e-210-gbs-zwart.html',
-      },
-      {
-        id: 'top-10',
-        name: 'Fujifilm Instax Mini 12',
-        description: 'Direct-klaar camera voor creatieve snapshots tijdens feestjes en trips.',
-        imageUrl: 'https://m.media-amazon.com/images/I/71lE2vDn0L._AC_SL1500_.jpg',
-        price: '€79,99',
-        affiliateLink: 'https://www.amazon.nl/dp/B0BWN6L62N/?tag=gifteez77-21',
-      },
-    ]
+    return curatedTop10Deals.map((deal) => ({ ...deal }))
   }
 
   private static getFallbackCategories(): DealCategory[] {
-    return [
-      {
-        title: 'Top Tech Gadgets',
-        items: this.getFallbackTop10Deals().slice(0, 3),
-      },
-    ]
+    return curatedDealCategories.map((category) => ({
+      title: category.title,
+      items: category.items.map((item) => ({ ...item })),
+    }))
   }
 }

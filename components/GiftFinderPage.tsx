@@ -14,9 +14,10 @@ import { calculateGiftScore, extractPriceFromRange } from '../services/giftScori
 import { gaSearch, gaPageView } from '../services/googleAnalytics'
 import { pinterestPageVisit, pinterestSearch } from '../services/pinterestTracking'
 import { Gift, InitialGiftFinderData, ShowToast, GiftProfile, GiftSearchParams, RetailerBadge } from '../types';
-import GiftFinderHero from './GiftFinderHero';
+import HeroSection from './HeroSection';
 import Button from './Button'
 import GiftResultCard from './GiftResultCard'
+import EmailGiftResultsModal from './EmailGiftResultsModal'
 import { ThumbsUpIcon, ThumbsDownIcon, EmptyBoxIcon, SpinnerIcon, UserIcon } from './IconComponents'
 import InternalLinkCTA from './InternalLinkCTA'
 import Breadcrumbs from './Breadcrumbs'
@@ -197,6 +198,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [relevanceFeedback, setRelevanceFeedback] = useState<string>('')
   const [feedbackSubmitting, setFeedbackSubmitting] = useState<boolean>(false)
   const [feedbackSubmitted, setFeedbackSubmitted] = useState<boolean>(false)
+  const [showEmailModal, setShowEmailModal] = useState<boolean>(false)
   const auth = useContext(AuthContext)
 
   const suggestedInterests = useMemo(() => {
@@ -658,39 +660,94 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         description="Gebruik onze slimme GiftFinder om binnen 30 seconden het perfecte cadeau te vinden. Vul budget, interesses en gelegenheid in en ontvang persoonlijke AI-aanbevelingen van Amazon en Coolblue."
       />
       <div className="min-h-screen bg-white">
-        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'GiftFinder' }]} />
-
-        {/* Hero achtergrond met nieuwe afbeelding giftfinder-hero.png */}
-        <GiftFinderHero
-          image="/images/giftfinder-hero-afb.png"
-          imageWebp="/images/giftfinder-hero-afb.webp"
-          alt="Twee vrolijke cadeaudoos mascottes op paarse achtergrond – start de GiftFinder"
-          subheading="Kies wie je wilt verrassen, stel je budget en interesses in en laat onze AI meezoeken."
-          onSelectPersonality={() =>
-            document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' })
-          }
-          onStart={() =>
+        {/* New Hero Section with background image */}
+        <HeroSection
+          onCtaClick={() =>
             document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' })
           }
         />
-        <div className="h-8 md:h-12" />
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12" id="giftfinder-form">
-          <div className="max-w-4xl mx-auto">
+        {/* How it works section - Optional decorative section */}
+        <div className="bg-gradient-to-b from-white to-rose-50/30 py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                Hoe werkt het?
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                In 3 simpele stappen vind je het perfecte cadeau met onze AI
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8 mb-16">
+              {/* Step 1 */}
+              <div className="relative group">
+                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-100">
+                  <div className="absolute -top-6 left-8 w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    1
+                  </div>
+                  <div className="mt-4">
+                    <div className="text-5xl mb-4">🎯</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Vertel ons over de ontvanger</h3>
+                    <p className="text-gray-600">
+                      Kies de relatie, geslacht en budget voor het perfecte cadeau
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative group">
+                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-100">
+                  <div className="absolute -top-6 left-8 w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    2
+                  </div>
+                  <div className="mt-4">
+                    <div className="text-5xl mb-4">🤖</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">AI doet de magie</h3>
+                    <p className="text-gray-600">
+                      Onze slimme AI analyseert duizenden producten in seconden
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative group">
+                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-100">
+                  <div className="absolute -top-6 left-8 w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                    3
+                  </div>
+                  <div className="mt-4">
+                    <div className="text-5xl mb-4">🎁</div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Krijg gepersonaliseerde tips</h3>
+                    <p className="text-gray-600">
+                      Ontvang handgeplukte cadeaus die perfect bij de ontvanger passen
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main form section */}
+        <div className="bg-gradient-to-b from-rose-50/30 to-white py-16" id="giftfinder-form">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <form
               onSubmit={handleSubmit}
-              className="bg-white p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-100 space-y-10 -mt-16 relative z-20"
+              className="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border-2 border-rose-100 space-y-12 relative"
             >
               {auth && auth.currentUser && auth.currentUser.profiles.length > 0 && (
-                <div className="p-6 bg-gradient-to-r from-secondary to-secondary/80 rounded-xl border border-secondary/20">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-white/20 rounded-lg">
-                      <UserIcon className="w-6 h-6 text-primary" />
+                <div className="p-8 bg-gradient-to-br from-violet-50 to-purple-50 rounded-2xl border-2 border-violet-200 shadow-lg">
+                  <div className="flex items-center gap-4 mb-5">
+                    <div className="p-3 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl shadow-lg">
+                      <UserIcon className="w-7 h-7 text-white" />
                     </div>
-                    <div>
-                      <h3 className="font-display text-xl font-bold text-primary">
+                    <div className="flex-1">
+                      <h3 className="font-display text-2xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
                         Snelstart met een profiel
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-600 mt-1">
                         Laad een opgeslagen profiel voor snelle invoer
                       </p>
                     </div>
@@ -699,7 +756,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     id="profile-select"
                     onChange={handleProfileSelect}
                     defaultValue=""
-                    className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-gray-800"
+                    className="w-full p-5 border-2 border-violet-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent bg-white shadow-sm text-gray-800 font-medium transition-all hover:border-violet-300"
                     aria-label="Kies een opgeslagen profiel"
                   >
                     <option value="" disabled>
@@ -715,22 +772,22 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               )}
 
               {/* Recipient Selection */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-rose-500/10 rounded-lg">
-                    <span className="text-2xl">🎯</span>
+              <div className="space-y-5 bg-gradient-to-br from-rose-50 to-pink-50/50 p-8 rounded-2xl border border-rose-200/50">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl shadow-lg">
+                    <span className="text-3xl">🎯</span>
                   </div>
-                  <div>
-                    <h3 className="font-display text-xl font-bold text-primary">
+                  <div className="flex-1">
+                    <h3 className="font-display text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                       Voor wie zoek je?
                     </h3>
-                    <p className="text-sm text-gray-600">Kies de relatie tot de ontvanger</p>
+                    <p className="text-sm text-gray-600 mt-1">Kies de relatie tot de ontvanger</p>
                   </div>
                 </div>
                 <select
                   value={recipient}
                   onChange={(e) => setRecipient(e.target.value)}
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-gray-800"
+                  className="w-full p-5 border-2 border-rose-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent bg-white shadow-sm text-gray-800 font-medium transition-all hover:border-rose-300"
                   aria-label="Relatie ontvanger"
                 >
                   {recipients.map((r) => (
@@ -742,25 +799,29 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               </div>
 
               {/* Gender Selection */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-500/10 rounded-lg">
-                    <span className="text-2xl">👤</span>
+              <div className="space-y-5 bg-gradient-to-br from-purple-50 to-indigo-50/50 p-8 rounded-2xl border border-purple-200/50">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl shadow-lg">
+                    <span className="text-3xl">👤</span>
                   </div>
-                  <div>
-                    <h3 className="font-display text-xl font-bold text-primary">
+                  <div className="flex-1">
+                    <h3 className="font-display text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                       Man of vrouw?
                     </h3>
-                    <p className="text-sm text-gray-600">Help ons betere suggesties te geven</p>
+                    <p className="text-sm text-gray-600 mt-1">Help ons betere suggesties te geven</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   {genders.map((g) => (
                     <button
                       key={g}
                       type="button"
                       onClick={() => setGender(g)}
-                      className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${gender === g ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'}`}
+                      className={`py-4 px-6 rounded-xl text-base font-bold transition-all duration-300 transform hover:scale-105 ${
+                        gender === g 
+                          ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-xl ring-4 ring-purple-200' 
+                          : 'bg-white border-2 border-purple-200 text-gray-700 hover:border-purple-400 hover:shadow-lg'
+                      }`}
                     >
                       {g}
                     </button>
@@ -769,52 +830,57 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               </div>
 
               {/* Budget Slider */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <span className="text-2xl">💸</span>
+              <div className="space-y-5 bg-gradient-to-br from-emerald-50 to-teal-50/50 p-8 rounded-2xl border border-emerald-200/50">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl shadow-lg">
+                    <span className="text-3xl">�</span>
                   </div>
                   <div className="flex-1">
                     <label
                       htmlFor="budget"
-                      className="block font-display text-xl font-bold text-primary mb-2"
+                      className="block font-display text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"
                     >
                       Wat is je budget?
                     </label>
-                    <p className="text-sm text-gray-600">Kies een indicatie van je uitgaven</p>
+                    <p className="text-sm text-gray-600 mt-1">Versleep de slider naar je ideale bedrag</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-2xl font-bold text-blue-600">€{budget}</span>
+                  <div className="text-right bg-white px-6 py-3 rounded-xl shadow-lg border-2 border-emerald-200">
+                    <span className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">€{budget}</span>
                   </div>
                 </div>
-                <input
-                  id="budget"
-                  type="range"
-                  min={5}
-                  max={500}
-                  step={5}
-                  value={budget}
-                  onChange={(e) => setBudget(Number(e.target.value))}
-                  className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary"
-                />
-                <div className="flex justify-between text-xs text-gray-500">
-                  <span>Laag</span>
-                  <span>Gemiddeld</span>
-                  <span>Premium</span>
+                <div className="pt-4">
+                  <input
+                    id="budget"
+                    type="range"
+                    min={5}
+                    max={500}
+                    step={5}
+                    value={budget}
+                    onChange={(e) => setBudget(Number(e.target.value))}
+                    className="w-full h-4 bg-gradient-to-r from-emerald-200 to-teal-200 rounded-lg appearance-none cursor-pointer slider-emerald"
+                    style={{
+                      background: `linear-gradient(to right, #10b981 0%, #10b981 ${((budget - 5) / 495) * 100}%, #d1fae5 ${((budget - 5) / 495) * 100}%, #d1fae5 100%)`
+                    }}
+                  />
+                  <div className="flex justify-between text-sm font-medium text-gray-600 mt-3">
+                    <span>€5</span>
+                    <span className="text-emerald-600">€{Math.round(500/2)}</span>
+                    <span>€500</span>
+                  </div>
                 </div>
               </div>
 
               {/* Occasion Selection */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-secondary/50 rounded-lg">
-                    <span className="text-2xl">🎉</span>
+              <div className="space-y-5 bg-gradient-to-br from-amber-50 to-orange-50/50 p-8 rounded-2xl border border-amber-200/50">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl shadow-lg">
+                    <span className="text-3xl">🎉</span>
                   </div>
-                  <div>
-                    <h3 className="font-display text-xl font-bold text-primary">
+                  <div className="flex-1">
+                    <h3 className="font-display text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                       Wat is de gelegenheid?
                     </h3>
-                    <p className="text-sm text-gray-600">Kies de speciale gelegenheid</p>
+                    <p className="text-sm text-gray-600 mt-1">Selecteer de speciale gelegenheid</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -823,7 +889,11 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       key={o}
                       type="button"
                       onClick={() => setOccasion(o)}
-                      className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${occasion === o ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'}`}
+                      className={`py-4 px-4 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 ${
+                        occasion === o 
+                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-xl ring-4 ring-amber-200' 
+                          : 'bg-white border-2 border-amber-200 text-gray-700 hover:border-amber-400 hover:shadow-lg'
+                      }`}
                     >
                       {o}
                     </button>
@@ -832,20 +902,20 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
               </div>
 
               {/* Interests Input */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/10 rounded-lg">
-                    <span className="text-2xl">🎨</span>
+              <div className="space-y-5 bg-gradient-to-br from-blue-50 to-cyan-50/50 p-8 rounded-2xl border border-blue-200/50">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg">
+                    <span className="text-3xl">🎨</span>
                   </div>
                   <div className="flex-1">
                     <label
                       htmlFor="interests"
-                      className="block font-display text-xl font-bold text-primary mb-2"
+                      className="block font-display text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent"
                     >
                       Hobby's of interesses?
                     </label>
-                    <p className="text-sm text-gray-600">
-                      Selecteer interesses of voeg je eigen toe
+                    <p className="text-sm text-gray-600 mt-1">
+                      Selecteer passende interesses of voeg je eigen toe
                     </p>
                   </div>
                 </div>
@@ -857,10 +927,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       key={interest.name}
                       type="button"
                       onClick={() => handleInterestTagToggle(interest.name)}
-                      className={`py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 ${
+                      className={`py-4 px-4 rounded-xl text-sm font-bold transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 ${
                         selectedInterestTags.includes(interest.name)
-                          ? 'bg-gradient-to-r from-primary to-accent text-white shadow-lg'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:shadow-md'
+                          ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-xl ring-4 ring-blue-200'
+                          : 'bg-white border-2 border-blue-200 text-gray-700 hover:border-blue-400 hover:shadow-lg'
                       }`}
                     >
                       <span className="text-xl">{interest.icon}</span>
@@ -870,10 +940,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 </div>
 
                 {/* Text input for custom interests */}
-                <div className="relative">
+                <div className="relative pt-2">
                   <label
                     htmlFor="interests"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-semibold text-gray-700 mb-3"
                   >
                     Of voeg eigen interesses toe:
                   </label>
@@ -887,30 +957,63 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       setSelectedInterestTags([])
                     }}
                     placeholder="bv. Fotografie, Koffie, Yoga"
-                    className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm text-gray-800"
+                    className="w-full p-5 border-2 border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm text-gray-800 font-medium transition-all hover:border-blue-300"
                   />
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-gray-200">
-                <Button
+              <div className="pt-8">
+                <button
                   type="submit"
-                  variant="accent"
                   disabled={isLoading}
-                  className="w-full py-4 text-lg font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center"
+                  className="group relative w-full py-6 rounded-2xl text-xl font-bold shadow-2xl transition-all duration-300 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? (
-                    <>
-                      <SpinnerIcon className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" />
-                      AI zoekt de beste cadeaus...
-                    </>
-                  ) : (
-                    <>
-                      <span className="mr-2">🎁</span>
-                      Vind Perfecte Cadeaus
-                    </>
-                  )}
-                </Button>
+                  {/* Gradient background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 transition-transform group-hover:scale-110 duration-500"></div>
+                  
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <span className="relative z-10 flex items-center justify-center text-white">
+                    {isLoading ? (
+                      <>
+                        <SpinnerIcon className="animate-spin -ml-1 mr-3 h-7 w-7" />
+                        <span>AI zoekt de beste cadeaus...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-3xl mr-3">🎁</span>
+                        <span>Vind Perfecte Cadeaus</span>
+                        <svg className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </>
+                    )}
+                  </span>
+                </button>
+                
+                {/* Trust badges below button */}
+                <div className="mt-6 flex items-center justify-center gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-medium">100% Gratis</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-medium">Binnen 30 sec</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span className="font-medium">AI-powered</span>
+                  </div>
+                </div>
               </div>
             </form>
 
@@ -1121,6 +1224,20 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     ))}
                   </div>
 
+                  {/* Email Results Button */}
+                  <div className="mt-8 text-center">
+                    <Button
+                      onClick={() => setShowEmailModal(true)}
+                      variant="secondary"
+                      className="px-8 py-3 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 inline-flex items-center gap-2"
+                    >
+                      📧 Email deze suggesties naar mij
+                    </Button>
+                    <p className="mt-2 text-sm text-gray-500">
+                      Ontvang je resultaten direct in je inbox
+                    </p>
+                  </div>
+
                   {/* Show More Button */}
                   {gifts.length > visibleCount && (
                     <div className="mt-8 text-center">
@@ -1253,6 +1370,18 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             </div>
           </div>
         )}
+
+        {/* Email Results Modal */}
+        <EmailGiftResultsModal
+          isOpen={showEmailModal}
+          onClose={() => setShowEmailModal(false)}
+          gifts={gifts}
+          searchParams={{
+            recipient,
+            occasion,
+            budget: `€${budget}`,
+          }}
+        />
       </div>
     </>
   )

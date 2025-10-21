@@ -28,6 +28,8 @@ import ActivityLog from './ActivityLog'
 import PerformanceInsights from './PerformanceInsights'
 import { BulkProductImporter } from './BulkProductImporter'
 import ImageValidator from './ImageValidator'
+import AdminNewsletterPanel from './AdminNewsletterPanel'
+import AdminContactMessages from './AdminContactMessages'
 import { DynamicProductService } from '../services/dynamicProductService'
 import {
   PinnedDealsService,
@@ -101,10 +103,13 @@ const QUIZ_REMINDER_STORAGE_KEY = 'gifteez.quizAdmin.reminders.v1'
 const ADMIN_PREFERENCES_STORAGE_KEY = 'gifteez.admin.preferences.v1'
 
 type AdminTab =
+  | 'overview'
   | 'blog'
   | 'deals'
   | 'quiz'
   | 'shop'
+  | 'newsletter'
+  | 'messages'
   | 'settings'
   | 'activity'
   | 'performance'
@@ -121,7 +126,7 @@ interface AdminPreferences {
 }
 
 const defaultAdminPreferences: AdminPreferences = {
-  defaultTab: 'blog',
+  defaultTab: 'overview',
 }
 
 const getStoredAdminPreferences = (): AdminPreferences => {
@@ -268,12 +273,16 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[
+              { key: 'overview', label: 'Overzicht', icon: '📊' },
               { key: 'blog', label: 'Blog Posts', icon: '📝' },
               { key: 'deals', label: 'Deals', icon: '🏷️' },
               { key: 'quiz', label: 'Quiz', icon: '❓' },
               { key: 'shop', label: 'Shop Items', icon: '🛍️' },
+              { key: 'newsletter', label: 'Nieuwsbrief', icon: '📧' },
+              { key: 'messages', label: 'Berichten', icon: '📨' },
               { key: 'import', label: 'Bulk Import', icon: '📦' },
-              { key: 'activity', label: 'Activiteiten', icon: '📊' },
+              { key: 'images', label: 'Images', icon: '🖼️' },
+              { key: 'activity', label: 'Activiteiten', icon: '📋' },
               { key: 'performance', label: 'Performance', icon: '📈' },
               { key: 'settings', label: 'Instellingen', icon: '⚙️' },
             ].map((tab) => (
@@ -294,17 +303,15 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
         </div>
       </div>
 
-      {/* Dashboard - Always visible at top */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        <AdminDashboard />
-      </div>
-
       {/* Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeTab === 'overview' && <AdminDashboard />}
         {activeTab === 'blog' && <BlogAdmin isCloudConnected={firebaseEnabled} />}
         {activeTab === 'deals' && <DealsAdmin />}
         {activeTab === 'quiz' && <QuizAdmin navigateTo={navigateTo} />}
         {activeTab === 'shop' && <ShopAdmin />}
+        {activeTab === 'newsletter' && <AdminNewsletterPanel />}
+        {activeTab === 'messages' && <AdminContactMessages />}
         {activeTab === 'import' && <BulkProductImporter />}
         {activeTab === 'images' && <ImageValidator />}
         {activeTab === 'activity' && <ActivityLog />}
@@ -3264,10 +3271,13 @@ interface SettingsAdminProps {
 }
 
 const tabLabels: Record<AdminTab, string> = {
+  overview: 'Overzicht',
   blog: 'Blogbeheer',
   deals: 'Deals',
   quiz: 'Quiz',
   shop: 'Shop items',
+  newsletter: 'Nieuwsbrief',
+  messages: 'Berichten',
   import: 'Bulk Import',
   images: 'Image Validator',
   settings: 'Instellingen',

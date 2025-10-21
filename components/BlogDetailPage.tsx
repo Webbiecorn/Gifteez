@@ -149,6 +149,33 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
   const [showJumpToTop, setShowJumpToTop] = useState(false)
   const [imageErrors, setImageErrors] = useState<Set<string>>(() => new Set())
 
+  const authorArticleCount = useMemo(() => {
+    if (!post) {
+      return 0
+    }
+    const totalByAuthor = posts.filter((p) => p.author.name === post.author.name).length
+    return totalByAuthor || 1
+  }, [post, posts])
+
+  const estimatedViews = useMemo(() => {
+    if (!post) {
+      return 0
+    }
+  const slugHash = post.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const dayStamp = post.publishedDate
+      ? Math.floor(new Date(post.publishedDate).getTime() / 86_400_000)
+      : 0
+    const normalized = (slugHash * 31 + dayStamp * 97) % 6200
+    return 1800 + normalized
+  }, [post])
+
+  const formattedViews = useMemo(() => {
+    if (!estimatedViews) {
+      return '—'
+    }
+    return new Intl.NumberFormat('nl-NL').format(estimatedViews)
+  }, [estimatedViews])
+
   useEffect(() => {
     if (postsLoading) {
       return
@@ -1023,7 +1050,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                           d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
                         />
                       </svg>
-                      {Math.floor(Math.random() * 5000) + 1000} views
+                      {formattedViews} weergaven
                     </span>
                     <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted-rose text-accent rounded-full text-xs font-medium">
                       <CheckIcon className="w-3 h-3 text-accent" aria-hidden="true" />
@@ -1077,7 +1104,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                         </span>
                         <span className="inline-flex items-center gap-2 bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">
                           <CheckIcon className="w-4 h-4" />
-                          {Math.floor(Math.random() * 50) + 10} Artikelen
+                          {authorArticleCount} {authorArticleCount === 1 ? 'Artikel' : 'Artikelen'}
                         </span>
                       </div>
                     </div>

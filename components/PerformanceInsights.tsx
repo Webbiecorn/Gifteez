@@ -81,6 +81,11 @@ const PerformanceInsights: React.FC = () => {
   const avgCtr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0
   const productsWithData = allMetrics.filter((m) => m.impressions > 0).length
 
+  // Top 5 performers by gift score
+  const topPerformers = [...currentTrending]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5)
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -91,6 +96,43 @@ const PerformanceInsights: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Top 5 Presterende Producten - Compact */}
+      {topPerformers.length > 0 && (
+        <div className="bg-gradient-to-br from-amber-50 to-rose-50 rounded-lg p-4 border border-amber-200">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">🏆</span>
+            <h3 className="text-sm font-semibold text-gray-700">Top 5 Presterende Producten</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+            {topPerformers.map((product, index) => {
+              const prod = products.get(product.productId)
+              return (
+                <div
+                  key={product.productId}
+                  className="bg-white/80 backdrop-blur rounded-lg p-2 border border-gray-200 hover:border-rose-300 transition-colors"
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="flex-shrink-0 w-5 h-5 bg-gradient-to-br from-rose-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      {index + 1}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium text-gray-900 truncate">
+                        {prod?.name || product.productId}
+                      </p>
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className="text-xs font-semibold text-rose-600">
+                          {product.score.toFixed(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">

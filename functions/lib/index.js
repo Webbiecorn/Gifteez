@@ -1,10 +1,12 @@
 // Gebruik v1 compat layer zodat 1st Gen deployment behouden blijft terwijl firebase-functions@6 is geïnstalleerd.
-import * as functions from 'firebase-functions/v1';
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import rateLimit from 'express-rate-limit';
-import { getItem, searchItems, isPaapiConfigured } from './amazon.js';
+import * as functions from 'firebase-functions/v1';
 import { Resend } from 'resend';
+import { getItem, searchItems, isPaapiConfigured } from './amazon.js';
+// Export email functions
+export { onNewsletterSubscribe, sendNewsletterCampaign, sendGiftFinderResults, onContactFormSubmit } from './email.js';
 const cache = new Map();
 const TTL_MS = 1000 * 60 * 60; // 1 hour
 function getCache(key) {
@@ -22,11 +24,7 @@ function setCache(key, value, ttlMs = TTL_MS) {
     cache.set(key, { value, expiresAt: Date.now() + ttlMs });
 }
 const app = express();
-const allowedOrigins = [
-    'http://localhost:5173',
-    'https://gifteez.nl',
-    'https://www.gifteez.nl'
-];
+const allowedOrigins = ['http://localhost:5173', 'https://gifteez.nl', 'https://www.gifteez.nl'];
 const corsDelegate = (origin, cb) => {
     if (!origin || typeof origin !== 'string')
         return cb(null, { origin: true });
@@ -55,7 +53,7 @@ app.use((req, res, next) => {
             status: res.statusCode,
             duration_ms: dur,
             ua: req.get('user-agent') || '',
-            ip: req.ip
+            ip: req.ip,
         }));
     });
     next();
@@ -82,7 +80,9 @@ app.post('/api/contact', async (req, res) => {
         }
         // Validate fields
         const errors = {};
-        function reqStr(v) { return typeof v === 'string' ? v.trim() : ''; }
+        function reqStr(v) {
+            return typeof v === 'string' ? v.trim() : '';
+        }
         const vName = reqStr(name);
         const vEmail = reqStr(email);
         const vSubject = reqStr(subject);
@@ -113,7 +113,7 @@ app.post('/api/contact', async (req, res) => {
             to: [toAddress],
             replyTo: vEmail,
             subject: `[Contact] ${vSubject}`.slice(0, 200),
-            html
+            html,
         });
         res.json({ ok: true });
     }
@@ -143,7 +143,7 @@ app.get('/api/amazon-search', async (req, res) => {
             minPrice: minPrice ? Number(minPrice) : undefined,
             maxPrice: maxPrice ? Number(maxPrice) : undefined,
             sort: sort ? String(sort) : undefined,
-            prime: prime === 'true'
+            prime: prime === 'true',
         });
         setCache(key, data);
         res.set('Cache-Control', 'public, max-age=300');
@@ -184,10 +184,8 @@ app.use((req, res) => {
     return res.status(404).send('Not found');
 });
 // Export 1st gen HTTPS function (upgrade to 2nd gen vereist aparte nieuwe naam / migratiepad)
-export const api = functions
-    .region('europe-west1')
-    .https.onRequest(app);
+export const api = functions.region('europe-west1').https.onRequest(app);
 // Helper to escape HTML
 function escapeHtml(str) {
-    return str.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    return str.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 }

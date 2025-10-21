@@ -39,14 +39,14 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
 
   return (
     <section
-      className={`relative w-full ${heightAspect} max-h-[760px] overflow-hidden bg-black ${className}`.trim()}
+      className={`relative w-full ${heightAspect} max-h-[760px] overflow-hidden bg-gradient-to-br from-secondary-50 to-secondary-100 ${className}`.trim()}
     >
       <picture>
         {imageWebp && <source srcSet={imageWebp} type="image/webp" />}
         <img
           src={image}
           alt={alt}
-          className="absolute inset-0 w-full h-full object-cover object-[center_60%] select-none pointer-events-none"
+          className="absolute inset-0 w-full h-full object-contain object-center select-none pointer-events-none animate-subtle-float"
           loading="eager"
           decoding="async"
           fetchPriority="high"
@@ -54,36 +54,45 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
           height={860}
         />
       </picture>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-black/0" />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-        <div className="space-y-4 sm:space-y-6 max-w-4xl">
-          <p className="text-sm sm:text-base font-semibold tracking-wider text-white/80">
+      
+      {/* Gradient fade aan beide zijkanten */}
+      <div className="absolute inset-0 bg-gradient-to-r from-secondary-100 via-transparent via-50% to-secondary-100" />
+      
+      {/* Gradient overlay voor tekstcontrast - links donkerder */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-900/50 via-primary-900/10 via-40% to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-secondary-100/20" />
+      
+      {/* Decoratieve gloed rond mascotte */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 right-1/3 -translate-y-1/2 w-96 h-96 bg-accent-500/20 rounded-full blur-3xl animate-pulse-slow" />
+      </div>
+
+      <div className="absolute inset-0 flex items-center px-6 sm:px-12 lg:px-20">
+        <div className="max-w-2xl space-y-4 sm:space-y-6">
+          <p className="text-sm sm:text-base font-semibold tracking-wider text-accent-500 drop-shadow-lg">
             {tagline}
           </p>
-          <h1 className="text-xl sm:text-3xl md:text-5xl font-extrabold leading-tight text-white drop-shadow-xl">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-white drop-shadow-2xl">
             {headingLines.map((line, index) => (
               <React.Fragment key={index}>
-                <span className={headingLines.length > 1 ? 'block sm:inline' : undefined}>
+                <span className="block">
                   {line}
                 </span>
-                {headingLines.length > 1 && index < headingLines.length - 1 && (
-                  <span className="hidden sm:inline">&nbsp;</span>
-                )}
               </React.Fragment>
             ))}
           </h1>
           {subheading && (
-            <p className="hidden sm:block text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-white/95 max-w-xl drop-shadow-lg leading-relaxed">
               {subheading}
             </p>
           )}
           {(onSelectPersonality || onStart) && (
-            <div className="hidden sm:flex sm:flex-wrap items-center justify-center gap-3 sm:gap-4 pt-6 w-full max-w-2xl mx-auto">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-4 sm:pt-6">
               {onSelectPersonality && (
                 <button
                   type="button"
                   onClick={onSelectPersonality}
-                  className="px-6 py-3 rounded-full font-semibold bg-white/30 hover:bg-white/40 text-white border border-white/30 shadow-lg transition"
+                  className="px-6 py-3 sm:px-7 sm:py-4 rounded-full font-semibold text-sm sm:text-base bg-white/95 hover:bg-white text-primary-800 border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all hover:scale-105 backdrop-blur-sm"
                   aria-label="Scroll naar formulier voor persoonlijkheid of interesses"
                 >
                   Persoonlijkheid kiezen
@@ -93,7 +102,7 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
                 <button
                   type="button"
                   onClick={onStart}
-                  className="px-8 py-3 rounded-full font-semibold bg-rose-500 hover:bg-rose-600 text-white shadow-lg hover:shadow-xl transition focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-300"
+                  className="px-8 py-3 sm:px-9 sm:py-4 rounded-full font-semibold text-sm sm:text-base bg-accent-500 hover:bg-accent-600 text-white shadow-xl hover:shadow-2xl transition-all hover:scale-105 focus:outline-none focus-visible:ring-4 focus-visible:ring-accent-300"
                   aria-label="Start de GiftFinder"
                 >
                   Start GiftFinder

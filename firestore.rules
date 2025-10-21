@@ -44,5 +44,31 @@ service cloud.firestore {
     match /admin/{document=**} {
       allow read, write: if isGifteezAdmin();
     }
+
+    // Newsletter subscribers - users can subscribe themselves, admins can manage
+    match /newsletter_subscribers/{email} {
+      // Iedereen kan zichzelf toevoegen (subscribe)
+      allow create: if true;
+      // Users kunnen hun eigen subscription status updaten (unsubscribe)
+      allow update: if request.resource.data.email == resource.data.email;
+      // Alleen admins kunnen alles lezen en verwijderen
+      allow read, delete: if isGifteezAdmin();
+    }
+
+    // Email templates - alleen admins
+    match /email_templates/{templateId} {
+      allow read, write: if isGifteezAdmin();
+    }
+
+    // Email campaigns - alleen admins
+    match /email_campaigns/{campaignId} {
+      allow read, write: if isGifteezAdmin();
+    }
+
+    // Contact messages - public create, admin read/update
+    match /contact_messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isGifteezAdmin();
+    }
   }
 }

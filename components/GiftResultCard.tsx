@@ -185,28 +185,38 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     onFavoriteChange?.(gift.productName, isNowFavorite)
   }
 
+  const baseCardClasses = 'overflow-hidden flex flex-col h-full'
   const containerClasses = isEmbedded
-    ? 'bg-white rounded-lg shadow-md overflow-hidden flex flex-col'
-    : 'bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-shadow duration-300'
+    ? `${baseCardClasses} bg-white/95 rounded-[inherit] border border-white/60 shadow-[0_30px_80px_-40px_rgba(225,29,72,0.35)] backdrop-blur-sm`
+    : `${baseCardClasses} bg-white rounded-lg shadow-lg transition-shadow duration-300 hover:shadow-xl`
+  const outerWrapperClasses = isEmbedded
+    ? 'h-full rounded-3xl bg-gradient-to-br from-rose-100/90 via-white to-amber-100/80 p-[1.5px] shadow-[0_26px_70px_-35px_rgba(225,29,72,0.4)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_34px_90px_-32px_rgba(225,29,72,0.45)]'
+    : ''
 
   const imageContainerHeight = candidateVariant ? 'h-32 md:h-36' : imageHeightClass
+  const imageWrapperBase = candidateVariant
+    ? `${imageContainerHeight} flex items-center justify-center p-4`
+    : `${imageContainerHeight} w-full`
+  const imageWrapperClasses = `relative ${imageWrapperBase} ${
+    isEmbedded
+      ? 'overflow-hidden rounded-2xl border border-white/60 bg-white/95 shadow-[0_18px_60px_-40px_rgba(225,29,72,0.3)]'
+      : 'bg-white'
+  }`
+  const imageClassName = `${
+    candidateVariant ? 'max-h-full max-w-full w-auto h-auto mx-auto' : 'w-full h-full'
+  } ${isEmbedded ? 'transition-transform duration-500 group-hover:scale-[1.05]' : candidateVariant ? '' : 'bg-white'}`
+  const contentPadding = isEmbedded ? 'p-7 md:p-8' : 'p-6'
 
-  return (
-    <div
-      className={`${containerClasses} h-full`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+  const cardContent = (
+    <>
       {/* Only show image section if there's an imageUrl */}
       {gift.imageUrl && gift.imageUrl.trim() !== '' && (
-        <div
-          className={`relative ${candidateVariant ? imageContainerHeight + ' flex items-center justify-center bg-white p-4' : imageContainerHeight + ' w-full'}`}
-        >
+        <div className={imageWrapperClasses}>
           {candidateVariant ? (
             <ImageWithFallback
               src={gift.imageUrl}
               alt={gift.productName}
-              className="max-h-full max-w-full w-auto h-auto mx-auto"
+              className={imageClassName}
               width={400}
               height={400}
               fit={imageFit}
@@ -215,7 +225,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
             <ImageWithFallback
               src={gift.imageUrl}
               alt={gift.productName}
-              className="w-full h-full bg-white"
+              className={imageClassName}
               width={400}
               height={300}
               fit={imageFit}
@@ -267,7 +277,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           {!isReadOnly && (
             <button
               onClick={handleToggleFavorite}
-              className="absolute top-3 right-3 bg-white/80 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+              className="absolute top-3 right-3 bg-white/85 p-2 rounded-full text-accent hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
               aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
             >
               {isFavorite ? (
@@ -298,7 +308,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
       )}
 
       <div
-        className={`p-6 flex flex-col flex-grow ${candidateVariant ? 'items-center text-center' : ''}`}
+        className={`${contentPadding} flex flex-col flex-grow ${candidateVariant ? 'items-center text-center' : ''}`}
       >
         {/* Compare Checkbox */}
         {onCompareToggle && !isReadOnly && !isEmbedded && (
@@ -359,7 +369,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           </div>
         )}
 
-        <p className={`mt-2 text-gray-600 ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>
+        <p className={`mt-2 text-gray-600 leading-relaxed ${candidateVariant ? 'flex-grow' : 'flex-grow'}`}>
           {gift.description}
         </p>
 
@@ -426,7 +436,18 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
                   aria-label={`Bekijk ${gift.productName} bij ${retailer.name}`}
                   onClick={handleClick}
                 >
-                  <Button variant={i === 0 ? 'accent' : 'primary'} className="w-full">
+                  <Button
+                    variant={
+                      isEmbedded
+                        ? i === 0
+                          ? 'affiliate'
+                          : 'affiliateSecondary'
+                        : i === 0
+                          ? 'accent'
+                          : 'primary'
+                    }
+                    className={`w-full ${isEmbedded ? '!rounded-full py-3 text-sm md:text-base tracking-wide' : ''}`}
+                  >
                     Bekijk bij {retailer.name}
                   </Button>
                 </a>
@@ -441,6 +462,22 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
           </div>
         )}
       </div>
+    </>
+  )
+
+  return (
+    <div
+      className="relative h-full group"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {isEmbedded ? (
+        <div className={outerWrapperClasses}>
+          <div className={containerClasses}>{cardContent}</div>
+        </div>
+      ) : (
+        <div className={containerClasses}>{cardContent}</div>
+      )}
     </div>
   )
 }

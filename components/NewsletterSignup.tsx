@@ -87,12 +87,20 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
 
       onSuccess?.()
     } catch (error: any) {
+      console.error('Newsletter signup error:', error)
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        stack: error.stack
+      })
+      
       if (error.message === 'Email is already subscribed') {
         showMessage('error', 'Dit e-mailadres is al aangemeld')
       } else {
-        showMessage('error', 'Er ging iets mis. Probeer het opnieuw.')
+        // Toon meer details in development
+        const errorMsg = error.message || error.toString()
+        showMessage('error', `Er ging iets mis: ${errorMsg}`)
       }
-      console.error('Newsletter signup error:', error)
     } finally {
       setIsLoading(false)
     }

@@ -26,7 +26,7 @@ async function signedFetch(path, body) {
         region,
         headers: {
             'content-type': 'application/json; charset=UTF-8',
-            'host': host,
+            host: host,
         },
         body: bodyStr,
     };
@@ -42,12 +42,16 @@ async function signedFetch(path, body) {
 function mapOffer(offer) {
     const amount = offer?.Price?.Amount;
     const currency = offer?.Price?.Currency;
-    const display = amount && currency ? new Intl.NumberFormat('nl-NL', { style: 'currency', currency }).format(amount) : undefined;
+    const display = amount && currency
+        ? new Intl.NumberFormat('nl-NL', { style: 'currency', currency }).format(amount)
+        : undefined;
     const savingsAmount = offer?.Savings?.Amount;
     const savingsPercent = offer?.Savings?.Percentage;
     return {
         price: amount && currency ? { value: amount, currency, display: display } : undefined,
-        savings: savingsAmount || savingsPercent ? { amount: savingsAmount, percent: savingsPercent } : undefined,
+        savings: savingsAmount || savingsPercent
+            ? { amount: savingsAmount, percent: savingsPercent }
+            : undefined,
         prime: offer?.ProgramEligibility?.IsPrimeEligible === true,
     };
 }
@@ -65,9 +69,13 @@ export async function searchItems(params) {
             'Images.Primary.Large',
             'Images.Primary.Medium',
             'Images.Primary.Small',
+            'ItemInfo.Features',
+            'EditorialReviews.Entries',
+            'CustomerReviews.Count',
+            'CustomerReviews.StarRating',
             'Offers.Listings.Price',
             'Offers.Listings.SavingBasis',
-            'Offers.Listings.ProgramEligibility'
+            'Offers.Listings.ProgramEligibility',
         ],
         // Note: price filters differ per locale; in PA-API use MinPrice/MaxPrice in cents for some markets.
     };
@@ -79,6 +87,15 @@ export async function searchItems(params) {
     const items = (data.ItemsResult?.Items || []).map((it) => {
         const listing = it?.Offers?.Listings?.[0];
         const priceInfo = mapOffer(listing);
+        const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
+            ? it.ItemInfo.Features.DisplayValues.filter((value) => typeof value === 'string')
+            : undefined;
+        const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
+        const editorialContent = Array.isArray(editorialEntries)
+            ? editorialEntries.find((entry) => entry?.Content)?.Content
+            : undefined;
+        const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
+        const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
         return {
             asin: it?.ASIN,
             title: it?.ItemInfo?.Title?.DisplayValue,
@@ -89,6 +106,10 @@ export async function searchItems(params) {
                 large: it?.Images?.Primary?.Large?.URL,
             },
             ...priceInfo,
+            rating: typeof starRating === 'number' ? starRating : undefined,
+            reviewCount,
+            features,
+            description: typeof editorialContent === 'string' ? editorialContent : undefined,
         };
     });
     return { items, fetchedAtISO: new Date().toISOString() };
@@ -104,10 +125,14 @@ export async function getItem(asin) {
             'Images.Primary.Large',
             'Images.Primary.Medium',
             'Images.Primary.Small',
+            'ItemInfo.Features',
+            'EditorialReviews.Entries',
+            'CustomerReviews.Count',
+            'CustomerReviews.StarRating',
             'Offers.Listings.Price',
             'Offers.Listings.SavingBasis',
-            'Offers.Listings.ProgramEligibility'
-        ]
+            'Offers.Listings.ProgramEligibility',
+        ],
     };
     const data = await signedFetch('/paapi5/getitems', body);
     const it = data.ItemsResult?.Items?.[0];
@@ -115,6 +140,15 @@ export async function getItem(asin) {
         return { item: null, fetchedAtISO: new Date().toISOString() };
     const listing = it?.Offers?.Listings?.[0];
     const priceInfo = mapOffer(listing);
+    const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
+        ? it.ItemInfo.Features.DisplayValues.filter((value) => typeof value === 'string')
+        : undefined;
+    const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
+    const editorialContent = Array.isArray(editorialEntries)
+        ? editorialEntries.find((entry) => entry?.Content)?.Content
+        : undefined;
+    const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
+    const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
     const item = {
         asin: it?.ASIN,
         title: it?.ItemInfo?.Title?.DisplayValue,
@@ -125,6 +159,10 @@ export async function getItem(asin) {
             large: it?.Images?.Primary?.Large?.URL,
         },
         ...priceInfo,
+        rating: typeof starRating === 'number' ? starRating : undefined,
+        reviewCount,
+        features,
+        description: typeof editorialContent === 'string' ? editorialContent : undefined,
     };
     return { item, fetchedAtISO: new Date().toISOString() };
 }

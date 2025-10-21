@@ -2,17 +2,36 @@ import type { DealItem, DealCategory } from '../types'
 
 export const dealOfTheWeek: DealItem = {
   id: 'deal-001',
-  name: 'Whirlpool WH7IPC15BM60 Maxispace',
+  name: 'Philips Airfryer XXL Connected HD9285/90',
   description:
-    'Inbouw vaatwasser met Maxi Space technologie en PowerClean sproeiarm. Perfect voor grote families en effectieve reiniging van al je servies.',
-  imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781',
-  price: 'Nu voor €629,00',
-  affiliateLink: 'https://www.coolblue.nl/product/966434/whirlpool-wh7ipc15bm60-maxispace.html',
+    'Slimme heteluchtfriteuse met HomeID app, 1,4 kg inhoud en RapidAir Plus technologie voor krokant resultaat met minder olie.',
+  imageUrl:
+    'https://coolblue.bynder.com/transform/f180f469-dfd2-4a11-9366-f9cdb96de2d7/931402?io=transform:fit,height:800,width:800&format=png&quality=100',
+  price: 'Nu voor €129,00',
+  affiliateLink: 'https://www.awin1.com/pclick.php?p=42621678106&a=2566111&m=85161',
 }
 
 export const top10Deals: DealItem[] = [
   {
     id: 'top-01',
+    name: 'Nintendo Switch + BlueBuilt Beschermhoes',
+    description: 'Complete Switch-bundel met travelcase: klaar om direct onderweg of op tv te gamen.',
+    imageUrl:
+      'https://coolblue.bynder.com/transform/3d47c794-c742-46cb-9a6c-34007e08866f/923666?io=transform:fit,height:800,width:800&format=png&quality=100',
+    price: '€314,00',
+    affiliateLink: 'https://www.awin1.com/pclick.php?p=42900551819&a=2566111&m=85161',
+  },
+  {
+    id: 'top-02',
+    name: 'JBL Live 770NC Koptelefoon',
+    description: '65 uur batterij, actieve noise cancelling en ingebouwde spraakassistenten.',
+    imageUrl:
+      'https://coolblue.bynder.com/transform/98e81dfc-60d3-48a0-84d3-a56f6d3418cb/934401?io=transform:fit,height:800,width:800&format=png&quality=100',
+    price: '€129,00',
+    affiliateLink: 'https://www.awin1.com/pclick.php?p=38552592076&a=2566111&m=85161',
+  },
+  {
+    id: 'top-03',
     name: 'Sonos Roam SL Speaker',
     description: 'Grootse draagbare Bluetooth speaker met uitstekende geluidskwaliteit.',
     imageUrl: 'https://m.media-amazon.com/images/I/51x24PzVnoL._AC_SL1000_.jpg',
@@ -21,30 +40,13 @@ export const top10Deals: DealItem[] = [
       'https://www.amazon.nl/Sonos-grootse-lichtgewicht-draagbare-speaker/dp/B09PNSV48L/ref=sr_1_2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3589OU964AFOZ&dib=eyJ2IjoiMSJ9.9IHwYG3HjWtIoOucSDPr9iRokuwbOPruR0NWGsJWWSjtQD_94t54-FEt_NdC5lk9UJx6jf4Y83jTm0gWNvNqxdTQbC4NnZTdcI6M7ih6_fZvh_GxQ0C4-henxbLnB8yz7xT6lYpQ2cKY8hJCeuS55OmRjPwJWQq-TY0rkGLoKMbMjZmeXPiAjYhhUHu0MeLQFr7ZbviHbkttCTYkEt0YHVS9daeMRdmBQHkdildzQZkhT3ikGTjpSAtevj-sBDF66NgTNV2FBJe0NmDoaRcIkvmZDV8AfpIhF6FI8ZaMwfg.68-AIdmpBVNG3f9FQe3Z_LdHbmaTr0C5QIHtlf1UsRs&dib_tag=se&keywords=Sonos%2BRoam%2BSL%2BSpeaker&qid=1757423666&sprefix=sonos%2Broam%2Bsl%2Bspeaker%2Caps%2C95&sr=8-2&th=1',
   },
   {
-    id: 'top-02',
+    id: 'top-04',
     name: 'RITUALS Amsterdam Collection',
     description: 'Luxe foaming shower gel set voor een verwennende douchebeleving.',
     imageUrl: 'https://m.media-amazon.com/images/I/61OcRmEAogL._AC_SL1500_.jpg',
     price: '€37,90',
     affiliateLink:
       'https://www.amazon.nl/RITUALS-Amsterdam-Collection-Foaming-Shower/dp/B0CTCR9449/ref=sr_1_1?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=117YXOPVSZNMQ&dib=eyJ2IjoiMSJ9.xjrf7uFglOGNfJE_RDX7svNzFqWeTOpFFv-ZdmshzCOzE9CdiKwRpIr4_ew3mJWlVbvoUetqc-gBZPh389yCxeu57m6ZhJSNynBmMwvZqsSul2h6UAx0HM6cJFCGrsFIaG924iC2zJDO5kqIU5xVjjURcR3NUGcmuiKZScKLhtG3WGgnT5I5MPWY_gHgIwvooHXEkl0RyApxQ4z5ulwP45XFwVTSBhEm-GTEhwDNQI2XGj-w0eCXbbShOR-UXKmuvyPgHBH6UmKls8TYwQsAMZTGBU6sAkhuuY_N357jluw.BdlJb5-v2_iJ2_1EDDmlBVk6CCanOzwv4XB9VDkLbYc&dib_tag=se&keywords=Rituals+Verwenpakket&qid=1757423946&sprefix=rituals+verwenpakket%2Caps%2C100&sr=8-1',
-  },
-  {
-    id: 'top-03',
-    name: 'LEGO Technic Fast & Furious',
-    description: 'Uitdagend bouwpakket voor volwassenen met gedetailleerde racewagen.',
-    imageUrl: 'https://m.media-amazon.com/images/I/81rFz-MoPmL._AC_SL1500_.jpg',
-    price: '€149,99',
-    affiliateLink:
-      'https://www.amazon.nl/LEGO-Technic-Furious-Bouwpakket-Volwassenen/dp/B0DRCXL888/ref=sr_1_3?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3R97ILD63XB1L&dib=eyJ2IjoiMSJ9.okNecXEwOiiE3iiAg79E6pHZNjzRq-Cyn6IR_B8AbquGmsVpIVwSADLouzJ50Jdo3CH-yC8iBmh512MuciSIv8ZiX8VW-KE-QJdl9rgLObUw-Jb8eo7RP42zWWkF8NLBfElCUVUwSpke8U-a74M84e2hKtEwTwECLeCmPWWZ_Wr_AhUWpkZU8InSbJXEeBVmnUBCBxmt4ZaB_DZG-SYn9eX1N4w9KMFLoc3IsTbQ2z8kHpdcb41kbr2K5fWR7OIA3Tcw8OIXKwPBiFg0HLVgQ8KUFyxNGYrmhv0RKdFGJTg.-5-fnVyfhGHxm6hoFKntIoGxyR_AVxWTc6Km8Spa8ak&dib_tag=se&keywords=LEGO+Technic+auto&qid=1757424087&sprefix=lego+technic+auto%2Caps%2C118&sr=8-3',
-  },
-  {
-    id: 'top-04',
-    name: 'JBL Live 770NC Koptelefoon',
-    description: 'Draadloze noise-cancelling koptelefoon met superieure geluidskwaliteit.',
-    imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/1962259',
-    price: '€118,00',
-    affiliateLink: 'https://www.coolblue.nl/product/934400/jbl-live-770nc-zwart.html',
   },
   {
     id: 'top-05',
@@ -106,7 +108,8 @@ export const dealCategories: DealCategory[] = [
     title: 'Top Tech Gadgets',
     items: [
       top10Deals[0],
-      top10Deals[3],
+      top10Deals[1],
+      top10Deals[2],
       {
         id: 'tech-lightbar',
         name: 'Philips Hue Play Lightbar Double Pack',
@@ -131,8 +134,8 @@ export const dealCategories: DealCategory[] = [
       {
         ...dealOfTheWeek,
         id: 'deal-keuken-1',
-        description: 'Inbouw vaatwasser met Maxi Space technologie en stille werking.',
-        imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2189781',
+        description:
+          'Slimme Airfryer met app-bediening, 16 automatische programma’s en 1,4 kg bakcapaciteit voor het hele gezin.',
       },
       top10Deals[4],
       {

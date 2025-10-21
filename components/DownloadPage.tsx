@@ -27,8 +27,8 @@ const DownloadPage: React.FC<DownloadPageProps> = ({ navigateTo }) => {
 
             <div className="mt-8">
               <a
-                href="/assets/Gifteez_Cadeau_Planner.pdf"
-                download="Gifteez_Ultieme_Cadeau_Planner.pdf"
+                href="/downloads/Ultieme_Cadeau_Planner_Gifteez_2025.pdf"
+                download="Ultieme_Cadeau_Planner_Gifteez_2025.pdf"
               >
                 <Button variant="accent">
                   <div className="flex items-center gap-2">

@@ -344,3 +344,64 @@ export interface DealCategory {
   title: string
   items: DealItem[]
 }
+
+// Newsletter & Email Types
+export interface NewsletterSubscriber {
+  email: string
+  name?: string
+  subscribedAt: Date
+  status: 'active' | 'unsubscribed'
+  source: 'footer' | 'giftfinder' | 'popup' | 'admin'
+  preferences?: {
+    deals?: boolean
+    blog?: boolean
+    tips?: boolean
+  }
+  unsubscribedAt?: Date
+}
+
+export interface EmailTemplate {
+  id: string
+  name: string
+  subject: string
+  htmlContent: string
+  textContent: string
+  variables: string[] // e.g., ["{{name}}", "{{unsubscribe_link}}"]
+  createdAt: Date
+  updatedAt: Date
+  category: 'welcome' | 'newsletter' | 'transactional' | 'promotional'
+}
+
+export interface EmailCampaign {
+  id: string
+  name: string
+  templateId: string
+  subject: string
+  scheduledFor?: Date
+  sentAt?: Date
+  status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'failed'
+  recipientCount: number
+  stats?: {
+    sent: number
+    delivered: number
+    opened: number
+    clicked: number
+    bounced: number
+    complained: number
+  }
+  createdBy: string
+  createdAt: Date
+}
+
+export interface ContactMessage {
+  id: string
+  name: string
+  email: string
+  subject?: string
+  message: string
+  createdAt: Date
+  read: boolean
+  replied: boolean
+  repliedAt?: Date
+  notes?: string
+}

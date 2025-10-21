@@ -1031,71 +1031,136 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       <JsonLd data={structuredData} />
 
       <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
-        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Deals' }]} />
-
-        {/* Hero Section - Compact & Modern */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-rose-500 via-rose-600 to-orange-600">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
+        {/* Hero Section - Modern Design */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50 min-h-[70vh] flex items-center">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* Floating sparkles */}
+            <div className="absolute top-[15%] left-[10%] animate-float-slow">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#f43f5e" fillOpacity="0.3"/>
+              </svg>
+            </div>
+            <div className="absolute top-[25%] right-[15%] animate-float-delayed">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fb923c" fillOpacity="0.4"/>
+              </svg>
+            </div>
+            <div className="absolute bottom-[20%] left-[20%] animate-float-slow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#f43f5e" fillOpacity="0.35"/>
+              </svg>
+            </div>
+            <div className="absolute top-[40%] right-[8%] animate-float-delayed">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fbbf24" fillOpacity="0.4"/>
+              </svg>
+            </div>
+            
+            {/* Gradient glows */}
+            <div className="absolute top-[10%] right-[20%] w-96 h-96 bg-rose-300/20 rounded-full blur-3xl animate-pulse-slow" />
+            <div className="absolute bottom-[10%] left-[15%] w-80 h-80 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slower" />
           </div>
 
-          <Container size="xl" padded className="relative py-12 md:py-16">
-            <div className="max-w-4xl mx-auto text-center text-white">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-2 mb-4 text-sm font-semibold">
-                <SparklesIcon className="h-4 w-4" />
-                <span>Dagelijks bijgewerkt</span>
+          <Container size="xl" padded className="relative py-16 md:py-20">
+            <div className="max-w-5xl mx-auto text-center">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full bg-white shadow-lg border border-rose-200 px-5 py-2.5 mb-6 animate-fade-in-up">
+                <SparklesIcon className="h-5 w-5 text-rose-500" />
+                <span className="text-sm font-bold bg-gradient-to-r from-rose-600 to-orange-600 bg-clip-text text-transparent">
+                  Dagelijks bijgewerkt
+                </span>
               </div>
 
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                De beste cadeaudeals
-                <span className="block text-yellow-300 mt-1">van deze week</span>
+              {/* Heading */}
+              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight animate-fade-in-up">
+                <span className="block text-gray-900 mb-2">De beste cadeaudeals</span>
+                <span className="block bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 bg-clip-text text-transparent">
+                  van deze week
+                </span>
               </h1>
 
-              <p className="text-lg md:text-xl text-white/90 mb-6 max-w-2xl mx-auto">
-                Ontdek scherpe deals van Coolblue en Amazon, perfect voor elk cadeau moment
+              {/* Description */}
+              <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
+                Ontdek scherpe deals van Coolblue en Amazon, 
+                <span className="font-semibold text-rose-600"> perfect voor elk cadeau moment</span>
               </p>
 
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <Button
-                  variant="accent"
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-4 mb-8 animate-fade-in-up">
+                <button
                   onClick={() => navigateTo('giftFinder')}
-                  className="shadow-lg"
+                  className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-rose-300"
                 >
-                  Vind je perfect cadeau
-                </Button>
+                  <GiftIcon className="h-6 w-6" />
+                  <span>Vind je perfect cadeau</span>
+                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </button>
+
                 {state.dealOfWeek && (
                   <a
                     href={withAffiliate(state.dealOfWeek.affiliateLink)}
                     target="_blank"
                     rel="sponsored nofollow noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl border border-white/60 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/20"
                     onClick={handleFeaturedClick}
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 border-rose-300 bg-white text-rose-600 font-bold text-lg hover:bg-rose-50 hover:border-rose-400 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    Bekijk topdeal
+                    <TagIcon className="h-5 w-5" />
+                    <span>Bekijk topdeal</span>
                   </a>
                 )}
-                <Button
-                  variant="ghost"
-                  className="border border-white/40 bg-white/10 text-white hover:bg-white/20"
+
+                <button
                   onClick={handleRefresh}
+                  className="inline-flex items-center gap-2 px-6 py-4 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 shadow-md hover:shadow-lg transition-all duration-300"
                 >
-                  Vernieuw deals
-                </Button>
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Vernieuw deals</span>
+                </button>
               </div>
 
+              {/* Info badges */}
+              <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600 mb-4">
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Handgeplukte deals</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Dagelijks vernieuwd</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <HeartIcon className="w-5 h-5 text-rose-500" />
+                  <span className="font-medium">Beste prijzen</span>
+                </div>
+              </div>
+
+              {/* Partner info */}
               {(lastUpdated || manualConfigUpdatedAt) && (
-                <div className="mt-6 text-xs text-white/70">
-                  {lastUpdated && <p>Laatst bijgewerkt: {formatDate(lastUpdated)}</p>}
+                <div className="text-sm text-gray-600 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 inline-block">
+                  {lastUpdated && <span>Laatst bijgewerkt: {formatDate(lastUpdated)}</span>}
                 </div>
               )}
               {partnerBadges.length > 0 && (
-                <div className="mt-4 text-xs font-semibold text-white/80">
-                  Partnerwinkels: {partnerBadges.join(' • ')}
+                <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                  <span className="text-sm font-semibold text-gray-700">Partnerwinkels:</span>
+                  {partnerBadges.map((badge, idx) => (
+                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                      {badge}
+                    </span>
+                  ))}
                 </div>
               )}
-              <p className="mt-3 text-xs text-white/70">
-                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor
-                jou.
+              <p className="mt-4 text-xs text-gray-500 max-w-2xl mx-auto">
+                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor jou.
               </p>
             </div>
           </Container>

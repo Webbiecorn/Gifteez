@@ -439,6 +439,9 @@ const AmazonProductManager: React.FC = () => {
         setStatus({ type: 'success', message: 'Nieuw Amazon-product toegevoegd!' })
       }
 
+      // Force reload products to ensure new item appears
+      await AmazonProductLibrary.loadProducts()
+      
       resetForm()
       window.setTimeout(() => setStatus(null), 3500)
     } catch (error: any) {

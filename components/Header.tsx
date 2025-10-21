@@ -122,11 +122,12 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
 
       <header className={headerClasses}>
         <Container size="xl" className="px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-6 py-3.5">
-            {/* Logo & Tagline */}
-            <div className="flex items-center gap-3 flex-shrink-0">
+          {/* Grid Layout: 3 equal columns for perfect centering */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 py-3.5 lg:grid-cols-[minmax(200px,1fr)_auto_minmax(200px,1fr)]">
+            {/* Left: Logo */}
+            <div className="flex items-center">
               <div
-                className="relative flex items-center cursor-pointer group"
+                className="relative cursor-pointer group"
                 onClick={() => handleNavClick('home')}
               >
                 <Logo
@@ -135,33 +136,15 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                   priority
                 />
               </div>
-              <div className="hidden xl:flex flex-col leading-tight border-l border-gray-200 pl-3">
-                <span className="text-sm font-semibold text-gray-900">
-                  Slimme cadeau-inspiratie
-                </span>
-                <span className="text-xs text-gray-500">AI-powered gift discovery</span>
-              </div>
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex flex-1 justify-center items-center gap-4">
+            {/* Center: Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-4">
               {desktopNav}
-
-              {/* Accent CTA - Start GiftFinder */}
-              <UIButton
-                variant="accent"
-                size="md"
-                onClick={() => handleNavClick('giftFinder')}
-                leftIcon={<GiftIcon className="w-4 h-4" />}
-                className="ml-2"
-                aria-label="Start de GiftFinder"
-              >
-                Start GiftFinder
-              </UIButton>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Right: Action Buttons */}
+            <div className="flex items-center gap-2 justify-end">
               {/* Favorites - Hidden on mobile, shown from md */}
               <button
                 onClick={() => handleNavClick(auth?.currentUser ? 'favorites' : 'login')}

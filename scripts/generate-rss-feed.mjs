@@ -27,33 +27,51 @@ async function loadBlogPosts() {
     const blogDataPath = join(projectRoot, 'data', 'blogData.ts');
     const blogDataContent = await readFile(blogDataPath, 'utf-8');
     
-    // Extract blog posts using regex (simple parser for our use case)
     const posts = [];
     
-    // Find all blog post objects in the blogPosts array
-    const blogPostsMatch = blogDataContent.match(/export const blogPosts: BlogPost\[\] = \[([\s\S]*?)\];/);
-    if (!blogPostsMatch) {
-      console.warn('⚠️  Could not find blogPosts array');
-      return [];
-    }
+    // Find each blog post - extract fields individually for better multi-line handling
+    // Look for slug patterns first
+    const slugMatches = [...blogDataContent.matchAll(/slug:\s*'([^']+)',/g)];
     
-    const postsContent = blogPostsMatch[1];
+    console.log(`🔍 Found ${slugMatches.length} slug matches`);
     
-    // Extract individual post objects
-    const postMatches = postsContent.matchAll(/\{[\s\S]*?slug: '([^']+)'[\s\S]*?title: '([^']+)'[\s\S]*?excerpt: '([^']+)'[\s\S]*?imageUrl: '([^']+)'[\s\S]*?category: '([^']+)'[\s\S]*?publishedDate: '([^']+)'[\s\S]*?\}/g);
-    
-    for (const match of postMatches) {
-      const [, slug, title, excerpt, imageUrl, category, publishedDate] = match;
+    for (const slugMatch of slugMatches) {
+      const slug = slugMatch[1];
+      const slugIndex = slugMatch.index;
       
-      posts.push({
-        slug,
-        title,
-        excerpt,
-        imageUrl,
-        category,
-        publishedAt: `${publishedDate}T10:00:00Z`,
-        updatedAt: `${publishedDate}T10:00:00Z`
-      });
+      console.log(`   Processing: ${slug} at index ${slugIndex}`);
+      
+      // Find the next slug or end of array to determine this post's content
+      const nextSlugMatch = blogDataContent.indexOf("slug: '", slugIndex + 10);
+      const endIndex = nextSlugMatch > 0 ? nextSlugMatch : blogDataContent.length;
+      const postContent = blogDataContent.substring(slugIndex, endIndex);
+      
+      // Extract fields from this post's content
+      const titleMatch = postContent.match(/title:\s*'([^']+)',/);
+      const excerptMatch = postContent.match(/excerpt:\s*[\n\s]*["']([\s\S]+?)["'],/);
+      const imageUrlMatch = postContent.match(/imageUrl:\s*'([^']+)',/);
+      const categoryMatch = postContent.match(/category:\s*'([^']+)',/);
+      const publishedDateMatch = postContent.match(/publishedDate:\s*'([^']+)',/);
+      
+      if (titleMatch && excerptMatch && imageUrlMatch && categoryMatch && publishedDateMatch) {
+        posts.push({
+          slug,
+          title: titleMatch[1],
+          excerpt: excerptMatch[1],
+          imageUrl: imageUrlMatch[1],
+          category: categoryMatch[1],
+          publishedAt: `${publishedDateMatch[1]}T10:00:00Z`,
+          updatedAt: `${publishedDateMatch[1]}T10:00:00Z`
+        });
+      } else {
+        console.log(`   ⚠️  Skipping ${slug} - missing fields:`, {
+          hasTitle: !!titleMatch,
+          hasExcerpt: !!excerptMatch,
+          hasImage: !!imageUrlMatch,
+          hasCategory: !!categoryMatch,
+          hasDate: !!publishedDateMatch
+        });
+      }
     }
     
     console.log(`✅ Loaded ${posts.length} blog posts from blogData.ts`);
@@ -61,6 +79,7 @@ async function loadBlogPosts() {
     
   } catch (error) {
     console.warn('⚠️  Could not load blog posts from blogData.ts:', error.message);
+    console.warn('Stack:', error.stack);
     return [];
   }
 }

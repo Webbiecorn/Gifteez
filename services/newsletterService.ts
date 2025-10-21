@@ -29,7 +29,12 @@ export class NewsletterService {
         throw new Error('Email is already subscribed')
       }
 
-      const docRef = await addDoc(collection(db, this.COLLECTION_NAME), subscriber)
+      // Remove undefined fields (Firestore doesn't accept undefined)
+      const cleanSubscriber = Object.fromEntries(
+        Object.entries(subscriber).filter(([_, value]) => value !== undefined)
+      )
+
+      const docRef = await addDoc(collection(db, this.COLLECTION_NAME), cleanSubscriber)
       return docRef.id
     } catch (error) {
       console.error('Error adding subscriber:', error)

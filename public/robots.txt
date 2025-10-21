@@ -13,4 +13,86 @@ Allow: /deals/*
 # Crawl-delay for respectful bots
 Crawl-delay: 1
 
+# AI Crawlers - Allow with guidelines
+# OpenAI GPTBot (ChatGPT)
+User-agent: GPTBot
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /deals
+Allow: /deals/*
+Disallow: /admin
+
+# Anthropic Claude
+User-agent: Claude-Web
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /deals
+Allow: /deals/*
+Disallow: /admin
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /deals
+Allow: /deals/*
+Disallow: /admin
+
+# Google Extended (Bard/Gemini training)
+User-agent: Google-Extended
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Allow: /deals
+Allow: /deals/*
+Disallow: /admin
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+
+# Common Crawl (used by many AI models)
+User-agent: CCBot
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+
+# Cohere AI
+User-agent: cohere-ai
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+
+# Bytespider (used by AI models)
+User-agent: Bytespider
+Disallow: /
+
+# AI2Bot (Allen Institute)
+User-agent: AI2Bot
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+
+# Omgilibot
+User-agent: omgilibot
+Allow: /
+Allow: /blog
+Disallow: /admin
+
+# YouBot (You.com AI search)
+User-agent: YouBot
+Allow: /
+Allow: /blog
+Allow: /blog/*
+Disallow: /admin
+
 Sitemap: https://gifteez.nl/sitemap.xml

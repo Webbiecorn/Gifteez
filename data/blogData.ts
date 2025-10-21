@@ -292,6 +292,22 @@ const gift_nyx_makeup: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/91XmiZfNJnL._AC_SL1500_.jpg',
 }
 
+const gift_kooltho_cocktail_set: Gift = {
+  productName: 'KOOLTHO Cocktail Shaker Set',
+  description:
+    'Complete 11-delige RVS cocktail set met 750ml shaker, maatbekers, barspoon, muddler, ijs- en zeeftools. Ideaal voor thuisshakers die Mojito’s, Espresso Martini’s en klassieke cocktails willen perfectioneren.',
+  priceRange: '€32,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink: 'https://www.amazon.nl/s?k=KOOLTHO+Cocktail+Shaker+Set&tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71gK4Pu03vL._AC_SL1500_.jpg',
+  tags: ['cocktail', 'keuken', 'lifestyle'],
+  giftType: 'physical',
+}
+
 const gift_slygad_yoga_set: Gift = {
   productName: 'Luks Vegan Yoga Cadeauset',
   description:
@@ -1435,6 +1451,19 @@ export const blogPosts: BlogPost[] = [
         type: 'paragraph',
         content:
           '<strong>Prijs:</strong> €32,90 | <strong>Perfect voor:</strong> Tieners, makeup-liefhebbers, beauty beginners<br><br>NYX is het affordable-luxe makeup merk met cult following. Deze geschenkset bevat lipstick, mascara, eyeliner, oogschaduw palette en makeup brushes. De producten zijn full-size (geen samples!) en de kleuren zijn trend-proof: neutrals en rosy tones.<br><br><strong>Waarom deze makeup set scoort:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>NYX = professional quality voor betaalbare prijs</li><li>Complete makeup look mogelijk met één set</li><li>Cruelty-free en vaak vegan formules</li><li>Trendy merk dat tieners/20-ers herkennen van YouTube/Instagram</li><li>Goede pigmentatie en long-lasting formulas</li></ul><br><strong>Best voor:</strong> Dochter 14-25 jaar, nichtje, vriendin die net begint met makeup. Perfect voor Sinterklaas, verjaardag of als "je bent geslaagd" cadeau. De set bevat alles om een natural makeup look te creëren zonder overwhelmend te zijn.',
+      },
+      {
+        type: 'heading',
+        content: '9. KOOLTHO Cocktail Shaker Set – Cadeauhit voor Thuisshakers',
+      },
+      {
+        type: 'gift',
+        content: gift_kooltho_cocktail_set,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €32,99 | <strong>Perfect voor:</strong> Thuisshakers, koppelavonden, housewarmings<br><br>Met de KOOLTHO Cocktail Shaker Set geef je een complete thuisbar in één box. De 11-delige set bevat een 750ml shaker, dubbele jigger, lange barlepel, muddler, strainer, ijs- en barclips en receptenkaart. Gemaakt van geborsteld RVS zodat hij vaatwasserbestendig is en jarenlang meegaat.<br><br><strong>Waarom dit een publieksfavoriet is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Compleet pakket – geen losse accessoires meer nodig</li><li>Stevige giftbox met magnetische sluiting: direct cadeau-klaar</li><li>Inclusief receptenkaart voor 10 klassiekers (o.a. Negroni, Espresso Martini)</li><li>Perfect voor date nights of cocktail avonden met vrienden</li><li>Roestvrij staal verkleurt niet en blijft glanzen</li></ul><br><strong>Best voor:</strong> Housewarming, vrijgezellenfeest, verjaardag van cocktailfans of als originele kerst verrassing. Combineer met een premium drank naar keuze en je hebt een instant success cadeau.',
       },
       { type: 'heading', content: 'Hoe Kies Je De Juiste Geschenkset?' },
       {
