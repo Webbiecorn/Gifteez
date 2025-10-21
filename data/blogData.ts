@@ -153,7 +153,30 @@ const gift_duurzaam_beeswax_wraps: Gift = {
 
 const gift_duurzaam_smartplug: Gift = gift_ai_smartplug // reuse
 
-const gift_workspace_labelprinter: Gift = {
+const gift_kooltho_cocktail_set: Gift = {
+  productName: 'KOOLTHO Cocktail Shaker Set met Standaard',
+  description:
+    '12-delige cocktailset met 750 ml cobbler shaker, fijne zeef, jigger, barlepel, stamper, ijstang en metalen rietjes inclusief displaystandaard.',
+  priceRange: '€24,97',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/dp/B09XBSP99W?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
+  category: 'cocktails',
+  tags: ['cocktail', 'bar', 'feest', 'cadeau'],
+  rating: 4.4,
+  reviews: 178,
+  giftType: 'physical',
+  matchReason:
+    'Compleet RVS cocktailpakket met personaliseerbare geschenkdoos en vaatwasserbestendige onderdelen, ideaal voor thuisbartenders.',
+  popularity: 8,
+}
+
+const _gift_workspace_labelprinter: Gift = {
   productName: 'DYMO LabelManager 210D+',
   description:
     'Desktop labelprinter – maakt kantoor, kabels, gereedschap & voorraad strak georganiseerd.',
@@ -290,22 +313,6 @@ const gift_nyx_makeup: Gift = {
     },
   ],
   imageUrl: 'https://m.media-amazon.com/images/I/91XmiZfNJnL._AC_SL1500_.jpg',
-}
-
-const gift_kooltho_cocktail_set: Gift = {
-  productName: 'KOOLTHO Cocktail Shaker Set',
-  description:
-    'Complete 11-delige RVS cocktail set met 750ml shaker, maatbekers, barspoon, muddler, ijs- en zeeftools. Ideaal voor thuisshakers die Mojito’s, Espresso Martini’s en klassieke cocktails willen perfectioneren.',
-  priceRange: '€32,99',
-  retailers: [
-    {
-      name: 'Amazon.nl',
-      affiliateLink: 'https://www.amazon.nl/s?k=KOOLTHO+Cocktail+Shaker+Set&tag=gifteez77-21',
-    },
-  ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71gK4Pu03vL._AC_SL1500_.jpg',
-  tags: ['cocktail', 'keuken', 'lifestyle'],
-  giftType: 'physical',
 }
 
 const gift_slygad_yoga_set: Gift = {
@@ -1452,19 +1459,6 @@ export const blogPosts: BlogPost[] = [
         content:
           '<strong>Prijs:</strong> €32,90 | <strong>Perfect voor:</strong> Tieners, makeup-liefhebbers, beauty beginners<br><br>NYX is het affordable-luxe makeup merk met cult following. Deze geschenkset bevat lipstick, mascara, eyeliner, oogschaduw palette en makeup brushes. De producten zijn full-size (geen samples!) en de kleuren zijn trend-proof: neutrals en rosy tones.<br><br><strong>Waarom deze makeup set scoort:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>NYX = professional quality voor betaalbare prijs</li><li>Complete makeup look mogelijk met één set</li><li>Cruelty-free en vaak vegan formules</li><li>Trendy merk dat tieners/20-ers herkennen van YouTube/Instagram</li><li>Goede pigmentatie en long-lasting formulas</li></ul><br><strong>Best voor:</strong> Dochter 14-25 jaar, nichtje, vriendin die net begint met makeup. Perfect voor Sinterklaas, verjaardag of als "je bent geslaagd" cadeau. De set bevat alles om een natural makeup look te creëren zonder overwhelmend te zijn.',
       },
-      {
-        type: 'heading',
-        content: '9. KOOLTHO Cocktail Shaker Set – Cadeauhit voor Thuisshakers',
-      },
-      {
-        type: 'gift',
-        content: gift_kooltho_cocktail_set,
-      },
-      {
-        type: 'paragraph',
-        content:
-          '<strong>Prijs:</strong> €32,99 | <strong>Perfect voor:</strong> Thuisshakers, koppelavonden, housewarmings<br><br>Met de KOOLTHO Cocktail Shaker Set geef je een complete thuisbar in één box. De 11-delige set bevat een 750ml shaker, dubbele jigger, lange barlepel, muddler, strainer, ijs- en barclips en receptenkaart. Gemaakt van geborsteld RVS zodat hij vaatwasserbestendig is en jarenlang meegaat.<br><br><strong>Waarom dit een publieksfavoriet is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Compleet pakket – geen losse accessoires meer nodig</li><li>Stevige giftbox met magnetische sluiting: direct cadeau-klaar</li><li>Inclusief receptenkaart voor 10 klassiekers (o.a. Negroni, Espresso Martini)</li><li>Perfect voor date nights of cocktail avonden met vrienden</li><li>Roestvrij staal verkleurt niet en blijft glanzen</li></ul><br><strong>Best voor:</strong> Housewarming, vrijgezellenfeest, verjaardag van cocktailfans of als originele kerst verrassing. Combineer met een premium drank naar keuze en je hebt een instant success cadeau.',
-      },
       { type: 'heading', content: 'Hoe Kies Je De Juiste Geschenkset?' },
       {
         type: 'paragraph',
@@ -1583,5 +1577,132 @@ export const blogPosts: BlogPost[] = [
       'rituals',
       'spa',
     ],
+  },
+  {
+    slug: 'kooltho-cocktail-shaker-set-review',
+    title: 'KOOLTHO Cocktail Shaker Set: Cadeauhit voor Thuisshakers',
+    excerpt:
+      'Deze 12-delige KOOLTHO cocktailset met personaliseerbare geschenkdoos tovert elke keuken om tot cocktailbar. Ideaal cadeau voor feestgangers, koppels en hobby-bartenders.',
+    imageUrl: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
+    category: 'Cadeaugids',
+    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-cocktails' },
+    publishedDate: '2025-10-20',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Op zoek naar een cadeau waarmee je direct de sfeer zet voor een memorabele avond? De KOOLTHO Cocktail Shaker Set combineert barkwaliteit RVS tools met een stijlvolle standaard en personaliseerbare geschenkdoos. Voor €24,97 haal je een complete cocktailervaring in huis, inclusief 750 ml cobbler shaker, fijnmazige zeef en accessoires die zelfs door pro-bartenders worden gebruikt.',
+      },
+      {
+        type: 'image',
+        src: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
+        alt: 'KOOLTHO cocktailset met standaard en accessoires op een aanrecht',
+        caption: 'Alles binnen handbereik: de KOOLTHO standaard geeft je bar een professionele uitstraling.',
+      },
+      { type: 'heading', content: 'Wat zit er in deze 12-delige barset?' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li>750 ml cobbler shaker met ingebouwde zeef en dop (18/8 RVS)</li><li>Fine mesh strainer voor silky afwerking van sours en martinis</li><li>Dubbele jigger (15/30 ml) voor precieze pours</li><li>Barlepel met gedraaid handvat en geïntegreerde muddler tip</li><li>Cocktailstamper voor verse kruiden en citrus</li><li>Ijstang plus vier RVS rietjes met schoonmaakborstel</li><li>Organizerstandaard van waterdicht composiet – perfect voor op het aanrecht</li></ul>',
+      },
+      { type: 'gift', content: gift_kooltho_cocktail_set },
+      {
+        type: 'paragraph',
+        content:
+          "Alle onderdelen zijn vaatwasserbestendig en gemaakt van 304 roestvrij staal. Daardoor blijft de glans behouden, zelfs na tientallen ronda's espresso martinis of virgin mojito's.",
+      },
+      { type: 'heading', content: 'Waarom dit cadeau altijd scoort' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Personaliseerbare giftbox:</strong> laat een handgeschreven boodschap achter op de binnenzijde van het deksel.</li><li><strong>Compacte premium look:</strong> de verticale standaard houdt de set georganiseerd en insta-ready.</li><li><strong>Beginnersproof én pro-ready:</strong> cobbler shaker sluit waterdicht af, fine strainer tilt de kwaliteit omhoog.</li><li><strong>Unisex cadeau:</strong> zilverkleurig RVS matcht elke keukenstijl en werkt voor zowel mannen als vrouwen.</li><li><strong>Bewezen kwaliteit:</strong> 4,4/5 sterren op Amazon met 170+ reviews.</li></ul>',
+      },
+      {
+        type: 'image',
+        src: 'https://m.media-amazon.com/images/I/71C7HE7GZOL._AC_SL1500_.jpg',
+        alt: 'KOOLTHO cocktailset in personaliseerbare cadeauverpakking',
+        caption: 'De geschenkdoos heeft ruimte voor een persoonlijke boodschap – ideaal voor bruiloft, housewarming of kerst.',
+      },
+      { type: 'heading', content: 'Zo personaliseer je de KOOLTHO geschenkdoos' },
+      {
+        type: 'paragraph',
+        content:
+          '<ol class="list-decimal space-y-2 pl-6 text-sm text-gray-700"><li>Open de magnetische sluiting en verwijder voorzichtig de standaard met accessoires.</li><li>Schrijf met metallic stift of paint marker een boodschap aan de binnenzijde van het deksel.</li><li>Voeg een receptkaart of QR-code naar jouw Spotify party playlist toe.</li><li>Plaats de set terug, sluit het deksel en wikkel een lint rond de box voor extra flair.</li></ol>',
+      },
+      { type: 'heading', content: 'Pro tips voor je cocktailavond' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Prep je mise en place:</strong> snijd citrus en vul ijsbakken ruim op tijd.</li><li><strong>Start met crowdpleasers:</strong> denk aan Pornstar Martini, Whiskey Sour of alcoholvrije Virgin Mule.</li><li><strong>Gebruik de fine strainer:</strong> dubbele filtering voorkomt pulp en ijssplinters in glazen.</li><li><strong>Mix & match straws:</strong> geef gasten hun eigen RVS rietje en spoel ze na afloop in een sopje.</li></ul>',
+      },
+      {
+        type: 'image',
+        src: 'https://m.media-amazon.com/images/I/71aUVP7pLVL._AC_SL1500_.jpg',
+        alt: 'Detail van KOOLTHO cocktailset tijdens het shaken van een martini',
+        caption: 'Shaken, strainen, serveren – met de KOOLTHO set maak je cocktails met barpresentatie vanuit je eigen keuken.',
+      },
+      { type: 'heading', content: 'Combineer met deze serveerideeën' },
+      {
+        type: 'paragraph',
+        content:
+          'Upgrade het cadeau met een fles kwaliteitsrum, verse citrus, een sirooppakket of een set coupeglazen. Voeg een kaartje toe met je drie favoriete recepten en gebruik de <a href="/giftfinder" class="text-accent hover:underline">AI GiftFinder</a> om bijpassende cadeaus (zoals ijsstenen of tapasplanken) te selecteren.',
+      },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Kan de cocktailset in de vaatwasser?',
+            answer:
+              'Ja. Alle RVS onderdelen zijn vaatwasserbestendig. Droog ze na het programma direct af voor maximale glans. De standaard maak je schoon met een vochtige doek.',
+          },
+          {
+            question: 'Is de cobbler shaker echt lekvrij?',
+            answer:
+              'De 3-delige shaker sluit strak af. Tik na het dichten even op de bovenkant voor extra seal. Open na het shaken door de dop licht te draaien voordat je tilt – zo voorkom je vacuümvastzitten.',
+          },
+          {
+            question: 'Voor wie is dit het leukste cadeau?',
+            answer:
+              "Perfect voor housewarmings, huwelijken, verjaardagen en feestdagen. Dankzij de neutrale look werkt het voor koppels, vrienden, collega's en families die graag borrels organiseren.",
+          },
+        ],
+      },
+      {
+        type: 'verdict',
+        title: 'Mix, pronk en personaliseert in één pakket',
+        content:
+          'De KOOLTHO Cocktail Shaker Set biedt bar-grade tools, een luxe presentatie en ruimte voor je eigen boodschap. Het is een betaalbaar cadeau met hoge perceived value en een gegarandeerde ijsbreker voor elke borrelavond.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Klaar om te bestellen? Shop de set via onze <a href="https://www.amazon.nl/dp/B09XBSP99W?tag=gifteez77-21" rel="nofollow sponsored" class="text-rose-600 underline">affiliate link</a> en steun Gifteez zonder extra kosten. Check ook de <a href="/deals" class="text-accent hover:underline">deals</a>-pagina voor bundels met glaswerk en siropen, of laat de <a href="/giftfinder" class="text-accent hover:underline">AI GiftFinder</a> nog meer barproof cadeausuggesties geven.',
+      },
+    ],
+    seo: {
+      metaTitle: 'KOOLTHO Cocktail Shaker Set Review: Cadeautip voor Thuisshakers',
+      metaDescription:
+        'Lees waarom de KOOLTHO cocktail shaker set de perfecte cadeauhit is. 12-delig RVS barpakket met personaliseerbare giftbox, vaatwasserbestendig en klaar voor elk feest.',
+      keywords: [
+        'kooltho cocktail set',
+        'cocktail shaker cadeau',
+        'cocktailset met standaard',
+        'cadeau voor cocktail lovers',
+        'cocktailshaker review',
+        'bar accessoires cadeau',
+      ],
+      ogTitle: 'KOOLTHO Cocktail Shaker Set: Cadeauhit voor Thuisshakers',
+      ogDescription:
+        'Ontdek de 12-delige KOOLTHO cocktailset met personaliseerbare geschenkdoos. Inclusief cobbler shaker, fine strainer en premium standaard.',
+      ogImage: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Mix & Match met de KOOLTHO Cocktail Shaker Set',
+      twitterDescription:
+        'Waarom deze 12-delige cocktailset het perfecte cadeau is voor barliefhebbers. Bekijk de review en tips.',
+      twitterImage: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
+      canonicalUrl: 'https://gifteez.nl/blog/kooltho-cocktail-shaker-set-review',
+    },
+    tags: ['cocktails', 'cadeau voor hem', 'cadeau voor haar', 'feestdagen', 'bar', 'amazon'],
   },
 ]
