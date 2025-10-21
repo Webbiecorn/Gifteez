@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
-import { withAffiliate } from '../services/affiliate';
-import { DynamicProductService } from '../services/dynamicProductService';
-import { DealCategoryConfigService } from '../services/dealCategoryConfigService';
-import { PinnedDealsService } from '../services/pinnedDealsService';
-import CoolblueFeedService from '../services/coolblueFeedService';
-import CoolblueAffiliateService from '../services/coolblueAffiliateService';
-import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton';
-import { PerformanceInsightsService } from '../services/performanceInsightsService';
-import { NavigateTo, DealCategory, DealItem } from '../types';
-import Breadcrumbs from './Breadcrumbs';
+import { withAffiliate } from '../services/affiliate'
+import CoolblueAffiliateService from '../services/coolblueAffiliateService'
+import CoolblueFeedService from '../services/coolblueFeedService'
+import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
+import { DynamicProductService } from '../services/dynamicProductService'
+import { PerformanceInsightsService } from '../services/performanceInsightsService'
+import { PinnedDealsService } from '../services/pinnedDealsService'
+import Breadcrumbs from './Breadcrumbs'
 import Button from './Button'
+import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton'
 import {
   SparklesIcon,
   TagIcon,
@@ -26,10 +25,11 @@ import {
 import ImageWithFallback from './ImageWithFallback'
 import InternalLinkCTA from './InternalLinkCTA'
 import JsonLd from './JsonLd'
-import { Container } from './layout/Container';
+import { Container } from './layout/Container'
 import LoadingSpinner from './LoadingSpinner'
 import Meta from './Meta'
-import ProductCarousel from './ProductCarousel';
+import ProductCarousel from './ProductCarousel'
+import type { NavigateTo, DealCategory, DealItem } from '../types'
 
 type RetailerInfo = {
   label: string
@@ -781,9 +781,23 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   target="_blank"
                   rel="sponsored nofollow noopener noreferrer"
                   onClick={handleClick}
-                  className={`block w-full rounded-lg bg-accent text-center font-bold text-white shadow-md transition-all hover:bg-accent-hover hover:shadow-lg hover:scale-105 ${buttonPaddingClass}`}
+                  className={`group/btn relative block w-full overflow-hidden rounded-xl text-center font-bold text-white shadow-lg transition-all hover:shadow-2xl hover:scale-105 ${buttonPaddingClass}`}
                 >
-                  Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'} →
+                  {/* Gradient background with animation */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 transition-all duration-300 group-hover/btn:from-rose-600 group-hover/btn:via-pink-600 group-hover/btn:to-rose-700"></div>
+                  
+                  {/* Shimmer effect on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                  </div>
+                  
+                  {/* Button content */}
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span>Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'}</span>
+                    <svg className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </span>
                 </a>
               </div>
             </div>
@@ -1038,25 +1052,41 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             {/* Floating sparkles */}
             <div className="absolute top-[15%] left-[10%] animate-float-slow">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#f43f5e" fillOpacity="0.3"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#f43f5e"
+                  fillOpacity="0.3"
+                />
               </svg>
             </div>
             <div className="absolute top-[25%] right-[15%] animate-float-delayed">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fb923c" fillOpacity="0.4"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#fb923c"
+                  fillOpacity="0.4"
+                />
               </svg>
             </div>
             <div className="absolute bottom-[20%] left-[20%] animate-float-slow">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#f43f5e" fillOpacity="0.35"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#f43f5e"
+                  fillOpacity="0.35"
+                />
               </svg>
             </div>
             <div className="absolute top-[40%] right-[8%] animate-float-delayed">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="#fbbf24" fillOpacity="0.4"/>
+                <path
+                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
+                  fill="#fbbf24"
+                  fillOpacity="0.4"
+                />
               </svg>
             </div>
-            
+
             {/* Gradient glows */}
             <div className="absolute top-[10%] right-[20%] w-96 h-96 bg-rose-300/20 rounded-full blur-3xl animate-pulse-slow" />
             <div className="absolute bottom-[10%] left-[15%] w-80 h-80 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slower" />
@@ -1082,7 +1112,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
               {/* Description */}
               <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
-                Ontdek scherpe deals van Coolblue en Amazon, 
+                Ontdek scherpe deals van Coolblue en Amazon,
                 <span className="font-semibold text-rose-600"> perfect voor elk cadeau moment</span>
               </p>
 
@@ -1094,8 +1124,18 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 >
                   <GiftIcon className="h-6 w-6" />
                   <span>Vind je perfect cadeau</span>
-                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <svg
+                    className="w-5 h-5 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
                   </svg>
                 </button>
 
@@ -1117,7 +1157,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   className="inline-flex items-center gap-2 px-6 py-4 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 shadow-md hover:shadow-lg transition-all duration-300"
                 >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
                   </svg>
                   <span>Vernieuw deals</span>
                 </button>
@@ -1127,13 +1172,21 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600 mb-4">
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span className="font-medium">Handgeplukte deals</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span className="font-medium">Dagelijks vernieuwd</span>
                 </div>
@@ -1153,14 +1206,18 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
                   <span className="text-sm font-semibold text-gray-700">Partnerwinkels:</span>
                   {partnerBadges.map((badge, idx) => (
-                    <span key={idx} className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 shadow-sm">
+                    <span
+                      key={idx}
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 shadow-sm"
+                    >
                       {badge}
                     </span>
                   ))}
                 </div>
               )}
               <p className="mt-4 text-xs text-gray-500 max-w-2xl mx-auto">
-                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor jou.
+                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor
+                jou.
               </p>
             </div>
           </Container>
