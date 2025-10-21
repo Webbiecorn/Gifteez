@@ -6,16 +6,14 @@ import { DealCategoryConfigService } from '../services/dealCategoryConfigService
 import { DynamicProductService } from '../services/dynamicProductService'
 import { PerformanceInsightsService } from '../services/performanceInsightsService'
 import { PinnedDealsService } from '../services/pinnedDealsService'
-import Breadcrumbs from './Breadcrumbs'
 import Button from './Button'
 import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton'
 import {
   SparklesIcon,
   TagIcon,
   StarIcon,
-  BookmarkFilledIcon,
-  BookmarkIcon,
   CheckIcon,
+  ChevronLeftIcon,
   ChevronRightIcon,
   HeartIcon,
   GiftIcon,
@@ -27,7 +25,6 @@ import ImageWithFallback from './ImageWithFallback'
 import InternalLinkCTA from './InternalLinkCTA'
 import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
-import LoadingSpinner from './LoadingSpinner'
 import Meta from './Meta'
 import { SocialShare } from './SocialShare'
 import ProductCarousel from './ProductCarousel'
@@ -266,7 +263,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           // Only invalidate caches when explicitly requested to avoid unnecessary cold starts
           CoolblueFeedService.clearCache()
           DealCategoryConfigService.clearCache()
-          console.log('🔄 Forcing fresh data load...')
+          console.warn('🔄 Forcing fresh data load...')
           sessionStorage.setItem('deals_loaded_this_session', 'true')
         }
 
@@ -335,15 +332,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
   // Function to rotate to the next premium deal
   const showNextDeal = useCallback(() => {
-    console.log('showNextDeal called', { premiumDealsLength: premiumDeals.length, currentIndex: dealOfWeekIndex })
-    
     if (premiumDeals.length <= 1) {
-      console.log('Not enough premium deals to rotate')
       return
     }
 
     const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length
-    console.log('Rotating to index:', nextIndex, 'Deal:', premiumDeals[nextIndex]?.name)
     
     setDealOfWeekIndex(nextIndex)
 
@@ -358,7 +351,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     (deals: DealItem[]) => {
       return deals.filter((deal) => {
         const normalizedPrice = deal.price
-          ? deal.price.replace(/[^0-9,\.]/g, '').replace(',', '.')
+          ? deal.price.replace(/[^0-9,.]/g, '').replace(',', '.')
           : ''
         const parsedPrice = normalizedPrice ? Number.parseFloat(normalizedPrice) : Number.NaN
 
@@ -402,7 +395,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         offers: {
           '@type': 'Offer',
           priceCurrency: 'EUR',
-          price: deal.price?.replace(/[^0-9,\.]/g, '').replace(',', '.') ?? '',
+          price: deal.price?.replace(/[^0-9,.]/g, '').replace(',', '.') ?? '',
           url: withAffiliate(deal.affiliateLink),
           seller: {
             '@type': 'Organization',
@@ -950,13 +943,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     navigateTo: NavigateTo
   }> = ({ category, index, navigateTo }) => {
     const items = category.items
-
-    if (!items.length) {
-      return null
-    }
-
-    const displayTitle = getDisplayTitle(category.title)
-    const description = getCategoryDescription(category.title, displayTitle, items.length)
+    const [canScrollLeft, setCanScrollLeft] = useState(false)
+    const [canScrollRight, setCanScrollRight] = useState(true)
+    const [currentIndex, setCurrentIndex] = useState(0)
+    const carouselRef = useRef<{ scroll: (__dir: 'left' | 'right') => void }>(null)
 
     const retailerLabels = useMemo(() => {
       const unique = new Set<string>()
@@ -972,7 +962,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const priceRange = useMemo(() => {
       const parsed = items
         .map((item) => {
-          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.')
+          const normalised = item.price.replace(/[^0-9,.]/g, '').replace(',', '.')
           const value = Number.parseFloat(normalised)
           return Number.isFinite(value) ? value : null
         })
@@ -990,16 +980,27 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       return `${formatCurrency(min)} – ${formatCurrency(max)}`
     }, [items])
 
-    const renderProductCard = (deal: DealItem, dealIndex: number) => (
+    const renderProductCard = useCallback((deal: DealItem, dealIndex: number) => (
       <DealCard key={deal.id} deal={deal} index={dealIndex} variant="grid" />
-    )
+    ), [])
+
+    if (!items.length) {
+      return null
+    }
+
+    const displayTitle = getDisplayTitle(category.title)
+    const description = getCategoryDescription(category.title, displayTitle, items.length)
+
+    // Calculate total pages
+    const itemsPerView = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+    const totalPages = Math.ceil(items.length / itemsPerView)
 
     return (
       <article
         className="space-y-6 animate-fade-in-up"
         style={{ animationDelay: `${120 + index * 70}ms` }}
       >
-        <header className="space-y-3">
+        <header className="space-y-3 relative">
           <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
             <GiftIcon className="h-4 w-4" />
             Curated selectie
@@ -1011,40 +1012,42 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               </h3>
               <p className="mt-2 max-w-3xl text-sm md:text-base text-slate-600">{description}</p>
             </div>
-            <button
-              onClick={() =>
-                navigateTo('categoryDetail', {
-                  categoryId: category.id,
-                  categoryTitle: displayTitle,
-                  categoryDescription: description,
-                  products: items,
-                })
-              }
-              className="group relative shrink-0 overflow-visible rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
-            >
-              {/* Glow effect achter de knop bij hover */}
-              <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
-              
-              {/* Animated gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl" />
-              
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-              </div>
-              
-              {/* Button content */}
-              <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Bekijk onze collectie
-                <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </span>
-            </button>
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={() =>
+                  navigateTo('categoryDetail', {
+                    categoryId: category.id,
+                    categoryTitle: displayTitle,
+                    categoryDescription: description,
+                    products: items,
+                  })
+                }
+                className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
+              >
+                {/* Glow effect achter de knop bij hover */}
+                <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+                
+                {/* Animated gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl" />
+                
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden">
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                </div>
+                
+                {/* Button content */}
+                <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Bekijk onze collectie
+                  <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </span>
+              </button>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
@@ -1063,23 +1066,64 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </header>
 
-        <ProductCarousel products={items} renderProduct={renderProductCard} />
+        <ProductCarousel 
+          ref={carouselRef}
+          products={items} 
+          renderProduct={renderProductCard}
+          hideDefaultNavigation={true}
+          onNavigationChange={(controls) => {
+            setCanScrollLeft(controls.canScrollLeft)
+            setCanScrollRight(controls.canScrollRight)
+            setCurrentIndex(controls.currentIndex)
+          }}
+        />
+
+        {/* Custom navigation in header - positioned absolutely */}
+        <div className="hidden md:flex items-center gap-2 absolute top-3 right-0" style={{ zIndex: 10 }}>
+          {/* Progress dots */}
+          {items.length > 3 && (
+            <div className="flex items-center gap-1.5 mr-2">
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+                const isActive = Math.floor(currentIndex / itemsPerView) === idx
+                return (
+                  <div
+                    key={idx}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      isActive ? 'w-6 bg-rose-500' : 'w-1.5 bg-slate-300'
+                    }`}
+                  />
+                )
+              })}
+            </div>
+          )}
+          
+          {/* Navigation buttons */}
+          <button
+            onClick={() => carouselRef.current?.scroll('left')}
+            disabled={!canScrollLeft}
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+            aria-label="Vorige items"
+          >
+            <ChevronLeftIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => carouselRef.current?.scroll('right')}
+            disabled={!canScrollRight}
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+            aria-label="Volgende items"
+          >
+            <ChevronRightIcon className="w-5 h-5" />
+          </button>
+        </div>
       </article>
     )
   }
 
   const PinnedDealsSection: React.FC<{ deals: DealItem[] }> = ({ deals }) => {
-    if (!deals.length) {
-      return null
-    }
-
-    const featured = deals[0]
-    const supporting = deals.slice(1)
-
     const priceRange = useMemo(() => {
       const parsed = deals
         .map((item) => {
-          const normalised = item.price.replace(/[^0-9,\.]/g, '').replace(',', '.')
+          const normalised = item.price.replace(/[^0-9,.]/g, '').replace(',', '.')
           const value = Number.parseFloat(normalised)
           return Number.isFinite(value) ? value : null
         })
@@ -1102,6 +1146,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       })
       return Array.from(labels)
     }, [deals])
+
+    if (!deals.length) {
+      return null
+    }
+
+    const featured = deals[0]
+    const supporting = deals.slice(1)
 
     return (
       <section className="space-y-8">
@@ -1528,9 +1579,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                         email: formData.get('email'),
                         timestamp: new Date().toISOString()
                       }
-                      console.log('Community wishlist submission:', wishData)
+                      console.warn('Community wishlist submission (TODO: add Firebase backend):', wishData)
                       // TODO: Add Firebase backend to store wishes
-                      alert('Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜')
+                      window.alert('Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜')
                       form.reset()
                     }}>
                       <div className="space-y-5">
