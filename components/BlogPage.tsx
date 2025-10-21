@@ -139,11 +139,13 @@ const SpotlightSupportCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; i
         <p className="text-sm leading-relaxed text-gray-600 line-clamp-3">{post.excerpt}</p>
 
         <div className="flex items-center gap-3 pt-2">
-          <ImageWithFallback
-            src={post.author.avatarUrl}
-            alt={post.author.name}
-            className="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm"
-          />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
+            {post.author.name
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .slice(0, 2)}
+          </div>
           <div className="text-sm text-gray-600">
             <p className="font-semibold text-gray-900">{post.author.name}</p>
             <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -272,11 +274,13 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
 
         <div className="mt-6 flex items-center justify-between border-t border-slate-100/70 pt-4">
           <div className="flex items-center gap-3">
-            <ImageWithFallback
-              src={post.author.avatarUrl}
-              alt={post.author.name}
-              className="h-10 w-10 rounded-full border-2 border-white object-cover shadow-sm"
-            />
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
+              {post.author.name
+                .split(' ')
+                .map((n) => n[0])
+                .join('')
+                .slice(0, 2)}
+            </div>
             <div>
               <p className="text-sm font-semibold text-gray-900">{post.author.name}</p>
               <div className="flex items-center gap-2 text-xs text-gray-500">
