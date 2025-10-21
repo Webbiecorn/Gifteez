@@ -335,9 +335,16 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
   // Function to rotate to the next premium deal
   const showNextDeal = useCallback(() => {
-    if (premiumDeals.length === 0) return
+    console.log('showNextDeal called', { premiumDealsLength: premiumDeals.length, currentIndex: dealOfWeekIndex })
+    
+    if (premiumDeals.length <= 1) {
+      console.log('Not enough premium deals to rotate')
+      return
+    }
 
     const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length
+    console.log('Rotating to index:', nextIndex, 'Deal:', premiumDeals[nextIndex]?.name)
+    
     setDealOfWeekIndex(nextIndex)
 
     setState((prev) => ({
@@ -1371,9 +1378,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                           >
                             Naar {featuredRetailer ? featuredRetailer.shortLabel : 'de winkel'} →
                           </a>
-                          <Button variant="secondary" className="bg-white" onClick={showNextDeal}>
-                            Toon andere deal
-                          </Button>
+                          {premiumDeals.length > 1 && (
+                            <Button variant="secondary" className="bg-white" onClick={showNextDeal}>
+                              Toon andere deal ({dealOfWeekIndex + 1}/{premiumDeals.length})
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>
