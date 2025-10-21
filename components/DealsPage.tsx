@@ -521,6 +521,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const scrollRef = useRef<HTMLDivElement>(null)
     const [canScrollLeft, setCanScrollLeft] = useState(false)
     const [canScrollRight, setCanScrollRight] = useState(true)
+    const [currentIndex, setCurrentIndex] = useState(0)
 
     // Touch swipe state
     const [touchStart, setTouchStart] = useState(0)
@@ -531,6 +532,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
         setCanScrollLeft(scrollLeft > 0)
         setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+        
+        // Update current index
+        const cardWidth = 280
+        const newIndex = Math.round(scrollLeft / cardWidth)
+        setCurrentIndex(newIndex)
       }
     }, [])
 
@@ -580,6 +586,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       setTouchStart(0)
       setTouchEnd(0)
     }
+    
+    const itemsPerView = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+    const totalPages = Math.ceil(items.length / itemsPerView)
 
     return (
       <div className="relative">
@@ -595,29 +604,53 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               </span>
             )}
           </div>
-          <div className="hidden md:flex gap-2">
-            <button
-              onClick={() => scroll('left')}
-              disabled={!canScrollLeft}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Scroll naar links"
-            >
-              <ChevronRightIcon className="h-5 w-5 rotate-180" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              disabled={!canScrollRight}
-              className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition-all hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Scroll naar rechts"
-            >
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
+          {/* Desktop navigation - always visible */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* Progress dots */}
+            {items.length > 3 && (
+              <div className="flex items-center gap-1.5">
+                {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+                  const isActive = Math.floor(currentIndex / itemsPerView) === idx
+                  return (
+                    <div
+                      key={idx}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        isActive ? 'w-6 bg-rose-500' : 'w-1.5 bg-slate-300'
+                      }`}
+                    />
+                  )
+                })}
+              </div>
+            )}
+            {/* Navigation buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => scroll('left')}
+                disabled={!canScrollLeft}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+                aria-label="Vorige items"
+              >
+                <ChevronRightIcon className="h-5 w-5 rotate-180" />
+              </button>
+              <button
+                onClick={() => scroll('right')}
+                disabled={!canScrollRight}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-slate-200 bg-white text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+                aria-label="Volgende items"
+              >
+                <ChevronRightIcon className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mobile swipe indicator */}
-        <div className="md:hidden mb-3 flex items-center justify-center gap-2 text-xs text-slate-500">
-          <span className="animate-pulse">👈 Swipe 👉</span>
+        <div className="md:hidden mb-3 flex items-center justify-center gap-2 text-xs text-slate-500 font-medium">
+          <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100">
+            <span>👈</span>
+            <span>Swipe om te navigeren</span>
+            <span>👉</span>
+          </div>
         </div>
 
         <div

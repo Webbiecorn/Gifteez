@@ -12,6 +12,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
   const [isScrolling, setIsScrolling] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  
   const prefersReducedMotion = useMemo(() => {
     if (typeof window === 'undefined' || !('matchMedia' in window)) {
       return false
@@ -21,6 +23,10 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
   const [hasAnimatedIn, setHasAnimatedIn] = useState(prefersReducedMotion)
 
   const productKey = useMemo(() => products.map((product) => product.id).join('|'), [products])
+
+  // Calculate total pages (groups of visible items)
+  const itemsPerView = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+  const totalPages = Math.ceil(products.length / itemsPerView)
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -40,6 +46,11 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
     const { scrollLeft, scrollWidth, clientWidth } = container
     setCanScrollLeft(scrollLeft > 10)
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+    
+    // Update current index based on scroll position
+    const cardWidth = 320
+    const newIndex = Math.round(scrollLeft / cardWidth)
+    setCurrentIndex(newIndex)
   }, [])
 
   useEffect(() => {
@@ -84,17 +95,54 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
   }
 
   return (
-    <div className="relative group">
-      {/* Left scroll button */}
-      {canScrollLeft && (
-        <button
-          onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-xl hover:shadow-2xl transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
-          aria-label="Scroll naar links"
-        >
-          <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
-        </button>
-      )}
+    <div className="relative">
+      {/* Navigation buttons - always visible on desktop */}
+      <div className="hidden md:flex items-center justify-between mb-4">
+        <div className="flex gap-2">
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+            aria-label="Vorige items"
+          >
+            <ChevronLeftIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canScrollRight}
+            className="flex items-center justify-center w-10 h-10 rounded-xl bg-white border-2 border-slate-200 text-slate-700 transition-all duration-200 hover:border-rose-400 hover:bg-rose-50 hover:text-rose-600 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-slate-200 disabled:hover:bg-white shadow-sm hover:shadow-md"
+            aria-label="Volgende items"
+          >
+            <ChevronRightIcon className="w-5 h-5" />
+          </button>
+        </div>
+        
+        {/* Progress indicator - dots */}
+        {products.length > 3 && (
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: Math.min(totalPages, 5) }).map((_, idx) => {
+              const isActive = Math.floor(currentIndex / itemsPerView) === idx
+              return (
+                <div
+                  key={idx}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    isActive ? 'w-6 bg-rose-500' : 'w-1.5 bg-slate-300'
+                  }`}
+                />
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Mobile swipe indicator */}
+      <div className="md:hidden mb-3 flex items-center justify-center gap-2 text-xs text-slate-500 font-medium">
+        <div className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100">
+          <span>👈</span>
+          <span>Swipe om te navigeren</span>
+          <span>👉</span>
+        </div>
+      </div>
 
       {/* Carousel container */}
       <div
@@ -127,17 +175,6 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ products, renderProdu
           )
         })}
       </div>
-
-      {/* Right scroll button */}
-      {canScrollRight && (
-        <button
-          onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-xl hover:shadow-2xl transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110"
-          aria-label="Scroll naar rechts"
-        >
-          <ChevronRightIcon className="w-6 h-6 text-gray-700" />
-        </button>
-      )}
 
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
