@@ -661,8 +661,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             document.getElementById('giftfinder-form')?.scrollIntoView({ behavior: 'smooth' })
           }
         />
-        {/* How it works section - Optional decorative section */}
-        <div className="bg-gradient-to-b from-white to-rose-50/30 py-6 md:py-16">
+        {/* How it works section - Hidden on mobile, visible on desktop */}
+        <div className="hidden md:block bg-gradient-to-b from-white to-rose-50/30 py-6 md:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-6 md:mb-12">
               <h2 className="text-xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2 md:mb-4">
