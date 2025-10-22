@@ -665,6 +665,16 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </div>
           ))}
         </div>
+
+        {/* Mobile scroll indicator - Shows there's more content below */}
+        <div className="md:hidden mt-4 flex flex-col items-center gap-2 text-xs text-slate-400">
+          <div className="flex items-center gap-1">
+            <span>↓</span>
+            <span>Scroll naar beneden voor meer</span>
+            <span>↓</span>
+          </div>
+          <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+        </div>
       </div>
     )
   }
@@ -972,7 +982,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false)
     const [canScrollRight, setCanScrollRight] = useState(true)
     const [currentIndex, setCurrentIndex] = useState(0)
-    const carouselRef = useRef<{ scroll: (__dir: 'left' | 'right') => void }>(null)
+    const carouselRef = useRef<{ scroll: () => void }>(null)
 
     const retailerLabels = useMemo(() => {
       const unique = new Set<string>()
