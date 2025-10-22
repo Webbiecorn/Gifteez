@@ -1049,7 +1049,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             <GiftIcon className="h-4 w-4" />
             Curated selectie
           </div>
-          <div className="flex items-start justify-between gap-4">
+          {/* Desktop layout: titel + knop naast elkaar */}
+          <div className="hidden md:flex items-start justify-between gap-4">
             <div className="flex-1">
               <h3 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
                 {displayTitle}
@@ -1113,7 +1114,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               </button>
 
               {/* Navigation buttons onder de knop */}
-              <div className="hidden md:flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 {/* Progress dots */}
                 {items.length > 3 && (
                   <div className="flex items-center gap-1.5 mr-2">
@@ -1151,6 +1152,62 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               </div>
             </div>
           </div>
+
+          {/* Mobile layout: titel boven, knop onder beschrijving */}
+          <div className="md:hidden space-y-4">
+            <div>
+              <h3 className="font-display text-2xl font-bold text-slate-900">{displayTitle}</h3>
+              <p className="mt-2 text-sm text-slate-600">{description}</p>
+            </div>
+
+            <button
+              onClick={() =>
+                navigateTo('categoryDetail', {
+                  categoryId: category.id,
+                  categoryTitle: displayTitle,
+                  categoryDescription: description,
+                  products: items,
+                })
+              }
+              className="group relative overflow-visible w-full rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl active:scale-95"
+            >
+              {/* Glow effect */}
+              <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-active:opacity-70 transition-opacity duration-500" />
+
+              {/* Button content */}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                Bekijk onze collectie
+                <svg
+                  className="w-5 h-5 transition-transform duration-300 group-active:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+
           <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
               {items.length} cadeaus
