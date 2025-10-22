@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { withAffiliate } from '../services/affiliate'
 import Breadcrumbs from './Breadcrumbs'
 import Button from './Button'
 import { ChevronLeftIcon, GiftIcon, SparklesIcon, HeartIcon, CheckIcon } from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
 import { Container } from './layout/Container'
-import LoadingSpinner from './LoadingSpinner'
 import Meta from './Meta'
 import type { NavigateTo, DealItem } from '../types'
 
@@ -15,7 +14,6 @@ interface CategoryDetailPageProps {
   categoryTitle: string
   categoryDescription?: string
   products: DealItem[]
-  renderProductCard?: (product: DealItem, index: number) => React.ReactNode
 }
 
 // Helper function to resolve retailer info
@@ -54,10 +52,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   categoryTitle,
   categoryDescription,
   products,
-  renderProductCard,
 }) => {
-  const [loading, setLoading] = useState(false)
-
   useEffect(() => {
     document.title = `${categoryTitle} | Gifteez.nl Deals`
     window.scrollTo(0, 0)
@@ -87,7 +82,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   }
 
   // Product Card Component - matches DealsPage styling
-  const ProductCard: React.FC<{ deal: DealItem; index: number }> = ({ deal, index }) => {
+  const ProductCard: React.FC<{ deal: DealItem }> = ({ deal }) => {
     const retailerInfo = useMemo(
       () => resolveRetailerInfo(deal.affiliateLink),
       [deal.affiliateLink]
@@ -218,9 +213,6 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     )
   }
 
-  // Check if this is the gift sets category
-  const isGiftSetsCategory = categoryTitle.toLowerCase().includes('gift set')
-
   return (
     <>
       <Meta
@@ -230,6 +222,37 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           `Ontdek de beste deals voor ${categoryTitle}. Handmatig geselecteerd door onze experts.`
         }
         canonical={`/deals/category/${categoryId}`}
+      />
+
+      {/* Structured Data for Breadcrumbs - Essential for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://gifteez.nl/',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Deals',
+                item: 'https://gifteez.nl/deals',
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: categoryTitle,
+                item: `https://gifteez.nl/deals/category/${categoryId}`,
+              },
+            ],
+          }),
+        }}
       />
 
       <div className="bg-gradient-to-b from-white via-rose-50/30 to-white min-h-screen">
@@ -249,8 +272,8 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           </div>
 
           <Container size="xl" className="relative z-10 py-16 md:py-24">
-            {/* Breadcrumbs - styled for dark background */}
-            <div className="mb-8">
+            {/* Breadcrumbs - hidden on mobile, visible on desktop for better UX, but always in structured data for SEO */}
+            <div className="mb-8 hidden md:block">
               <div className="text-white/90">
                 <Breadcrumbs
                   items={[
@@ -357,14 +380,10 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
 
         <Container size="xl" className="py-12">
           {/* Products Grid */}
-          {loading ? (
-            <div className="flex justify-center py-16">
-              <LoadingSpinner size="large" />
-            </div>
-          ) : products.length > 0 ? (
+          {products.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((product, index) => (
-                <ProductCard key={product.id} deal={product} index={index} />
+              {products.map((product) => (
+                <ProductCard key={product.id} deal={product} />
               ))}
             </div>
           ) : (
