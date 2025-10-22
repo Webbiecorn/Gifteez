@@ -15,7 +15,8 @@ export const top10Deals: DealItem[] = [
   {
     id: 'top-01',
     name: 'Nintendo Switch + BlueBuilt Beschermhoes',
-    description: 'Complete Switch-bundel met travelcase: klaar om direct onderweg of op tv te gamen.',
+    description:
+      'Complete Switch-bundel met travelcase: klaar om direct onderweg of op tv te gamen.',
     imageUrl:
       'https://coolblue.bynder.com/transform/3d47c794-c742-46cb-9a6c-34007e08866f/923666?io=transform:fit,height:800,width:800&format=png&quality=100',
     price: '€314,00',
@@ -54,7 +55,8 @@ export const top10Deals: DealItem[] = [
     description: 'Klassieke koffiepadmachine voor perfecte koffie in een handomdraai.',
     imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2140334',
     price: '€59,00',
-    affiliateLink: 'https://www.awin1.com/cread.php?awinmid=8558&awinaffid=2566111&ued=https%3A%2F%2Fwww.coolblue.nl%2Fproduct%2F960722%2Fphilips-senseo-original-hd6553-50.html',
+    affiliateLink:
+      'https://www.awin1.com/cread.php?awinmid=8558&awinaffid=2566111&ued=https%3A%2F%2Fwww.coolblue.nl%2Fproduct%2F960722%2Fphilips-senseo-original-hd6553-50.html',
   },
   {
     id: 'top-06',
@@ -141,7 +143,7 @@ export const dealCategories: DealCategory[] = [
       {
         id: 'kitchen-airfryer',
         name: 'Philips Airfryer XXL Smart Sensing',
-        description: 'Gezond frituren voor het hele gezin met automatische bereidingsprogramma\'s.',
+        description: "Gezond frituren voor het hele gezin met automatische bereidingsprogramma's.",
         imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2143848',
         price: '€249,00',
         affiliateLink:

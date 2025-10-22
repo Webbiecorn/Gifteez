@@ -700,7 +700,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                   </div>
                   <div className="mt-3 md:mt-4">
                     <div className="text-3xl md:text-5xl mb-2 md:mb-4">🤖</div>
-                    <h3 className="text-base md:text-xl font-bold text-gray-900 mb-1.5 md:mb-3">AI doet de magie</h3>
+                    <h3 className="text-base md:text-xl font-bold text-gray-900 mb-1.5 md:mb-3">
+                      AI doet de magie
+                    </h3>
                     <p className="text-xs md:text-base text-gray-600">
                       Onze slimme AI analyseert duizenden producten in seconden
                     </p>
@@ -730,7 +732,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         </div>
 
         {/* Main form section */}
-        <div className="bg-gradient-to-b from-rose-50/30 to-white py-6 md:py-16" id="giftfinder-form">
+        <div
+          className="bg-gradient-to-b from-rose-50/30 to-white py-6 md:py-16"
+          id="giftfinder-form"
+        >
           <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
             <form
               onSubmit={handleSubmit}
@@ -780,7 +785,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     <h3 className="font-display text-base md:text-2xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                       Voor wie zoek je?
                     </h3>
-                    <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1">Kies de relatie tot de ontvanger</p>
+                    <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1">
+                      Kies de relatie tot de ontvanger
+                    </p>
                   </div>
                 </div>
                 <select
@@ -885,7 +892,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     <h3 className="font-display text-base md:text-2xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
                       Wat is de gelegenheid?
                     </h3>
-                    <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1">Selecteer de speciale gelegenheid</p>
+                    <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1">
+                      Selecteer de speciale gelegenheid
+                    </p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
@@ -1011,7 +1020,11 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 {/* Trust badges below button */}
                 <div className="mt-4 md:mt-6 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs md:text-sm text-gray-600">
                   <div className="flex items-center gap-1.5 md:gap-2">
-                    <svg className="w-4 md:w-5 h-4 md:h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-4 md:w-5 h-4 md:h-5 text-green-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -1021,7 +1034,11 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     <span className="font-medium">100% Gratis</span>
                   </div>
                   <div className="flex items-center gap-1.5 md:gap-2">
-                    <svg className="w-4 md:w-5 h-4 md:h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-4 md:w-5 h-4 md:h-5 text-blue-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
@@ -1140,7 +1157,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                           <h3 className="font-display text-base md:text-lg font-bold text-primary mb-1 md:mb-2">
                             Jouw Persoonlijke AI Assistent
                           </h3>
-                          <p className="text-sm md:text-base text-gray-700 leading-relaxed">{personalizedIntro}</p>
+                          <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                            {personalizedIntro}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1157,7 +1176,9 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     </div>
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-4">
                       <div className="flex items-center gap-2 sm:gap-3">
-                        <label className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap">Sorteren op:</label>
+                        <label className="text-xs md:text-sm font-medium text-gray-700 whitespace-nowrap">
+                          Sorteren op:
+                        </label>
                         <select
                           value={sortBy}
                           onChange={(e) => {

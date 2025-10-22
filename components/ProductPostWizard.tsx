@@ -1,19 +1,28 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { AmazonProductLibrary } from '../services/amazonProductLibrary'
 import CoolblueFeedService from '../services/coolblueFeedService'
 import Button from './Button'
 import ImageWithFallback from './ImageWithFallback'
+import type { AmazonProduct } from '../services/amazonProductLibrary'
 import type { BlogPostData } from '../services/blogService'
 import type { CoolblueFeedMeta, CoolblueProduct } from '../services/coolblueFeedService'
 
 interface ProductPostWizardProps {
   isOpen: boolean
   onCancel: () => void
+  // eslint-disable-next-line no-unused-vars
   onGenerate: (postTemplate: BlogPostData) => void
 }
 
+// Unified product interface voor zowel Amazon als Coolblue
+interface UnifiedProduct extends CoolblueProduct {
+  source: 'amazon' | 'coolblue'
+  originalProduct?: AmazonProduct
+}
+
 interface WizardState {
-  products: CoolblueProduct[]
-  meta: CoolblueFeedMeta
+  products: UnifiedProduct[]
+  coolblueMeta: CoolblueFeedMeta
   loading: boolean
   error?: string
 }
@@ -21,11 +30,11 @@ interface WizardState {
 const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel, onGenerate }) => {
   const [state, setState] = useState<WizardState>({
     products: [],
-    meta: CoolblueFeedService.getMeta(),
+    coolblueMeta: CoolblueFeedService.getMeta(),
     loading: true,
   })
   const [search, setSearch] = useState('')
-  const [selectedProducts, setSelectedProducts] = useState<CoolblueProduct[]>([])
+  const [selectedProducts, setSelectedProducts] = useState<UnifiedProduct[]>([])
   const [focusedProductId, setFocusedProductId] = useState<string | null>(null)
   const [selectionWarning, setSelectionWarning] = useState<string | null>(null)
   const MAX_SELECTION = 5
@@ -42,6 +51,27 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
     return selectedProducts[0] ?? null
   }, [selectedProducts, focusedProductId])
 
+  // Helper functie om Amazon product te converteren naar UnifiedProduct
+  const convertAmazonToUnified = (amazonProduct: AmazonProduct): UnifiedProduct => {
+    return {
+      id: amazonProduct.id,
+      name: amazonProduct.name,
+      price: amazonProduct.price,
+      image: amazonProduct.image || amazonProduct.imageLarge || '',
+      imageUrl: amazonProduct.image || amazonProduct.imageLarge || '',
+      description: amazonProduct.description || '',
+      shortDescription: amazonProduct.description?.slice(0, 150) || '',
+      category: amazonProduct.category || 'Overig',
+      affiliateLink: amazonProduct.affiliateLink,
+      isOnSale: false,
+      lastUpdated: new Date().toISOString(),
+      tags: [],
+      giftScore: 0,
+      source: 'amazon',
+      originalProduct: amazonProduct,
+    }
+  }
+
   useEffect(() => {
     if (!isOpen) {
       return
@@ -50,12 +80,26 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
     let cancelled = false
     setState((prev) => ({ ...prev, loading: true, error: undefined }))
 
-    CoolblueFeedService.loadProducts()
-      .then((products) => {
+    // Laad zowel Coolblue als Amazon producten
+    Promise.all([CoolblueFeedService.loadProducts(), AmazonProductLibrary.loadProducts()])
+      .then(([coolblueProducts, amazonProducts]) => {
         if (cancelled) return
+
+        // Converteer Coolblue producten naar UnifiedProduct
+        const unifiedCoolblue: UnifiedProduct[] = coolblueProducts.map((product) => ({
+          ...product,
+          source: 'coolblue' as const,
+        }))
+
+        // Converteer Amazon producten naar UnifiedProduct
+        const unifiedAmazon: UnifiedProduct[] = amazonProducts.map(convertAmazonToUnified)
+
+        // Combineer beide arrays
+        const allProducts = [...unifiedCoolblue, ...unifiedAmazon]
+
         setState({
-          products,
-          meta: CoolblueFeedService.getMeta(),
+          products: allProducts,
+          coolblueMeta: CoolblueFeedService.getMeta(),
           loading: false,
         })
         setSelectedProducts([])
@@ -63,15 +107,15 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
         setSearch('')
         setSelectionWarning(null)
       })
-      .catch((error: any) => {
+      .catch((error: unknown) => {
         if (cancelled) return
-        console.error('Kon Coolblue feed niet laden:', error)
+        const errorMessage = error instanceof Error ? error.message : 'Onbekende fout'
+        console.error('Kon producten niet laden:', errorMessage)
         setState({
           products: [],
-          meta: CoolblueFeedService.getMeta(),
+          coolblueMeta: CoolblueFeedService.getMeta(),
           loading: false,
-          error:
-            'De productfeed kon niet geladen worden. Probeer het later opnieuw of importeer een nieuwe feed via het Shop tabblad.',
+          error: 'De producten konden niet geladen worden. Probeer het later opnieuw.',
         })
         setSelectedProducts([])
         setFocusedProductId(null)
@@ -122,15 +166,43 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
     }
 
     try {
-      const template = CoolblueFeedService.generateMultiProductTemplate(selectedProducts)
+      // Converteer UnifiedProduct terug naar CoolblueProduct voor de template generator
+      const productsForTemplate: CoolblueProduct[] = selectedProducts.map((product) => {
+        // Als het een Amazon product is, gebruik de originalProduct data
+        if (product.source === 'amazon' && product.originalProduct) {
+          return {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            imageUrl: product.imageUrl,
+            description: product.description,
+            shortDescription: product.shortDescription,
+            category: product.category,
+            affiliateLink: product.affiliateLink,
+            isOnSale: product.isOnSale,
+            lastUpdated: product.lastUpdated,
+            tags: product.tags,
+            giftScore: product.giftScore,
+          }
+        }
+        // Voor Coolblue producten, return as-is (verwijder source en originalProduct)
+        // eslint-disable-next-line no-unused-vars
+        const { source: _source, originalProduct: _originalProduct, ...coolblueProduct } = product
+        return coolblueProduct
+      })
+
+      const template = CoolblueFeedService.generateMultiProductTemplate(productsForTemplate)
       onGenerate(template)
-    } catch (error: any) {
-      console.error('Kon productpost niet genereren:', error)
-      setSelectionWarning(error?.message ?? 'Genereren mislukt. Probeer het opnieuw.')
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Genereren mislukt. Probeer het opnieuw.'
+      console.error('Kon productpost niet genereren:', errorMessage)
+      setSelectionWarning(errorMessage)
     }
   }
 
-  const toggleProduct = (product: CoolblueProduct) => {
+  const toggleProduct = (product: UnifiedProduct) => {
     setSelectedProducts((prev) => {
       const exists = prev.some((item) => item.id === product.id)
       if (exists) {
@@ -169,15 +241,16 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
-                Productpost bouwen vanuit Coolblue feed
+                Productpost bouwen vanuit productfeed
               </h2>
               <p className="mt-1 text-sm text-gray-500">
-                Kies een product uit de feed om automatisch een concept blogpost te genereren.
+                Kies producten uit Amazon of Coolblue om automatisch een concept blogpost te
+                genereren.
               </p>
               <p className="mt-1 text-xs text-gray-400">
-                Bron: {state.meta.source ?? 'onbekend'} · Laatst bijgewerkt:{' '}
-                {new Date(state.meta.importedAt).toLocaleString('nl-NL')} · {state.meta.total}{' '}
-                producten beschikbaar
+                {state.coolblueMeta.total} Coolblue producten ·{' '}
+                {state.products.filter((p) => p.source === 'amazon').length} Amazon producten ·
+                Totaal: {state.products.length} beschikbaar
               </p>
             </div>
             <button
@@ -263,7 +336,18 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
                         </div>
                         <div className="flex-1">
                           <div className="flex items-start justify-between gap-3">
-                            <div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <span
+                                  className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${
+                                    product.source === 'amazon'
+                                      ? 'bg-amber-100 text-amber-700'
+                                      : 'bg-blue-100 text-blue-700'
+                                  }`}
+                                >
+                                  {product.source === 'amazon' ? '🔶 Amazon' : '🔷 Coolblue'}
+                                </span>
+                              </div>
                               <p className="text-sm font-semibold text-gray-900 line-clamp-2">
                                 {product.name}
                               </p>
@@ -398,6 +482,17 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
                         />
                       </div>
                       <div className="flex-1">
+                        <div className="mb-2">
+                          <span
+                            className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${
+                              focusedProduct.source === 'amazon'
+                                ? 'bg-amber-100 text-amber-700'
+                                : 'bg-blue-100 text-blue-700'
+                            }`}
+                          >
+                            {focusedProduct.source === 'amazon' ? '🔶 Amazon' : '🔷 Coolblue'}
+                          </span>
+                        </div>
                         <h4 className="text-base font-semibold text-gray-900">
                           {focusedProduct.name}
                         </h4>

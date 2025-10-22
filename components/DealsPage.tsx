@@ -26,8 +26,8 @@ import InternalLinkCTA from './InternalLinkCTA'
 import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
-import { SocialShare } from './SocialShare'
 import ProductCarousel from './ProductCarousel'
+import { SocialShare } from './SocialShare'
 import type { NavigateTo, DealCategory, DealItem } from '../types'
 
 type RetailerInfo = {
@@ -337,7 +337,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     }
 
     const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length
-    
+
     setDealOfWeekIndex(nextIndex)
 
     setState((prev) => ({
@@ -525,7 +525,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
         setCanScrollLeft(scrollLeft > 0)
         setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
-        
+
         // Update current index
         const cardWidth = 280
         const newIndex = Math.round(scrollLeft / cardWidth)
@@ -579,8 +579,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       setTouchStart(0)
       setTouchEnd(0)
     }
-    
-    const itemsPerView = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+
+    const itemsPerView =
+      typeof window !== 'undefined' && window.innerWidth >= 1024
+        ? 3
+        : window.innerWidth >= 640
+          ? 2
+          : 1
     const totalPages = Math.ceil(items.length / itemsPerView)
 
     return (
@@ -695,9 +700,16 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           return name
         }
         // Add female-focused language for beauty/wellness/spa sets
-        if (lower.includes('beauty') || lower.includes('spa') || lower.includes('skincare') || 
-            lower.includes('wellness') || lower.includes('bath') || lower.includes('badolie') ||
-            lower.includes('body') || lower.includes('verzorging')) {
+        if (
+          lower.includes('beauty') ||
+          lower.includes('spa') ||
+          lower.includes('skincare') ||
+          lower.includes('wellness') ||
+          lower.includes('bath') ||
+          lower.includes('badolie') ||
+          lower.includes('body') ||
+          lower.includes('verzorging')
+        ) {
           return `${name} - Luxe Verwenset voor Haar`
         }
       }
@@ -841,21 +853,31 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 >
                   {/* Gradient background with animation */}
                   <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 transition-all duration-300 group-hover/btn:from-rose-600 group-hover/btn:via-pink-600 group-hover/btn:to-rose-700"></div>
-                  
+
                   {/* Shimmer effect on hover */}
                   <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
                   </div>
-                  
+
                   {/* Button content */}
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     <span>Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'}</span>
-                    <svg className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    <svg
+                      className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
                     </svg>
                   </span>
                 </a>
-                
+
                 {/* Share button - Stuur deze deal naar een vriend */}
                 <button
                   onClick={(e) => {
@@ -871,13 +893,17 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   <span>Deel deze deal</span>
                 </button>
                 <div className="deal-share-menu hidden rounded-lg border border-slate-200 bg-white p-3 shadow-lg">
-                  <p className="mb-2 text-xs font-semibold text-slate-600">Stuur deze deal naar een vriend</p>
-                  <SocialShare 
-                    item={{
-                      productName: deal.name,
-                      description: deal.description || `Toppertje: ${deal.name} nu met korting!`,
-                      imageUrl: deal.imageUrl,
-                    } as any}
+                  <p className="mb-2 text-xs font-semibold text-slate-600">
+                    Stuur deze deal naar een vriend
+                  </p>
+                  <SocialShare
+                    item={
+                      {
+                        productName: deal.name,
+                        description: deal.description || `Toppertje: ${deal.name} nu met korting!`,
+                        imageUrl: deal.imageUrl,
+                      } as any
+                    }
                     type="gift"
                     variant="compact"
                   />
@@ -980,9 +1006,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       return `${formatCurrency(min)} – ${formatCurrency(max)}`
     }, [items])
 
-    const renderProductCard = useCallback((deal: DealItem, dealIndex: number) => (
-      <DealCard key={deal.id} deal={deal} index={dealIndex} variant="grid" />
-    ), [])
+    const renderProductCard = useCallback(
+      (deal: DealItem, dealIndex: number) => (
+        <DealCard key={deal.id} deal={deal} index={dealIndex} variant="grid" />
+      ),
+      []
+    )
 
     if (!items.length) {
       return null
@@ -992,7 +1021,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const description = getCategoryDescription(category.title, displayTitle, items.length)
 
     // Calculate total pages
-    const itemsPerView = typeof window !== 'undefined' && window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1
+    const itemsPerView =
+      typeof window !== 'undefined' && window.innerWidth >= 1024
+        ? 3
+        : window.innerWidth >= 640
+          ? 2
+          : 1
     const totalPages = Math.ceil(items.length / itemsPerView)
 
     return (
@@ -1026,28 +1060,48 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               >
                 {/* Glow effect achter de knop bij hover */}
                 <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
-                
+
                 {/* Animated gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl" />
-                
+
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden">
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                 </div>
-                
+
                 {/* Button content */}
                 <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
                   </svg>
                   Bekijk onze collectie
-                  <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <svg
+                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
                   </svg>
                 </span>
               </button>
-              
+
               {/* Navigation buttons onder de knop */}
               <div className="hidden md:flex items-center gap-2">
                 {/* Progress dots */}
@@ -1066,7 +1120,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     })}
                   </div>
                 )}
-                
+
                 {/* Navigation buttons */}
                 <button
                   onClick={() => carouselRef.current?.scroll('left')}
@@ -1104,9 +1158,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           </div>
         </header>
 
-        <ProductCarousel 
+        <ProductCarousel
           ref={carouselRef}
-          products={items} 
+          products={items}
           renderProduct={renderProductCard}
           hideDefaultNavigation={true}
           onNavigationChange={(controls) => {
@@ -1550,7 +1604,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 )}
 
               {/* Community Wishlist Section - Wat wil jij in de deals zien? */}
-              <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 py-12 md:py-16 px-6 md:px-8 animate-fade-in-up" style={{ animationDelay: '140ms' }}>
+              <section
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 py-12 md:py-16 px-6 md:px-8 animate-fade-in-up"
+                style={{ animationDelay: '140ms' }}
+              >
                 <div className="max-w-4xl mx-auto">
                   <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 rounded-full bg-white shadow-lg border border-purple-200 px-5 py-2.5 mb-4">
@@ -1560,33 +1617,48 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       </span>
                     </div>
                     <h2 className="font-display text-3xl md:text-4xl font-bold mb-3 text-gray-900">
-                      Wat wil <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">jij</span> in de deals zien?
+                      Wat wil{' '}
+                      <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        jij
+                      </span>{' '}
+                      in de deals zien?
                     </h2>
                     <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
-                      Jouw wensen zijn belangrijk! Laat ons weten welke producten of categorieën je graag als deal zou willen zien.
+                      Jouw wensen zijn belangrijk! Laat ons weten welke producten of categorieën je
+                      graag als deal zou willen zien.
                     </p>
                   </div>
 
                   <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-purple-100 p-6 md:p-8">
-                    <form onSubmit={(e) => {
-                      e.preventDefault()
-                      const form = e.currentTarget
-                      const formData = new FormData(form)
-                      const wishData = {
-                        product: formData.get('product'),
-                        category: formData.get('category'),
-                        description: formData.get('description'),
-                        email: formData.get('email'),
-                        timestamp: new Date().toISOString()
-                      }
-                      console.warn('Community wishlist submission (TODO: add Firebase backend):', wishData)
-                      // TODO: Add Firebase backend to store wishes
-                      window.alert('Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜')
-                      form.reset()
-                    }}>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        const form = e.currentTarget
+                        const formData = new FormData(form)
+                        const wishData = {
+                          product: formData.get('product'),
+                          category: formData.get('category'),
+                          description: formData.get('description'),
+                          email: formData.get('email'),
+                          timestamp: new Date().toISOString(),
+                        }
+                        console.warn(
+                          'Community wishlist submission (TODO: add Firebase backend):',
+                          wishData
+                        )
+                        // TODO: Add Firebase backend to store wishes
+                        window.alert(
+                          'Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜'
+                        )
+                        form.reset()
+                      }}
+                    >
                       <div className="space-y-5">
                         <div>
-                          <label htmlFor="product" className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label
+                            htmlFor="product"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
                             Welk product zou je graag willen zien?
                           </label>
                           <input
@@ -1600,7 +1672,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label
+                            htmlFor="category"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
                             Categorie
                           </label>
                           <select
@@ -1622,7 +1697,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label
+                            htmlFor="description"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
                             Extra toelichting (optioneel)
                           </label>
                           <textarea
@@ -1635,7 +1713,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                         </div>
 
                         <div>
-                          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label
+                            htmlFor="email"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
                             E-mail (optioneel - voor notificaties)
                           </label>
                           <input

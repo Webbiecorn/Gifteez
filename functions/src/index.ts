@@ -9,7 +9,12 @@ import type { CorsOptionsDelegate } from 'cors'
 import type { Request, Response } from 'express'
 
 // Export email functions
-export { onNewsletterSubscribe, sendNewsletterCampaign, sendGiftFinderResults, onContactFormSubmit } from './email.js'
+export {
+  onNewsletterSubscribe,
+  sendNewsletterCampaign,
+  sendGiftFinderResults,
+  onContactFormSubmit,
+} from './email.js'
 
 // Basic in-memory cache (ephemeral). For production, consider Firestore/Redis.
 type CacheEntry = { value: any; expiresAt: number }

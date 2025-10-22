@@ -1,13 +1,13 @@
 import React from 'react'
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { render } from '@testing-library/react'
 import { screen, fireEvent, waitFor, within } from '@testing-library/dom'
+import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import GiftResultCard from '../GiftResultCard'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { AuthContext } from '../../contexts/AuthContext'
-import type { Gift, AuthContextType } from '../../types'
 import * as affiliateModule from '../../services/affiliate'
 import * as analyticsModule from '../../services/giftFinderAnalyticsService'
+import GiftResultCard from '../GiftResultCard'
+import type { Gift, AuthContextType } from '../../types'
 
 // Mock modules
 vi.mock('../../services/affiliate', () => ({

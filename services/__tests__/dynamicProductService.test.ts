@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import { DynamicProductService } from '../dynamicProductService'
 import * as AmazonProductLibraryModule from '../amazonProductLibrary'
 import CoolblueFeedService from '../coolblueFeedService'
-import { ShopLikeYouGiveADamnService } from '../shopLikeYouGiveADamnService'
-import { PinnedDealsService } from '../pinnedDealsService'
 import { DealCategoryConfigService } from '../dealCategoryConfigService'
+import { DynamicProductService } from '../dynamicProductService'
+import { PinnedDealsService } from '../pinnedDealsService'
+import { ShopLikeYouGiveADamnService } from '../shopLikeYouGiveADamnService'
 
 // Mock all external services
 vi.mock('../amazonProductLibrary', () => ({

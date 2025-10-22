@@ -161,7 +161,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     if (!post) {
       return 0
     }
-  const slugHash = post.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const slugHash = post.slug.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
     const dayStamp = post.publishedDate
       ? Math.floor(new Date(post.publishedDate).getTime() / 86_400_000)
       : 0

@@ -82,9 +82,7 @@ const PerformanceInsights: React.FC = () => {
   const productsWithData = allMetrics.filter((m) => m.impressions > 0).length
 
   // Top 5 performers by gift score
-  const topPerformers = [...currentTrending]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
+  const topPerformers = [...currentTrending].sort((a, b) => b.score - a.score).slice(0, 5)
 
   if (loading) {
     return (

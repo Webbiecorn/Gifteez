@@ -1,3 +1,8 @@
+import {
+  dealOfTheWeek as curatedDealOfTheWeek,
+  top10Deals as curatedTop10Deals,
+  dealCategories as curatedDealCategories,
+} from '../data/dealsData'
 import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary'
 import CoolblueFeedService from './coolblueFeedService'
 import { DealCategoryConfigService, type DealCategoryConfig } from './dealCategoryConfigService'
@@ -5,11 +10,6 @@ import { PinnedDealsService } from './pinnedDealsService'
 import { ShopLikeYouGiveADamnService, type SLYGADProduct } from './shopLikeYouGiveADamnService'
 import type { CoolblueProduct } from './coolblueFeedService'
 import type { DealItem, DealCategory } from '../types'
-import {
-  dealOfTheWeek as curatedDealOfTheWeek,
-  top10Deals as curatedTop10Deals,
-  dealCategories as curatedDealCategories,
-} from '../data/dealsData'
 
 const DEFAULT_PRODUCT_PLACEHOLDER = '/images/amazon-placeholder.png'
 
@@ -846,9 +846,10 @@ export class DynamicProductService {
     }
 
     if (combinedDeals.length < MAX_TOTAL) {
-      this.getAdditionalCoolblueDeals(Array.from(seenIds), MAX_TOTAL - combinedDeals.length).forEach(
-        (deal) => pushUnique(deal)
-      )
+      this.getAdditionalCoolblueDeals(
+        Array.from(seenIds),
+        MAX_TOTAL - combinedDeals.length
+      ).forEach((deal) => pushUnique(deal))
     }
 
     if (!combinedDeals.length) {

@@ -70,9 +70,16 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
       if (lower.includes('voor haar') || lower.includes('vrouwen') || lower.includes('dames')) {
         return name
       }
-      if (lower.includes('beauty') || lower.includes('spa') || lower.includes('skincare') || 
-          lower.includes('wellness') || lower.includes('bath') || lower.includes('badolie') ||
-          lower.includes('body') || lower.includes('verzorging')) {
+      if (
+        lower.includes('beauty') ||
+        lower.includes('spa') ||
+        lower.includes('skincare') ||
+        lower.includes('wellness') ||
+        lower.includes('bath') ||
+        lower.includes('badolie') ||
+        lower.includes('body') ||
+        lower.includes('verzorging')
+      ) {
         return `${name} - Luxe Verwenset voor Haar`
       }
     }
@@ -81,7 +88,10 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
 
   // Product Card Component - matches DealsPage styling
   const ProductCard: React.FC<{ deal: DealItem; index: number }> = ({ deal, index }) => {
-    const retailerInfo = useMemo(() => resolveRetailerInfo(deal.affiliateLink), [deal.affiliateLink])
+    const retailerInfo = useMemo(
+      () => resolveRetailerInfo(deal.affiliateLink),
+      [deal.affiliateLink]
+    )
     const isTopDeal = deal.giftScore && deal.giftScore >= 9
     const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8
     const displayName = enhanceProductName(deal.name)
@@ -96,7 +106,11 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           }`}
         >
           {/* Inner card wrapper for TOP deals */}
-          <div className={isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'}>
+          <div
+            className={
+              isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'
+            }
+          >
             {/* Image */}
             <div className="relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white h-44">
               <ImageWithFallback
@@ -105,7 +119,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                 className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
                 fit="contain"
               />
-              
+
               {/* Badges */}
               <div className="absolute top-2 right-2 flex flex-col gap-1">
                 {isTopDeal && (
@@ -129,7 +143,9 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             {/* Content */}
             <div className="flex flex-1 flex-col gap-3 p-5">
               {retailerInfo && (
-                <div className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}>
+                <div
+                  className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}
+                >
                   {retailerInfo.label}
                 </div>
               )}
@@ -167,20 +183,30 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                 >
                   {/* Glow effect achter de knop bij hover */}
                   <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover/btn:opacity-70 transition-opacity duration-500" />
-                  
+
                   {/* Gradient background */}
                   <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 rounded-xl transition-all duration-300 group-hover/btn:from-rose-600 group-hover/btn:via-pink-600 group-hover/btn:to-rose-700" />
-                  
+
                   {/* Shimmer effect */}
                   <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 rounded-xl overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
                   </div>
-                  
+
                   {/* Button content */}
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     <span>Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'}</span>
-                    <svg className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    <svg
+                      className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
                     </svg>
                   </span>
                 </a>
@@ -212,8 +238,14 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           {/* Animated background decorations */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-pink-400/30 rounded-full blur-3xl animate-pulse-slow" />
-            <div className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-purple-400/30 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-rose-300/20 rounded-full blur-2xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+            <div
+              className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-purple-400/30 rounded-full blur-3xl animate-pulse-slow"
+              style={{ animationDelay: '1s' }}
+            />
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-rose-300/20 rounded-full blur-2xl animate-pulse-slow"
+              style={{ animationDelay: '2s' }}
+            />
           </div>
 
           <Container size="xl" className="relative z-10 py-16 md:py-24">
@@ -315,13 +347,15 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           {/* Wave separator */}
           <div className="absolute bottom-0 left-0 right-0">
             <svg className="w-full h-12 md:h-16" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path d="M0,0 C150,80 350,80 600,50 C850,20 1050,20 1200,80 L1200,120 L0,120 Z" fill="white" />
+              <path
+                d="M0,0 C150,80 350,80 600,50 C850,20 1050,20 1200,80 L1200,120 L0,120 Z"
+                fill="white"
+              />
             </svg>
           </div>
         </div>
 
         <Container size="xl" className="py-12">
-
           {/* Products Grid */}
           {loading ? (
             <div className="flex justify-center py-16">

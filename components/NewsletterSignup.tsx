@@ -91,9 +91,9 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
       console.error('Error details:', {
         message: error.message,
         code: error.code,
-        stack: error.stack
+        stack: error.stack,
       })
-      
+
       if (error.message === 'Email is already subscribed') {
         showMessage('error', 'Dit e-mailadres is al aangemeld')
       } else {

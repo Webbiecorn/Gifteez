@@ -21,7 +21,7 @@ import type {
   ParagraphBlockDraft,
   RetailerDraft,
 } from './ContentBuilder'
-import type { BlogPostData } from '../services/blogService';
+import type { BlogPostData } from '../services/blogService'
 import type { SEOData } from '../services/seoManager'
 
 type ProductSource = 'coolblue' | 'amazon'

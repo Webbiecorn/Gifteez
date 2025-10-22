@@ -21,16 +21,6 @@ const handleAdminOpschonen = async (
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlogContext } from '../contexts/BlogContext'
-import AmazonProductManager from './AmazonProductManager'
-import DealCategoryManager from './DealCategoryManager'
-import AdminDashboard from './AdminDashboard'
-import ActivityLog from './ActivityLog'
-import PerformanceInsights from './PerformanceInsights'
-import { BulkProductImporter } from './BulkProductImporter'
-import ImageValidator from './ImageValidator'
-import AdminNewsletterPanel from './AdminNewsletterPanel'
-import AdminContactMessages from './AdminContactMessages'
-import { DynamicProductService } from '../services/dynamicProductService'
 import {
   PinnedDealsService,
   type PinnedDealEntry,
@@ -41,9 +31,17 @@ import { withAffiliate } from '../services/affiliate'
 import { quizQuestions, quizResults } from '../data/quizData'
 import BlogService from '../services/blogService'
 import CoolblueFeedService from '../services/coolblueFeedService'
+import { DynamicProductService } from '../services/dynamicProductService'
 import { firebaseEnabled } from '../services/firebase'
 import { QuizQuestion } from '../types'
+import ActivityLog from './ActivityLog'
+import AdminContactMessages from './AdminContactMessages'
+import AdminDashboard from './AdminDashboard'
+import AdminNewsletterPanel from './AdminNewsletterPanel'
+import AmazonProductManager from './AmazonProductManager'
 import BlogEditor from './BlogEditor'
+import { BulkProductImporter } from './BulkProductImporter'
+import DealCategoryManager from './DealCategoryManager'
 import {
   SparklesIcon,
   TagIcon,
@@ -61,7 +59,9 @@ import {
   CheckCircleIcon,
   XCircleIcon,
 } from './IconComponents'
+import ImageValidator from './ImageValidator'
 import ImageWithFallback from './ImageWithFallback'
+import PerformanceInsights from './PerformanceInsights'
 import ProductPostWizard from './ProductPostWizard'
 import type { BlogPostData } from '../services/blogService'
 import type { CoolblueFeedMeta, CoolblueProduct } from '../services/coolblueFeedService'

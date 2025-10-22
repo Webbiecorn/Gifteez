@@ -1,6 +1,3 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
-import BlogService, { type BlogPostData } from '../blogService'
-import * as firebaseModule from '../firebase'
 import {
   collection,
   getDocs,
@@ -13,6 +10,9 @@ import {
   orderBy,
   Timestamp,
 } from 'firebase/firestore'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
+import BlogService, { type BlogPostData } from '../blogService'
+import * as firebaseModule from '../firebase'
 
 // Mock Firebase modules
 vi.mock('firebase/firestore', () => ({

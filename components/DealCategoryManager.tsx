@@ -37,8 +37,8 @@ import {
   SearchIcon,
   FilterIcon,
 } from './IconComponents'
-import ImageWithFallback from './ImageWithFallback';
-import LoadingSpinner from './LoadingSpinner';
+import ImageWithFallback from './ImageWithFallback'
+import LoadingSpinner from './LoadingSpinner'
 import QuickActionsToolbar from './QuickActionsToolbar'
 import TemplatePanel from './TemplatePanel'
 import type { DealItem } from '../types'

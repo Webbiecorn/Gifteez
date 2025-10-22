@@ -406,7 +406,11 @@ export const applyAdvancedFilters = (gifts: Gift[], filters: Partial<AdvancedFil
     }
 
     // Delivery speed filter - only filter if gift has deliverySpeed
-    if (filters.deliverySpeed && gift.deliverySpeed && gift.deliverySpeed !== filters.deliverySpeed) {
+    if (
+      filters.deliverySpeed &&
+      gift.deliverySpeed &&
+      gift.deliverySpeed !== filters.deliverySpeed
+    ) {
       return false
     }
 
@@ -416,7 +420,12 @@ export const applyAdvancedFilters = (gifts: Gift[], filters: Partial<AdvancedFil
     }
 
     // Gender filter - only filter if gift has gender
-    if (filters.gender && gift.gender && gift.gender !== filters.gender && gift.gender !== 'unisex') {
+    if (
+      filters.gender &&
+      gift.gender &&
+      gift.gender !== filters.gender &&
+      gift.gender !== 'unisex'
+    ) {
       return false
     }
 

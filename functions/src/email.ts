@@ -8,7 +8,7 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null
 // Welcome email template
 function getWelcomeEmailHtml(name?: string): string {
   const displayName = name || 'daar'
-  
+
   return `
 <!DOCTYPE html>
 <html lang="nl">
@@ -98,7 +98,7 @@ function getWelcomeEmailHtml(name?: string): string {
 // Plain text version
 function getWelcomeEmailText(name?: string): string {
   const displayName = name || 'daar'
-  
+
   return `
 Welkom ${displayName}! 👋
 
@@ -134,7 +134,7 @@ export const onNewsletterSubscribe = functions
     const subscriber = snap.data()
     const email = subscriber.email
     const name = subscriber.name
-    
+
     if (!email) {
       console.error('No email found in subscriber document')
       return
@@ -143,7 +143,7 @@ export const onNewsletterSubscribe = functions
     try {
       // Get API key from Firebase Functions config
       const apiKey = functions.config().resend?.api_key
-      
+
       if (!apiKey) {
         console.error('RESEND_API_KEY not configured in functions.config()')
         return
@@ -151,7 +151,7 @@ export const onNewsletterSubscribe = functions
 
       console.log('Using API key from functions.config()')
       const resendClient = new Resend(apiKey)
-      
+
       // TEMPORARY: Use Resend's test domain to verify API works
       const result = await resendClient.emails.send({
         from: 'Gifteez <onboarding@resend.dev>',
@@ -182,12 +182,9 @@ export const sendNewsletterCampaign = functions
 
     const email = context.auth.token.email
     const isAdmin = email && /^(admin|kevin|beheer)@gifteez\.nl$/i.test(email)
-    
+
     if (!isAdmin) {
-      throw new functions.https.HttpsError(
-        'permission-denied',
-        'Only admins can send newsletters'
-      )
+      throw new functions.https.HttpsError('permission-denied', 'Only admins can send newsletters')
     }
 
     if (!resend) {
@@ -204,7 +201,7 @@ export const sendNewsletterCampaign = functions
       // If testEmail is provided, send only to that address
       if (testEmail) {
         const fromAddress = process.env.NEWSLETTER_FROM || 'noreply@gifteez.nl'
-        
+
         await resend.emails.send({
           from: `Gifteez <${fromAddress}>`,
           to: testEmail,
@@ -231,10 +228,16 @@ function getGiftFinderEmailHtml(data: {
   recipient: string
   occasion: string
   budget: string
-  gifts: Array<{ title: string; price: string; imageUrl: string; link: string; description?: string }>
+  gifts: Array<{
+    title: string
+    price: string
+    imageUrl: string
+    link: string
+    description?: string
+  }>
 }): string {
   const { name, recipient, occasion, budget, gifts } = data
-  
+
   const giftCards = gifts
     .map(
       (gift) => `
@@ -405,7 +408,7 @@ export const sendGiftFinderResults = functions
 
     try {
       const fromAddress = process.env.GIFTFINDER_FROM || 'giftfinder@gifteez.nl'
-      
+
       await resend.emails.send({
         from: `Gifteez GiftFinder <${fromAddress}>`,
         to: email,
@@ -438,7 +441,7 @@ export const onContactFormSubmit = functions
 
     const message = snap.data()
     const { name, email, subject, message: messageText } = message
-    
+
     if (!email || !name) {
       console.error('Missing required fields in contact message')
       return

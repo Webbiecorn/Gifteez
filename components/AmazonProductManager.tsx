@@ -441,7 +441,7 @@ const AmazonProductManager: React.FC = () => {
 
       // Force reload products to ensure new item appears
       await AmazonProductLibrary.loadProducts()
-      
+
       resetForm()
       window.setTimeout(() => setStatus(null), 3500)
     } catch (error: any) {

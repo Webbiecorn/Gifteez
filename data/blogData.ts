@@ -161,8 +161,7 @@ const gift_kooltho_cocktail_set: Gift = {
   retailers: [
     {
       name: 'Amazon.nl',
-      affiliateLink:
-        'https://www.amazon.nl/dp/B09XBSP99W?tag=gifteez77-21',
+      affiliateLink: 'https://www.amazon.nl/dp/B09XBSP99W?tag=gifteez77-21',
     },
   ],
   imageUrl: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
@@ -195,7 +194,7 @@ const _gift_workspace_labelprinter: Gift = {
 }
 
 // Unused - kept for future reference
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const __gift_workspace_labelprinter_unused = _gift_workspace_labelprinter
 
 // Amazon Gift Sets for Blog
@@ -1589,7 +1588,10 @@ export const blogPosts: BlogPost[] = [
       'Deze 12-delige KOOLTHO cocktailset met personaliseerbare geschenkdoos tovert elke keuken om tot cocktailbar. Ideaal cadeau voor feestgangers, koppels en hobby-bartenders.',
     imageUrl: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
     category: 'Cadeaugids',
-    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-cocktails' },
+    author: {
+      name: 'Gifteez Redactie',
+      avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-cocktails',
+    },
     publishedDate: '2025-10-20',
     content: [
       {
@@ -1601,7 +1603,8 @@ export const blogPosts: BlogPost[] = [
         type: 'image',
         src: 'https://m.media-amazon.com/images/I/711Q6Z4RPJL._AC_SL1500_.jpg',
         alt: 'KOOLTHO cocktailset met standaard en accessoires op een aanrecht',
-        caption: 'Alles binnen handbereik: de KOOLTHO standaard geeft je bar een professionele uitstraling.',
+        caption:
+          'Alles binnen handbereik: de KOOLTHO standaard geeft je bar een professionele uitstraling.',
       },
       { type: 'heading', content: 'Wat zit er in deze 12-delige barset?' },
       {
@@ -1625,7 +1628,8 @@ export const blogPosts: BlogPost[] = [
         type: 'image',
         src: 'https://m.media-amazon.com/images/I/71C7HE7GZOL._AC_SL1500_.jpg',
         alt: 'KOOLTHO cocktailset in personaliseerbare cadeauverpakking',
-        caption: 'De geschenkdoos heeft ruimte voor een persoonlijke boodschap – ideaal voor bruiloft, housewarming of kerst.',
+        caption:
+          'De geschenkdoos heeft ruimte voor een persoonlijke boodschap – ideaal voor bruiloft, housewarming of kerst.',
       },
       { type: 'heading', content: 'Zo personaliseer je de KOOLTHO geschenkdoos' },
       {
@@ -1643,7 +1647,8 @@ export const blogPosts: BlogPost[] = [
         type: 'image',
         src: 'https://m.media-amazon.com/images/I/71aUVP7pLVL._AC_SL1500_.jpg',
         alt: 'Detail van KOOLTHO cocktailset tijdens het shaken van een martini',
-        caption: 'Shaken, strainen, serveren – met de KOOLTHO set maak je cocktails met barpresentatie vanuit je eigen keuken.',
+        caption:
+          'Shaken, strainen, serveren – met de KOOLTHO set maak je cocktails met barpresentatie vanuit je eigen keuken.',
       },
       { type: 'heading', content: 'Combineer met deze serveerideeën' },
       {
@@ -1725,7 +1730,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          "Ben je het zat om altijd net te laat te zijn voor de beste deals? Of twijfel je of iets wel écht een koopje is? In deze ultieme deal hunting gids deel ik alle tips en tricks die ik in 3+ jaar heb geleerd. Van timing tot tools: na het lezen weet je precies hoe je altijd de beste cadeaudeals scoort – zonder uren te zoeken.",
+          'Ben je het zat om altijd net te laat te zijn voor de beste deals? Of twijfel je of iets wel écht een koopje is? In deze ultieme deal hunting gids deel ik alle tips en tricks die ik in 3+ jaar heb geleerd. Van timing tot tools: na het lezen weet je precies hoe je altijd de beste cadeaudeals scoort – zonder uren te zoeken.',
       },
       {
         type: 'image',
@@ -1741,7 +1746,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          "De nummer 1 fout bij deal hunting? Shoppen op het verkeerde moment. Als je weet wanneer retailers hun voorraad opruimen, kun je tot 70% besparen op exact dezelfde producten. Hier is je dealkalender voor 2025:",
+          'De nummer 1 fout bij deal hunting? Shoppen op het verkeerde moment. Als je weet wanneer retailers hun voorraad opruimen, kun je tot 70% besparen op exact dezelfde producten. Hier is je dealkalender voor 2025:',
       },
       {
         type: 'paragraph',
@@ -1924,7 +1929,7 @@ export const blogPosts: BlogPost[] = [
         type: 'verdict',
         title: 'Word een Slimme Deal Hunter',
         content:
-          "Deal hunting is een vaardigheid die je leert. Met de juiste tools, timing en strategieën bespaar je honderden euro's per jaar – zonder in te leveren op kwaliteit. Begin vandaag: check onze <a href=\"/deals\" class=\"text-rose-600 underline\">actuele Deal van de Week</a>, voeg je wishlist toe aan de Community Wishlist, en deel geweldige deals met je vrienden. Elke aankoop kan een slimme deal zijn!",
+          'Deal hunting is een vaardigheid die je leert. Met de juiste tools, timing en strategieën bespaar je honderden euro\'s per jaar – zonder in te leveren op kwaliteit. Begin vandaag: check onze <a href="/deals" class="text-rose-600 underline">actuele Deal van de Week</a>, voeg je wishlist toe aan de Community Wishlist, en deel geweldige deals met je vrienden. Elke aankoop kan een slimme deal zijn!',
       },
       {
         type: 'faq',

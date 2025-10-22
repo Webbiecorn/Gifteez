@@ -38,12 +38,12 @@ import { TextSkeleton } from './components/SkeletonLoader'
 import Toast from './components/Toast'
 import { AuthContext } from './contexts/AuthContext'
 import { BlogProvider } from './contexts/BlogContext'
-import type { DealItem } from './types'
 import { useCookieConsent } from './hooks/useCookieConsent'
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor'
 import { BlogNotificationService } from './services/blogNotificationService'
 import { PerformanceInsightsService } from './services/performanceInsightsService'
 import { wecantrackService } from './services/wecantrackService'
+import type { DealItem } from './types'
 import type { Page, InitialGiftFinderData, Gift } from './types'
 
 const App: React.FC = () => {

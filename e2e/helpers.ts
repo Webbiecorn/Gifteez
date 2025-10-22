@@ -1,4 +1,5 @@
-import { Page, expect } from '@playwright/test'
+import { expect } from '@playwright/test'
+import type { Page } from '@playwright/test'
 
 /**
  * Helper utilities for E2E tests
@@ -70,10 +71,7 @@ export async function waitForNavigation(page: Page) {
  * Click and wait for navigation
  */
 export async function clickAndWaitForNavigation(page: Page, selector: string) {
-  await Promise.all([
-    page.waitForLoadState('networkidle'),
-    page.click(selector)
-  ])
+  await Promise.all([page.waitForLoadState('networkidle'), page.click(selector)])
 }
 
 /**
@@ -123,16 +121,12 @@ export async function waitForApiResponse(page: Page, urlPattern: string | RegExp
 /**
  * Mock API response
  */
-export async function mockApiResponse(
-  page: Page,
-  urlPattern: string | RegExp,
-  response: any
-) {
+export async function mockApiResponse(page: Page, urlPattern: string | RegExp, response: any) {
   await page.route(urlPattern, (route) => {
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(response)
+      body: JSON.stringify(response),
     })
   })
 }
@@ -148,10 +142,7 @@ export async function getLocalStorageItem(page: Page, key: string): Promise<stri
  * Set localStorage item
  */
 export async function setLocalStorageItem(page: Page, key: string, value: string) {
-  await page.evaluate(
-    ({ k, v }) => localStorage.setItem(k, v),
-    { k: key, v: value }
-  )
+  await page.evaluate(({ k, v }) => localStorage.setItem(k, v), { k: key, v: value })
 }
 
 /**
@@ -215,11 +206,7 @@ export async function waitForElementText(
 /**
  * Check if page has meta tag with content
  */
-export async function hasMetaTag(
-  page: Page,
-  name: string,
-  content: string
-): Promise<boolean> {
+export async function hasMetaTag(page: Page, name: string, content: string): Promise<boolean> {
   const metaContent = await page.getAttribute(`meta[name="${name}"]`, 'content')
   return metaContent === content
 }
@@ -228,9 +215,7 @@ export async function hasMetaTag(
  * Get all links on page
  */
 export async function getAllLinks(page: Page): Promise<string[]> {
-  return page.evaluate(() =>
-    Array.from(document.querySelectorAll('a')).map((a) => a.href)
-  )
+  return page.evaluate(() => Array.from(document.querySelectorAll('a')).map((a) => a.href))
 }
 
 /**
@@ -306,11 +291,11 @@ export async function pressKeys(page: Page, keys: string) {
  */
 export async function checkBasicAccessibility(page: Page) {
   // Check for main landmarks
-  const hasMain = await page.locator('main').count() > 0
-  const hasNav = await page.locator('nav').count() > 0
-  
+  const hasMain = (await page.locator('main').count()) > 0
+  const hasNav = (await page.locator('nav').count()) > 0
+
   expect(hasMain || hasNav).toBe(true)
-  
+
   // Check all images have alt text
   const images = await page.locator('img').all()
   for (const img of images) {
