@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
-import { CartContext } from '../contexts/CartContext'
 import Button from './Button'
 import {
   GiftIcon,
@@ -10,7 +9,6 @@ import {
   XIcon,
   UserCircleIcon,
   LogOutIcon,
-  QuestionMarkCircleIcon,
   TagIcon,
   BookOpenIcon,
   MailIcon,
@@ -18,7 +16,6 @@ import {
 } from './IconComponents'
 import { Container } from './layout/Container'
 import Logo from './Logo'
-import { Button as UIButton } from './ui/Button'
 import type { Page, NavigateTo } from '../types'
 
 interface HeaderProps {
@@ -30,7 +27,6 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const auth = useContext(AuthContext)
-  const cart = useContext(CartContext)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -139,30 +135,32 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
             <div className="hidden lg:flex items-center gap-4">{desktopNav}</div>
 
             {/* Right: Action Buttons */}
-            <div className="flex items-center gap-2 justify-end">
-              {/* Favorites - Hidden on mobile, shown from md */}
-              <button
-                onClick={() => handleNavClick(auth?.currentUser ? 'favorites' : 'login')}
-                className={`hidden md:flex group relative h-10 w-10 items-center justify-center rounded-lg border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/50 ${
-                  isFavoritesPage
-                    ? 'bg-rose-50 border-rose-200 text-rose-600'
-                    : 'bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50'
-                }`}
-                aria-label="Bekijk favorieten"
-              >
-                <div className="relative">
-                  {isFavoritesPage ? (
-                    <HeartIconFilled className="w-5 h-5" />
-                  ) : (
-                    <HeartIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-                  )}
-                  {auth?.currentUser?.favorites && auth.currentUser.favorites.length > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-white text-[10px] font-bold ring-2 ring-white">
-                      {auth.currentUser.favorites.length}
-                    </span>
-                  )}
-                </div>
-              </button>
+            <div className="flex items-center gap-1.5 justify-end">
+              {/* Favorites - Only show when logged in */}
+              {auth?.currentUser && (
+                <button
+                  onClick={() => handleNavClick('favorites')}
+                  className={`hidden md:flex group relative h-10 w-10 items-center justify-center rounded-lg border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary/50 ${
+                    isFavoritesPage
+                      ? 'bg-rose-50 border-rose-200 text-rose-600'
+                      : 'bg-white border-gray-200 text-gray-600 hover:border-rose-300 hover:text-rose-600 hover:bg-rose-50'
+                  }`}
+                  aria-label="Bekijk favorieten"
+                >
+                  <div className="relative">
+                    {isFavoritesPage ? (
+                      <HeartIconFilled className="w-5 h-5" />
+                    ) : (
+                      <HeartIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                    )}
+                    {auth.currentUser.favorites && auth.currentUser.favorites.length > 0 && (
+                      <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-rose-600 text-white text-[10px] font-bold ring-2 ring-white">
+                        {auth.currentUser.favorites.length}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              )}
 
               {/* Auth Section - Hidden on mobile, shown from lg */}
               {auth?.currentUser ? (

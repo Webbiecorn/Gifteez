@@ -54,7 +54,7 @@ export const top10Deals: DealItem[] = [
     description: 'Klassieke koffiepadmachine voor perfecte koffie in een handomdraai.',
     imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2140334',
     price: '€59,00',
-    affiliateLink: 'https://www.coolblue.nl/product/960722/philips-senseo-original-hd6553-50.html',
+    affiliateLink: 'https://www.awin1.com/cread.php?awinmid=8558&awinaffid=2566111&ued=https%3A%2F%2Fwww.coolblue.nl%2Fproduct%2F960722%2Fphilips-senseo-original-hd6553-50.html',
   },
   {
     id: 'top-06',
@@ -72,7 +72,7 @@ export const top10Deals: DealItem[] = [
     imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2169599',
     price: '€1.499,00',
     affiliateLink:
-      'https://www.coolblue.nl/product/964585/thrustmaster-t598-direct-drive-racestuur.html',
+      'https://www.awin1.com/cread.php?awinmid=8558&awinaffid=2566111&ued=https%3A%2F%2Fwww.coolblue.nl%2Fproduct%2F964585%2Fthrustmaster-t598-direct-drive-racestuur.html',
   },
   {
     id: 'top-08',
@@ -141,11 +141,11 @@ export const dealCategories: DealCategory[] = [
       {
         id: 'kitchen-airfryer',
         name: 'Philips Airfryer XXL Smart Sensing',
-        description: 'Gezond frituren voor het hele gezin met automatische bereidingsprogramma’s.',
+        description: 'Gezond frituren voor het hele gezin met automatische bereidingsprogramma\'s.',
         imageUrl: 'https://image.coolblue.nl/max/1400xauto/products/2143848',
         price: '€249,00',
         affiliateLink:
-          'https://www.coolblue.nl/product/960955/philips-airfryer-xxl-smart-sensing-black.html',
+          'https://www.awin1.com/cread.php?awinmid=8558&awinaffid=2566111&ued=https%3A%2F%2Fwww.coolblue.nl%2Fproduct%2F960955%2Fphilips-airfryer-xxl-smart-sensing-black.html',
       },
       {
         id: 'kitchen-nutribullet',
