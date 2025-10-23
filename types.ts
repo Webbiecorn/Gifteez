@@ -19,6 +19,7 @@ export type Page =
   | 'deals'
   | 'categoryDetail'
   | 'productLanding'
+  | 'comparison'
   | 'disclaimer'
   | 'privacy'
   | 'affiliateDisclosure'

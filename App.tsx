@@ -22,6 +22,7 @@ const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccess
 const DealsPage = ReactLazy(() => import('./components/DealsPage'))
 const CategoryDetailPage = ReactLazy(() => import('./components/CategoryDetailPage'))
 const ProductLandingPage = ReactLazy(() => import('./components/ProductLandingPage'))
+const ComparisonPage = ReactLazy(() => import('./components/ComparisonPage'))
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'))
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'))
 const AffiliateDisclosurePage = ReactLazy(() => import('./components/AffiliateDisclosurePage'))
@@ -80,6 +81,8 @@ const App: React.FC = () => {
     productId: string
     product: DealItem
   } | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [comparisonData, setComparisonData] = useState<any>(null)
   const [toastMessage, setToastMessage] = useState('')
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -122,6 +125,8 @@ const App: React.FC = () => {
         return `/deals/category/${data?.categoryId ?? ''}`
       case 'productLanding':
         return `/product/${data?.productId ?? ''}`
+      case 'comparison':
+        return `/compare/${data?.categoryId ?? ''}`
       case 'disclaimer':
         return '/disclaimer'
       case 'privacy':
@@ -223,6 +228,14 @@ const App: React.FC = () => {
           setCurrentPage('notFound')
         }
         break
+      case 'compare':
+        if (second) {
+          setCurrentPage('comparison')
+          // Comparison data will be passed via navigation
+        } else {
+          setCurrentPage('notFound')
+        }
+        break
       case 'disclaimer':
         setCurrentPage('disclaimer')
         break
@@ -265,6 +278,7 @@ const App: React.FC = () => {
     setCurrentPostSlug(null)
     setCategoryDetailData(null)
     setProductLandingData(null)
+    setComparisonData(null)
 
     if (page === 'giftFinder' && data) {
       setInitialGiftFinderData(data)
@@ -274,6 +288,8 @@ const App: React.FC = () => {
       setCategoryDetailData(data)
     } else if (page === 'productLanding' && data) {
       setProductLandingData(data)
+    } else if (page === 'comparison' && data) {
+      setComparisonData(data)
     }
     setCurrentPage(page)
     const newPath = pathFor(page, data)
@@ -319,6 +335,9 @@ const App: React.FC = () => {
         productLanding: data?.product?.name
           ? `${data.product.name} — Beste Deal`
           : 'Product — Beste Deal',
+        comparison: data?.categoryTitle
+          ? `Top 5 ${data.categoryTitle} — Vergelijking`
+          : 'Vergelijking — Top 5',
         adminDealsPreview: 'Admin deals preview',
         disclaimer: 'Disclaimer — Gifteez.nl',
         privacy: 'Privacybeleid — Gifteez.nl',
@@ -454,6 +473,18 @@ const App: React.FC = () => {
             navigateTo={navigateTo}
             product={productLandingData.product}
             relatedProducts={[]}
+          />
+        )
+      case 'comparison':
+        if (!comparisonData) {
+          return <NotFoundPage navigateTo={navigateTo} />
+        }
+        return (
+          <ComparisonPage
+            navigateTo={navigateTo}
+            categoryId={comparisonData.categoryId ?? ''}
+            categoryTitle={comparisonData.categoryTitle ?? ''}
+            products={comparisonData.products ?? []}
           />
         )
       case 'disclaimer':
