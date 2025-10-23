@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, useRef, useContext } from 'react'
+import { AuthContext } from '../contexts/AuthContext'
 import { withAffiliate } from '../services/affiliate'
 import CoolblueAffiliateService from '../services/coolblueAffiliateService'
 import CoolblueFeedService from '../services/coolblueFeedService'
@@ -16,6 +17,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   HeartIcon,
+  HeartIconFilled,
   GiftIcon,
   CakeIcon,
   SnowflakeIcon,
@@ -28,7 +30,7 @@ import { Container } from './layout/Container'
 import Meta from './Meta'
 import ProductCarousel from './ProductCarousel'
 import { SocialShare } from './SocialShare'
-import type { NavigateTo, DealCategory, DealItem } from '../types'
+import type { NavigateTo, DealCategory, DealItem, Gift } from '../types'
 
 type RetailerInfo = {
   label: string
@@ -685,6 +687,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     index?: number
     variant?: 'carousel' | 'grid' | 'feature'
   }> = ({ deal, index = 0, variant = 'carousel' }) => {
+    const auth = useContext(AuthContext)
+
+    // Favorites state
+    const [isFavorite, setIsFavorite] = useState(false)
+    const [favoritePulse, setFavoritePulse] = useState(false)
+    const favoritePulseTimeoutRef = useRef<number | null>(null)
+
     // Check if this is a top deal (score 9+) or hot deal (sale + score 8+)
     const isTopDeal = deal.giftScore && deal.giftScore >= 9
     const isHotDeal = deal.isOnSale && deal.giftScore && deal.giftScore >= 8
@@ -699,6 +708,89 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const priceBadgeClass = variant === 'feature' ? 'px-4 py-2 text-base' : 'px-3 py-1.5 text-sm'
     const buttonPaddingClass =
       variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm'
+
+    // Convert DealItem to Gift format for favorites
+    const dealAsGift = useMemo(
+      () => ({
+        productName: deal.name,
+        description: deal.description || '',
+        imageUrl: deal.imageUrl,
+        affiliateLink: deal.affiliateLink,
+        price: formatPrice(deal.price) || '',
+        occasion: '',
+        recipientType: '',
+        interests: [],
+        ageRange: '',
+        priceRange: formatPrice(deal.price) || '',
+        relationship: '',
+      }),
+      [deal]
+    )
+
+    // Check favorite status
+    useEffect(() => {
+      if (auth?.currentUser) {
+        setIsFavorite(auth.isFavorite(dealAsGift))
+      } else {
+        try {
+          const favorites: Gift[] = JSON.parse(localStorage.getItem('gifteezFavorites') || '[]')
+          setIsFavorite(favorites.some((fav: Gift) => fav.productName === deal.name))
+        } catch (e) {
+          console.error('Failed to parse guest favorites from localStorage', e)
+        }
+      }
+    }, [deal.name, auth, dealAsGift])
+
+    // Cleanup timeout on unmount
+    useEffect(
+      () => () => {
+        if (favoritePulseTimeoutRef.current) {
+          clearTimeout(favoritePulseTimeoutRef.current)
+        }
+      },
+      []
+    )
+
+    // Toggle favorite handler
+    const handleToggleFavorite = (e: React.MouseEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      let isNowFavorite: boolean
+
+      if (auth?.currentUser) {
+        auth.toggleFavorite(dealAsGift)
+        isNowFavorite = !auth.isFavorite(dealAsGift)
+      } else {
+        try {
+          const favorites: Gift[] = JSON.parse(localStorage.getItem('gifteezFavorites') || '[]')
+          const isCurrentlyFavorite = favorites.some((fav) => fav.productName === deal.name)
+
+          let updatedFavorites: Gift[]
+          if (isCurrentlyFavorite) {
+            updatedFavorites = favorites.filter((fav) => fav.productName !== deal.name)
+          } else {
+            updatedFavorites = [...favorites, dealAsGift]
+          }
+          localStorage.setItem('gifteezFavorites', JSON.stringify(updatedFavorites))
+          isNowFavorite = !isCurrentlyFavorite
+        } catch (e) {
+          console.error('Failed to update guest favorites in localStorage', e)
+          return
+        }
+      }
+
+      setIsFavorite(isNowFavorite)
+      if (isNowFavorite) {
+        if (favoritePulseTimeoutRef.current) {
+          clearTimeout(favoritePulseTimeoutRef.current)
+        }
+        setFavoritePulse(true)
+        favoritePulseTimeoutRef.current = setTimeout(() => {
+          setFavoritePulse(false)
+        }, 220)
+      }
+    }
 
     // Enhance product name for gift sets
     const enhanceProductName = (name: string): string => {
@@ -755,7 +847,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           observer.unobserve(node)
         }
       }
-    }, [deal.id, retailerInfo?.shortLabel, trackDealImpression])
+    }, [deal.id, retailerInfo?.shortLabel])
 
     const handleClick = () => {
       if (deal.id) {
@@ -787,6 +879,21 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
                 fit="contain"
               />
+
+              {/* Favorite button - top-left corner */}
+              <button
+                onClick={handleToggleFavorite}
+                className={`absolute top-2 left-2 z-10 rounded-full bg-white p-2 shadow-md transition-all hover:scale-110 hover:shadow-lg ${
+                  favoritePulse ? 'animate-pulse' : ''
+                }`}
+                aria-label={isFavorite ? 'Verwijder van favorieten' : 'Voeg toe aan favorieten'}
+              >
+                {isFavorite ? (
+                  <HeartIconFilled className="h-5 w-5 text-rose-500" />
+                ) : (
+                  <HeartIcon className="h-5 w-5 text-slate-400 hover:text-rose-500" />
+                )}
+              </button>
 
               {/* Badges - stacked in top-right corner */}
               <div className="absolute top-2 right-2 flex flex-col gap-1">
