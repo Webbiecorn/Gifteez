@@ -1047,7 +1047,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     // Detect if this is a men's category
     const lowerTitle = category.title.toLowerCase()
     const isMensCategory =
-      lowerTitle.includes('man') || lowerTitle.includes('heren') || lowerTitle.includes('men')
+      lowerTitle.includes('mannen') ||
+      lowerTitle.includes('heren') ||
+      lowerTitle.includes('men') ||
+      lowerTitle.includes('voor mannen')
 
     // Different colors for men vs women categories
     const badgeClasses = isMensCategory ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-600'
