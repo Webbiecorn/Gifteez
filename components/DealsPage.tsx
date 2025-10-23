@@ -930,6 +930,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const lowerTitle = title.toLowerCase()
 
     if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
+      if (
+        lowerTitle.includes('man') ||
+        lowerTitle.includes('heren') ||
+        lowerTitle.includes('men')
+      ) {
+        return 'Stoere Gift Sets voor Mannen - Maak Indruk'
+      }
       return 'Luxe Gift Sets voor Vrouwen - Direct Indruk Maken'
     }
 
@@ -953,6 +960,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       const lowerTitle = title.toLowerCase()
 
       if (lowerTitle.includes('gift') && lowerTitle.includes('set')) {
+        if (
+          lowerTitle.includes('man') ||
+          lowerTitle.includes('heren') ||
+          lowerTitle.includes('men')
+        ) {
+          return `🎯 Stoere cadeauboxen speciaal voor mannen. ${count} gave sets met grooming, tech en lifestyle producten. Strak verpakt, snel leverbaar via Amazon Prime, en meteen klaar om te geven. Perfect voor vaders, broers, vrienden of een traktatie voor jezelf.`
+        }
         return `✨ Speciaal samengestelde cadeauboxen voor haar. ${count} prachtige sets met beauty, wellness en lifestyle producten. Luxe verpakkingen, snelle levering via Amazon Prime, en direct klaar om cadeau te geven. Perfect voor vriendinnen, moeders, zussen of een verwenmoment voor jezelf.`
       }
 
@@ -1030,6 +1044,22 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const displayTitle = getDisplayTitle(category.title)
     const description = getCategoryDescription(category.title, displayTitle, items.length)
 
+    // Detect if this is a men's category
+    const lowerTitle = category.title.toLowerCase()
+    const isMensCategory =
+      lowerTitle.includes('man') || lowerTitle.includes('heren') || lowerTitle.includes('men')
+
+    // Different colors for men vs women categories
+    const badgeClasses = isMensCategory ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-600'
+
+    const buttonGradient = isMensCategory
+      ? 'from-blue-600 via-indigo-600 to-slate-700'
+      : 'from-rose-500 via-pink-500 to-purple-500'
+
+    const buttonGlowGradient = isMensCategory
+      ? 'from-blue-400 via-indigo-400 to-slate-500'
+      : 'from-pink-400 via-rose-400 to-purple-400'
+
     // Calculate total pages
     const itemsPerView =
       typeof window !== 'undefined' && window.innerWidth >= 1024
@@ -1045,7 +1075,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         style={{ animationDelay: `${120 + index * 70}ms` }}
       >
         <header className="space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-600">
+          <div
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${badgeClasses}`}
+          >
             <GiftIcon className="h-4 w-4" />
             Curated selectie
           </div>
@@ -1067,13 +1099,17 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     products: items,
                   })
                 }
-                className="group relative overflow-visible rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1"
+                className={`group relative overflow-visible rounded-2xl bg-gradient-to-br ${buttonGradient} px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1`}
               >
                 {/* Glow effect achter de knop bij hover */}
-                <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+                <div
+                  className={`absolute -inset-2 -z-10 bg-gradient-to-r ${buttonGlowGradient} rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-500`}
+                />
 
                 {/* Animated gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-400 via-rose-400 to-purple-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl" />
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${buttonGlowGradient} opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-2xl`}
+                />
 
                 {/* Shimmer effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl overflow-hidden">
@@ -1169,10 +1205,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   products: items,
                 })
               }
-              className="group relative overflow-visible w-full rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-purple-500 px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl active:scale-95"
+              className={`group relative overflow-visible w-full rounded-2xl bg-gradient-to-br ${buttonGradient} px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl active:scale-95`}
             >
               {/* Glow effect */}
-              <div className="absolute -inset-2 -z-10 bg-gradient-to-r from-pink-400 via-rose-400 to-purple-400 rounded-2xl blur-xl opacity-0 group-active:opacity-70 transition-opacity duration-500" />
+              <div
+                className={`absolute -inset-2 -z-10 bg-gradient-to-r ${buttonGlowGradient} rounded-2xl blur-xl opacity-0 group-active:opacity-70 transition-opacity duration-500`}
+              />
 
               {/* Button content */}
               <span className="relative z-10 flex items-center justify-center gap-2">

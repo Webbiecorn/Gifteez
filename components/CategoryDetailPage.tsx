@@ -58,11 +58,28 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     window.scrollTo(0, 0)
   }, [categoryTitle])
 
+  // Detect if this is a men's category
+  const lowerTitle = categoryTitle.toLowerCase()
+  const isMensCategory =
+    lowerTitle.includes('man') || lowerTitle.includes('heren') || lowerTitle.includes('men')
+
+  // Different colors for men vs women categories
+  const heroGradient = isMensCategory
+    ? 'from-blue-600 via-indigo-600 to-slate-700'
+    : 'from-rose-500 via-pink-500 to-purple-600'
+
+  const decorativeColors = isMensCategory
+    ? ['bg-indigo-400/30', 'bg-slate-500/30', 'bg-blue-300/20']
+    : ['bg-pink-400/30', 'bg-purple-400/30', 'bg-rose-300/20']
+
   // Enhanced product name for gift sets
   const enhanceProductName = (name: string): string => {
     const lower = name.toLowerCase()
     if (lower.includes('set') || lower.includes('box') || lower.includes('kit')) {
       if (lower.includes('voor haar') || lower.includes('vrouwen') || lower.includes('dames')) {
+        return name
+      }
+      if (lower.includes('voor hem') || lower.includes('mannen') || lower.includes('heren')) {
         return name
       }
       if (
@@ -76,6 +93,15 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         lower.includes('verzorging')
       ) {
         return `${name} - Luxe Verwenset voor Haar`
+      }
+      if (
+        lower.includes('grooming') ||
+        lower.includes('shaving') ||
+        lower.includes('beard') ||
+        lower.includes('baard') ||
+        lower.includes('aftershave')
+      ) {
+        return `${name} - Stoere Set voor Hem`
       }
     }
     return name
@@ -257,16 +283,18 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
 
       <div className="bg-gradient-to-b from-white via-rose-50/30 to-white min-h-screen">
         {/* Hero Section met gradient en decorative elements */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-rose-500 via-pink-500 to-purple-600 text-white">
+        <div className={`relative overflow-hidden bg-gradient-to-br ${heroGradient} text-white`}>
           {/* Animated background decorations */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-1/2 -left-1/4 w-96 h-96 bg-pink-400/30 rounded-full blur-3xl animate-pulse-slow" />
             <div
-              className="absolute -bottom-1/2 -right-1/4 w-96 h-96 bg-purple-400/30 rounded-full blur-3xl animate-pulse-slow"
+              className={`absolute -top-1/2 -left-1/4 w-96 h-96 ${decorativeColors[0]} rounded-full blur-3xl animate-pulse-slow`}
+            />
+            <div
+              className={`absolute -bottom-1/2 -right-1/4 w-96 h-96 ${decorativeColors[1]} rounded-full blur-3xl animate-pulse-slow`}
               style={{ animationDelay: '1s' }}
             />
             <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-rose-300/20 rounded-full blur-2xl animate-pulse-slow"
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 ${decorativeColors[2]} rounded-full blur-2xl animate-pulse-slow`}
               style={{ animationDelay: '2s' }}
             />
           </div>
