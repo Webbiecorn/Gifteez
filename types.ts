@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import type React from 'react'
 export type Page =
   | 'home'
@@ -17,6 +18,7 @@ export type Page =
   | 'checkoutSuccess'
   | 'deals'
   | 'categoryDetail'
+  | 'productLanding'
   | 'disclaimer'
   | 'privacy'
   | 'affiliateDisclosure'
@@ -25,9 +27,10 @@ export type Page =
   | 'notFound'
   | 'error'
 
-export type NavigateTo = (page: Page, data?: any) => void
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type NavigateTo = (_page: Page, _data?: any) => void
 
-export type ShowToast = (message: string) => void
+export type ShowToast = (_message: string) => void
 
 export interface InitialGiftFinderData {
   recipient?: string
@@ -247,23 +250,23 @@ export interface NotificationSettings {
 export interface AuthContextType {
   currentUser: User | null
   loading: boolean
-  login: (email: string, password: string) => Promise<User | null>
-  signup: (name: string, email: string, password: string) => Promise<User | null>
+  login: (_email: string, _password: string) => Promise<User | null>
+  signup: (_name: string, _email: string, _password: string) => Promise<User | null>
   logout: () => void
-  resetPassword: (email: string) => Promise<boolean>
-  toggleFavorite: (gift: Gift) => void
-  isFavorite: (gift: Gift) => boolean
-  addProfile: (profileData: Omit<GiftProfile, 'id'>) => Promise<void>
-  updateProfile: (profile: GiftProfile) => Promise<void>
-  deleteProfile: (profileId: string) => Promise<void>
+  resetPassword: (_email: string) => Promise<boolean>
+  toggleFavorite: (_gift: Gift) => void
+  isFavorite: (_gift: Gift) => boolean
+  addProfile: (_profileData: Omit<GiftProfile, 'id'>) => Promise<void>
+  updateProfile: (_profile: GiftProfile) => Promise<void>
+  deleteProfile: (_profileId: string) => Promise<void>
   // Enhanced user management
-  updateUserPreferences: (preferences: Partial<UserPreferences>) => Promise<void>
-  updateNotificationSettings: (settings: Partial<NotificationSettings>) => Promise<void>
+  updateUserPreferences: (_preferences: Partial<UserPreferences>) => Promise<void>
+  updateNotificationSettings: (_settings: Partial<NotificationSettings>) => Promise<void>
   syncFavorites: () => Promise<void>
-  updateAvatar: (avatar: string) => Promise<void>
+  updateAvatar: (_avatar: string) => Promise<void>
   getFavoritesByCategory: () => Record<string, Gift[]>
   exportFavorites: () => Promise<string> // JSON export
-  importFavorites: (data: string) => Promise<void>
+  importFavorites: (_data: string) => Promise<void>
 }
 
 export type QuizQuestionKind = 'persona' | 'budget' | 'relationship' | 'occasion'
@@ -321,8 +324,8 @@ export interface CartItem extends Product {
 
 export interface CartContextType {
   cart: CartItem[]
-  addToCart: (product: Product) => void
-  removeFromCart: (productId: string) => void
+  addToCart: (_product: Product) => void
+  removeFromCart: (_productId: string) => void
   clearCart: () => void
   itemCount: number
 }

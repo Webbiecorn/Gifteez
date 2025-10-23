@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react'
-import ReactLazy = React.lazy
+const ReactLazy = React.lazy
 const Header = ReactLazy(() => import('./components/Header'))
 const Footer = ReactLazy(() => import('./components/Footer'))
 const HomePage = ReactLazy(() => import('./components/HomePage'))
@@ -21,6 +21,7 @@ const CartPage = ReactLazy(() => import('./components/CartPage'))
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'))
 const DealsPage = ReactLazy(() => import('./components/DealsPage'))
 const CategoryDetailPage = ReactLazy(() => import('./components/CategoryDetailPage'))
+const ProductLandingPage = ReactLazy(() => import('./components/ProductLandingPage'))
 const DisclaimerPage = ReactLazy(() => import('./components/DisclaimerPage'))
 const PrivacyPage = ReactLazy(() => import('./components/PrivacyPage'))
 const AffiliateDisclosurePage = ReactLazy(() => import('./components/AffiliateDisclosurePage'))
@@ -43,8 +44,7 @@ import { usePerformanceMonitor } from './hooks/usePerformanceMonitor'
 import { BlogNotificationService } from './services/blogNotificationService'
 import { PerformanceInsightsService } from './services/performanceInsightsService'
 import { wecantrackService } from './services/wecantrackService'
-import type { DealItem } from './types'
-import type { Page, InitialGiftFinderData, Gift } from './types'
+import type { Page, InitialGiftFinderData, Gift, DealItem } from './types'
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null)
@@ -74,9 +74,15 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home')
   const [currentPostSlug, setCurrentPostSlug] = useState<string | null>(null)
   const [initialGiftFinderData, setInitialGiftFinderData] = useState<InitialGiftFinderData>({})
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [categoryDetailData, setCategoryDetailData] = useState<any>(null)
+  const [productLandingData, setProductLandingData] = useState<{
+    productId: string
+    product: DealItem
+  } | null>(null)
   const [toastMessage, setToastMessage] = useState('')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pathFor = (page: Page, data?: any) => {
     switch (page) {
       case 'home':
@@ -114,6 +120,8 @@ const App: React.FC = () => {
         return '/deals'
       case 'categoryDetail':
         return `/deals/category/${data?.categoryId ?? ''}`
+      case 'productLanding':
+        return `/product/${data?.productId ?? ''}`
       case 'disclaimer':
         return '/disclaimer'
       case 'privacy':
@@ -207,6 +215,14 @@ const App: React.FC = () => {
           setCurrentPage('deals')
         }
         break
+      case 'product':
+        if (second) {
+          setCurrentPage('productLanding')
+          // Product data will be passed via navigation or fetched
+        } else {
+          setCurrentPage('notFound')
+        }
+        break
       case 'disclaimer':
         setCurrentPage('disclaimer')
         break
@@ -243,10 +259,12 @@ const App: React.FC = () => {
     }
   }, [applyRoute])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigateTo = useCallback((page: Page, data?: any) => {
     setInitialGiftFinderData({})
     setCurrentPostSlug(null)
     setCategoryDetailData(null)
+    setProductLandingData(null)
 
     if (page === 'giftFinder' && data) {
       setInitialGiftFinderData(data)
@@ -254,6 +272,8 @@ const App: React.FC = () => {
       setCurrentPostSlug(data.slug)
     } else if (page === 'categoryDetail' && data) {
       setCategoryDetailData(data)
+    } else if (page === 'productLanding' && data) {
+      setProductLandingData(data)
     }
     setCurrentPage(page)
     const newPath = pathFor(page, data)
@@ -296,6 +316,9 @@ const App: React.FC = () => {
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Deals & Aanbiedingen',
         categoryDetail: data?.categoryTitle ? `${data.categoryTitle} — Deals` : 'Categorie — Deals',
+        productLanding: data?.product?.name
+          ? `${data.product.name} — Beste Deal`
+          : 'Product — Beste Deal',
         adminDealsPreview: 'Admin deals preview',
         disclaimer: 'Disclaimer — Gifteez.nl',
         privacy: 'Privacybeleid — Gifteez.nl',
@@ -329,6 +352,7 @@ const App: React.FC = () => {
           'Vind snel het perfecte cadeau met de AI GiftFinder, inspiratie, gidsen en deals.'
       )
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const showToast = useCallback((message: string) => {
@@ -401,7 +425,7 @@ const App: React.FC = () => {
             categoryTitle={categoryDetailData?.categoryTitle ?? ''}
             categoryDescription={categoryDetailData?.categoryDescription ?? ''}
             products={categoryDetailData?.products ?? []}
-            renderProductCard={(product, index) => (
+            renderProductCard={(product) => (
               // Simple product card renderer - will use the same design as deals page
               <div key={product.id} className="h-full">
                 {/* Placeholder for product card - the actual component will be imported */}
@@ -419,6 +443,17 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
+          />
+        )
+      case 'productLanding':
+        if (!productLandingData?.product) {
+          return <NotFoundPage navigateTo={navigateTo} />
+        }
+        return (
+          <ProductLandingPage
+            navigateTo={navigateTo}
+            product={productLandingData.product}
+            relatedProducts={[]}
           />
         )
       case 'disclaimer':
@@ -439,9 +474,11 @@ const App: React.FC = () => {
   return (
     <BlogProvider>
       <ErrorBoundary
-        onError={(error, errorInfo) => {
+        onError={(error) => {
           // Log error to analytics
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (typeof window !== 'undefined' && (window as any).gtag) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(window as any).gtag('event', 'exception', {
               description: `React Error: ${error.toString()}`,
               fatal: false,
