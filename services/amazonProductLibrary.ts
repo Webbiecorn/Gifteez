@@ -72,7 +72,7 @@ export const parseAmazonAffiliateLink = (rawLink: string): ParsedAmazonLink => {
   let url: URL
   try {
     url = new URL(rawLink)
-  } catch (error) {
+  } catch {
     try {
       url = new URL(`https://${rawLink}`)
     } catch {
@@ -184,7 +184,8 @@ export interface AmazonProduct extends AmazonProductInput {
   updatedAt?: string
 }
 
-type Listener = (products: AmazonProduct[]) => void
+// eslint-disable-next-line no-unused-vars
+type Listener = (items: AmazonProduct[]) => void
 
 const COLLECTION = 'amazonProducts'
 const LOCAL_STORAGE_KEY = 'gifteez_amazon_products_v1'
@@ -454,6 +455,7 @@ export const AmazonProductLibrary = {
     )
 
     if (firebaseEnabled && db) {
+      // Extract fields to exclude from Firestore payload
       const {
         id: _id,
         source: _source,
@@ -461,13 +463,28 @@ export const AmazonProductLibrary = {
         updatedAt: _updatedAt,
         ...rest
       } = normalised
+      void _id
+      void _source
+      void _createdAt
+      void _updatedAt // Mark as intentionally unused
       const payload = compactFirestoreData({
         ...rest,
         source: 'firestore',
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       })
-      await addDoc(collection(db, COLLECTION), payload)
+      const docRef = await addDoc(collection(db, COLLECTION), payload)
+
+      // Immediately add to cache and emit change for instant UI update
+      const newProduct: AmazonProduct = {
+        ...normalised,
+        id: docRef.id,
+        source: 'firestore',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      cachedProducts = [newProduct, ...cachedProducts]
+      emitChange()
       return
     }
 
@@ -520,6 +537,7 @@ export const AmazonProductLibrary = {
 
     if (firebaseEnabled && db) {
       const ref = doc(db, COLLECTION, id)
+      // Extract fields to exclude from Firestore payload
       const {
         id: _id,
         source: _source,
@@ -527,12 +545,31 @@ export const AmazonProductLibrary = {
         updatedAt: _updatedAt,
         ...rest
       } = normalised
+      void _id
+      void _source
+      void _createdAt
+      void _updatedAt // Mark as intentionally unused
       const payload = compactFirestoreData({
         ...rest,
         source: 'firestore',
         updatedAt: serverTimestamp(),
       })
       await updateDoc(ref, payload)
+
+      // Immediately update cache and emit change for instant UI update
+      const now = new Date().toISOString()
+      cachedProducts = cachedProducts.map((item) =>
+        item.id === id
+          ? {
+              ...normalised,
+              id,
+              source: 'firestore',
+              createdAt: item.createdAt ?? now,
+              updatedAt: now,
+            }
+          : item
+      )
+      emitChange()
       return
     }
 
@@ -574,6 +611,10 @@ export const AmazonProductLibrary = {
   async remove(id: string): Promise<void> {
     if (firebaseEnabled && db) {
       await deleteDoc(doc(db, COLLECTION, id))
+
+      // Immediately remove from cache and emit change for instant UI update
+      cachedProducts = cachedProducts.filter((item) => item.id !== id)
+      emitChange()
       return
     }
 
