@@ -10,6 +10,7 @@ import {
   CheckIcon,
   UsersIcon,
   FireIcon,
+  TrophyIcon,
 } from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
 import { Container } from './layout/Container'
@@ -472,6 +473,41 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Compare Top 5 CTA - Only show if 5+ products */}
+          {products.length >= 5 && (
+            <div className="mb-8 rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50 p-6 shadow-lg">
+              <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg">
+                    <TrophyIcon className="h-8 w-8" />
+                  </div>
+                  <div>
+                    <h3 className="mb-1 font-display text-xl font-bold text-slate-900">
+                      Vergelijk de Top 5
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      Bekijk onze expert vergelijking en kies de perfecte match
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="primary"
+                  onClick={() =>
+                    navigateTo('comparison', {
+                      categoryId,
+                      categoryTitle,
+                      products,
+                    })
+                  }
+                  className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all hover:scale-105 whitespace-nowrap"
+                >
+                  <TrophyIcon className="h-5 w-5 transition-transform group-hover:rotate-12" />
+                  Bekijk Vergelijking
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Products Grid */}
           {products.length > 0 ? (
