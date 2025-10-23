@@ -129,10 +129,16 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     // Calculate mock savings percentage for conversion boost
     const savingsPercent = deal.originalPrice ? Math.floor(10 + Math.random() * 30) : null
 
+    // Handle card click to navigate to product landing page
+    const handleCardClick = () => {
+      navigateTo('productLanding', { productId: deal.id, product: deal })
+    }
+
     return (
       <div className="h-full">
         <div
-          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.03] ${
+          onClick={handleCardClick}
+          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.03] cursor-pointer ${
             isTopDeal
               ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px]'
               : 'border border-slate-200 hover:border-rose-300'
@@ -231,6 +237,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                   href={withAffiliate(deal.affiliateLink)}
                   target="_blank"
                   rel="sponsored nofollow noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="group/btn relative block w-full overflow-visible rounded-xl text-center font-bold text-white shadow-lg transition-all hover:shadow-2xl hover:scale-105 px-4 py-2.5 text-sm"
                 >
                   {/* Glow effect achter de knop bij hover */}

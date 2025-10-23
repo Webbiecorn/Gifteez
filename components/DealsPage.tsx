@@ -853,12 +853,15 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       if (deal.id) {
         trackDealClick(deal.id, retailerInfo?.shortLabel)
       }
+      // Navigate to product landing page
+      navigateTo('productLanding', { productId: deal.id, product: deal })
     }
 
     return (
       <div ref={cardRef} className="h-full">
         <div
-          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] ${
+          onClick={handleClick}
+          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] cursor-pointer ${
             isTopDeal
               ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy'
               : 'border border-slate-200'
@@ -882,7 +885,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
               {/* Favorite button - top-left corner */}
               <button
-                onClick={handleToggleFavorite}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleToggleFavorite(e)
+                }}
                 className={`absolute top-2 left-2 z-10 rounded-full bg-white p-2 shadow-md transition-all hover:scale-110 hover:shadow-lg ${
                   favoritePulse ? 'animate-pulse' : ''
                 }`}
@@ -965,7 +971,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   href={withAffiliate(deal.affiliateLink)}
                   target="_blank"
                   rel="sponsored nofollow noopener noreferrer"
-                  onClick={handleClick}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleClick()
+                  }}
                   className={`group/btn relative block w-full overflow-hidden rounded-xl text-center font-bold text-white shadow-lg transition-all hover:shadow-2xl hover:scale-105 ${buttonPaddingClass}`}
                 >
                   {/* Gradient background with animation */}
