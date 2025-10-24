@@ -30,7 +30,8 @@ const testimonials: Testimonial[] = [
     author: 'Sophie van Dijk',
   },
   {
-    quote: 'De deals sectie heeft me zoveel geld bespaard. Echt geweldige prijzen!',
+    quote:
+      'De collecties zijn echt goed samengesteld. Kwaliteit voorop, niet zomaar wat producten bij elkaar.',
     author: 'Thomas Bakker',
   },
   {
@@ -267,9 +268,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <TagIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Live deals</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Handmatige selectie</h3>
                       <p className="text-xs text-slate-600">
-                        Automatisch de beste prijzen en exclusieve kortingen.
+                        Elk cadeau persoonlijk beoordeeld op kwaliteit en originaliteit.
                       </p>
                     </div>
                   </div>
@@ -828,12 +829,12 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
               </div>
 
               <h2 className="typo-h1 bg-gradient-to-r from-primary via-rose-600 to-orange-600 bg-clip-text text-transparent">
-                Deals & Top Cadeaus
+                Handgepickte Collecties
               </h2>
 
               <p className="typo-lead mx-auto mt-6 max-w-3xl text-gray-700">
-                Ontdek onze zorgvuldig geselecteerde collectie van de beste deals en populairste
-                cadeaus. Handmatig gekozen door onze experts voor maximale waarde.
+                Ontdek onze zorgvuldig samengestelde cadeau collecties. Elk product handmatig
+                geselecteerd door onze gift experts op kwaliteit, originaliteit en betekenis.
               </p>
             </div>
 
@@ -860,10 +861,10 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     </svg>
                   </div>
 
-                  <h3 className="mb-2 text-xl font-bold text-gray-900">Beste Prijzen</h3>
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">Expert Selectie</h3>
                   <p className="text-sm leading-relaxed text-gray-600">
-                    Onverslaanbare deals op kwaliteitscadeaus. Bespaar tot 50% op topmerken en
-                    bestsellers.
+                    Zorgvuldig samengesteld door onze gift experts. Elk product getest op kwaliteit,
+                    originaliteit en cadeauwaarde.
                   </p>
                 </div>
               </div>
@@ -922,7 +923,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
               <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
                 <div className="text-center">
                   <div className="mb-1 text-3xl font-bold text-primary">1000+</div>
-                  <div className="text-sm text-gray-600">Actieve deals</div>
+                  <div className="text-sm text-gray-600">Geselecteerde cadeaus</div>
                 </div>
                 <div className="text-center">
                   <div className="mb-1 text-3xl font-bold text-primary">50+</div>
@@ -947,11 +948,11 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                 className="group px-10 py-5 text-lg font-semibold shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
               >
                 <TagIcon className="h-6 w-6 transition-transform group-hover:scale-110" />
-                Ontdek alle Deals
+                Ontdek onze Collecties
               </Button>
 
               <p className="mt-4 text-sm text-gray-600">
-                Nieuw aanbod elke dag • Gratis verzending bij veel producten
+                Handmatig geselecteerd • Voor elke gelegenheid het perfecte cadeau
               </p>
             </div>
           </div>

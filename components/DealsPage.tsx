@@ -1543,15 +1543,15 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
               {/* Heading */}
               <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight animate-fade-in-up">
-                <span className="block text-gray-900 mb-2">De beste cadeaudeals</span>
+                <span className="block text-gray-900 mb-2">Handgepickte cadeau collecties</span>
                 <span className="block bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 bg-clip-text text-transparent">
-                  van deze week
+                  voor elke gelegenheid
                 </span>
               </h1>
 
               {/* Description */}
               <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
-                Ontdek scherpe deals van Coolblue en Amazon,
+                Ontdek zorgvuldig geselecteerde cadeaus van Coolblue en Amazon,
                 <span className="font-semibold text-rose-600"> perfect voor elk cadeau moment</span>
               </p>
 
@@ -1587,7 +1587,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     className="inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 border-rose-300 bg-white text-rose-600 font-bold text-lg hover:bg-rose-50 hover:border-rose-400 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <TagIcon className="h-5 w-5" />
-                    <span>Bekijk topdeal</span>
+                    <span>Bekijk uitgelicht cadeau</span>
                   </a>
                 )}
 
@@ -1603,7 +1603,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
-                  <span>Vernieuw deals</span>
+                  <span>Vernieuw collectie</span>
                 </button>
               </div>
 
@@ -1617,7 +1617,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="font-medium">Handgeplukte deals</span>
+                  <span className="font-medium">Zorgvuldig samengesteld</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
@@ -1631,7 +1631,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 </div>
                 <div className="flex items-center gap-2">
                   <HeartIcon className="w-5 h-5 text-rose-500" />
-                  <span className="font-medium">Beste prijzen</span>
+                  <span className="font-medium">Kwaliteit voorop</span>
                 </div>
               </div>
 
@@ -1699,7 +1699,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       <div className="flex flex-col justify-center gap-4">
                         <div className="inline-flex items-center gap-2 self-start rounded-full bg-rose-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
                           <StarIcon className="h-4 w-4" />
-                          Deal van de week
+                          In de spotlight
                         </div>
                         {featuredRetailer && (
                           <div
@@ -1742,7 +1742,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                           </a>
                           {premiumDeals.length > 1 && (
                             <Button variant="secondary" className="bg-white" onClick={showNextDeal}>
-                              Toon andere deal ({dealOfWeekIndex + 1}/{premiumDeals.length})
+                              Toon ander cadeau ({dealOfWeekIndex + 1}/{premiumDeals.length})
                             </Button>
                           )}
                         </div>

@@ -330,8 +330,10 @@ const App: React.FC = () => {
         shop: 'Shop — Producten & Cadeaus',
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
-        deals: 'Deals & Aanbiedingen',
-        categoryDetail: data?.categoryTitle ? `${data.categoryTitle} — Deals` : 'Categorie — Deals',
+        deals: 'Handgepickte Collecties',
+        categoryDetail: data?.categoryTitle
+          ? `${data.categoryTitle} — Collectie`
+          : 'Categorie — Collectie',
         productLanding: data?.product?.name
           ? `${data.product.name} — Beste Deal`
           : 'Product — Beste Deal',
@@ -358,8 +360,8 @@ const App: React.FC = () => {
         quiz: 'Doe de cadeau quiz en ontdek welk type cadeau het beste past.',
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
         shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
-        deals: 'Pak de beste actuele cadeau deals en aanbiedingen.',
-        categoryDetail: data?.categoryDescription || 'Bekijk alle producten in deze categorie.',
+        deals: 'Zorgvuldig samengestelde cadeau collecties voor elke gelegenheid.',
+        categoryDetail: data?.categoryDescription || 'Bekijk alle producten in deze collectie.',
         adminDealsPreview: 'Controleer als admin de live deals-selectie van Gifteez.',
       }
       const metaDesc = ensure('meta[name="description"]', () =>
@@ -368,7 +370,7 @@ const App: React.FC = () => {
       metaDesc.setAttribute(
         'content',
         descriptions[page] ||
-          'Vind snel het perfecte cadeau met de AI GiftFinder, inspiratie, gidsen en deals.'
+          'Vind snel het perfecte cadeau met de AI GiftFinder, inspiratie, gidsen en handgepickte collecties.'
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

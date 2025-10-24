@@ -64,7 +64,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   products,
 }) => {
   useEffect(() => {
-    document.title = `${categoryTitle} | Gifteez.nl Deals`
+    document.title = `${categoryTitle} | Gifteez.nl Collecties`
     window.scrollTo(0, 0)
   }, [categoryTitle])
 
@@ -211,7 +211,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                   </div>
                   {savingsPercent && deal.originalPrice && (
                     <div className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600">
-                      <span>🎉 Bespaar {savingsPercent}%</span>
+                      <span>💝 Uitstekende prijs-kwaliteit</span>
                     </div>
                   )}
                 </div>
@@ -281,10 +281,10 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   return (
     <>
       <Meta
-        title={`${categoryTitle} - Beste Deals & Aanbiedingen`}
+        title={`${categoryTitle} - Handgepickte Collectie`}
         description={
           categoryDescription ||
-          `Ontdek de beste deals voor ${categoryTitle}. Handmatig geselecteerd door onze experts.`
+          `Ontdek de beste ${categoryTitle.toLowerCase()}. Handmatig geselecteerd door onze cadeau-experts.`
         }
         canonical={`/deals/category/${categoryId}`}
       />
@@ -399,7 +399,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                   className="bg-white text-rose-600 hover:bg-white/90 inline-flex items-center gap-2"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
-                  Terug naar alle deals
+                  Terug naar alle collecties
                 </Button>
               </div>
 
@@ -451,6 +451,90 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             <TrustBadges layout="grid" />
           </div>
 
+          {/* Collection Story Section - New! */}
+          <div className="mb-12 rounded-3xl bg-gradient-to-br from-slate-50 to-white p-8 md:p-12 border border-slate-200 shadow-sm">
+            <div className="mx-auto max-w-4xl">
+              {/* About this collection */}
+              <div className="mb-8">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-lg">
+                    <SparklesIcon className="h-6 w-6" />
+                  </div>
+                  <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900">
+                    Over deze collectie
+                  </h2>
+                </div>
+                <p className="text-lg leading-relaxed text-slate-700">
+                  {categoryDescription ||
+                    `Deze ${categoryTitle.toLowerCase()} collectie is zorgvuldig samengesteld door ons team van cadeau-experts. Elk product is persoonlijk beoordeeld op kwaliteit, originaliteit en geschiktheid als cadeau.`}
+                </p>
+              </div>
+
+              {/* Perfect voor */}
+              <div className="mb-8 grid gap-6 md:grid-cols-2">
+                <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                  <div className="mb-4 flex items-center gap-2">
+                    <GiftIcon className="h-5 w-5 text-rose-600" />
+                    <h3 className="font-bold text-slate-900">Perfect voor</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm text-slate-700">
+                    <li className="flex items-start gap-2">
+                      <CheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <span>Verjaardagen en feestdagen</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <span>Last-minute cadeaus met impact</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <span>Bijzondere gelegenheden</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-100">
+                  <div className="mb-4 flex items-center gap-2">
+                    <TrophyIcon className="h-5 w-5 text-amber-600" />
+                    <h3 className="font-bold text-slate-900">Onze selectiecriteria</h3>
+                  </div>
+                  <ul className="space-y-2 text-sm text-slate-700">
+                    <li className="flex items-start gap-2">
+                      <CheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <span>Minimaal 4.0+ sterren reviews</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <span>Betrouwbare retailers</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <span>Originaliteit en kwaliteit</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Curator note */}
+              <div className="rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 p-6 border border-rose-100">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-600 text-white font-bold text-lg shadow-lg">
+                      G
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mb-1 font-semibold text-slate-900">Gifteez Team</div>
+                    <p className="text-sm italic text-slate-700">
+                      "We selecteren alleen producten die we zelf als cadeau zouden geven. Kwaliteit
+                      en originaliteit staan voorop, niet de kortingen."
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Social Proof & Stats Section */}
           <div className="mb-10 grid gap-4 md:grid-cols-3">
             <SocialProofBadge
@@ -469,7 +553,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
               </div>
               <div>
                 <div className="text-2xl font-bold text-emerald-900">{products.length}</div>
-                <div className="text-sm text-emerald-700 font-medium">Exclusieve deals</div>
+                <div className="text-sm text-emerald-700 font-medium">Geselecteerde cadeaus</div>
               </div>
             </div>
           </div>
