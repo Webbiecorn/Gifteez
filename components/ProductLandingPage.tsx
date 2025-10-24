@@ -18,7 +18,7 @@ import { Container } from './layout/Container'
 import Meta from './Meta'
 import { SocialShare } from './SocialShare'
 import StickyAffiliateBar from './StickyAffiliateBar'
-import { StockCounter, CountdownTimer, SocialProofBadge, TrustBadges } from './UrgencyBadges'
+import { CountdownTimer, SocialProofBadge, TrustBadges } from './UrgencyBadges'
 import type { NavigateTo, DealItem, Gift } from '../types'
 
 interface ProductLandingPageProps {
@@ -224,7 +224,6 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
   ]
 
   // Mock urgency data (in production, would come from API)
-  const mockStock = Math.floor(Math.random() * 15) + 3
   const mockViewers = Math.floor(Math.random() * 150) + 20
   const mockSoldThisMonth = Math.floor(Math.random() * 500) + 100
   const dealEndTime = new Date(Date.now() + 1000 * 60 * 60 * 12) // 12 hours from now
@@ -425,9 +424,6 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
                 purchaseCount={mockSoldThisMonth}
                 recentPurchaseMinutes={Math.floor(Math.random() * 45) + 5}
               />
-
-              {/* Stock Counter */}
-              {mockStock < 20 && <StockCounter currentStock={mockStock} totalStock={50} />}
 
               {/* Countdown Timer */}
               {product.isOnSale && <CountdownTimer endTime={dealEndTime} />}

@@ -22,7 +22,6 @@ Dedicated product landing pages met maximale conversie-optimalisatie.
 - ⭐ Mock ratings (4.5/5) met review counts
 - 👥 Social proof: viewers, sold count, recent purchases
 - ⏱️ Countdown timers voor deals
-- 📊 Stock scarcity indicators (progress bar)
 - ✅ Trust badges (shipping, returns, security, support)
 - ❓ FAQ section (accordion) met dynamic content
 - 🎁 Related products carousel
@@ -146,7 +145,6 @@ Reusable accordion FAQ component.
 
 Conversion-boosting urgency components.
 
-- **StockCounter**: Progress bar (green/amber/red)
 - **CountdownTimer**: Live countdown (hours:minutes:seconds)
 - **SocialProofBadge**: 3 types (viewers, purchases, recent)
 - **TrustBadges**: 2x2 or 1x4 grid (🚚🔒↩️💬)
@@ -380,9 +378,10 @@ DealsPage:           54.55 kB (gzip: 13.44 kB) ✅
 
 ### ProductLandingPage:
 
+### ProductLandingPage:
+
 - ⏱️ Countdown timer (urgency)
-- 📊 Stock counter (scarcity)
-- 👥 Social proof (trust)
+- Social proof (trust)
 - ✅ Trust badges (credibility)
 - ⭐ Mock ratings (social validation)
 - 💰 Savings highlight (value)
