@@ -11,8 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# Environment variables (contains API keys)
 .env
 .env.*
+
+# Temporary scripts with credentials
+scripts/fetch-*.mjs
+scripts/temp-*.mjs
 
 # Editor directories and files
 .vscode/*
