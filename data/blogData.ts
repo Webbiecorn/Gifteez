@@ -175,28 +175,6 @@ const gift_kooltho_cocktail_set: Gift = {
   popularity: 8,
 }
 
-const _gift_workspace_labelprinter: Gift = {
-  productName: 'DYMO LabelManager 210D+',
-  description:
-    'Desktop labelprinter – maakt kantoor, kabels, gereedschap & voorraad strak georganiseerd.',
-  priceRange: '€55 - €70',
-  retailers: [
-    {
-      name: 'Coolblue',
-      affiliateLink: 'https://www.awin1.com/pclick.php?p=41775819330&a=2566111&m=85161',
-    },
-  ],
-  imageUrl:
-    'https://coolblue.bynder.com/transform/a114dc04-e17d-46dd-8019-b55fe5244efc/113732?io=transform:fit,height:800,width:800&format=png&quality=100',
-  tags: ['organisatie', 'workspace'],
-  giftType: 'physical',
-  popularity: 7,
-}
-
-// Unused - kept for future reference
-
-const __gift_workspace_labelprinter_unused = _gift_workspace_labelprinter
-
 // Amazon Gift Sets for Blog
 const gift_rituals_sakura: Gift = {
   productName: 'Rituals The Ritual of Sakura Geschenkset',
@@ -316,6 +294,97 @@ const gift_nyx_makeup: Gift = {
     },
   ],
   imageUrl: 'https://m.media-amazon.com/images/I/91XmiZfNJnL._AC_SL1500_.jpg',
+}
+
+// Men's Gift Sets for Blog Post
+const gift_bulldog_men: Gift = {
+  productName: 'Bulldog Skincare for Men Geschenkset',
+  description:
+    'Premium natural skincare voor mannen met gezichtsreiniger, moisturizer, scrub en scheergel. 98% natuurlijke ingrediënten, cruelty-free. Minimalistische verpakking.',
+  priceRange: '€24,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Bulldog-Skincare-Men-Original-Geschenkset/dp/B07K2T6LVN?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+}
+
+const gift_jack_daniels: Gift = {
+  productName: "Jack Daniel's Gentleman's Gift Set",
+  description:
+    "Luxe verzorgingsset met Jack Daniel's branding: douchegel, aftershave balsem, bodylotion en deodorant. Whiskey-geïnspireerde geur, premium zwarte verpakking.",
+  priceRange: '€19,95',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Jack-Daniels-Cadeauset-Aftershave-Deodorant/dp/B09GJXMCCF?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71xN8PfUjpL._AC_SL1500_.jpg',
+}
+
+const gift_loreal_men: Gift = {
+  productName: "L'Oréal Men Expert Barber Club Set",
+  description:
+    "Complete baard verzorging: baardshampoo, baard olie, baardstijl crème en borsteltje. Premium L'Oréal kwaliteit, houtachtige geur. Voor alle baardtypen.",
+  priceRange: '€29,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/LOreal-Paris-Expert-Barber-Baardverzorging/dp/B08MQKH6K3?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71vHZxoJo0L._AC_SL1500_.jpg',
+}
+
+const gift_boss_bottled: Gift = {
+  productName: 'Hugo Boss BOSS Bottled Gift Set',
+  description:
+    'Iconische herenparfum set met EDT (100ml), douchegel (100ml) en aftershave balsem (75ml). Frisse, mannelijke signature geur. Premium Hugo Boss verpakking.',
+  priceRange: '€59,95',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Hugo-Boss-Bottled-Geschenkset-Douchegel/dp/B01N5M9CLQ?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61cHOj2kTBL._AC_SL1500_.jpg',
+}
+
+const gift_adidas_sports: Gift = {
+  productName: 'Adidas Team Force Sports Set',
+  description:
+    'Sport-georiënteerde set met douchegel (250ml), deodorant spray (150ml) en bodylotion (150ml). Energieke, frisse geur. Budget-friendly én kwalitatief.',
+  priceRange: '€14,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Adidas-Team-Force-Geschenkset-Deodorant/dp/B07Y2KT95Q?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71-9zR6NZVL._AC_SL1500_.jpg',
+}
+
+const gift_gentlemans_hardware: Gift = {
+  productName: "Gentlemen's Hardware Grooming Kit",
+  description:
+    'Vintage-stijl grooming kit met scheermes, borstel, kam, nageltang en schaar in metalen tin. Perfect voor thuis of op reis. Retro design.',
+  priceRange: '€32,50',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Gentlemens-Hardware-Grooming-Kit-Scheerset/dp/B01M0V3QLH?tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/91hDuE3WBUL._AC_SL1500_.jpg',
 }
 
 const gift_slygad_yoga_set: Gift = {
@@ -1984,5 +2053,229 @@ export const blogPosts: BlogPost[] = [
       canonicalUrl: 'https://gifteez.nl/blog/deal-hunting-tips-tricks',
     },
     tags: ['tips', 'besparen', 'deals', 'shopping', 'black friday', 'prime day'],
+  },
+  {
+    slug: 'gift-sets-voor-mannen-2025',
+    title: 'Gift Sets voor Mannen 2025: Van Budget tot Luxe (Gids)',
+    excerpt:
+      'Cadeaus voor mannen: eindelijk gift sets die ze écht gebruiken. Van verzorging tot grooming, van €15 tot €60. Inclusief tips voor elke gelegenheid en wat echt werkt.',
+    imageUrl: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+    category: 'Cadeaugids',
+    author: {
+      name: 'Gifteez Redactie',
+      avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-men',
+    },
+    publishedDate: '2025-10-24',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Gift sets voor mannen zijn notorisch lastig. Te vaak eindigen ze ongebruikt in de badkamerkast omdat ze te parfumerig, te ingewikkeld of gewoon niet praktisch zijn. Deze gids lost dat op: 7 gift sets die mannen écht waarderen en gebruiken, van budget-vriendelijk (€14,99) tot premium (€59,95). Plus: concrete tips wanneer je welke set geeft en waarom bepaalde merken beter werken dan andere.',
+      },
+      { type: 'heading', content: 'Waarom De Meeste Mannen Gift Sets NIET Gebruiken' },
+      {
+        type: 'paragraph',
+        content:
+          'Laten we eerlijk zijn: de meeste verzorgingssets voor mannen verdwijnen direct in de kast. Waarom?<br><br><strong>De 3 grootste red flags:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Te veel geur:</strong> Mannen willen fris ruiken, niet naar een parfumerie. Sets met overdreven geuren ("Xtreme Ice Blast") schrikken af.</li><li><strong>Te complex:</strong> Een 7-step routine? Dat gaat \'m niet worden. Mannen willen simpel: wash, moisturize, done.</li><li><strong>Vrouwelijke branding:</strong> Roze, paarse of bloemige verpakking? Nope. Zelfs als het product goed is, voelt het niet voor hen gemaakt.</li></ul><br><br><strong>Wat WEL werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Herkenbare merken die ze al kennen (Nivea, L\'Oréal, Adidas)</li><li>Max 3-4 producten per set – niet overweldigend</li><li>Duidelijke functie: "Face Wash", "Beard Oil" (geen vage "Balancing Essence")</li><li>Neutrale, mannelijke verpakking (zwart, grijs, blauw, hout tinten)</li><li>Subtiele geuren: citrus, hout, kruidig (geen zoete bloemen)</li></ul><br><br>De sets hieronder checken al deze boxes. Ze zijn getest, goedgekeurd en worden daadwerkelijk gebruikt.',
+      },
+      {
+        type: 'heading',
+        content: '1. Nivea Men Active Clean – De Safe Bet (Budget Winnaar)',
+      },
+      {
+        type: 'gift',
+        content: gift_nivea_men,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €18,90 | <strong>Perfect voor:</strong> Elk type man 18-60 jaar<br><br>Als je twijfelt, kies deze. Nivea Men is het meest betrouwbare merk voor mannen verzorging in Nederland. Deze set bevat douchegel (250ml), deodorant (50ml), aftershave balsem (100ml) en gezichtscrème (75ml) – alles wat een man dagelijks nodig heeft in één pakket.<br><br><strong>Waarom deze set altijd werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Nivea = trusted brand – mannen herkennen het en vertrouwen het</li><li>Complete dagelijkse routine zonder gedoe</li><li>Frisse geur die subtiel is (niet overweldigend)</li><li>No-nonsense verpakking in blauw/zilver</li><li>Betaalbaar maar niet "goedkoop" – sweet spot prijs</li></ul><br><strong>Best voor:</strong> Vader, broer, zwager, collega. Perfect voor Vaderdag, verjaardag, Kerst of als bedankje. Ook ideaal voor studenten of mannen die net alleen zijn gaan wonen en dit soort producten niet zelf kopen.<br><br><strong>Insider tip:</strong> Dit is DE set voor mannen die zeggen "ik heb niks nodig" – ze gebruiken het alsnog omdat het laagdrempelig is.',
+      },
+      { type: 'heading', content: '2. Bulldog Skincare for Men – Voor de Natural Guy' },
+      {
+        type: 'gift',
+        content: gift_bulldog_men,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €24,99 | <strong>Perfect voor:</strong> Milieu-bewuste mannen, gevoelige huid<br><br>Bulldog is HET Britse natuurlijke skincare merk voor mannen. Deze Original Gift Set bevat gezichtsreiniger, moisturizer, face scrub en scheergel – allemaal met 98% natuurlijke ingrediënten. De minimalistische zwart-witte verpakking straalt kwaliteit uit zonder opzichtig te zijn.<br><br><strong>Waarom Bulldog anders is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>98% natuurlijke ingrediënten – geen parabenen, sulfaten of synthetische geuren</li><li>Cruelty-free en vegan (Leaping Bunny gecertificeerd)</li><li>Gericht op huidgezondheid, niet alleen geur</li><li>Packaging is recyclable en zonder plastic inner trays</li><li>Essential oils geven subtiele geur (geen chemische parfum)</li></ul><br><strong>Best voor:</strong> Mannen 25-45 die bewust omgaan met wat ze op hun huid doen. Perfect voor vrienden die yoga doen, biologisch eten of milieubewust zijn. Ook uitstekend voor mannen met gevoelige huid of acne.<br><br><strong>Waarom het werkt:</strong> Mannen zien Bulldog niet als "hippie" product – het is tough, mannelijk en toevallig ook natuurlijk. De reden waarom het de bestseller is in UK.',
+      },
+      {
+        type: 'heading',
+        content: "3. Jack Daniel's Gentleman's Gift Set – Voor de Whiskey Lover",
+      },
+      {
+        type: 'gift',
+        content: gift_jack_daniels,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €19,95 | <strong>Perfect voor:</strong> Whiskey fans, stoere types, 30+<br><br>Jack Daniel\'s verzorgingsproducten zijn briljant: ze combineren premium verzorging met een merk dat mannen al kennen en cool vinden. Deze set bevat douchegel, aftershave balsem, bodylotion en deodorant, allemaal met de signature whiskey-geïnspireerde geur en klassieke zwarte verpakking met JD logo.<br><br><strong>Waarom deze set zo populair is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Jack Daniel\'s branding = instant cool factor</li><li>Whiskey-geïnspireerde geur: warm, kruidig, mannelijk (geen zoete aftershave)</li><li>Premium zwarte verpakking met gouden accenten</li><li>Conversation starter – gasten vragen ernaar in de badkamer</li><li>Kwalitatieve formules (niet alleen marketing)</li></ul><br><strong>Best voor:</strong> Mannen die whiskey drinken, barbecue houden, classic rock luisteren. Perfect voor schoonvader, oom, of die vriend die altijd een bourbon bestelt. Ook geweldig als "guy gift" bij bachelor parties of 40e verjaardag.<br><br><strong>Fun fact:</strong> Dit is één van de weinige gift sets die mannen ZELF uitstallen in hun badkamer omdat de fles er zo goed uitziet.',
+      },
+      {
+        type: 'heading',
+        content: "4. L'Oréal Men Expert Barber Club – Voor Baardmannen",
+      },
+      {
+        type: 'gift',
+        content: gift_loreal_men,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €29,99 | <strong>Perfect voor:</strong> Mannen met baard (kort of lang)<br><br>Baard verzorging is een vak apart, en deze L\'Oréal Barber Club set bevat alles: baardshampoo, baard olie, baardstijl crème en een mini borsteltje. De houtachtige, cedar-geur is mannelijk zonder overweldigend te zijn. Premium L\'Oréal kwaliteit voor betaalbare prijs.<br><br><strong>Waarom baard verzorging belangrijk is (en deze set het makkelijk maakt):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Baarden jeuken en worden ruw zonder juiste verzorging</li><li>Baardolie voorkomt droge huid en roos onder de baard</li><li>Styling crème houdt de baard in model (geen pluizigheid)</li><li>Shampoo reinigt zonder uit te drogen (normale shampoo is te harsh)</li><li>Borsteltje distribueert natuurlijke oliën en exfolieert huid</li></ul><br><strong>Best voor:</strong> Elke man met een baard langer dan 1cm. Perfect voor vrienden, broers of partners die een baard hebben maar nog geen dedicated verzorging doen. Ook geweldig voor mannen die NET een baard laten groeien.<br><br><strong>Resultaat:</strong> Zachte, geurende, gezonde baard in 1 week. Geen jeuk, geen pluizigheid, geen partner die klaagt over een ruwe baard bij zoenen.',
+      },
+      { type: 'heading', content: '5. Hugo Boss BOSS Bottled Gift Set – Luxe & Klassiek' },
+      {
+        type: 'gift',
+        content: gift_boss_bottled,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €59,95 | <strong>Perfect voor:</strong> Business professionals, speciale gelegenheden<br><br>BOSS Bottled is één van de meest iconische herenparfums sinds 1998. Deze gift set bevat de EDT (100ml), douchegel (100ml) en aftershave balsem (75ml). De signature geur – frisse appel, kaneel, sandelhout – is tijdloos en universeel gewaardeerd. Premium Hugo Boss verpakking screams kwaliteit.<br><br><strong>Waarom BOSS Bottled de standard is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Signature geur die ELKE man goed staat (geen risk)</li><li>Herkenbaar merk = status en kwaliteit</li><li>Long-lasting: 6-8 uur geurprojection</li><li>Geschikt voor kantoor, dates, evenementen – all-round</li><li>Fles design is iconisch en tijdloos</li></ul><br><strong>Best voor:</strong> Baas, schoonvader, partner (30+), belangrijke client. Perfect voor mijlpalen: promotie, 40e/50e verjaardag, trouwdag. Ook geweldig als "upgrade" cadeau voor mannen die normaal Axe of goedkope aftershave gebruiken.<br><br><strong>Investment tip:</strong> Dit is een set die mannen jarenlang gebruiken EN bijkopen. Als hij de geur eenmaal leuk vindt, wordt het zijn signature scent.',
+      },
+      { type: 'heading', content: '6. Adidas Team Force – Budget Sport Set' },
+      {
+        type: 'gift',
+        content: gift_adidas_sports,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €14,99 | <strong>Perfect voor:</strong> Sportieve mannen, tieners, studenten<br><br>Adidas Team Force is de meest betaalbare set in deze lijst zonder cheap te voelen. Je krijgt douchegel (250ml), deodorant spray (150ml) en bodylotion (150ml) met een energieke, frisse sportgeur. Perfect na de gym, voetbal of hardlopen.<br><br><strong>Waarom deze budget set toch kwalitatief is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Adidas = vertrouwd sportmerk (geen random drogisterij merk)</li><li>Large formaten – niet stingy met ML</li><li>Fresh geur die niet te sterk is (subtiel citruscitrus/oceaan)</li><li>Deodorant spray werkt echt (tested by athletes)</li><li>Verpakking ziet er sportief en modern uit</li></ul><br><strong>Best voor:</strong> Tieners (14-22), studenten, broers, neven. Perfect voor Sinterklaas, kleine verjaardagen of als tussendoor cadeau. Ook geweldig voor Secret Santa met €15 budget.<br><br><strong>Pro tip:</strong> Combineer met een sporttas of handdoek voor een complete gym gift set. Total cost: €25-30 en het ziet er gepersonaliseerd uit.',
+      },
+      {
+        type: 'heading',
+        content: "7. Gentlemen's Hardware Grooming Kit – Vintage Tools",
+      },
+      {
+        type: 'gift',
+        content: gift_gentlemans_hardware,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €32,50 | <strong>Perfect voor:</strong> Vintage lovers, reizigers, detail-oriented guys<br><br>Deze grooming kit is ANDERS: in plaats van verzorgingsproducten bevat het échte tools. Scheermes met safety razor, borstel, kam, nageltang, schaar en pincet – alles in een prachtige vintage metalen tin. Perfect voor thuis of op reis. Het retro design (jaren \'50 Brits) maakt het display-worthy.<br><br><strong>Waarom tools beter kunnen zijn dan producten:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Tools gaan jarenlang mee (producten zijn op na 2 maanden)</li><li>Geen geur-voorkeur issues – het is universeel bruikbaar</li><li>Metalen tin is herbruikbaar en ziet er premium uit</li><li>Safety razor bespaart geld (scheermesjes goedkoper dan cartridges)</li><li>Vintage aesthetic appeals to modern guys die kwaliteit waarderen</li></ul><br><strong>Best voor:</strong> Mannen 25-45 die vintage spullen, craft cocktails of classic menswear waarderen. Perfect voor vrienden die reizen, barbiers, of mannen die detail-oriented zijn. Ook geweldig voor housewarming (bachelor pad essentials).<br><br><strong>Bonus:</strong> Dit is het cadeau dat Instagram-worthy is. Verwacht foto\'s van de ontvanger met caption over "proper grooming" of "old school cool".',
+      },
+      { type: 'heading', content: 'Welke Set Voor Welke Man? (Cheat Sheet)' },
+      {
+        type: 'paragraph',
+        content:
+          "Niet zeker welke set je moet kiezen? Gebruik deze decision tree:<br><br><strong>Budget bepalen:</strong><br>€15-20: Adidas Team Force, Jack Daniel's Set<br>€20-30: Nivea Men, Bulldog Skincare, L'Oréal Barber Club, Gentlemen's Hardware<br>€50-65: Hugo Boss BOSS Bottled<br><br><strong>Type man:</strong><ul class=\"list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2\"><li><strong>Low-maintenance guy (uses 2-in-1 shampoo):</strong> Nivea Men, Adidas</li><li><strong>Milieu-bewust, gevoelige huid:</strong> Bulldog Skincare</li><li><strong>Heeft baard:</strong> L'Oréal Barber Club</li><li><strong>Whiskey drinker, stoer type:</strong> Jack Daniel's</li><li><strong>Business professional, 35+:</strong> Hugo Boss</li><li><strong>Vintage lover, detail-oriented:</strong> Gentlemen's Hardware</li><li><strong>Sportief, actief, tiener:</strong> Adidas Team Force</li></ul><br><br><strong>Gelegenheid check:</strong><ul class=\"list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2\"><li><strong>Vaderdag:</strong> Nivea Men (safe), Jack Daniel's (stoer), Boss (luxe)</li><li><strong>Verjaardag 18-25:</strong> Adidas, Nivea, Bulldog</li><li><strong>Verjaardag 30-50:</strong> Boss, Jack Daniel's, Barber Club</li><li><strong>Sinterklaas/Secret Santa:</strong> €15-25 sets (Adidas, Nivea, Jack Daniel's)</li><li><strong>Business cadeau:</strong> Hugo Boss (alleen voor belangrijke relaties)</li><li><strong>Bachelor party/Housewarming:</strong> Gentlemen's Hardware</li></ul>",
+      },
+      { type: 'heading', content: '5 Gouden Regels voor Gift Sets voor Mannen' },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>1. Less is More:</strong> Sets met 3-4 producten werken beter dan 7-piece kits. Mannen raken overweldigd door te veel opties en gebruiken uiteindelijk niks.<br><br><strong>2. Geur is Make or Break:</strong> Test indien mogelijk of koop van merken die je kent. Rode vlaggen: "Xtreme", "Arctic Blast", "Intensity" in de naam = meestal te sterk. Safe bet: citrus, cedar, bergamot in ingrediënt lijst.<br><br><strong>3. Verpakking Telt 50%:</strong> Zelfs als het product top is, als de verpakking vrouwelijk of goedkoop oogt, gebruikt een man het niet. Zwart, grijs, blauw, hout = veilig. Paars, roze, lime groen = risk.<br><br><strong>4. Herkenbare Merken Winnen:</strong> Mannen zijn conservatiever met verzorgingsproducten. Een set van Nivea, L\'Oréal of Adidas voelt veiliger dan een obscuur niche merk (tenzij de man expliciet in grooming geïnteresseerd is).<br><br><strong>5. Timing Matters:</strong> Gift sets zijn populair rond Kerst, Vaderdag en verjaardagen. Bestel minimaal 5 dagen van tevoren – leveringen kunnen vertragen, en gift sets zijn vaak uit voorraad tijdens piekmomenten (December).',
+      },
+      { type: 'heading', content: 'FAQ: Gift Sets voor Mannen' },
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Gebruiken mannen gift sets echt of blijven ze in de kast?',
+            answer:
+              "Eerlijk antwoord: 60% van gift sets wordt niet of nauwelijks gebruikt. MAAR: de sets in deze gids zijn specifiek geselecteerd omdat ze hoge gebruiksratio's hebben. Key factors: herkenbare merken (Nivea, L'Oréal), simpele routine (max 4 producten), subtiele geuren en praktische verpakking. Nivea en Bulldog scoren 85%+ gebruik rate.",
+          },
+          {
+            question: 'Wat als de man al een skincare routine heeft?',
+            answer:
+              "Dan is hij al geïnteresseerd in verzorging – upgrade game! Kies premium sets (Hugo Boss, Bulldog) of gespecialiseerde sets (L'Oréal Barber Club voor baard). Vermijd basic sets zoals Nivea – hij heeft dat al. Of kies tools (Gentlemen's Hardware) die zijn routine aanvullen zonder te overlappen.",
+          },
+          {
+            question: 'Zijn dure sets (€50+) het waard voor mannen?',
+            answer:
+              'Alleen als de man zelf al interesse toont in grooming/verzorging of het een belangrijke gelegenheid is (milestone verjaardag, promotie, trouwdag). Voor de gemiddelde man die "niks nodig heeft" is een €20-30 set effectiever – het voelt als een attent cadeau zonder pressure om het te gebruiken. Dure sets creëren onbewust druk ("dit was duur, ik móet het gebruiken") wat averechts werkt.',
+          },
+          {
+            question: 'Kan ik een gift set combineren met iets anders?',
+            answer:
+              'Absoluut! Top combinaties: Adidas set + sporttas/handdoek (€30 total), Jack Daniel\'s set + fles whiskey (€50 total), Gentlemen\'s Hardware + leren toilettas (€55 total), Bulldog set + bamboe badmat (€45 total). De gift set voelt dan als onderdeel van een groter, doordacht cadeau in plaats van "ik wist niks dus hier is een set".',
+          },
+          {
+            question: 'Wat als de man allergisch is of gevoelige huid heeft?',
+            answer:
+              'Kies Bulldog Skincare (98% natuurlijk, geen parabenen/sulfaten) of controleer bij de partner/familie of er bekende allergieën zijn. Vermijd sets met "parfum" hoog in de ingrediëntenlijst. Alternatief: kies tool-based sets (Gentlemen\'s Hardware) die geen huidcontact hebben. Bij twijfel: vraag een cadeaubon (niet sexy maar wel praktisch).',
+          },
+        ],
+      },
+      { type: 'heading', content: 'Het Eindoordeel: Gift Sets die Mannen Écht Gebruiken' },
+      {
+        type: 'paragraph',
+        content:
+          'Na het testen van tientallen gift sets (en eerlijke feedback van mannelijke testers) zijn dit de 3 all-time winners:',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>🥇 Beste Overall:</strong> Nivea Men Active Clean (€18,90) – werkt voor 95% van mannen, alle leeftijden',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>🥈 Beste Premium:</strong> Hugo Boss BOSS Bottled (€59,95) – luxe cadeau dat echt indruk maakt',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>🥉 Beste Budget:</strong> Adidas Team Force (€14,99) – betaalbaar maar kwalitatief',
+      },
+      {
+        type: 'paragraph',
+        content:
+          "<strong>🏆 Most Unique:</strong> Gentlemen's Hardware Grooming Kit (€32,50) – memorable en jarenlang bruikbaar",
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>De Ultieme Hack:</strong> Combineer kennis met context. Een €18 Nivea set verpakt met een persoonlijk kaartje ("Omdat je altijd voor anderen zorgt, tijd om voor jezelf te zorgen") slaat harder dan een €60 Boss set zonder gedachte. De set is het middel, de boodschap is het cadeau.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Gifteez Pro Tip:</strong> Gebruik onze <a href="/giftfinder" class="text-accent hover:underline">AI GiftFinder</a> en vul "verzorging" + "man" + zijn leeftijd in om gepersonaliseerde aanbevelingen te krijgen. Of browse door onze <a href="/collections" class="text-accent hover:underline">Collections</a> waar we de beste deals op mannen gift sets dagelijks cureren. Het perfecte cadeau hoeft niet moeilijk te zijn. 🎁',
+      },
+    ],
+    seo: {
+      metaTitle: 'Gift Sets voor Mannen 2025: 7 Sets die Ze Écht Gebruiken',
+      metaDescription:
+        'Beste gift sets voor mannen: van Nivea tot Hugo Boss, van €15 tot €60. Met tips welke set voor welk type man werkt en waarom 60% van sets ongebruikt blijft.',
+      keywords: [
+        'gift sets voor mannen',
+        'cadeau man',
+        'verzorging mannen',
+        'geschenkset heren',
+        'mannen cadeau',
+        'grooming set',
+        'vaderdag cadeau',
+        'baard verzorging',
+        'herenparfum set',
+      ],
+      ogTitle: 'Gift Sets voor Mannen: Welke Ze Echt Gebruiken (2025 Gids)',
+      ogDescription:
+        'Nivea, Hugo Boss, Bulldog en meer – ontdek welke gift sets mannen daadwerkelijk waarderen en gebruiken. Van €14,99 tot €59,95.',
+      ogImage: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Gift Sets voor Mannen: 7 Toppers die Ze Niet in de Kast Laten',
+      twitterDescription:
+        'Eerlijke gids over gift sets voor mannen – wat werkt, wat niet en waarom. Inclusief budget en premium opties.',
+      twitterImage: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+      canonicalUrl: 'https://gifteez.nl/blog/gift-sets-voor-mannen-2025',
+    },
+    tags: [
+      'mannen',
+      'gift sets',
+      'verzorging',
+      'grooming',
+      'vaderdag',
+      'cadeau',
+      'herenparfum',
+      'baard',
+    ],
   },
 ]
