@@ -14,6 +14,42 @@ interface ProductPostWizardProps {
   onGenerate: (postTemplate: BlogPostData) => void
 }
 
+// Template types voor verschillende soorten posts
+type TemplateType = 'quick' | 'detailed' | 'comparison'
+
+interface TemplateOption {
+  type: TemplateType
+  label: string
+  description: string
+  icon: string
+  recommended: boolean
+}
+
+const templateOptions: TemplateOption[] = [
+  {
+    type: 'detailed',
+    label: 'Uitgebreid (Aanbevolen)',
+    description:
+      'Volledige productbeschrijvingen met specs, highlights en vergelijkingen. Beste voor SEO en conversie.',
+    icon: '📝',
+    recommended: true,
+  },
+  {
+    type: 'quick',
+    label: 'Kort & Krachtig',
+    description: 'Snelle opsomming met kernpunten. Ideaal voor lijstartikelen en quick guides.',
+    icon: '⚡',
+    recommended: false,
+  },
+  {
+    type: 'comparison',
+    label: 'Vergelijkend',
+    description: 'Side-by-side vergelijking van producten. Perfect voor "X vs Y" artikelen.',
+    icon: '⚖️',
+    recommended: false,
+  },
+]
+
 // Unified product interface voor zowel Amazon als Coolblue
 interface UnifiedProduct extends CoolblueProduct {
   source: 'amazon' | 'coolblue'
@@ -37,6 +73,9 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
   const [selectedProducts, setSelectedProducts] = useState<UnifiedProduct[]>([])
   const [focusedProductId, setFocusedProductId] = useState<string | null>(null)
   const [selectionWarning, setSelectionWarning] = useState<string | null>(null)
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('detailed')
+  const [showPreview, setShowPreview] = useState(false)
+  const [generatedPreview, setGeneratedPreview] = useState<BlogPostData | null>(null)
   const MAX_SELECTION = 5
   const focusedProduct = useMemo(() => {
     if (!selectedProducts.length) {
@@ -193,12 +232,23 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
       })
 
       const template = CoolblueFeedService.generateMultiProductTemplate(productsForTemplate)
-      onGenerate(template)
+
+      // Toon preview in plaats van direct genereren
+      setGeneratedPreview(template)
+      setShowPreview(true)
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'Genereren mislukt. Probeer het opnieuw.'
       console.error('Kon productpost niet genereren:', errorMessage)
       setSelectionWarning(errorMessage)
+    }
+  }
+
+  const handleConfirmGenerate = () => {
+    if (generatedPreview) {
+      onGenerate(generatedPreview)
+      setShowPreview(false)
+      setGeneratedPreview(null)
     }
   }
 
@@ -560,6 +610,40 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
               </>
             )}
 
+            {/* Template type selector */}
+            {selectedProducts.length > 0 && (
+              <div className="mt-6 rounded-xl border border-gray-200 bg-gradient-to-br from-rose-50 to-white p-4">
+                <h4 className="mb-3 text-sm font-semibold text-gray-900">
+                  📝 Kies je artikel stijl
+                </h4>
+                <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                  {templateOptions.map((option) => (
+                    <button
+                      key={option.type}
+                      type="button"
+                      onClick={() => setSelectedTemplate(option.type)}
+                      className={`relative rounded-lg border-2 p-3 text-left transition ${
+                        selectedTemplate === option.type
+                          ? 'border-rose-500 bg-rose-50 shadow-sm'
+                          : 'border-gray-200 bg-white hover:border-rose-200'
+                      }`}
+                    >
+                      {option.recommended && (
+                        <span className="absolute -top-2 -right-2 rounded-full bg-green-500 px-2 py-0.5 text-[10px] font-bold text-white shadow">
+                          BEST
+                        </span>
+                      )}
+                      <div className="mb-1 text-xl">{option.icon}</div>
+                      <div className="text-xs font-semibold text-gray-900">{option.label}</div>
+                      <div className="mt-1 text-[11px] leading-tight text-gray-600">
+                        {option.description}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
               <div className="text-xs text-gray-400">
                 {selectedProducts.length > 1
@@ -594,6 +678,124 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
           </div>
         </div>
       </div>
+
+      {/* Preview Modal */}
+      {showPreview && generatedPreview && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-6">
+          <div className="relative flex w-full max-w-4xl flex-col rounded-3xl bg-white shadow-2xl md:max-h-[90vh]">
+            <div className="border-b px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-900">📋 Preview: Jouw artikel</h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Check de content voordat je naar de editor gaat
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowPreview(false)
+                    setGeneratedPreview(null)
+                  }}
+                  className="text-2xl text-gray-400 transition hover:text-gray-600"
+                  aria-label="Sluiten"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              {/* Preview content */}
+              <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+                <div className="mb-4 border-b pb-4">
+                  <h1 className="text-2xl font-bold text-gray-900">{generatedPreview.title}</h1>
+                  <p className="mt-2 text-sm text-gray-600">{generatedPreview.excerpt}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="rounded-full bg-rose-100 px-3 py-1 text-xs font-semibold text-rose-700">
+                      {generatedPreview.category}
+                    </span>
+                    {generatedPreview.tags?.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-700"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Content preview (first 500 chars) */}
+                <div className="prose prose-sm max-w-none">
+                  <div className="text-sm text-gray-700">
+                    {generatedPreview.content.slice(0, 800)}...
+                  </div>
+                </div>
+
+                <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">ℹ️</span>
+                    <div>
+                      <p className="text-sm font-semibold text-blue-900">
+                        Dit is een preview van de eerste paragrafen
+                      </p>
+                      <p className="mt-1 text-xs text-blue-700">
+                        Het volledige artikel bevat {selectedProducts.length} producten met alle
+                        details, specs en affiliate links. Je kunt alles aanpassen in de editor.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SEO preview */}
+                <div className="mt-6 rounded-lg border border-gray-200 bg-white p-4">
+                  <h3 className="mb-3 text-sm font-semibold text-gray-900">🔍 SEO Preview</h3>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Meta Title</p>
+                      <p className="text-sm text-blue-600">
+                        {generatedPreview.seo?.metaTitle || generatedPreview.title}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">Meta Description</p>
+                      <p className="text-xs text-gray-700">
+                        {generatedPreview.seo?.metaDescription || generatedPreview.excerpt}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-gray-500">URL Slug</p>
+                      <p className="text-xs font-mono text-gray-600">
+                        /blog/{generatedPreview.slug}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t px-6 py-4">
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPreview(false)
+                    setGeneratedPreview(null)
+                  }}
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-600 shadow-sm transition hover:bg-gray-50"
+                >
+                  ← Terug naar selectie
+                </button>
+                <div className="flex gap-3">
+                  <Button variant="accent" onClick={handleConfirmGenerate} className="px-6">
+                    ✓ Akkoord, naar editor
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
