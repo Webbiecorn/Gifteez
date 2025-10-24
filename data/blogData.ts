@@ -2059,7 +2059,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Gift Sets voor Mannen 2025: Van Budget tot Luxe (Gids)',
     excerpt:
       'Cadeaus voor mannen: eindelijk gift sets die ze écht gebruiken. Van verzorging tot grooming, van €15 tot €60. Inclusief tips voor elke gelegenheid en wat echt werkt.',
-    imageUrl: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+    imageUrl: '/images/blog-giftsets-mannen-header.png',
     category: 'Cadeaugids',
     author: {
       name: 'Gifteez Redactie',
@@ -2258,14 +2258,14 @@ export const blogPosts: BlogPost[] = [
       ogTitle: 'Gift Sets voor Mannen: Welke Ze Echt Gebruiken (2025 Gids)',
       ogDescription:
         'Nivea, Hugo Boss, Bulldog en meer – ontdek welke gift sets mannen daadwerkelijk waarderen en gebruiken. Van €14,99 tot €59,95.',
-      ogImage: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
-      pinterestImage: 'https://gifteez.nl/images/blog-men-giftsets-pinterest.jpg', // Pinterest version with text overlay
+      ogImage: 'https://gifteez.nl/images/blog-giftsets-mannen-header.png',
+      pinterestImage: 'https://gifteez.nl/images/Blog-giftsets-mannen-pinterest.png',
       ogType: 'article',
       twitterCard: 'summary_large_image',
       twitterTitle: 'Gift Sets voor Mannen: 7 Toppers die Ze Niet in de Kast Laten',
       twitterDescription:
         'Eerlijke gids over gift sets voor mannen – wat werkt, wat niet en waarom. Inclusief budget en premium opties.',
-      twitterImage: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+      twitterImage: 'https://gifteez.nl/images/blog-giftsets-mannen-header.png',
       canonicalUrl: 'https://gifteez.nl/blog/gift-sets-voor-mannen-2025',
     },
     tags: [
