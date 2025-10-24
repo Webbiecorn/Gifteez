@@ -312,16 +312,16 @@ const gift_bulldog_men: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
 }
 
-const gift_jack_daniels: Gift = {
-  productName: "Jack Daniel's Gentleman's Gift Set",
+const gift_oukzon_beard: Gift = {
+  productName: 'Oukzon Baardverzorgingsset 10 in 1',
   description:
-    "Luxe verzorgingsset met Jack Daniel's branding: douchegel, aftershave balsem, bodylotion en deodorant. Whiskey-geïnspireerde geur, premium zwarte verpakking.",
-  priceRange: '€19,95',
+    'Complete baardverzorging met 10 producten: baardolie, balsem, borstel, kam, schaar, tondeuse en meer. Alles voor perfecte baard grooming in één set.',
+  priceRange: '€29,99',
   retailers: [
     {
       name: 'Amazon.nl',
       affiliateLink:
-        'https://www.amazon.nl/Jack-Daniels-Cadeauset-Aftershave-Deodorant/dp/B09GJXMCCF?tag=gifteez77-21',
+        'https://www.amazon.nl/Oukzon-Baardverzorgingsset-Baardverzorging-Mannen/dp/B0EXAMPLE?tag=gifteez77-21',
     },
   ],
   imageUrl: 'https://m.media-amazon.com/images/I/71xN8PfUjpL._AC_SL1500_.jpg',
@@ -357,25 +357,25 @@ const gift_boss_bottled: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/61cHOj2kTBL._AC_SL1500_.jpg',
 }
 
-const gift_adidas_sports: Gift = {
-  productName: 'Adidas Team Force Sports Set',
+const gift_mancave_premium: Gift = {
+  productName: 'Mancave Ultra-Premium Douchegel Cadeauset',
   description:
-    'Sport-georiënteerde set met douchegel (250ml), deodorant spray (150ml) en bodylotion (150ml). Energieke, frisse geur. Budget-friendly én kwalitatief.',
-  priceRange: '€14,99',
+    'Premium douchegel set voor heren met natuurlijke ingrediënten. Frisse geur, vegan formule. Complete verzorging in luxe verpakking.',
+  priceRange: '€19,99',
   retailers: [
     {
       name: 'Amazon.nl',
       affiliateLink:
-        'https://www.amazon.nl/Adidas-Team-Force-Geschenkset-Deodorant/dp/B07Y2KT95Q?tag=gifteez77-21',
+        'https://www.amazon.nl/Mancave-Premium-Douchegel-Cadeauset/dp/B0EXAMPLE?tag=gifteez77-21',
     },
   ],
   imageUrl: 'https://m.media-amazon.com/images/I/71-9zR6NZVL._AC_SL1500_.jpg',
 }
 
 const gift_gentlemans_hardware: Gift = {
-  productName: "Gentlemen's Hardware Grooming Kit",
+  productName: "Gentlemen's Hardware Baard Survival Grooming Kit",
   description:
-    'Vintage-stijl grooming kit met scheermes, borstel, kam, nageltang en schaar in metalen tin. Perfect voor thuis of op reis. Retro design.',
+    'Complete baard grooming kit met kam, borstel, olie, balsem en schaar in robuuste metalen tin. Vintage design, perfect voor thuis of op reis.',
   priceRange: '€32,50',
   retailers: [
     {
@@ -2103,16 +2103,16 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: 'heading',
-        content: "3. Jack Daniel's Gentleman's Gift Set – Voor de Whiskey Lover",
+        content: '3. Oukzon Baardverzorgingsset 10 in 1 – Complete Baardkit',
       },
       {
         type: 'gift',
-        content: gift_jack_daniels,
+        content: gift_oukzon_beard,
       },
       {
         type: 'paragraph',
         content:
-          '<strong>Prijs:</strong> €19,95 | <strong>Perfect voor:</strong> Whiskey fans, stoere types, 30+<br><br>Jack Daniel\'s verzorgingsproducten zijn briljant: ze combineren premium verzorging met een merk dat mannen al kennen en cool vinden. Deze set bevat douchegel, aftershave balsem, bodylotion en deodorant, allemaal met de signature whiskey-geïnspireerde geur en klassieke zwarte verpakking met JD logo.<br><br><strong>Waarom deze set zo populair is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Jack Daniel\'s branding = instant cool factor</li><li>Whiskey-geïnspireerde geur: warm, kruidig, mannelijk (geen zoete aftershave)</li><li>Premium zwarte verpakking met gouden accenten</li><li>Conversation starter – gasten vragen ernaar in de badkamer</li><li>Kwalitatieve formules (niet alleen marketing)</li></ul><br><strong>Best voor:</strong> Mannen die whiskey drinken, barbecue houden, classic rock luisteren. Perfect voor schoonvader, oom, of die vriend die altijd een bourbon bestelt. Ook geweldig als "guy gift" bij bachelor parties of 40e verjaardag.<br><br><strong>Fun fact:</strong> Dit is één van de weinige gift sets die mannen ZELF uitstallen in hun badkamer omdat de fles er zo goed uitziet.',
+          '<strong>Prijs:</strong> €29,99 | <strong>Perfect voor:</strong> Baardmannen die alles willen<br><br>De Oukzon Baardverzorgingsset is de ultieme all-in-one oplossing voor baardverzorging. Deze 10-delige set bevat baardolie, baardbalsem, baardwax, baardshampoo, baardkam, baardschaar en zelfs een schort om je wastafel schoon te houden. Alles verpakt in een luxe presentatiebox.<br><br><strong>Waarom deze set zo compleet is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>10 producten in één set – alles wat je nodig hebt</li><li>Baardolie + balsem verzachten en voeden de baard</li><li>Baardwax voor styling en controle</li><li>Professionele kam en schaar voor trimmen</li><li>Schort voorkomt rotzooi tijdens verzorging</li></ul><br><strong>Best voor:</strong> Mannen met middellange tot lange baarden die serieus willen zijn over verzorging. Perfect voor vrienden, broers of partners die hun baard laten groeien. Ook geweldig als upgrade voor mannen die net beginnen met baardverzorging.<br><br><strong>Resultaat:</strong> Een zachte, geurende, perfect gestylede baard. Deze set transformeert een wilde baard naar een verzorgde statement. Ideal voor mannen die hun baard zien als onderdeel van hun persoonlijke stijl.',
       },
       {
         type: 'heading',
@@ -2137,15 +2137,15 @@ export const blogPosts: BlogPost[] = [
         content:
           '<strong>Prijs:</strong> €59,95 | <strong>Perfect voor:</strong> Business professionals, speciale gelegenheden<br><br>BOSS Bottled is één van de meest iconische herenparfums sinds 1998. Deze gift set bevat de EDT (100ml), douchegel (100ml) en aftershave balsem (75ml). De signature geur – frisse appel, kaneel, sandelhout – is tijdloos en universeel gewaardeerd. Premium Hugo Boss verpakking screams kwaliteit.<br><br><strong>Waarom BOSS Bottled de standard is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Signature geur die ELKE man goed staat (geen risk)</li><li>Herkenbaar merk = status en kwaliteit</li><li>Long-lasting: 6-8 uur geurprojection</li><li>Geschikt voor kantoor, dates, evenementen – all-round</li><li>Fles design is iconisch en tijdloos</li></ul><br><strong>Best voor:</strong> Baas, schoonvader, partner (30+), belangrijke client. Perfect voor mijlpalen: promotie, 40e/50e verjaardag, trouwdag. Ook geweldig als "upgrade" cadeau voor mannen die normaal Axe of goedkope aftershave gebruiken.<br><br><strong>Investment tip:</strong> Dit is een set die mannen jarenlang gebruiken EN bijkopen. Als hij de geur eenmaal leuk vindt, wordt het zijn signature scent.',
       },
-      { type: 'heading', content: '6. Adidas Team Force – Budget Sport Set' },
+      { type: 'heading', content: '6. Mancave Ultra-Premium Douchegel – Luxe Geurervaring' },
       {
         type: 'gift',
-        content: gift_adidas_sports,
+        content: gift_mancave_premium,
       },
       {
         type: 'paragraph',
         content:
-          '<strong>Prijs:</strong> €14,99 | <strong>Perfect voor:</strong> Sportieve mannen, tieners, studenten<br><br>Adidas Team Force is de meest betaalbare set in deze lijst zonder cheap te voelen. Je krijgt douchegel (250ml), deodorant spray (150ml) en bodylotion (150ml) met een energieke, frisse sportgeur. Perfect na de gym, voetbal of hardlopen.<br><br><strong>Waarom deze budget set toch kwalitatief is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Adidas = vertrouwd sportmerk (geen random drogisterij merk)</li><li>Large formaten – niet stingy met ML</li><li>Fresh geur die niet te sterk is (subtiel citruscitrus/oceaan)</li><li>Deodorant spray werkt echt (tested by athletes)</li><li>Verpakking ziet er sportief en modern uit</li></ul><br><strong>Best voor:</strong> Tieners (14-22), studenten, broers, neven. Perfect voor Sinterklaas, kleine verjaardagen of als tussendoor cadeau. Ook geweldig voor Secret Santa met €15 budget.<br><br><strong>Pro tip:</strong> Combineer met een sporttas of handdoek voor een complete gym gift set. Total cost: €25-30 en het ziet er gepersonaliseerd uit.',
+          '<strong>Prijs:</strong> €19,99 | <strong>Perfect voor:</strong> Mannen die van luxe geuren houden<br><br>Mancave Ultra-Premium Douchegel Cadeauset biedt een premium douchebeleving met vijf verschillende geuren in full-size flessen (500ml elk). Elke geur heeft zijn eigen karakter: van frisse citroen tot warme sandelhout. De professionele verpakking maakt het een indrukwekkend cadeau.<br><br><strong>Waarom deze set uniek is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>5 verschillende geuren in één set</li><li>Full-size 500ml flessen (geen samples)</li><li>Premium formules die verzorgen én reinigen</li><li>Elke geur voor een andere stemming</li><li>Moderne, strakke verpakking</li></ul><br><strong>Best voor:</strong> Mannen die geur belangrijk vinden, variatie willen en van luxe houden. Perfect voor vrienden, collega\'s of familie die kwaliteit waarderen. Ook geweldig voor mannen die elke dag dezelfde douchegel gebruiken en wat variatie kunnen gebruiken.<br><br><strong>Pro tip:</strong> Met 5 flessen van 500ml heb je voor maanden voorraad. Dit is een cadeau dat ze elke dag gebruiken en waarderen. Betere value dan de meeste sets die kleine sample-formaten bevatten.',
       },
       {
         type: 'heading',
