@@ -17,6 +17,7 @@ import ImageWithFallback from './ImageWithFallback'
 import { Container } from './layout/Container'
 import Meta from './Meta'
 import { SocialShare } from './SocialShare'
+import StickyAffiliateBar from './StickyAffiliateBar'
 import { StockCounter, CountdownTimer, SocialProofBadge, TrustBadges } from './UrgencyBadges'
 import type { NavigateTo, DealItem, Gift } from '../types'
 
@@ -586,6 +587,21 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
             </Button>
           </div>
         </Container>
+
+        {/* Sticky Affiliate Bar for Mobile */}
+        <StickyAffiliateBar
+          product={product}
+          retailerName={retailer.shortName}
+          onCtaClick={() => {
+            if (window.gtag) {
+              window.gtag('event', 'sticky_bar_conversion', {
+                event_category: 'affiliate',
+                event_label: product.name,
+                retailer: retailer.name,
+              })
+            }
+          }}
+        />
       </div>
     </>
   )

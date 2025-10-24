@@ -21,18 +21,17 @@ const handleAdminOpschonen = async (
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlogContext } from '../contexts/BlogContext'
+import { quizQuestions, quizResults } from '../data/quizData'
+import { withAffiliate } from '../services/affiliate'
+import BlogService from '../services/blogService'
+import CoolblueFeedService from '../services/coolblueFeedService'
+import { DynamicProductService } from '../services/dynamicProductService'
+import { firebaseEnabled } from '../services/firebase'
 import {
   PinnedDealsService,
   type PinnedDealEntry,
   clearAllPinnedDeals,
 } from '../services/pinnedDealsService'
-import Button from './Button'
-import { withAffiliate } from '../services/affiliate'
-import { quizQuestions, quizResults } from '../data/quizData'
-import BlogService from '../services/blogService'
-import CoolblueFeedService from '../services/coolblueFeedService'
-import { DynamicProductService } from '../services/dynamicProductService'
-import { firebaseEnabled } from '../services/firebase'
 import { QuizQuestion } from '../types'
 import ActivityLog from './ActivityLog'
 import AdminContactMessages from './AdminContactMessages'
@@ -41,6 +40,7 @@ import AdminNewsletterPanel from './AdminNewsletterPanel'
 import AmazonProductManager from './AmazonProductManager'
 import BlogEditor from './BlogEditor'
 import { BulkProductImporter } from './BulkProductImporter'
+import Button from './Button'
 import DealCategoryManager from './DealCategoryManager'
 import {
   SparklesIcon,
