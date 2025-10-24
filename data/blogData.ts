@@ -296,50 +296,101 @@ const gift_nyx_makeup: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/91XmiZfNJnL._AC_SL1500_.jpg',
 }
 
-// Men's Gift Sets for Blog Post
-const gift_bulldog_men: Gift = {
-  productName: 'Bulldog Skincare for Men Geschenkset',
+// Men's Gift Sets for Blog Post - From Firebase Admin Panel
+const gift_kneipp_douche_trio: Gift = {
+  productName: 'Kneipp Mannen Gift Set Douche Trio',
   description:
-    'Premium natural skincare voor mannen met gezichtsreiniger, moisturizer, scrub en scheergel. 98% natuurlijke ingrediënten, cruelty-free. Minimalistische verpakking.',
-  priceRange: '€24,99',
+    'Geselecteerde 2 in 1 Douche Bestsellers: Koele frisheid, startklaar en krachtig - ideaal geschenk voor de verzorgde man. Behoudt het eigen microbioom van de huid. Recepten zonder microplastic. 3 x 75 ml.',
+  priceRange: '€11,50',
   retailers: [
     {
       name: 'Amazon.nl',
       affiliateLink:
-        'https://www.amazon.nl/Bulldog-Skincare-Men-Original-Geschenkset/dp/B07K2T6LVN?tag=gifteez77-21',
+        'https://www.amazon.nl/Kneipp-Mannen-Gift-Douche-Trio/dp/B0CKXF3M38?crid=358U6CARDREFJ&dib=eyJ2IjoiMSJ9.QDnzJxnlJcCKkJpqZE4GKDqe9ukBz-CaffNcANIr1oCxDUlF0iXiZnzGw-pc5MTsD8xktkFOkOlwkCdVuVcHdwvKeLX6IFUKkRcNQz9SgVr9qutTbagMLMNilLgsgkl9hc1lRIdEVhx2z6FTmQjcITSXUpEK16oaQvGJSlZwIosCipOfup_wGFy8CTyDtJ0NN1NWyhIBCm90H1cz4P63tIpuA-uiOci_-6vEkBGdQzBFHmUZo0w2g_brbLCKCKmTVXYBu1RjJMjghILx6i12_XgPdaELtaIlo74WOgcEDno.f9K_qBAoW7eNpWVGBdb5e9svi06cLP0Ufv7UDyXoF9s&dib_tag=se&keywords=giftset+mannen&qid=1761217252&sprefix=giftset%2Caps%2C82&sr=8-5&linkCode=ll1&tag=gifteez77-21&linkId=a273acbc3ccf7d4a3069803df6a3076f&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/81p9vMuc5dL._AC_SL1500_.jpg',
+  rating: 4.6,
 }
 
-const gift_oukzon_beard: Gift = {
-  productName: 'Oukzon Baardverzorgingsset 10 in 1',
+const gift_mens_collection_borrel: Gift = {
+  productName: "Accentra Men's Collection Geschenkdoos",
   description:
-    'Complete baardverzorging met 10 producten: baardolie, balsem, borstel, kam, schaar, tondeuse en meer. Alles voor perfecte baard grooming in één set.',
+    'Cadeauset met 140ml bad & douchegel en 2 x borrelglas in biervorm (elk 4cl). Geur: berk & ceder. Origineel verpakt in geschenkdoos, perfect voor Vaderdag, verjaardag of Kerstmis.',
+  priceRange: '€10,94',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Cadeauset-COLLECTION-geschenkdoos-douchegel-borrelglas/dp/B0CN6T5F1B?crid=358U6CARDREFJ&dib=eyJ2IjoiMSJ9.QDnzJxnlJcCKkJpqZE4GKDqe9ukBz-CaffNcANIr1oCxDUlF0iXiZnzGw-pc5MTsD8xktkFOkOlwkCdVuVcHdwvKeLX6IFUKkRcNQz9SgVr9qutTbagMLMNilLgsgkl9hc1lRIdEVhx2z6FTmQjcITSXUpEK16oaQvGJSlZwIosCipOfup_wGFy8CTyDtJ0NN1NWyhIBCm90H1cz4P63tIpuA-uiOci_-6vEkBGdQzBFHmUZo0w2g_brbLCKCKmTVXYBu1RjJMjghILx6i12_XgPdaELtaIlo74WOgcEDno.f9K_qBAoW7eNpWVGBdb5e9svi06cLP0Ufv7UDyXoF9s&dib_tag=se&keywords=giftset+mannen&qid=1761217252&sprefix=giftset%2Caps%2C82&sr=8-4&linkCode=ll1&tag=gifteez77-21&linkId=6ace5f01b6c964bfbd9ddeada3285d97&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/91nYpWoBkgL._AC_SL1500_.jpg',
+  rating: 4.4,
+}
+
+const gift_toolkit_badkuip: Gift = {
+  productName: 'Accentra Bath & Body Toolkit Badkuip',
+  description:
+    '4-delige verzorgingsset in decoratieve badkuip. Bevat 2 x 100 ml douchegel, 50 ml handpeeling en netspons. Geur: Sandalwood & Musk. Perfect voor Vaderdag of verjaardag.',
+  priceRange: '€13,32',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Cadeauset-decoratieve-handpeeling-verzorgingsset-verjaardag/dp/B0D3HRPL1Z?crid=358U6CARDREFJ&dib=eyJ2IjoiMSJ9.QDnzJxnlJcCKkJpqZE4GKDqe9ukBz-CaffNcANIr1oCxDUlF0iXiZnzGw-pc5MTsD8xktkFOkOlwkCdVuVcHdwvKeLX6IFUKkRcNQz9SgVr9qutTbagMLMNilLgsgkl9hc1lRIdEVhx2z6FTmQjcITSXUpEK16oaQvGJSlZwIosCipOfup_wGFy8CTyDtJ0NN1NWyhIBCm90H1cz4P63tIpuA-uiOci_-6vEkBGdQzBFHmUZo0w2g_brbLCKCKmTVXYBu1RjJMjghILx6i12_XgPdaELtaIlo74WOgcEDno.f9K_qBAoW7eNpWVGBdb5e9svi06cLP0Ufv7UDyXoF9s&dib_tag=se&keywords=giftset+mannen&qid=1761217252&sprefix=giftset%2Caps%2C82&sr=8-11&linkCode=ll1&tag=gifteez77-21&linkId=65395da0ee9f9bef9a748bb46c49f2d5&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71FCcCTMeML._AC_SL1500_.jpg',
+  rating: 4.0,
+}
+
+const gift_toolkit_gereedschap: Gift = {
+  productName: 'Accentra Bath & Body Toolkit Gereedschapskoffer',
+  description:
+    'Coole verzorgingsset in gereedschapskoffer. Bevat 400 ml douchegel, 50 ml handpeeling en houten nagelborstel. Sandalwood & Muskus geur. Perfect voor bouwvakkers, automonteurs en hobbyvakmensen.',
+  priceRange: '€22,00',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/cadeauset-douchegel-handpeeling-nagelborstel-gereedschapskoffer/dp/B0CV4CTG1L?crid=358U6CARDREFJ&dib=eyJ2IjoiMSJ9.QDnzJxnlJcCKkJpqZE4GKDqe9ukBz-CaffNcANIr1oCxDUlF0iXiZnzGw-pc5MTsD8xktkFOkOlwkCdVuVcHdwvKeLX6IFUKkRcNQz9SgVr9qutTbagMLMNilLgsgkl9hc1lRIdEVhx2z6FTmQjcITSXUpEK16oaQvGJSlZwIosCipOfup_wGFy8CTyDtJ0NN1NWyhIBCm90H1cz4P63tIpuA-uiOci_-6vEkBGdQzBFHmUZo0w2g_brbLCKCKmTVXYBu1RjJMjghILx6i12_XgPdaELtaIlo74WOgcEDno.f9K_qBAoW7eNpWVGBdb5e9svi06cLP0Ufv7UDyXoF9s&dib_tag=se&keywords=giftset%2Bmannen&qid=1761217252&sprefix=giftset%2Caps%2C82&sr=8-13&th=1&linkCode=ll1&tag=gifteez77-21&linkId=d2932f03c5b43af87dc6107e67e5dacc&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71E-dUZaPBL._AC_SL1500_.jpg',
+  rating: 4.1,
+}
+
+const gift_gitaar_sandelhout: Gift = {
+  productName: 'Accentra Cadeauset Metalen Gitaar',
+  description:
+    'Unieke verwenset in metalen gitaarverpakking met sandelhout geur. Bevat douchegel, bodylotion, zeep en kleine handdoek. Herbruikbare metalen gitaar als decoratief element. Perfect voor rocksterren.',
+  priceRange: '€22,67',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Accentra-cadeauset-inclusief-douchegel-bodylotion/dp/B0CST1B28S?crid=358U6CARDREFJ&dib=eyJ2IjoiMSJ9.QDnzJxnlJcCKkJpqZE4GKDqe9ukBz-CaffNcANIr1oCxDUlF0iXiZnzGw-pc5MTsD8xktkFOkOlwkCdVuVcHdwvKeLX6IFUKkRcNQz9SgVr9qutTbagMLMNilLgsgkl9hc1lRIdEVhx2z6FTmQjcITSXUpEK16oaQvGJSlZwIosCipOfup_wGFy8CTyDtJ0NN1NWyhIBCm90H1cz4P63tIpuA-uiOci_-6vEkBGdQzBFHmUZo0w2g_brbLCKCKmTVXYBu1RjJMjghILx6i12_XgPdaELtaIlo74WOgcEDno.f9K_qBAoW7eNpWVGBdb5e9svi06cLP0Ufv7UDyXoF9s&dib_tag=se&keywords=giftset+mannen&qid=1761217252&sprefix=giftset%2Caps%2C82&sr=8-15&linkCode=ll1&tag=gifteez77-21&linkId=7da18ef83f46414a7c0eab8427227009&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71rVyp+eeML._AC_SL1500_.jpg',
+  rating: 4.7,
+}
+
+const gift_bodyearth_sandelhout: Gift = {
+  productName: 'Body & Earth Reinigingsgeschenkset Sandelhout',
+  description:
+    '8-delige sandelhoutgeurgeschenkset voor mannen met opbergtas, douchegel 205ml, schuimbad 205ml, bodyscrub 95ml, reinigingsmelk 100ml, badzout 200g, handzeep 50g en badbal. Natuurlijke ingrediënten, draagbare reistas.',
   priceRange: '€29,99',
   retailers: [
     {
       name: 'Amazon.nl',
       affiliateLink:
-        'https://www.amazon.nl/Oukzon-Baardverzorgingsset-Baardverzorging-Mannen/dp/B0EXAMPLE?tag=gifteez77-21',
+        'https://www.amazon.nl/BODY-EARTH-Geschenkmanden-Reinigingsgeschenkset-Sandelhoutgeurgeschenkset/dp/B0CTCGRKV7?crid=358U6CARDREFJ&dib=eyJ2IjoiMSJ9.QDnzJxnlJcCKkJpqZE4GKDqe9ukBz-CaffNcANIr1oCxDUlF0iXiZnzGw-pc5MTsD8xktkFOkOlwkCdVuVcHdwvKeLX6IFUKkRcNQz9SgVr9qutTbagMLMNilLgsgkl9hc1lRIdEVhx2z6FTmQjcITSXUpEK16oaQvGJSlZwIosCipOfup_wGFy8CTyDtJ0NN1NWyhIBCm90H1cz4P63tIpuA-uiOci_-6vEkBGdQzBFHmUZo0w2g_brbLCKCKmTVXYBu1RjJMjghILx6i12_XgPdaELtaIlo74WOgcEDno.f9K_qBAoW7eNpWVGBdb5e9svi06cLP0Ufv7UDyXoF9s&dib_tag=se&keywords=giftset%2Bmannen&qid=1761217252&sprefix=giftset%2Caps%2C82&sr=8-16&th=1&linkCode=ll1&tag=gifteez77-21&linkId=68fbe0ea092f8cb11ce5551535a3ebfc&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71xN8PfUjpL._AC_SL1500_.jpg',
-}
-
-const gift_loreal_men: Gift = {
-  productName: "L'Oréal Men Expert Barber Club Set",
-  description:
-    "Complete baard verzorging: baardshampoo, baard olie, baardstijl crème en borsteltje. Premium L'Oréal kwaliteit, houtachtige geur. Voor alle baardtypen.",
-  priceRange: '€29,99',
-  retailers: [
-    {
-      name: 'Amazon.nl',
-      affiliateLink:
-        'https://www.amazon.nl/LOreal-Paris-Expert-Barber-Baardverzorging/dp/B08MQKH6K3?tag=gifteez77-21',
-    },
-  ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71vHZxoJo0L._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/71rhfjTwavL._AC_SL1500_.jpg',
+  rating: 4.4,
 }
 
 const gift_boss_bottled: Gift = {
@@ -355,36 +406,6 @@ const gift_boss_bottled: Gift = {
     },
   ],
   imageUrl: 'https://m.media-amazon.com/images/I/61cHOj2kTBL._AC_SL1500_.jpg',
-}
-
-const gift_mancave_premium: Gift = {
-  productName: 'Mancave Ultra-Premium Douchegel Cadeauset',
-  description:
-    'Premium douchegel set voor heren met natuurlijke ingrediënten. Frisse geur, vegan formule. Complete verzorging in luxe verpakking.',
-  priceRange: '€19,99',
-  retailers: [
-    {
-      name: 'Amazon.nl',
-      affiliateLink:
-        'https://www.amazon.nl/Mancave-Premium-Douchegel-Cadeauset/dp/B0EXAMPLE?tag=gifteez77-21',
-    },
-  ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71-9zR6NZVL._AC_SL1500_.jpg',
-}
-
-const gift_gentlemans_hardware: Gift = {
-  productName: "Gentlemen's Hardware Baard Survival Grooming Kit",
-  description:
-    'Complete baard grooming kit met kam, borstel, olie, balsem en schaar in robuuste metalen tin. Vintage design, perfect voor thuis of op reis.',
-  priceRange: '€32,50',
-  retailers: [
-    {
-      name: 'Amazon.nl',
-      affiliateLink:
-        'https://www.amazon.nl/Gentlemens-Hardware-Grooming-Kit-Scheerset/dp/B01M0V3QLH?tag=gifteez77-21',
-    },
-  ],
-  imageUrl: 'https://m.media-amazon.com/images/I/91hDuE3WBUL._AC_SL1500_.jpg',
 }
 
 const gift_slygad_yoga_set: Gift = {
@@ -2080,80 +2101,83 @@ export const blogPosts: BlogPost[] = [
       },
       {
         type: 'heading',
-        content: '1. Nivea Men Active Clean – De Safe Bet (Budget Winnaar)',
+        content: '1. Kneipp Mannen Gift Set – De Budget Winner',
       },
       {
         type: 'gift',
-        content: gift_nivea_men,
+        content: gift_kneipp_douche_trio,
       },
       {
         type: 'paragraph',
         content:
-          '<strong>Prijs:</strong> €18,90 | <strong>Perfect voor:</strong> Elk type man 18-60 jaar<br><br>Als je twijfelt, kies deze. Nivea Men is het meest betrouwbare merk voor mannen verzorging in Nederland. Deze set bevat douchegel (250ml), deodorant (50ml), aftershave balsem (100ml) en gezichtscrème (75ml) – alles wat een man dagelijks nodig heeft in één pakket.<br><br><strong>Waarom deze set altijd werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Nivea = trusted brand – mannen herkennen het en vertrouwen het</li><li>Complete dagelijkse routine zonder gedoe</li><li>Frisse geur die subtiel is (niet overweldigend)</li><li>No-nonsense verpakking in blauw/zilver</li><li>Betaalbaar maar niet "goedkoop" – sweet spot prijs</li></ul><br><strong>Best voor:</strong> Vader, broer, zwager, collega. Perfect voor Vaderdag, verjaardag, Kerst of als bedankje. Ook ideaal voor studenten of mannen die net alleen zijn gaan wonen en dit soort producten niet zelf kopen.<br><br><strong>Insider tip:</strong> Dit is DE set voor mannen die zeggen "ik heb niks nodig" – ze gebruiken het alsnog omdat het laagdrempelig is.',
+          '<strong>Prijs:</strong> €11,50 | <strong>Perfect voor:</strong> Elk type man 18-60 jaar<br><br>Kneipp is een betrouwbaar merk met een heritage van 130+ jaar. Deze Douche Trio set bevat drie 2-in-1 douchegels (75ml elk): Koele Frisheid, Startklaar en Krachtig. Perfect voor lichaam én haar, zonder gedoe. De set behoudt het natuurlijke microbioom van de huid en bevat geen microplastic.<br><br><strong>Waarom deze set altijd werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Kneipp = vertrouwd merk met natuurlijke formules</li><li>2-in-1 formule: scheelt tijd en gedoe</li><li>3 verschillende geuren om af te wisselen</li><li>Compact formaat perfect voor sporttas of reizen</li><li>Beste prijs-kwaliteit verhouding (€11,50!)</li></ul><br><strong>Best voor:</strong> Studenten, sporters, reizigers. Perfect voor Secret Santa, kleine bedankjes of als toevoeging bij een groter cadeau. Ook ideaal voor mannen die "niks nodig hebben".<br><br><strong>Insider tip:</strong> Het compacte formaat maakt dit perfect voor de sportschool of weekendjes weg. Mannen waarderen de praktische 2-in-1 formule.',
       },
-      { type: 'heading', content: '2. Bulldog Skincare for Men – Voor de Natural Guy' },
+      { type: 'heading', content: "2. Accentra Men's Collection – De Originele Borrelset" },
       {
         type: 'gift',
-        content: gift_bulldog_men,
+        content: gift_mens_collection_borrel,
       },
       {
         type: 'paragraph',
         content:
-          '<strong>Prijs:</strong> €24,99 | <strong>Perfect voor:</strong> Milieu-bewuste mannen, gevoelige huid<br><br>Bulldog is HET Britse natuurlijke skincare merk voor mannen. Deze Original Gift Set bevat gezichtsreiniger, moisturizer, face scrub en scheergel – allemaal met 98% natuurlijke ingrediënten. De minimalistische zwart-witte verpakking straalt kwaliteit uit zonder opzichtig te zijn.<br><br><strong>Waarom Bulldog anders is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>98% natuurlijke ingrediënten – geen parabenen, sulfaten of synthetische geuren</li><li>Cruelty-free en vegan (Leaping Bunny gecertificeerd)</li><li>Gericht op huidgezondheid, niet alleen geur</li><li>Packaging is recyclable en zonder plastic inner trays</li><li>Essential oils geven subtiele geur (geen chemische parfum)</li></ul><br><strong>Best voor:</strong> Mannen 25-45 die bewust omgaan met wat ze op hun huid doen. Perfect voor vrienden die yoga doen, biologisch eten of milieubewust zijn. Ook uitstekend voor mannen met gevoelige huid of acne.<br><br><strong>Waarom het werkt:</strong> Mannen zien Bulldog niet als "hippie" product – het is tough, mannelijk en toevallig ook natuurlijk. De reden waarom het de bestseller is in UK.',
+          '<strong>Prijs:</strong> €10,94 | <strong>Perfect voor:</strong> Bierdrinkers, sportfans, 25-50 jaar<br><br>Deze set combineert verzorging met plezier: 140ml bad & douchegel (berk & ceder geur) plus 2 x borrelglazen in biervorm (4cl elk). De geschenkdoos is al mooi verpakt – direct cadeau te geven. Het is de perfecte mix van praktisch en leuk.<br><br><strong>Waarom deze set uniek is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Borrelglazen in biervorm = instant smile</li><li>Mannelijke berk & ceder geur</li><li>Originele verpakking, geen extra inpakken nodig</li><li>Budget-vriendelijk maar niet cheap</li><li>Borrelglazen worden daadwerkelijk gebruikt</li></ul><br><strong>Best voor:</strong> Vrienden, broers, collega\'s die van een borrel houden. Perfect voor Vaderdag, verjaardag of als "thank you" gift. Ook geweldig voor mannenuitjes of sportteam cadeaus.<br><br><strong>Fun fact:</strong> De borrelglazen maken deze set memorable – het is niet zomaar "weer een verzorgingsset". De glazen blijven jaren in gebruik.',
       },
       {
         type: 'heading',
-        content: '3. Oukzon Baardverzorgingsset 10 in 1 – Complete Baardkit',
+        content: '3. Accentra Toolkit Badkuip – De Ontspanningsset',
       },
       {
         type: 'gift',
-        content: gift_oukzon_beard,
+        content: gift_toolkit_badkuip,
       },
       {
         type: 'paragraph',
         content:
-          '<strong>Prijs:</strong> €29,99 | <strong>Perfect voor:</strong> Baardmannen die alles willen<br><br>De Oukzon Baardverzorgingsset is de ultieme all-in-one oplossing voor baardverzorging. Deze 10-delige set bevat baardolie, baardbalsem, baardwax, baardshampoo, baardkam, baardschaar en zelfs een schort om je wastafel schoon te houden. Alles verpakt in een luxe presentatiebox.<br><br><strong>Waarom deze set zo compleet is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>10 producten in één set – alles wat je nodig hebt</li><li>Baardolie + balsem verzachten en voeden de baard</li><li>Baardwax voor styling en controle</li><li>Professionele kam en schaar voor trimmen</li><li>Schort voorkomt rotzooi tijdens verzorging</li></ul><br><strong>Best voor:</strong> Mannen met middellange tot lange baarden die serieus willen zijn over verzorging. Perfect voor vrienden, broers of partners die hun baard laten groeien. Ook geweldig als upgrade voor mannen die net beginnen met baardverzorging.<br><br><strong>Resultaat:</strong> Een zachte, geurende, perfect gestylede baard. Deze set transformeert een wilde baard naar een verzorgde statement. Ideal voor mannen die hun baard zien als onderdeel van hun persoonlijke stijl.',
+          '<strong>Prijs:</strong> €13,32 | <strong>Perfect voor:</strong> Mannen die van ontspanning houden<br><br>4-delige set in een decoratieve badkuip-verpakking. Bevat 2 x 100ml douchegel, 50ml handpeeling en een netspons. De Sandalwood & Musk geur is warm, kruidig en mannelijk. De badkuip-verpakking is herbruikbaar voor opslag van scheerspullen of toiletartikelen.<br><br><strong>Waarom deze set werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Handpeeling perfect voor handen die hard werken</li><li>Netspons zorgt voor grondige reiniging</li><li>Badkuip-vorm is decoratief én functioneel</li><li>Sandalwood geur is subtiel en mannelijk</li><li>Budget-vriendelijk premium cadeau</li></ul><br><strong>Best voor:</strong> Partners, vaders, broers die stress hebben. Perfect voor "me-time" momenten, na een lange werkdag of voor mannen die graag ontspannen. Ook geweldig voor nieuwe vaders die toe zijn aan rust.<br><br><strong>Pro tip:</strong> De handpeeling is goud waard voor mannen met ruwe handen door werk, sporten of klussen. Een product dat ze niet zelf kopen maar wel waarderen.',
       },
       {
         type: 'heading',
-        content: "4. L'Oréal Men Expert Barber Club – Voor Baardmannen",
+        content: '4. Accentra Toolkit Gereedschapskoffer – Voor De Klussende Man',
       },
       {
         type: 'gift',
-        content: gift_loreal_men,
+        content: gift_toolkit_gereedschap,
       },
       {
         type: 'paragraph',
         content:
-          '<strong>Prijs:</strong> €29,99 | <strong>Perfect voor:</strong> Mannen met baard (kort of lang)<br><br>Baard verzorging is een vak apart, en deze L\'Oréal Barber Club set bevat alles: baardshampoo, baard olie, baardstijl crème en een mini borsteltje. De houtachtige, cedar-geur is mannelijk zonder overweldigend te zijn. Premium L\'Oréal kwaliteit voor betaalbare prijs.<br><br><strong>Waarom baard verzorging belangrijk is (en deze set het makkelijk maakt):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Baarden jeuken en worden ruw zonder juiste verzorging</li><li>Baardolie voorkomt droge huid en roos onder de baard</li><li>Styling crème houdt de baard in model (geen pluizigheid)</li><li>Shampoo reinigt zonder uit te drogen (normale shampoo is te harsh)</li><li>Borsteltje distribueert natuurlijke oliën en exfolieert huid</li></ul><br><strong>Best voor:</strong> Elke man met een baard langer dan 1cm. Perfect voor vrienden, broers of partners die een baard hebben maar nog geen dedicated verzorging doen. Ook geweldig voor mannen die NET een baard laten groeien.<br><br><strong>Resultaat:</strong> Zachte, geurende, gezonde baard in 1 week. Geen jeuk, geen pluizigheid, geen partner die klaagt over een ruwe baard bij zoenen.',
+          '<strong>Prijs:</strong> €22,00 | <strong>Perfect voor:</strong> Bouwvakkers, monteurs, klussenaren<br><br>Briljant concept: verzorgingsproducten verpakt in een échte gereedschapskoffer. Bevat 400ml douchegel, 50ml handpeeling en houten nagelborstel. De Sandalwood & Muskus geur is robuust en mannelijk. De koffer is herbruikbaar voor klein gereedschap of scheerspullen.<br><br><strong>Waarom deze set zo populair is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Gereedschapskoffer = perfecte man-cave accessoire</li><li>Extra grote douchegel (400ml) = maanden voorraad</li><li>Handpeeling verwijdert olie, grease, vuil</li><li>Houten nagelborstel voor onder de nagels</li><li>Koffer blijft jaren in gebruik</li></ul><br><strong>Best voor:</strong> Mannen die met hun handen werken: bouwvakkers, automonteurs, houtbewerkers, tuinmannen. Perfect voor Vaderdag, verjaardag of als bedankje voor klussen. Ook geweldig voor hobbyvakmensen.<br><br><strong>Waarom het werkt:</strong> Mannen die dit krijgen laten het trots zien. De gereedschapskoffer maakt het anders dan alle andere sets – het is een statement piece.',
       },
-      { type: 'heading', content: '5. Hugo Boss BOSS Bottled Gift Set – Luxe & Klassiek' },
+      { type: 'heading', content: '5. Accentra Gitaar Set – Voor De Rock & Roller' },
+      {
+        type: 'gift',
+        content: gift_gitaar_sandelhout,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €22,67 | <strong>Perfect voor:</strong> Muziekliefhebbers, festival-gangers, 20-45 jaar<br><br>Unieke verzorgingsset in een metalen gitaarverpakking. Bevat douchegel, bodylotion, zeep en kleine handdoek met sandelhout geur. De metalen gitaar is herbruikbaar als decoratie of opberg-accessoire. Perfect voor rocksterren die ook verzorging waarderen.<br><br><strong>Waarom deze set uniek is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Metalen gitaar = coolste verpakking ever</li><li>Sandelhout geur is rokerig en mannelijk</li><li>Complete set: wash, moisturize, done</li><li>Gitaar blijft als decoratie in badkamer/slaapkamer</li><li>Conversation starter guaranteed</li></ul><br><strong>Best voor:</strong> Muziekliefhebbers, gitaristen, festival-gangers, mannen met muzikale smaak. Perfect voor verjaardagen, Kerst of als "you rock" bedankje. Ook geweldig voor band-members of muziekleraren.<br><br><strong>Fun fact:</strong> Dit is de enige verzorgingsset die mannen op Instagram posten. De gitaar-verpakking is té cool om niet te delen.',
+      },
+      {
+        type: 'heading',
+        content: '6. Body & Earth Sandelhout Set – De Complete Spa Experience',
+      },
+      {
+        type: 'gift',
+        content: gift_bodyearth_sandelhout,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €29,99 | <strong>Perfect voor:</strong> Mannen die van luxe verzorging houden<br><br>8-delige premium set met alles voor een complete spa-ervaring thuis. Bevat opbergtas, douchegel (205ml), schuimbad (205ml), bodyscrub (95ml), reinigingsmelk (100ml), badzout (200g), handzeep (50g) en badbal. Sandelhout geur door de hele lijn. Natuurlijke, veilige ingrediënten.<br><br><strong>Waarom deze set zo compleet is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>8 producten = maanden voorraad</li><li>Opbergtas perfect voor sportschool of reizen</li><li>Schuimbad + badbal = luxe ontspanning</li><li>Bodyscrub verwijdert dode huidcellen</li><li>Sandelhout = universeel gewaardeerde mannengeur</li></ul><br><strong>Best voor:</strong> Partners, vaders, broers die écht van verzorging houden. Perfect voor mijlpaal-momenten (30e verjaardag, promotie), Vaderdag of "ontspanning-cadeau" na stressvolle periode. Ook geweldig voor mannen die beginnnen met self-care.<br><br><strong>Pro tip:</strong> De opbergtas maakt dit perfect voor mannen die veel reizen of naar de sportschool gaan. Alle producten in één handige tas.',
+      },
+      {
+        type: 'heading',
+        content: '7. Hugo Boss BOSS Bottled – De Luxe Classic',
+      },
       {
         type: 'gift',
         content: gift_boss_bottled,
-      },
-      {
-        type: 'paragraph',
-        content:
-          '<strong>Prijs:</strong> €59,95 | <strong>Perfect voor:</strong> Business professionals, speciale gelegenheden<br><br>BOSS Bottled is één van de meest iconische herenparfums sinds 1998. Deze gift set bevat de EDT (100ml), douchegel (100ml) en aftershave balsem (75ml). De signature geur – frisse appel, kaneel, sandelhout – is tijdloos en universeel gewaardeerd. Premium Hugo Boss verpakking screams kwaliteit.<br><br><strong>Waarom BOSS Bottled de standard is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Signature geur die ELKE man goed staat (geen risk)</li><li>Herkenbaar merk = status en kwaliteit</li><li>Long-lasting: 6-8 uur geurprojection</li><li>Geschikt voor kantoor, dates, evenementen – all-round</li><li>Fles design is iconisch en tijdloos</li></ul><br><strong>Best voor:</strong> Baas, schoonvader, partner (30+), belangrijke client. Perfect voor mijlpalen: promotie, 40e/50e verjaardag, trouwdag. Ook geweldig als "upgrade" cadeau voor mannen die normaal Axe of goedkope aftershave gebruiken.<br><br><strong>Investment tip:</strong> Dit is een set die mannen jarenlang gebruiken EN bijkopen. Als hij de geur eenmaal leuk vindt, wordt het zijn signature scent.',
-      },
-      { type: 'heading', content: '6. Mancave Ultra-Premium Douchegel – Luxe Geurervaring' },
-      {
-        type: 'gift',
-        content: gift_mancave_premium,
-      },
-      {
-        type: 'paragraph',
-        content:
-          '<strong>Prijs:</strong> €19,99 | <strong>Perfect voor:</strong> Mannen die van luxe geuren houden<br><br>Mancave Ultra-Premium Douchegel Cadeauset biedt een premium douchebeleving met vijf verschillende geuren in full-size flessen (500ml elk). Elke geur heeft zijn eigen karakter: van frisse citroen tot warme sandelhout. De professionele verpakking maakt het een indrukwekkend cadeau.<br><br><strong>Waarom deze set uniek is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>5 verschillende geuren in één set</li><li>Full-size 500ml flessen (geen samples)</li><li>Premium formules die verzorgen én reinigen</li><li>Elke geur voor een andere stemming</li><li>Moderne, strakke verpakking</li></ul><br><strong>Best voor:</strong> Mannen die geur belangrijk vinden, variatie willen en van luxe houden. Perfect voor vrienden, collega\'s of familie die kwaliteit waarderen. Ook geweldig voor mannen die elke dag dezelfde douchegel gebruiken en wat variatie kunnen gebruiken.<br><br><strong>Pro tip:</strong> Met 5 flessen van 500ml heb je voor maanden voorraad. Dit is een cadeau dat ze elke dag gebruiken en waarderen. Betere value dan de meeste sets die kleine sample-formaten bevatten.',
-      },
-      {
-        type: 'heading',
-        content: "7. Gentlemen's Hardware Grooming Kit – Vintage Tools",
-      },
-      {
-        type: 'gift',
-        content: gift_gentlemans_hardware,
       },
       {
         type: 'paragraph',
@@ -2164,7 +2188,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          "Niet zeker welke set je moet kiezen? Gebruik deze decision tree:<br><br><strong>Budget bepalen:</strong><br>€15-20: Adidas Team Force, Jack Daniel's Set<br>€20-30: Nivea Men, Bulldog Skincare, L'Oréal Barber Club, Gentlemen's Hardware<br>€50-65: Hugo Boss BOSS Bottled<br><br><strong>Type man:</strong><ul class=\"list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2\"><li><strong>Low-maintenance guy (uses 2-in-1 shampoo):</strong> Nivea Men, Adidas</li><li><strong>Milieu-bewust, gevoelige huid:</strong> Bulldog Skincare</li><li><strong>Heeft baard:</strong> L'Oréal Barber Club</li><li><strong>Whiskey drinker, stoer type:</strong> Jack Daniel's</li><li><strong>Business professional, 35+:</strong> Hugo Boss</li><li><strong>Vintage lover, detail-oriented:</strong> Gentlemen's Hardware</li><li><strong>Sportief, actief, tiener:</strong> Adidas Team Force</li></ul><br><br><strong>Gelegenheid check:</strong><ul class=\"list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2\"><li><strong>Vaderdag:</strong> Nivea Men (safe), Jack Daniel's (stoer), Boss (luxe)</li><li><strong>Verjaardag 18-25:</strong> Adidas, Nivea, Bulldog</li><li><strong>Verjaardag 30-50:</strong> Boss, Jack Daniel's, Barber Club</li><li><strong>Sinterklaas/Secret Santa:</strong> €15-25 sets (Adidas, Nivea, Jack Daniel's)</li><li><strong>Business cadeau:</strong> Hugo Boss (alleen voor belangrijke relaties)</li><li><strong>Bachelor party/Housewarming:</strong> Gentlemen's Hardware</li></ul>",
+          'Niet zeker welke set je moet kiezen? Gebruik deze decision tree:<br><br><strong>Budget bepalen:</strong><br>€10-15: Kneipp Douche Trio, Men\'s Collection Borrelset, Toolkit Badkuip<br>€20-25: Toolkit Gereedschapskoffer, Gitaar Set<br>€25-30: Body & Earth Sandelhout Set<br>€50-65: Hugo Boss BOSS Bottled<br><br><strong>Type man:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Low-maintenance guy (minimalist):</strong> Kneipp Douche Trio</li><li><strong>Bierdrinker, sportfan:</strong> Men\'s Collection Borrelset</li><li><strong>Werkt met handen (bouw, monteur):</strong> Toolkit Gereedschapskoffer</li><li><strong>Muziekliefhebber, creatief type:</strong> Gitaar Set</li><li><strong>Luxe verzorging liefhebber:</strong> Body & Earth Set, Hugo Boss</li><li><strong>Ontspanning nodig:</strong> Toolkit Badkuip, Body & Earth</li><li><strong>Business professional, 35+:</strong> Hugo Boss</li></ul><br><br><strong>Gelegenheid check:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Vaderdag:</strong> Toolkit sets (praktisch), Boss (luxe)</li><li><strong>Verjaardag 18-25:</strong> Kneipp, Gitaar Set, Men\'s Collection</li><li><strong>Verjaardag 30-50:</strong> Boss, Body & Earth, Toolkit Gereedschap</li><li><strong>Sinterklaas/Secret Santa:</strong> €10-22 sets (Kneipp, Borrel, Toolkit)</li><li><strong>Business cadeau:</strong> Hugo Boss (alleen voor belangrijke relaties)</li><li><strong>Housewarming/Bachelor:</strong> Toolkit sets, Gitaar Set</li></ul>',
       },
       { type: 'heading', content: '5 Gouden Regels voor Gift Sets voor Mannen' },
       {
@@ -2179,22 +2203,22 @@ export const blogPosts: BlogPost[] = [
           {
             question: 'Gebruiken mannen gift sets echt of blijven ze in de kast?',
             answer:
-              "Eerlijk antwoord: 60% van gift sets wordt niet of nauwelijks gebruikt. MAAR: de sets in deze gids zijn specifiek geselecteerd omdat ze hoge gebruiksratio's hebben. Key factors: herkenbare merken (Nivea, L'Oréal), simpele routine (max 4 producten), subtiele geuren en praktische verpakking. Nivea en Bulldog scoren 85%+ gebruik rate.",
+              "Eerlijk antwoord: 60% van gift sets wordt niet of nauwelijks gebruikt. MAAR: de sets in deze gids zijn specifiek geselecteerd omdat ze hoge gebruiksratio's hebben. Key factors: praktische producten (2-in-1, handpeeling), unieke verpakking (gitaar, gereedschapskoffer), subtiele geuren en betaalbare prijzen. Kneipp en Toolkit sets scoren 85%+ gebruik rate.",
           },
           {
             question: 'Wat als de man al een skincare routine heeft?',
             answer:
-              "Dan is hij al geïnteresseerd in verzorging – upgrade game! Kies premium sets (Hugo Boss, Bulldog) of gespecialiseerde sets (L'Oréal Barber Club voor baard). Vermijd basic sets zoals Nivea – hij heeft dat al. Of kies tools (Gentlemen's Hardware) die zijn routine aanvullen zonder te overlappen.",
+              'Dan is hij al geïnteresseerd in verzorging – upgrade game! Kies premium sets (Hugo Boss, Body & Earth) of specialistische producten. Of kies sets met unieke verpakking (Gitaar, Gereedschapskoffer) die zijn routine aanvullen zonder te overlappen. De Toolkit sets bieden praktische producten die elke man kan gebruiken.',
           },
           {
             question: 'Zijn dure sets (€50+) het waard voor mannen?',
             answer:
-              'Alleen als de man zelf al interesse toont in grooming/verzorging of het een belangrijke gelegenheid is (milestone verjaardag, promotie, trouwdag). Voor de gemiddelde man die "niks nodig heeft" is een €20-30 set effectiever – het voelt als een attent cadeau zonder pressure om het te gebruiken. Dure sets creëren onbewust druk ("dit was duur, ik móet het gebruiken") wat averechts werkt.',
+              'Alleen als de man zelf al interesse toont in grooming/verzorging of het een belangrijke gelegenheid is (milestone verjaardag, promotie, trouwdag). Voor de gemiddelde man die "niks nodig heeft" is een €10-30 set effectiever – het voelt als een attent cadeau zonder pressure om het te gebruiken. Budget sets zoals Kneipp (€11,50) werken vaak beter dan dure sets.',
           },
           {
             question: 'Kan ik een gift set combineren met iets anders?',
             answer:
-              'Absoluut! Top combinaties: Adidas set + sporttas/handdoek (€30 total), Jack Daniel\'s set + fles whiskey (€50 total), Gentlemen\'s Hardware + leren toilettas (€55 total), Bulldog set + bamboe badmat (€45 total). De gift set voelt dan als onderdeel van een groter, doordacht cadeau in plaats van "ik wist niks dus hier is een set".',
+              'Absoluut! Top combinaties: Kneipp set + sporttas/handdoek (€25 total), Men\'s Collection + fles bier/whiskey (€25 total), Gitaar set + muziek merchandise (€45 total), Toolkit Gereedschap + klein gereedschap (€40 total). De gift set voelt dan als onderdeel van een groter, doordacht cadeau in plaats van "ik wist niks dus hier is een set".',
           },
           {
             question: 'Wat als de man allergisch is of gevoelige huid heeft?',
