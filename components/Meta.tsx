@@ -6,6 +6,7 @@ interface MetaProps {
   description: string
   canonical?: string
   ogImage?: string
+  pinterestImage?: string // Pinterest-specific image (with text overlay)
   type?: 'website' | 'article'
   // Pinterest Rich Pins - Article metadata
   author?: string
@@ -20,6 +21,7 @@ export const Meta: React.FC<MetaProps> = ({
   description,
   canonical,
   ogImage,
+  pinterestImage,
   type = 'website',
   author,
   publishedDate,
@@ -127,14 +129,32 @@ export const Meta: React.FC<MetaProps> = ({
       twitterImage.setAttribute('content', ogImage)
     }
 
-    // Pinterest-specific meta tag
+    // Pinterest-specific meta tags
     const pinterestDesc = ensureTag("meta[name='pinterest:description']", () => {
       const m = document.createElement('meta')
       m.setAttribute('name', 'pinterest:description')
       return m
     })
     pinterestDesc.setAttribute('content', description)
-  }, [title, description, canonical, ogImage, type, author, publishedDate, category, keywords])
+
+    // Pinterest-specific image (if provided, otherwise falls back to ogImage)
+    if (pinterestImage || ogImage) {
+      const pinterestImg = ensureTag("meta[property='pinterest:image']", () => {
+        const m = document.createElement('meta')
+        m.setAttribute('property', 'pinterest:image')
+        return m
+      })
+      pinterestImg.setAttribute('content', pinterestImage || ogImage || '')
+    }
+
+    // Enable Pinterest Rich Pins
+    const richPin = ensureTag("meta[name='pinterest-rich-pin']", () => {
+      const m = document.createElement('meta')
+      m.setAttribute('name', 'pinterest-rich-pin')
+      return m
+    })
+    richPin.setAttribute('content', 'true')
+  }, [title, description, canonical, ogImage, pinterestImage, type, author, publishedDate, category, keywords])
 
   return null // Head side-effects only
 }

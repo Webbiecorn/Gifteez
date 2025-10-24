@@ -2259,6 +2259,7 @@ export const blogPosts: BlogPost[] = [
       ogDescription:
         'Nivea, Hugo Boss, Bulldog en meer – ontdek welke gift sets mannen daadwerkelijk waarderen en gebruiken. Van €14,99 tot €59,95.',
       ogImage: 'https://m.media-amazon.com/images/I/71jY+DeHJKL._AC_SL1500_.jpg',
+      pinterestImage: 'https://gifteez.nl/images/blog-men-giftsets-pinterest.jpg', // Pinterest version with text overlay
       ogType: 'article',
       twitterCard: 'summary_large_image',
       twitterTitle: 'Gift Sets voor Mannen: 7 Toppers die Ze Niet in de Kast Laten',

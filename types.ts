@@ -130,6 +130,7 @@ export interface BlogSeoMetadata {
   twitterTitle?: string
   twitterDescription?: string
   twitterImage?: string
+  pinterestImage?: string // Pinterest-specific image (usually with text overlay)
   canonicalUrl?: string
 }
 

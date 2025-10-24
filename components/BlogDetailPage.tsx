@@ -744,6 +744,13 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
         ogImage={
           post.imageUrl.startsWith('http') ? post.imageUrl : `https://gifteez.nl${post.imageUrl}`
         }
+        pinterestImage={
+          post.seo?.pinterestImage
+            ? post.seo.pinterestImage.startsWith('http')
+              ? post.seo.pinterestImage
+              : `https://gifteez.nl${post.seo.pinterestImage}`
+            : undefined
+        }
         type="article"
         author={post.author?.name || 'Gifteez Redactie'}
         publishedDate={post.publishedDate}
