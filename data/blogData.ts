@@ -2304,86 +2304,102 @@ export const blogPosts: BlogPost[] = [
     ],
   },
   {
-    slug: 'cadeautrends-2025',
-    title: 'Cadeautrends 2025: Dit Wil Iedereen Ontvangen',
+    slug: 'sinterklaas-cadeaus-2025-originele-ideeen',
+    title: 'Sinterklaas Cadeaus 2025: 15 Originele Ideeën Die Écht Blij Maken',
     excerpt:
-      'Ontdek de hotste cadeautrends van 2025. Van duurzame self-care tot culinaire verwennerij en slimme gadgets — dit zijn de cadeaus waar iedereen blij van wordt.',
+      'Van tech gadgets tot wellness en culinaire verwennerij — ontdek de populairste Sinterklaas cadeaus van 2025. Voor elk budget en elke persoonlijkheid.',
     publishedDate: '2025-10-25',
     author: { name: 'Kevin van Gifteez', avatarUrl: 'https://i.pravatar.cc/150?u=kevin' },
-    category: 'Trends',
-    imageUrl: '/images/blog-cadeautrends-2025-header.png',
+    category: 'Sinterklaas',
+    imageUrl: '/images/blog-sinterklaas-2025-header.jpg',
     content: [
       {
         type: 'paragraph',
         content:
-          'Cadeaus in 2025 draaien om aandacht, duurzaamheid en beleving. Geen snelle impulsaankopen, maar slimme keuzes die bij de ontvanger passen. In deze gids vind je de belangrijkste trends met concrete ideeën — van eco-vriendelijke must-haves tot relaxte self-care en culinaire verwennerij.',
+          "Sinterklaas 2025 staat voor de deur en de zoektocht naar het perfecte cadeau begint. Of je nu zoekt voor je partner, ouders, vrienden of collega's — in deze gids vind je 15 originele cadeau-ideeën verdeeld over verschillende categorieën. Van betaalbare attentie tot luxe verwennerij.",
       },
 
+      { type: 'heading', content: '🎯 Tech & Gadgets: Voor de Technologie Liefhebber' },
       {
-        type: 'heading',
-        content: 'Trend 1 — Duurzame cadeaus (lang plezier, kleine voetafdruk)',
+        type: 'paragraph',
+        content:
+          'Tech cadeaus blijven een hit. Denk aan slimme speakers, draadloze oordopjes of een fitness tracker. Deze gadgets zijn praktisch én leuk om te krijgen.',
       },
       {
         type: 'paragraph',
         content:
-          'Duurzaamheid is niet langer een niche. Kies voor herbruikbaar (waterflessen, koffiebekers), gerecyclede materialen of fair-trade pakketten. Denk aan een zero-waste starterkit of een luxe theeset met biologische blends.',
-      },
-      {
-        type: 'paragraph',
-        content:
-          'Affiliate ideeën: herbruikbare waterfles of thermos • fair-trade koffie/thee • zero-waste starterkit. Winkels: Amazon, Coolblue, Shop Like You Give a Damn.',
+          '• **Smartwatch of Fitness Tracker** (€50-200) — Perfect voor wie gezonder wil leven. Volg stappen, slaap en hartslag. [AMAZON_LINK_SMARTWATCH]\n\n• **Draadloze Oordopjes** (€30-150) — Noise cancelling voor onderweg of tijdens het sporten. Topmerken zoals Sony en JBL hebben modellen voor elk budget. [AMAZON_LINK_OORDOPJES]\n\n• **Slimme Speaker** (€40-100) — Google Nest of Amazon Echo voor muziek, weer en smart home bediening. [AMAZON_LINK_SPEAKER]\n\n• **Powerbank met Snelladen** (€25-60) — Essentieel voor wie veel onderweg is. Kies minimaal 20.000 mAh. [AMAZON_LINK_POWERBANK]',
       },
 
-      { type: 'heading', content: 'Trend 2 — Wellness & self-care (geef ontspanning cadeau)' },
+      { type: 'heading', content: '🧘 Wellness & Self-Care: Ontspanning Cadeau Geven' },
       {
         type: 'paragraph',
         content:
-          "Zelfzorg blijft groot. Populair zijn spa-sets, aromadiffusers met etherische oliën, massagekussens en zachte handdoeken. Perfect voor drukke agenda's en thuiswerkers.",
+          'Na een druk jaar is ontspanning goud waard. Self-care cadeaus tonen dat je écht om iemand geeft.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '• **Luxe Spa Set** (€30-80) — Badolie, body scrub, geurkaarsen en zachte handdoeken in een mooi pakket. [AMAZON_LINK_SPASET]\n\n• **Aromatherapie Diffuser** (€25-60) — Met etherische oliën voor rust en een frisse geur thuis. [AMAZON_LINK_DIFFUSER]\n\n• **Massage Apparaat** (€40-120) — Nekmassager of voetmassage apparaat tegen spanning en stress. [AMAZON_LINK_MASSAGE]\n\n• **Gewichtsdeken** (€50-120) — Vermindert stress en verbetert slaapkwaliteit. Kies 10% van lichaamsgewicht. [AMAZON_LINK_GEWICHTSDEKEN]',
       },
 
+      { type: 'heading', content: '☕ Culinair Genieten: Voor de Fijnproever' },
       {
-        type: 'heading',
-        content: 'Trend 3 — Culinaire cadeaus (kwaliteit boven kwantiteit)',
+        type: 'paragraph',
+        content:
+          'Lekker eten en drinken blijft altijd een succes. Van koffieliefhebbers tot kookfanaten — deze cadeaus scoren gegarandeerd.',
       },
       {
         type: 'paragraph',
         content:
-          'Gourmet blijft een schot in de roos: denk aan een mooie kaasplank met accessoires, luxe chocoladebox of een koffiespecialiteiten-pakket. Combineer met een handig keukengadget voor extra waarde.',
-      },
-
-      { type: 'heading', content: 'Trend 4 — Seizoens- en thema-cadeaus' },
-      {
-        type: 'paragraph',
-        content:
-          "Maak het moment leidend: winterse Sinterklaas/Kerst-pakketten, een zomerpicknick-set of themapakketten voor hobby's (wijn & kaas, tuinieren, fotografie).",
+          "• **Luxe Koffie Cadeau Set** (€30-70) — Specialty koffie, Frans pers of mooie koffiemok. Voor de echte koffie connoisseur. [AMAZON_LINK_KOFFIE]\n\n• **Chocolade Proefpakket** (€25-60) — Premium chocolade van verschillende landen en smaken. Tony's Chocolonely of Belgische pralines. [AMAZON_LINK_CHOCOLADE]\n\n• **Kaasplank met Accessoires** (€35-80) — Marmeren plank, kaasmessen en misschien een selectie kazen. [AMAZON_LINK_KAASPLANK]\n\n• **Cocktail Shaker Set** (€30-70) — Compleet met receptenboek voor thuisbar liefhebbers. [AMAZON_LINK_COCKTAILSET]",
       },
 
-      { type: 'heading', content: 'Snelle start: 6 concrete cadeau-ideeën' },
+      { type: 'heading', content: '📚 Creatief & Hobby: Persoonlijke Ontwikkeling' },
       {
         type: 'paragraph',
         content:
-          '1) Herbruikbare waterfles met isolatie • 2) Zero-waste starterkit (wraps, produce bags) • 3) Spa-pakket met geurkaarsen • 4) Aromadiffuser + etherische olie • 5) Kaasplank met messen • 6) Luxe chocoladebox.',
+          'Steun iemands passie met een cadeau dat past bij hun hobby. Van lezen tot tekenen, tuinieren tot fotografie.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '• **E-Reader** (€100-200) — Kindle of Kobo met duizenden boeken in je zak. Ideaal voor boekenliefhebbers. [AMAZON_LINK_EREADER]\n\n• **Premium Notitieboek Set** (€20-50) — Moleskine of Leuchtturm1917 voor journaling of schetsen. [AMAZON_LINK_NOTITIEBOEK]\n\n• **Creatieve Hobby Kit** (€30-80) — Aquarel set, brei pakket, of plant starter kit. Kies wat bij hun interesse past. [AMAZON_LINK_HOBBYKIT]',
       },
 
-      { type: 'heading', content: 'Waar koop je ze? (affiliate-vriendelijk)' },
+      { type: 'heading', content: '💡 Tips Voor Het Perfecte Sinterklaas Cadeau' },
       {
         type: 'paragraph',
         content:
-          'Amazon: herbruikbare flessen, spa-sets, chocolade. Coolblue: diffusers, yogamatten, keukenaccessoires. Shop Like You Give a Damn: duurzame en fair-trade opties. Voeg in je component de juiste affiliate-URL\'s toe met rel="sponsored noopener".',
+          '**1. Ken je budget** — Stel vooraf een realistisch bedrag vast. Tussen €25-75 zit je meestal goed voor Sinterklaas.\n\n**2. Denk aan persoonlijkheid** — Sportief? Kies fitness gear. Huismus? Ga voor wellness. Tech-savvy? Gadgets zijn perfect.\n\n**3. Bestudeer wensen** — Luister naar hints in gesprekken of check social media voor inspiratie.\n\n**4. Verpakking telt mee** — Een mooi ingepakt cadeau maakt meer indruk. Overweeg cadeaupapier op thema.\n\n**5. Bestel op tijd** — Sinterklaas is 5 december. Bestel voor 25 november om leverproblemen te voorkomen.',
       },
 
-      { type: 'heading', content: 'Tip: laat onze cadeau-coach meedenken' },
+      { type: 'heading', content: '🎁 Budget Indeling: Wat Kun Je Verwachten?' },
       {
         type: 'paragraph',
         content:
-          'Nog geen keuze kunnen maken? Bezoek /sinterklaas voor seizoensinspiratie of gebruik de cadeau-coach op /quiz: drie korte vragen en je krijgt direct passende suggesties.',
+          '**Budget (€15-30):** Kleine attentie zoals geurkaarsen, sokken set, leuke mok of boek.\n\n**Mid-range (€30-75):** Draadloze oordopjes, spa set, diffuser, koffie cadeau pakket.\n\n**Premium (€75-150):** Smartwatch, massage apparaat, luxe kaasplank, e-reader.\n\n**Luxe (€150+):** High-end tech, designer items, complete wellness pakket.',
       },
 
-      { type: 'heading', content: 'Conclusie' },
+      { type: 'heading', content: '📦 Waar Koop Je Deze Cadeaus?' },
       {
         type: 'paragraph',
         content:
-          'Kies in 2025 voor cadeaus die duurzaam zijn, ontspanning bieden of smaakvol verwennen — en geef er een persoonlijke twist aan. Zo voelt elk cadeau doordacht én bijzonder.',
+          'Alle bovenstaande cadeaus zijn beschikbaar via **Amazon.nl** met snelle levering en betrouwbare klantenservice. Klik op de links bij elk product om direct naar de beste opties te gaan. Let op kortingen en deals in november — Black Friday valt vaak samen met de Sinterklaas periode!',
+      },
+
+      { type: 'heading', content: '✨ Nog Twijfels? Gebruik Onze Cadeau Coach' },
+      {
+        type: 'paragraph',
+        content:
+          'Weet je nog steeds niet wat te kiezen? Probeer onze **Cadeau Coach** op [gifteez.nl/quiz](/quiz). Beantwoord 3 snelle vragen over de ontvanger en krijg direct gepersonaliseerde suggesties. Of gebruik de **AI GiftFinder** voor nog meer inspiratie op basis van persoonlijkheid en budget.',
+      },
+
+      { type: 'heading', content: '🎅 Conclusie: Sinterklaas 2025 Wordt Onvergetelijk' },
+      {
+        type: 'paragraph',
+        content:
+          'Met deze 15 cadeau-ideeën heb je voor elk type persoon en budget een passend Sinterklaas cadeau. Van praktische tech tot ontspannende wellness en smakelijke culinaire verwennerij — het perfecte cadeau is binnen handbereik. Bestel op tijd, verpak met zorg, en maak dit jaar onvergetelijk!',
       },
     ],
   },
