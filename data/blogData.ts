@@ -678,6 +678,232 @@ const gift_slygad_placemat_green: Gift = {
     'Herbruikt fruitafval en gerecyclede vezels en wordt geleverd in een plasticvrije verpakking.',
 }
 
+// Sinterklaas 2025 Gifts
+const gift_sinterklaas_smartwatch: Gift = {
+  productName: 'Smartwatch Fitness Tracker met Telefoonfunctie',
+  description:
+    'Perfect voor wie gezonder wil leven. Volg stappen, slaap en hartslag met IP68 waterdicht horloge. Inclusief telefoonfunctie en bloeddrukmeting.',
+  priceRange: '€64,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Telefoonfunctie-Fitnesstracker-Bloeddrukmeting-IP68-Waterdicht-Activiteitstracker/dp/B0CMCJP588?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=EVOOOIG19654&dib=eyJ2IjoiMSJ9.TI6x2uL3Y0gsMOJlLgEnyIYjrzJaxKwbuWwqZS1X8t3SnI46drpDa57SKUPRaWiLWwQYQ_b1UHFlacmImotucpBHPBci1uwS741cCAvZXAXZze5Gd7ezbIIwRCz8Pl8i2myQ23Ioa9A2rnyAC-b0RcEY-NV72_ehR8Wmxg944TpyFuyJlnrCc6flDBrEXiq4lmC609UqbsruxKKBnHjvpMvTQXv_3b1dcAem9Lqq_zhFW9Q1B-shFVQv9eEamXa4XXkpIQgkNb_KxB_FlXwbxRVoLirF8e7xUazNKwr1UuE.LOtbDycUp2BRBkgirB-yCPFG8Xe7EQCXM7Zp-ci_upU&dib_tag=se&keywords=Smartwatch%2Bof%2BFitness%2BTracker&qid=1761417661&sprefix=smartwatch%2Bof%2Bfitness%2Btracker%2Caps%2C90&sr=8-23-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=0b0190cc57a8439ffd765ddb718bac20&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/816qetpdViL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_oordopjes: Gift = {
+  productName: 'HUAWEI FreeBuds 6i Draadloze Oordopjes',
+  description:
+    'Noise cancelling voor onderweg. Premium geluidskwaliteit met dual-driver technologie en intelligent dynamic ANC 3.0.',
+  priceRange: '€139,86',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/HUAWEI-Ooromsluitend-draagcomfort-Dual-driver-Verbinding/dp/B0F2TD7MBZ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&content-id=amzn1.sym.26978089-8dca-4887-9d0c-70fdc84d83da%3Aamzn1.sym.26978089-8dca-4887-9d0c-70fdc84d83da&crid=E0JGMFQ878PL&cv_ct_cx=Draadloze%2BOordopjes%2B%28%E2%82%AC30-150%29&keywords=Draadloze%2BOordopjes%2B%28%E2%82%AC30-150%29&pd_rd_i=B0F2TD7MBZ&pd_rd_r=0de7b84a-f735-4024-a025-849518c3ec21&pd_rd_w=DiSME&pd_rd_wg=oQUId&pf_rd_p=26978089-8dca-4887-9d0c-70fdc84d83da&pf_rd_r=Y2RHN0E1CH8DZK7BKQCF&qid=1761417955&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sprefix=draadloze%2Boordopjes%2B30-150%2B%2Caps%2C162&sr=1-1-07652b71-81e3-41f8-9097-e46726928fb7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=53ad9181479e8ff14296c9dbb3a1649a&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/51dHwi38shL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_echo: Gift = {
+  productName: 'Amazon Echo Dot 5e Generatie',
+  description:
+    'Compacte smart speaker met Alexa voor muziek, weer en smart home bediening. Verbeterde audio en temperatuursensor.',
+  priceRange: '€64,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/amazon-echo-dot-5e-generatie-2022-release-smartspeaker-met-wifi-bluetooth-en-alexa-charcoal/dp/B09B8X9RGM?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=PD9QQEOAI20E&dib=eyJ2IjoiMSJ9.1jV0IWOsEv5fyB632CujUR4MmpZbFKcEZQ8lQm7Ehu1W14c9zn1jwGXUA_Chh398NmNOoyLjWRj8xH-8iE0pFxTBBCdZ1OAnxZaqg9JZwDcu69Ou25PvoxIFg9Jay4mhYVwJaDC6xbeXYZqxduRalCmF9CvbSivxYjOdIRC_32o4DYPPGPLdY-K4R57dj5DkBk2BsWV7ilHvf9m3nHxEs6I4V5tr-g0I1r5_Xd8poHMXgVaIisjbxcueCraDiHh75Y8vdcWLJ3tbc3u4ricCuO7zYj-oz9PuB9bLQVNeYyI.RhcgFlBvQ_WmV_dJFinJUFCm2Yu5RETHtKTrAz1_jgI&dib_tag=se&keywords=Slimme%2BSpeaker%2B%28&qid=1761418273&sprefix=slimme%2Bspeaker%2B%2Caps%2C167&sr=8-6&th=1&linkCode=ll1&tag=gifteez77-21&linkId=59b6a19f503203b3dae2101583786fd2&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71kWHAL7pnL._AC_SL1000_.jpg',
+}
+
+const gift_sinterklaas_powerbank: Gift = {
+  productName: 'NOBIS Powerbank 26800mAh Snelladen',
+  description:
+    'Krachtige 26800mAh powerbank. Laad meerdere apparaten tegelijk op met USB-C en dubbele USB-A poorten. Inclusief LED display.',
+  priceRange: '€32,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/NOBIS-Powerbank-Draagbare-Snelladen-Compatibel/dp/B0D63H6KKV?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3MS7EIHVNCHGO&dib=eyJ2IjoiMSJ9._N6JUc02my6K40SVzoka_bYnOuNIU3WtbPbcS7kLjWK670AadozQuLO68Mx1T2wUZzQG0Gk8ZnKFpktWsultAkkRMDpV0BIspRFmcmeWHkV7df6gbLDVCOUwKeuvEThO7msk_eQ_vhjqOUT1f14pmCEIKZvaSOsYl4w9tW8NmpvSfytavKZTtMVkuSRVdRfkh73GJaR4DURHGF6Ncv9tQ-q3n0OMKwZ3uvb0JYwJRf1biaoCQWRCrp1rAoJeV-W8S4uxB3vrY4i70P1JPAXDMGaGTggFtEKJXk33zIxpocc.hYNnkdAkOw0a8qL662kzGwG8AbWE3yKvdOQoo8mzUeM&dib_tag=se&keywords=powerbank%2Bmet%2Bsnellader&qid=1761418506&sprefix=powerbank%2Bmet%2Bsnelladen%2B%2Caps%2C135&sr=8-13&th=1&linkCode=ll1&tag=gifteez77-21&linkId=36e88a130b2a506064ffd204cabebcc2&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61D6xQQzsDL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_spa: Gift = {
+  productName: 'Luxe Spa Gift Set voor Vrouwen',
+  description:
+    'Compleet wellness pakket met badolie, body scrub en geurkaarsen voor ultieme ontspanning. Perfect voor een spa-dag thuis.',
+  priceRange: '€62,22',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Zelfzorgset-Voor-Vrouwen-Ontspanning-Echtgenote/dp/B0FBGJH28X?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1XUQ2EVRVZ4LF&dib=eyJ2IjoiMSJ9.GZoVOA29P2iw1Tlnr4GDihYA4GjnHYCow7_8_SjlLvUPBwRstF5khIy5JAHh71Z2GAZVq3oC6Dr8ov24C0v-Z_jEVFq-tjkYxycLOLccuRj0r8UAJw-IN6TQp4ux8GFtMep0qpMqnMGW8UG9GayONS_cjp08l16vBstz_rRn70e0xFyPw0Mh_PwoTq9XZWxhp0AIimbJMAWuHLefZkb8Kt-Sr2_gR84VVwkWraJU6QWA4NR6D8d53mVouYAs0U3OY4f1K49Sk6_6jKdTOoT5_oiN_iTB60YW2tny0U2PG5Q.NkdaIZ4isAuzBza9OcGBMDtii31NaKcoviHVDNc1hL8&dib_tag=se&keywords=Luxe+Spa+Set&qid=1761418816&sprefix=luxe+spa+set%2Caps%2C158&sr=8-51-spons&xpid=kZMbOLA_agIYv&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGZfbmV4dA&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=2f4ce1c11ea19e28e8cb006ec822cf6f&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/81bFtLIFjcL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_diffuser: Gift = {
+  productName: 'Aromatherapie Diffuser met Afstandsbediening',
+  description:
+    'Luchtbevochtiger met etherische oliën. 7 kleuren LED en timer functie. 500ml capaciteit voor grote kamers.',
+  priceRange: '€27,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/ZOVHYYA-Luchtbevochtiger-Afstandsbediening-Automatische-Uitschakeling/dp/B0CSYY5GXR?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=234VBCG09QJCP&dib=eyJ2IjoiMSJ9.HIGeuxq_twxDW4v7nqDke7ZgaKHY3hJXJBkQJWuwz-3X9QU8UZ3-rwLUMM31i3EhGcoI4p-um2RDY7CKogkB5CO7UMsqqBoNDE2a766P8Hx4FxY3IeMnaqmYT5WmKStuP2a7PGK0Ev9ZENAJrbgELI-yJL-WMj_yNG_qFPXlNc8Apz9pRRqx-BnlG5y_EiVXeBsqDb2s0T0JI5KcuWLHrRvWnb9cZuQE31kmckvafIpwdUrJT_BixYbpldo9j1Y6VY-feaHpECkmoUlUA3DrkYrl88o_rHLsgX5_So0vFWo.x0GHphTDrheQC8s6VCfrWXx4CeaB7dpnc4eZFh-tZg0&dib_tag=se&keywords=Diffuser%2Bmet%2Betherische%2Boli%C3%ABn&qid=1761418955&sprefix=diffuser%2Bmet%2Betherische%2Boli%C3%ABn%2Caps%2C98&sr=8-7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f8fcb484f93df677699365ca15080418&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71T8xeCZDcL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_massage: Gift = {
+  productName: 'Nekmassageapparaat Shiatsu 2025',
+  description:
+    'Draadloos nekmassage apparaat met warmtefunctie. 6 massagemodi tegen spanning. Geschikt voor nek, schouders en rug.',
+  priceRange: '€79,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Nekmassageapparaat-2025-Shiatsu-massage-grafeenverwarming-draagstijlen/dp/B0F53MKHBT?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3FWPHEOJSFWEI&dib=eyJ2IjoiMSJ9.Jg1_kQsjjdQ7fDSMTAoAXjh1wsSiWCktqKKy_3FMRYOtGFawmqPd7tolbNllHl7xB_Cm02EErdSInsVzR-Qpv56i8jwi3NsM0fFkBg9roKnocl6faN4i_S19j47wy3MpJT-9q1hi7WOkpNR-NxboyI06Qd7kRYSjSjYvC-OiVWyTlYEsin3oP6lhv-B4I-LoPgmFIV7B2ViUuCHpPhVHJtHe6zfethv2hipUnjmeQ6W7ec_Mwlx0v9WdaYWCB9sMvCUlh_7yOOfLR-VxwNrh3rttsdc2fnejSz4ROUSw5KM.yow9Nzzs9pZm8eNzQgMiX4Jdxj2fQxI7QrDmeHY0CVw&dib_tag=se&keywords=Massage%2BApparaat&qid=1761419143&sprefix=massage%2Bapparaat%2B%2Caps%2C159&sr=8-27&th=1&linkCode=ll1&tag=gifteez77-21&linkId=bdf5193e8522ea73424a71d5727b1853&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/51ZVXF5wE0L._AC_SL1200_.jpg',
+}
+
+const gift_sinterklaas_deken: Gift = {
+  productName: 'Polar Night Verzwaringsdeken 7kg',
+  description:
+    'Therapeutische gewichtsdeken 7kg. Vermindert stress en bevordert diepe slaap. Hypoallergeen en ademend.',
+  priceRange: '€74,90',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Polar-Night-verzwaringsdeken-voor-volwassenen/dp/B08ZSSCVG7?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2BNOYA0089QWE&dib=eyJ2IjoiMSJ9.COdKxLAokkVRY37v54qwxlw06aeNpwosfd7oxieMBse4zB49m7GE3bWG1JwNkzWdFYLyEJ85t2Z183fMdBYqYMrYQnp-WELJX7zI_qCEKGWQ2ag8SC994tKlHnnZV5WfLA8GWi7G-WPGFKL8XLZygcSuuzOYN9kJBZYKpO53dwWYy_y9OacXAWeUkGers0zZucGOiZ-es7FBSULwrhrcs3lYC25VX_T4tT3ke8f5vANWQbkI8UaX6kvDwKb0bTqwixubnNIcyTc8YIGbbYKaa23-ruygSY0fdviBeC9qvm0.hS4aZUpPH9XP__iop1jN_CxOXnqqbTuTQcA7df0iCjQ&dib_tag=se&keywords=zware%2Bdeken%2Bvoor%2Bbeter%2Bslaap&qid=1761419333&sprefix=zware%2Bdeken%2Bvoor%2Bbetere%2Bslaap%2Caps%2C143&sr=8-8&th=1&linkCode=ll1&tag=gifteez77-21&linkId=e9313e1bcd2dd01430fc931157c809eb&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/81A4JZkRUpL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_koffie: Gift = {
+  productName: 'Koffie Probeerset 6 Smaken Versgebrand',
+  description:
+    '6 verschillende koffiesoorten versgebrand. Specialty koffie voor de echte liefhebber. Ideaal om verschillende smaken te ontdekken.',
+  priceRange: '€54,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Koffiecadeau-probeerset-geroosterd-koffiebonen-volautomaat/dp/B093DLP5MS?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=471KQUSSLVOM&dib=eyJ2IjoiMSJ9.uE6d5FqEuwCaTG_Y3ac94rrjfOZjJcwNIG_IsfXigydjTuqCleajJ26b_B8yo2vcnxqu1_3tjLq9DI7W57o0R_m59_nvHnV2cvM6XSLoyKK89pLHdIjsfqm-JvJbz9ma2neVcYYwzVK4HRfK7SWw_w.cceMCdmgxNOWfP8y1bAhUFhvHie_gz75E2-tJ0GulzM&dib_tag=se&keywords=specialty+koffieman+s+pers+gift&qid=1761419487&sprefix=specialty+koffieman+frans+pers+gift%2Caps%2C59&sr=8-7&linkCode=ll1&tag=gifteez77-21&linkId=46bd415088db236bc00fed70438756e7&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/91vRlVmXmIL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_chocolade: Gift = {
+  productName: 'Anthon Berg Chocolade Liqueur Collectie',
+  description:
+    'Premium Deense chocolade met likeur vulling. Luxe proefpakket met verschillende smaken. Perfect voor fijnproevers.',
+  priceRange: '€39,81',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Anthon-Berg-Chocolade-Liquor-Chocolates/dp/B09HT6L72D?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1LBO4XQI5M5CH&dib=eyJ2IjoiMSJ9.4WQh2soq0fx0bCI8sAwxKzMkgjTFr22s83DGWO7ueuVmst_wZTrL9vvFrPqCwMLNbDkrtbMT_9g2vv2F97ZNBOtCMKsVxzzmavSYLZwZa394iwKYKvZQAx27QF8foqzo_RqAE0Y0HlhuO6E2U9cddnHi3yDZD9y7NcQb5kQAvzzA9E_mHXJND9o1MmQmBg9y-TfYTWad-iSrpGLJTTyq3A1r9arW_V7tZMI1GwbRqRABKZq_vgImVL0t46_jBu91hat5utO4o7w7m27Yvc0WU9L1PSqgd48BCPZ8UxyjzzQ.pkevTzlkUvQapJNffksC4h6MS0xeOYaFaPWDUX_1IRQ&dib_tag=se&keywords=Premium+chocolade&qid=1761419626&sprefix=premium+chocolade%2Caps%2C98&sr=8-6&linkCode=ll1&tag=gifteez77-21&linkId=af9fbf387d5464eba5479fc5432de08a&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/715WpBqIdyL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_kaasplank: Gift = {
+  productName: 'StarBlue Kaasplankenset Bamboe',
+  description:
+    'Bamboe kaasplank met 4 messen en extra snijplanken. Perfect voor borrel liefhebbers. Inclusief opbergvak voor accessoires.',
+  priceRange: '€26,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/StarBlue-Kaasplankenset-Kaassnijplank-housewarming-Verjaardagscadeaus/dp/B08Q2WTJQX?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2LFXG54MNZ44Q&dib=eyJ2IjoiMSJ9.DGrZYMC_Ya7h-f5WE9clFplnpZIK9yp4Q17q1Er-cPTyWOxJQvJF-2Lc5JxSOgDgUisz9zgWqx8mQYefKJW4GzkMLPxkZ-urRIIA8Jp8KwIFXS6mmTal48QoA-pEpPwnCZBPGVdfaeFWWAiCD-a-AIZiyvtH0kACZai-0BJgAyZOuyhW6Wa2uOXF2q0uKID0aqQm-MbZa4X5p0cJwG9Sr3lsLJEQ1ZZt5yeJEpgHVwXb8-D0nI3Puh23w73wKfiiEqV2zuQGLmQBpiVGPHPS105Inl_Zzhsaos6IeEHEcY4.OkITwlhSW5T_vRJkeG87vQGSvxq8SgWQfau0MgqkWmE&dib_tag=se&keywords=Kaasplank%2Bmet%2BAccessoires&qid=1761420001&sprefix=kaasplank%2Bmet%2Baccessoires%2B%2Caps%2C66&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=50c16ecafaeab85edc9af61152214670&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/91L0v9RKv9L._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_cocktail: Gift = {
+  productName: 'Cocktail Shaker Set met Receptenboek',
+  description:
+    'Professionele cocktail set met shaker, maatbeker en receptenboek. Ideaal voor thuisbar. Inclusief 11 accessoires.',
+  priceRange: '€29,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Bar-Dedicated-Cocktail-Receptenboek-Cadeauverpakking/dp/B0CRRRMPDR?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3B0PR0PMBB8DM&dib=eyJ2IjoiMSJ9.OJgY61HztquEAX7Im-RBf6_FSLeAI8gFACeUHPVCCRd4qfPh57UiO9L-ruD5yWUb8j_4Q2ex8DskXtOoaN8BmIsTu4-h2VEjP1bAfCXMmH0AtjBYGP5w8ozVnRe7DSmMlmVPpPFtJfaMAq7_3SlWhn93HJ8pFmD1fwVLk6xfOdRGYRU0sYCdjoYNuqhxnN1x2psi6J5rpV72kQRNCMkKPQdKCZel3dZB1IaR9AjKe8Ts7MBbsYC9tVXQ0WbS7MtPd8eMfEFEsqq5ac8rRoR4d_-YWMkzU_Q39As6h2ZpGys.anCewwaLeosiU4sU5CAkx_QHu34tDmF8c4F3o3kw2UQ&dib_tag=se&keywords=Cocktail%2BShaker%2BSet%2Bmet%2Brecepten&qid=1761420174&sprefix=cocktail%2Bshaker%2Bset%2Bmet%2Brecepten%2Caps%2C69&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=5551719dedb4bbb5114efb8036d4fd55&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71R+YYkSN3L._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_kindle: Gift = {
+  productName: 'Kindle Paperwhite 2024 E-Reader',
+  description:
+    'Nieuwste Kindle met 7" scherm en wekenlange batterijduur. Waterdicht en anti-spiegeling. Perfect voor boekenwurmen.',
+  priceRange: '€179,99',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/kindle-paperwhite-2024/dp/B0CFPWLGF2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2EC8JA1QB76XZ&dib=eyJ2IjoiMSJ9.FKzPUyoHrssudTJsNuD3Ws32HbHjYgMPah4UfH6R6k2CgyT_INf0CjXGhspnThn27mqORtnw9ImpWjoBLUBw9tJlJgIfm18mvhmodu_1dhYQpfzyqnC8dC9o0105Xiou-PGF13Jw2jqHsSf5yPxME8tRaNH7ab04ygZnizw7I2UoiHKGRBi-lwMyFuuyOgTkHurC2n4AsuviaWrc71_iCK_BUebBAuZiSJnBJCiiB3YFYBDAdNDHSyGWRmR6RdWjCLywuT_ZWgSokgDrd-OYtWLetCTDUxZ9qSlS2Rjcn90.3f9hbYUiIsUqm8bHGrC5sPzreUox8npEs3RFeYmy4GA&dib_tag=se&keywords=e-reader%2Bkindle&qid=1761420317&sprefix=e-reader%2Bkindle%2Caps%2C77&sr=8-2&th=1&linkCode=ll1&tag=gifteez77-21&linkId=2da07ee307e2e3c2a23c6aa5f5ea5e9a&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/51QCk7e7pAL._AC_SL1000_.jpg',
+}
+
+const gift_sinterklaas_moleskine: Gift = {
+  productName: 'Moleskine Essential Notitieboek Set',
+  description:
+    'Gelinieerd notitieboek met luxe pen. Perfect voor journaling, schetsen en creatief schrijven. Iconisch design.',
+  priceRange: '€37,75',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Moleskine-Essential-gelinieerd-notitieboek-rollerballpen/dp/B0B55XSNNV?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=193JL0OAC0G4W&dib=eyJ2IjoiMSJ9.5v5Ib_JNlCqBQteQqdnjv1P9VmbATWyfgO53YYcxkPAx44C82t_zG-xq0xdluogrspe_102lFv7o1gJdGqWWTeUXfX0HHG313iAW4TkQAQFbwdzx5QsE2-RXk47Xdxw7rh6oCoHE9z7ZR_G4unPCePwlPcgynL4b7VgUsGPDLr6ro0xoo7POO3fIgLQmvNYrNCET9WA3Jsj0wqJGkGUCnZKwperd77lBQvo1SRtRj7RLEKQFqXw75HElMJFTWfgE6wR5a2N-S1DkyyIEU67TNiR9Qo2euVQCaHQnGiAh20Y.feLhkfw_dBJkEUqwYRhWNXQXqrUtsfYR8uomwWvPu1g&dib_tag=se&keywords=Premium%2BNotitieboek%2BSet%2BMoleskine&qid=1761420549&sprefix=premium%2Bnotitieboek%2Bset%2Bmoleskine%2Caps%2C97&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=d634f8f8715767a52f7103844195e7e2&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71nA98u8yuL._AC_SL1500_.jpg',
+}
+
+const gift_sinterklaas_aquarel: Gift = {
+  productName: 'Faber-Castell Aquarel Creative Studio',
+  description:
+    'Compleet aquarel starterspakket met penselen, papier en verf. Ideaal voor creatieve hobbyisten. Premium kwaliteit.',
+  priceRange: '€21,16',
+  retailers: [
+    {
+      name: 'Amazon.nl',
+      affiliateLink:
+        'https://www.amazon.nl/Faber-Castell-Creative-Aquarellen-meerkleurig-universiteit/dp/B0828LQX8R?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1RQ2ILV1LEQ2L&dib=eyJ2IjoiMSJ9.b75x5TzwBLuR_2l8aq1o6rluZoFacjpLDYBM8Cfif3v2KaeXhPzZhQHQhvrB_ocX-U3-Bs0-YjHKSSe7XeFq8W0eClAcFi92GZ6INC1lTMsY3sUS5_izpAFvWmUX1irqXZhj1PxN5bWWZ4eMdapytf0LiNb2-J-Zrbqnbf5dnbaG7fPV7qgU5OdgSZ29sy9lDgfRU63DVYLEi3LLGBADgGJkDM123Zqlo_7JTWgTP2oJldEdAtRzOaNHmPyPFiyiJEtILwJpjwBaEFp2H4wnSN580_9a1vt-gRoRQR_cQyQ.3gWXDbiNHdl3NjJfC_pyIAPLqqwDrZqxt3K0Btelcbg&dib_tag=se&keywords=creative%2Bhobby%2Bkit%2Baquarel&qid=1761420739&sprefix=creative%2Bhobby%2Bkit%2Baquarel%2Caps%2C64&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=b79ac2d1aa3b2722fc9164171f22f675&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/91bTyTlOkKL._AC_SL1500_.jpg',
+}
+
 export const blogPosts: BlogPost[] = [
   {
     slug: 'shop-like-you-give-a-damn-duurzame-cadeaus',
@@ -2323,84 +2549,242 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          'Tech cadeaus blijven een hit. Denk aan slimme speakers, draadloze oordopjes of een fitness tracker. Deze gadgets zijn praktisch én leuk om te krijgen.',
+          'Tech cadeaus blijven een hit. Deze gadgets combineren functionaliteit met wow-factor en zijn geschikt voor elk ervaringsniveau.',
       },
+
+      { type: 'gift', content: gift_sinterklaas_smartwatch },
       {
         type: 'paragraph',
         content:
-          '• **[Smartwatch Fitness Tracker met Telefoonfunctie](https://www.amazon.nl/Telefoonfunctie-Fitnesstracker-Bloeddrukmeting-IP68-Waterdicht-Activiteitstracker/dp/B0CMCJP588?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=EVOOOIG19654&dib=eyJ2IjoiMSJ9.TI6x2uL3Y0gsMOJlLgEnyIYjrzJaxKwbuWwqZS1X8t3SnI46drpDa57SKUPRaWiLWwQYQ_b1UHFlacmImotucpBHPBci1uwS741cCAvZXAXZze5Gd7ezbIIwRCz8Pl8i2myQ23Ioa9A2rnyAC-b0RcEY-NV72_ehR8Wmxg944TpyFuyJlnrCc6flDBrEXiq4lmC609UqbsruxKKBnHjvpMvTQXv_3b1dcAem9Lqq_zhFW9Q1B-shFVQv9eEamXa4XXkpIQgkNb_KxB_FlXwbxRVoLirF8e7xUazNKwr1UuE.LOtbDycUp2BRBkgirB-yCPFG8Xe7EQCXM7Zp-ci_upU&dib_tag=se&keywords=Smartwatch%2Bof%2BFitness%2BTracker&qid=1761417661&sprefix=smartwatch%2Bof%2Bfitness%2Btracker%2Caps%2C90&sr=8-23-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=0b0190cc57a8439ffd765ddb718bac20&language=nl_NL&ref_=as_li_ss_tl)** (€64,99) — Perfect voor wie gezonder wil leven. Volg stappen, slaap en hartslag met IP68 waterdicht horloge.\n\n• **[HUAWEI FreeBuds 6i Draadloze Oordopjes](https://www.amazon.nl/HUAWEI-Ooromsluitend-draagcomfort-Dual-driver-Verbinding/dp/B0F2TD7MBZ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&content-id=amzn1.sym.26978089-8dca-4887-9d0c-70fdc84d83da%3Aamzn1.sym.26978089-8dca-4887-9d0c-70fdc84d83da&crid=E0JGMFQ878PL&cv_ct_cx=Draadloze%2BOordopjes%2B%28%E2%82%AC30-150%29&keywords=Draadloze%2BOordopjes%2B%28%E2%82%AC30-150%29&pd_rd_i=B0F2TD7MBZ&pd_rd_r=0de7b84a-f735-4024-a025-849518c3ec21&pd_rd_w=DiSME&pd_rd_wg=oQUId&pf_rd_p=26978089-8dca-4887-9d0c-70fdc84d83da&pf_rd_r=Y2RHN0E1CH8DZK7BKQCF&qid=1761417955&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sprefix=draadloze%2Boordopjes%2B30-150%2B%2Caps%2C162&sr=1-1-07652b71-81e3-41f8-9097-e46726928fb7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=53ad9181479e8ff14296c9dbb3a1649a&language=nl_NL&ref_=as_li_ss_tl)** (€139,86) — Noise cancelling voor onderweg. Premium geluidskwaliteit met dual-driver technologie.\n\n• **[Amazon Echo Dot 5e Generatie](https://www.amazon.nl/amazon-echo-dot-5e-generatie-2022-release-smartspeaker-met-wifi-bluetooth-en-alexa-charcoal/dp/B09B8X9RGM?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=PD9QQEOAI20E&dib=eyJ2IjoiMSJ9.1jV0IWOsEv5fyB632CujUR4MmpZbFKcEZQ8lQm7Ehu1W14c9zn1jwGXUA_Chh398NmNOoyLjWRj8xH-8iE0pFxTBBCdZ1OAnxZaqg9JZwDcu69Ou25PvoxIFg9Jay4mhYVwJaDC6xbeXYZqxduRalCmF9CvbSivxYjOdIRC_32o4DYPPGPLdY-K4R57dj5DkBk2BsWV7ilHvf9m3nHxEs6I4V5tr-g0I1r5_Xd8poHMXgVaIisjbxcueCraDiHh75Y8vdcWLJ3tbc3u4ricCuO7zYj-oz9PuB9bLQVNeYyI.RhcgFlBvQ_WmV_dJFinJUFCm2Yu5RETHtKTrAz1_jgI&dib_tag=se&keywords=Slimme%2BSpeaker%2B%28&qid=1761418273&sprefix=slimme%2Bspeaker%2B%2Caps%2C167&sr=8-6&th=1&linkCode=ll1&tag=gifteez77-21&linkId=59b6a19f503203b3dae2101583786fd2&language=nl_NL&ref_=as_li_ss_tl)** (€64,99) — Compacte smart speaker met Alexa voor muziek, weer en smart home bediening.\n\n• **[NOBIS Powerbank 26800mAh Snelladen](https://www.amazon.nl/NOBIS-Powerbank-Draagbare-Snelladen-Compatibel/dp/B0D63H6KKV?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3MS7EIHVNCHGO&dib=eyJ2IjoiMSJ9._N6JUc02my6K40SVzoka_bYnOuNIU3WtbPbcS7kLjWK670AadozQuLO68Mx1T2wUZzQG0Gk8ZnKFpktWsultAkkRMDpV0BIspRFmcmeWHkV7df6gbLDVCOUwKeuvEThO7msk_eQ_vhjqOUT1f14pmCEIKZvaSOsYl4w9tW8NmpvSfytavKZTtMVkuSRVdRfkh73GJaR4DURHGF6Ncv9tQ-q3n0OMKwZ3uvb0JYwJRf1biaoCQWRCrp1rAoJeV-W8S4uxB3vrY4i70P1JPAXDMGaGTggFtEKJXk33zIxpocc.hYNnkdAkOw0a8qL662kzGwG8AbWE3yKvdOQoo8mzUeM&dib_tag=se&keywords=powerbank%2Bmet%2Bsnellader&qid=1761418506&sprefix=powerbank%2Bmet%2Bsnelladen%2B%2Caps%2C135&sr=8-13&th=1&linkCode=ll1&tag=gifteez77-21&linkId=36e88a130b2a506064ffd204cabebcc2&language=nl_NL&ref_=as_li_ss_tl)** (€32,99) — Krachtige 26800mAh powerbank. Laad meerdere apparaten tegelijk op.',
+          '<strong>Perfect voor:</strong> Sporters, health-bewuste types, iedereen met een druk leven.<br><br>Deze smartwatch biedt alles wat je nodig hebt voor een gezondere lifestyle: hartslagmeting, slaaptracking en 100+ sportmodi. De IP68 waterbestendigheid betekent dat je ermee kunt zwemmen. Bonus: de telefoonfunctie laat je bellen zonder telefoon bij je te hebben. Met 7 dagen batterijduur hoef je niet dagelijks op te laden.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_oordopjes },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Forensen, muziekliefhebbers, frequent flyers.<br><br>De HUAWEI FreeBuds 6i gebruiken intelligent dynamic ANC 3.0 om omgevingsgeluid actief te onderdrukken. Of je nu in de trein zit of op kantoor werkt — je hoort alleen wat je wilt horen. De dual-driver setup levert premium audio met heldere hoge tonen en diepe bas. Met 35 uur totale speeltijd (met case) kun je een hele week door.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_echo },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Smart home beginners, muziekfans, technologie-nieuwsgierigen.<br><br>De Echo Dot 5e gen heeft verbeterde audio ten opzichte van vorige modellen en een ingebouwde temperatuursensor. Vraag Alexa naar het weer, zet een timer, speel muziek via Spotify of bedien je smart home apparaten — alles met je stem. Het compacte design past op elk nachtkastje of bureau.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_powerbank },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Frequent reizigers, studenten, iedereen met battery anxiety.<br><br>Met 26800mAh capaciteit laad je een iPhone 13 ongeveer 6 keer volledig op. De drie USB-poorten (1x USB-C, 2x USB-A) laten je meerdere apparaten tegelijk opladen. Het LED-display toont exact hoeveel procent er nog in de powerbank zit — geen verrassingen meer. Snelladen via USB-C PD betekent dat je telefoon in 30 minuten van 0% naar 50% gaat.',
       },
 
       { type: 'heading', content: '🧘 Wellness & Self-Care: Ontspanning Cadeau Geven' },
       {
         type: 'paragraph',
         content:
-          'Na een druk jaar is ontspanning goud waard. Self-care cadeaus tonen dat je écht om iemand geeft.',
+          'Na een druk jaar is ontspanning goud waard. Deze wellness cadeaus tonen dat je écht om iemand geeft.',
       },
+
+      { type: 'gift', content: gift_sinterklaas_spa },
       {
         type: 'paragraph',
         content:
-          '• **[Luxe Spa Gift Set voor Vrouwen](https://www.amazon.nl/Zelfzorgset-Voor-Vrouwen-Ontspanning-Echtgenote/dp/B0FBGJH28X?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1XUQ2EVRVZ4LF&dib=eyJ2IjoiMSJ9.GZoVOA29P2iw1Tlnr4GDihYA4GjnHYCow7_8_SjlLvUPBwRstF5khIy5JAHh71Z2GAZVq3oC6Dr8ov24C0v-Z_jEVFq-tjkYxycLOLccuRj0r8UAJw-IN6TQp4ux8GFtMep0qpMqnMGW8UG9GayONS_cjp08l16vBstz_rRn70e0xFyPw0Mh_PwoTq9XZWxhp0AIimbJMAWuHLefZkb8Kt-Sr2_gR84VVwkWraJU6QWA4NR6D8d53mVouYAs0U3OY4f1K49Sk6_6jKdTOoT5_oiN_iTB60YW2tny0U2PG5Q.NkdaIZ4isAuzBza9OcGBMDtii31NaKcoviHVDNc1hL8&dib_tag=se&keywords=Luxe+Spa+Set&qid=1761418816&sprefix=luxe+spa+set%2Caps%2C158&sr=8-51-spons&xpid=kZMbOLA_agIYv&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGZfbmV4dA&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=2f4ce1c11ea19e28e8cb006ec822cf6f&language=nl_NL&ref_=as_li_ss_tl)** (€62,22) — Compleet wellness pakket met badolie, body scrub en geurkaarsen voor ultieme ontspanning.\n\n• **[Aromatherapie Diffuser met Afstandsbediening](https://www.amazon.nl/ZOVHYYA-Luchtbevochtiger-Afstandsbediening-Automatische-Uitschakeling/dp/B0CSYY5GXR?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=234VBCG09QJCP&dib=eyJ2IjoiMSJ9.HIGeuxq_twxDW4v7nqDke7ZgaKHY3hJXJBkQJWuwz-3X9QU8UZ3-rwLUMM31i3EhGcoI4p-um2RDY7CKogkB5CO7UMsqqBoNDE2a766P8Hx4FxY3IeMnaqmYT5WmKStuP2a7PGK0Ev9ZENAJrbgELI-yJL-WMj_yNG_qFPXlNc8Apz9pRRqx-BnlG5y_EiVXeBsqDb2s0T0JI5KcuWLHrRvWnb9cZuQE31kmckvafIpwdUrJT_BixYbpldo9j1Y6VY-feaHpECkmoUlUA3DrkYrl88o_rHLsgX5_So0vFWo.x0GHphTDrheQC8s6VCfrWXx4CeaB7dpnc4eZFh-tZg0&dib_tag=se&keywords=Diffuser%2Bmet%2Betherische%2Boli%C3%ABn&qid=1761418955&sprefix=diffuser%2Bmet%2Betherische%2Boli%C3%ABn%2Caps%2C98&sr=8-7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f8fcb484f93df677699365ca15080418&language=nl_NL&ref_=as_li_ss_tl)** (€27,99) — Luchtbevochtiger met etherische oliën. 7 kleuren LED en timer functie.\n\n• **[Nekmassageapparaat Shiatsu 2025](https://www.amazon.nl/Nekmassageapparaat-2025-Shiatsu-massage-grafeenverwarming-draagstijlen/dp/B0F53MKHBT?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3FWPHEOJSFWEI&dib=eyJ2IjoiMSJ9.Jg1_kQsjjdQ7fDSMTAoAXjh1wsSiWCktqKKy_3FMRYOtGFawmqPd7tolbNllHl7xB_Cm02EErdSInsVzR-Qpv56i8jwi3NsM0fFkBg9roKnocl6faN4i_S19j47wy3MpJT-9q1hi7WOkpNR-NxboyI06Qd7kRYSjSjYvC-OiVWyTlYEsin3oP6lhv-B4I-LoPgmFIV7B2ViUuCHpPhVHJtHe6zfethv2hipUnjmeQ6W7ec_Mwlx0v9WdaYWCB9sMvCUlh_7yOOfLR-VxwNrh3rttsdc2fnejSz4ROUSw5KM.yow9Nzzs9pZm8eNzQgMiX4Jdxj2fQxI7QrDmeHY0CVw&dib_tag=se&keywords=Massage%2BApparaat&qid=1761419143&sprefix=massage%2Bapparaat%2B%2Caps%2C159&sr=8-27&th=1&linkCode=ll1&tag=gifteez77-21&linkId=bdf5193e8522ea73424a71d5727b1853&language=nl_NL&ref_=as_li_ss_tl)** (€79,99) — Draadloos nekmassage apparaat met warmtefunctie. 6 massagemodi tegen spanning.\n\n• **[Polar Night Verzwaringsdeken 7kg](https://www.amazon.nl/Polar-Night-verzwaringsdeken-voor-volwassenen/dp/B08ZSSCVG7?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2BNOYA0089QWE&dib=eyJ2IjoiMSJ9.COdKxLAokkVRY37v54qwxlw06aeNpwosfd7oxieMBse4zB49m7GE3bWG1JwNkzWdFYLyEJ85t2Z183fMdBYqYMrYQnp-WELJX7zI_qCEKGWQ2ag8SC994tKlHnnZV5WfLA8GWi7G-WPGFKL8XLZygcSuuzOYN9kJBZYKpO53dwWYy_y9OacXAWeUkGers0zZucGOiZ-es7FBSULwrhrcs3lYC25VX_T4tT3ke8f5vANWQbkI8UaX6kvDwKb0bTqwixubnNIcyTc8YIGbbYKaa23-ruygSY0fdviBeC9qvm0.hS4aZUpPH9XP__iop1jN_CxOXnqqbTuTQcA7df0iCjQ&dib_tag=se&keywords=zware%2Bdeken%2Bvoor%2Bbeter%2Bslaap&qid=1761419333&sprefix=zware%2Bdeken%2Bvoor%2Bbetere%2Bslaap%2Caps%2C143&sr=8-8&th=1&linkCode=ll1&tag=gifteez77-21&linkId=e9313e1bcd2dd01430fc931157c809eb&language=nl_NL&ref_=as_li_ss_tl)** (€74,90) — Therapeutische gewichtsdeken 7kg. Vermindert stress en bevordert diepe slaap.',
+          '<strong>Perfect voor:</strong> Moeder, schoonmoeder, overwerkte vriendin, badkuip-bezitters.<br><br>Deze spa set transformeert elke badkamer in een wellness oase. Je krijgt badolie (250ml), body scrub (100g), bodylotion (200ml), 2 geurkaarsen en een zachte spons — alles in een luxe geschenkverpakking. De lavendel-chamomile geur is rustgevend zonder opdringerig te zijn. De body scrub bevat natuurlijke exfolianten die dode huidcellen verwijderen zonder te schuren.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_diffuser },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Yoga-enthousiastelingen, slaapproblemen, kantoor-aan-huis werkers.<br><br>Deze aromatherapie diffuser bevat alles: 500ml watertank (10+ uur gebruik), 7 LED kleuren die je kunt instellen, timer-functies en een afstandsbediening. Voeg je favoriete etherische olie toe (lavendel voor slaap, pepermunt voor focus, eucalyptus voor vrije luchtwegen) en de ruimte vult zich met een subtiele mist en geur. De automatische uitschakeling bij leeg waterreservoir voorkomt schade.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_massage },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Kantoorwerkers, gamers, iedereen met nekklachten.<br><br>Dit Shiatsu massage apparaat simuleert professionele massagetechnieken met roterende knoppen die diep in de spieren werken. De grafeen verwarmingsfunctie verhoogt de effectiviteit door spieren te ontspannen voordat ze gemasseerd worden. Je kunt het gebruiken op nek, schouders, onderrug, benen — waar je maar spanning voelt. Draadloos betekent dat je vrijheid hebt om te bewegen tijdens de massage.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_deken },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Slecht slapers, stress-gevoelige mensen, anxious minds.<br><br>Een verzwaringsdeken simuleert "deep pressure touch" — het gevoel van een warme knuffel. Dit activeert het parasympathische zenuwstelsel en vermindert cortisol (stresshormoon) terwijl het serotonine en melatonine verhoogt. Resultaat: je valt sneller in slaap en slaapt dieper. De 7kg versie is ideaal voor iemand tussen 60-90kg lichaamsgewicht. Het ademende materiaal voorkomt oververhitting.',
       },
 
       { type: 'heading', content: '☕ Culinair Genieten: Voor de Fijnproever' },
       {
         type: 'paragraph',
         content:
-          'Lekker eten en drinken blijft altijd een succes. Van koffieliefhebbers tot kookfanaten — deze cadeaus scoren gegarandeerd.',
+          'Lekker eten en drinken blijft altijd een succes. Deze culinaire cadeaus maken elke foodie blij.',
       },
+
+      { type: 'gift', content: gift_sinterklaas_koffie },
       {
         type: 'paragraph',
         content:
-          '• **[Koffie Probeerset 6 Smaken Versgebrand](https://www.amazon.nl/Koffiecadeau-probeerset-geroosterd-koffiebonen-volautomaat/dp/B093DLP5MS?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=471KQUSSLVOM&dib=eyJ2IjoiMSJ9.uE6d5FqEuwCaTG_Y3ac94rrjfOZjJcwNIG_IsfXigydjTuqCleajJ26b_B8yo2vcnxqu1_3tjLq9DI7W57o0R_m59_nvHnV2cvM6XSLoyKK89pLHdIjsfqm-JvJbz9ma2neVcYYwzVK4HRfK7SWw_w.cceMCdmgxNOWfP8y1bAhUFhvHie_gz75E2-tJ0GulzM&dib_tag=se&keywords=specialty+koffieman+s+pers+gift&qid=1761419487&sprefix=specialty+koffieman+frans+pers+gift%2Caps%2C59&sr=8-7&linkCode=ll1&tag=gifteez77-21&linkId=46bd415088db236bc00fed70438756e7&language=nl_NL&ref_=as_li_ss_tl)** (€54,99) — 6 verschillende koffiesoorten versgebrand. Specialty koffie voor de echte liefhebber.\n\n• **[Anthon Berg Chocolade Liqueur Collectie](https://www.amazon.nl/Anthon-Berg-Chocolade-Liquor-Chocolates/dp/B09HT6L72D?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1LBO4XQI5M5CH&dib=eyJ2IjoiMSJ9.4WQh2soq0fx0bCI8sAwxKzMkgjTFr22s83DGWO7ueuVmst_wZTrL9vvFrPqCwMLNbDkrtbMT_9g2vv2F97ZNBOtCMKsVxzzmavSYLZwZa394iwKYKvZQAx27QF8foqzo_RqAE0Y0HlhuO6E2U9cddnHi3yDZD9y7NcQb5kQAvzzA9E_mHXJND9o1MmQmBg9y-TfYTWad-iSrpGLJTTyq3A1r9arW_V7tZMI1GwbRqRABKZq_vgImVL0t46_jBu91hat5utO4o7w7m27Yvc0WU9L1PSqgd48BCPZ8UxyjzzQ.pkevTzlkUvQapJNffksC4h6MS0xeOYaFaPWDUX_1IRQ&dib_tag=se&keywords=Premium+chocolade&qid=1761419626&sprefix=premium+chocolade%2Caps%2C98&sr=8-6&linkCode=ll1&tag=gifteez77-21&linkId=af9fbf387d5464eba5479fc5432de08a&language=nl_NL&ref_=as_li_ss_tl)** (€39,81) — Premium Deense chocolade met likeur vulling. Luxe proefpakket met verschillende smaken.\n\n• **[StarBlue Kaasplankenset Bamboe](https://www.amazon.nl/StarBlue-Kaasplankenset-Kaassnijplank-housewarming-Verjaardagscadeaus/dp/B08Q2WTJQX?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2LFXG54MNZ44Q&dib=eyJ2IjoiMSJ9.DGrZYMC_Ya7h-f5WE9clFplnpZIK9yp4Q17q1Er-cPTyWOxJQvJF-2Lc5JxSOgDgUisz9zgWqx8mQYefKJW4GzkMLPxkZ-urRIIA8Jp8KwIFXS6mmTal48QoA-pEpPwnCZBPGVdfaeFWWAiCD-a-AIZiyvtH0kACZai-0BJgAyZOuyhW6Wa2uOXF2q0uKID0aqQm-MbZa4X5p0cJwG9Sr3lsLJEQ1ZZt5yeJEpgHVwXb8-D0nI3Puh23w73wKfiiEqV2zuQGLmQBpiVGPHPS105Inl_Zzhsaos6IeEHEcY4.OkITwlhSW5T_vRJkeG87vQGSvxq8SgWQfau0MgqkWmE&dib_tag=se&keywords=Kaasplank%2Bmet%2BAccessoires&qid=1761420001&sprefix=kaasplank%2Bmet%2Baccessoires%2B%2Caps%2C66&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=50c16ecafaeab85edc9af61152214670&language=nl_NL&ref_=as_li_ss_tl)** (€26,99) — Bamboe kaasplank met 4 messen en extra snijplanken. Perfect voor borrel liefhebbers.\n\n• **[Cocktail Shaker Set met Receptenboek](https://www.amazon.nl/Bar-Dedicated-Cocktail-Receptenboek-Cadeauverpakking/dp/B0CRRRMPDR?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3B0PR0PMBB8DM&dib=eyJ2IjoiMSJ9.OJgY61HztquEAX7Im-RBf6_FSLeAI8gFACeUHPVCCRd4qfPh57UiO9L-ruD5yWUb8j_4Q2ex8DskXtOoaN8BmIsTu4-h2VEjP1bAfCXMmH0AtjBYGP5w8ozVnRe7DSmMlmVPpPFtJfaMAq7_3SlWhn93HJ8pFmD1fwVLk6xfOdRGYRU0sYCdjoYNuqhxnN1x2psi6J5rpV72kQRNCMkKPQdKCZel3dZB1IaR9AjKe8Ts7MBbsYC9tVXQ0WbS7MtPd8eMfEFEsqq5ac8rRoR4d_-YWMkzU_Q39As6h2ZpGys.anCewwaLeosiU4sU5CAkx_QHu34tDmF8c4F3o3kw2UQ&dib_tag=se&keywords=Cocktail%2BShaker%2BSet%2Bmet%2Brecepten&qid=1761420174&sprefix=cocktail%2Bshaker%2Bset%2Bmet%2Brecepten%2Caps%2C69&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=5551719dedb4bbb5114efb8036d4fd55&language=nl_NL&ref_=as_li_ss_tl)** (€29,99) — Professionele cocktail set met shaker, maatbeker en receptenboek. Ideaal voor thuisbar.',
+          '<strong>Perfect voor:</strong> Koffieliefhebbers, specialty coffee explorers, ochtendmensen.<br><br>Dit probeerset bevat 6x 250g bonen van verschillende oorsprongen: Ethiopië (fruity notes), Colombia (chocolade tonen), Brazilië (nootachtig), Guatemala (karamel), Costa Rica (citrus) en een seasonal blend. Elke verpakking vermeldt de roastdatum — binnen 2 weken geroost betekent maximale frisheid. De bonen zijn geschikt voor espresso, filter en French press.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_chocolade },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Chocolade connaisseurs, iedereen die van een likeur houdt, avond-verwenners.<br><br>Anthon Berg is een Deens heritage merk (sinds 1884) bekend om hun liqueur chocolates. Deze collectie bevat 64 pralines met 16 verschillende likeurvullingen: cognac, rum, whiskey, amaretto, Irish cream en meer. De pure chocolade omhulling is van Belgische origine. Elke praline is individueel verpakt — perfect om te delen of juist niet.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_kaasplank },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Kaasliefhebbers, borrel-enthousiastelingen, entertainers.<br><br>Deze bamboe kaasplank heeft een ingenieus design: 4 mini-snijplanken die uit de hoofdplank schuiven (één per kaassoort), een verborgen lade met 4 gespecialiseerde messen (harde kaas, zachte kaas, parmesan, spreading knife) en groeven voor crackers. De bamboe is antibacterieel van nature en gaat decennia mee. Op 36x32cm heb je ruimte voor 6-8 kaassoorten plus garnering.',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_cocktail },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Perfect voor:</strong> Cocktail-liefhebbers, thuisbar-starters, party hosts.<br><br>Deze 11-delige set bevat alles voor professionele cocktails: 750ml Boston shaker, dubbele jigger (25ml/50ml), mixing spoon, muddler, strainer, ice tongs, pourers en een receptenboek met 50 klassieke cocktails. De RVS tools zijn dishwasher-safe en de bamboe standaard houdt alles georganiseerd. Leer Mojito, Margarita, Old Fashioned en meer — geen bartending ervaring nodig.',
       },
 
       { type: 'heading', content: '📚 Creatief & Hobby: Persoonlijke Ontwikkeling' },
       {
         type: 'paragraph',
         content:
-          'Steun iemands passie met een cadeau dat past bij hun hobby. Van lezen tot tekenen, tuinieren tot fotografie.',
+          'Steun iemands passie met een cadeau dat past bij hun hobby. Van lezen tot kunst, deze cadeaus inspireren.',
       },
+
+      { type: 'gift', content: gift_sinterklaas_kindle },
       {
         type: 'paragraph',
         content:
-          '• **[Kindle Paperwhite 2024 E-Reader](https://www.amazon.nl/kindle-paperwhite-2024/dp/B0CFPWLGF2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2EC8JA1QB76XZ&dib=eyJ2IjoiMSJ9.FKzPUyoHrssudTJsNuD3Ws32HbHjYgMPah4UfH6R6k2CgyT_INf0CjXGhspnThn27mqORtnw9ImpWjoBLUBw9tJlJgIfm18mvhmodu_1dhYQpfzyqnC8dC9o0105Xiou-PGF13Jw2jqHsSf5yPxME8tRaNH7ab04ygZnizw7I2UoiHKGRBi-lwMyFuuyOgTkHurC2n4AsuviaWrc71_iCK_BUebBAuZiSJnBJCiiB3YFYBDAdNDHSyGWRmR6RdWjCLywuT_ZWgSokgDrd-OYtWLetCTDUxZ9qSlS2Rjcn90.3f9hbYUiIsUqm8bHGrC5sPzreUox8npEs3RFeYmy4GA&dib_tag=se&keywords=e-reader%2Bkindle&qid=1761420317&sprefix=e-reader%2Bkindle%2Caps%2C77&sr=8-2&th=1&linkCode=ll1&tag=gifteez77-21&linkId=2da07ee307e2e3c2a23c6aa5f5ea5e9a&language=nl_NL&ref_=as_li_ss_tl)** (€179,99) — Nieuwste Kindle met 7" scherm en wekenlange batterijduur. Waterdicht en anti-spiegeling.\n\n• **[Moleskine Essential Notitieboek Set](https://www.amazon.nl/Moleskine-Essential-gelinieerd-notitieboek-rollerballpen/dp/B0B55XSNNV?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=193JL0OAC0G4W&dib=eyJ2IjoiMSJ9.5v5Ib_JNlCqBQteQqdnjv1P9VmbATWyfgO53YYcxkPAx44C82t_zG-xq0xdluogrspe_102lFv7o1gJdGqWWTeUXfX0HHG313iAW4TkQAQFbwdzx5QsE2-RXk47Xdxw7rh6oCoHE9z7ZR_G4unPCePwlPcgynL4b7VgUsGPDLr6ro0xoo7POO3fIgLQmvNYrNCET9WA3Jsj0wqJGkGUCnZKwperd77lBQvo1SRtRj7RLEKQFqXw75HElMJFTWfgE6wR5a2N-S1DkyyIEU67TNiR9Qo2euVQCaHQnGiAh20Y.feLhkfw_dBJkEUqwYRhWNXQXqrUtsfYR8uomwWvPu1g&dib_tag=se&keywords=Premium%2BNotitieboek%2BSet%2BMoleskine&qid=1761420549&sprefix=premium%2Bnotitieboek%2Bset%2Bmoleskine%2Caps%2C97&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=d634f8f8715767a52f7103844195e7e2&language=nl_NL&ref_=as_li_ss_tl)** (€37,75) — Gelinieerd notitieboek met luxe pen. Perfect voor journaling, schetsen en creatief schrijven.\n\n• **[Faber-Castell Aquarel Creative Studio](https://www.amazon.nl/Faber-Castell-Creative-Aquarellen-meerkleurig-universiteit/dp/B0828LQX8R?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1RQ2ILV1LEQ2L&dib=eyJ2IjoiMSJ9.b75x5TzwBLuR_2l8aq1o6rluZoFacjpLDYBM8Cfif3v2KaeXhPzZhQHQhvrB_ocX-U3-Bs0-YjHKSSe7XeFq8W0eClAcFi92GZ6INC1lTMsY3sUS5_izpAFvWmUX1irqXZhj1PxN5bWWZ4eMdapytf0LiNb2-J-Zrbqnbf5dnbaG7fPV7qgU5OdgSZ29sy9lDgfRU63DVYLEi3LLGBADgGJkDM123Zqlo_7JTWgTP2oJldEdAtRzOaNHmPyPFiyiJEtILwJpjwBaEFp2H4wnSN580_9a1vt-gRoRQR_cQyQ.3gWXDbiNHdl3NjJfC_pyIAPLqqwDrZqxt3K0Btelcbg&dib_tag=se&keywords=creative%2Bhobby%2Bkit%2Baquarel&qid=1761420739&sprefix=creative%2Bhobby%2Bkit%2Baquarel%2Caps%2C64&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=b79ac2d1aa3b2722fc9164171f22f675&language=nl_NL&ref_=as_li_ss_tl)** (€21,16) — Compleet aquarel starterspakket met penselen, papier en verf. Ideaal voor creatieve hobbyisten.',
+          '<strong>Perfect voor:</strong> Boekenwurmen, frequent reizigers, mensen die in bed lezen.<br><br>De Kindle Paperwhite 2024 heeft een 7" glare-free scherm dat leest als echt papier, zelfs in fel zonlicht. Met 16GB opslag heb je ruimte voor 1000+ boeken. De verstelbare warmlight laat je kleurtemperatuur aanpassen van wit (overdag) naar warm oranje (avond) om je slaap niet te verstoren. IPX8 waterbestendigheid betekent lezen in bad zonder stress. Batterij gaat 10 weken mee (30 min/dag).',
+      },
+
+      { type: 'gift', content: gift_sinterklaas_moleskine },
+      {
+        type: 'paragraph',
+        content:
+          "<strong>Perfect voor:</strong> Journalers, schrijvers, bullet journal fans, creatievelingen.<br><br>Moleskine is het iconische notitieboek gebruikt door Hemingway, Van Gogh en Picasso. Deze Essential set bevat een gelinieerd A5 hardcover notitieboek (192 pagina's), een zachte kaft A6 notitieboek (96 pagina's) en een premium rollerball pen. Het zuurvrije papier voorkomt vergelingen en inkt bleedt niet door. De elastische sluiting en zakje achterin maken het perfect voor onderweg.",
+      },
+
+      { type: 'gift', content: gift_sinterklaas_aquarel },
+      {
+        type: 'paragraph',
+        content:
+          "<strong>Perfect voor:</strong> Art beginners, hobbykunstenaars, kinderen 12+, therapeutische creativiteit.<br><br>Faber-Castell's Creative Studio bevat alles om direct te starten: 12 aquarel napjes, 12 kleurpotloden, 4 penselen (verschillende diktes), 10 vellen aquarel papier, schetsboek, gum en puntenslijper. De kleuren zijn intens gepigmenteerd en mengen goed. Het compacte koffertje (35x24cm) maakt het draagbaar — neem het mee naar het park of café voor plein air schilderen.",
       },
 
       { type: 'heading', content: '💡 Tips Voor Het Perfecte Sinterklaas Cadeau' },
       {
         type: 'paragraph',
         content:
-          '**1. Ken je budget** — Stel vooraf een realistisch bedrag vast. Tussen €25-75 zit je meestal goed voor Sinterklaas.\n\n**2. Denk aan persoonlijkheid** — Sportief? Kies fitness gear. Huismus? Ga voor wellness. Tech-savvy? Gadgets zijn perfect.\n\n**3. Bestudeer wensen** — Luister naar hints in gesprekken of check social media voor inspiratie.\n\n**4. Verpakking telt mee** — Een mooi ingepakt cadeau maakt meer indruk. Overweeg cadeaupapier op thema.\n\n**5. Bestel op tijd** — Sinterklaas is 5 december. Bestel voor 25 november om leverproblemen te voorkomen.',
+          '<strong>1. Ken je budget</strong> — Stel vooraf een realistisch bedrag vast. Tussen €25-75 zit je meestal goed voor Sinterklaas. Meer dan €100 kan awkward voelen tenzij het familie is.<br><br><strong>2. Denk aan persoonlijkheid</strong> — Sportief? Kies de smartwatch. Stress-gevoelig? Ga voor wellness. Tech-savvy? Gadgets zijn perfect. Foodie? Culinaire sets scoren altijd.<br><br><strong>3. Bestudeer wensen</strong> — Luister naar hints in gesprekken of check social media voor inspiratie. Iemand die constant klaagt over slechte slaap? Verzwaringsdeken. Altijd lege telefoonbatterij? Powerbank.<br><br><strong>4. Verpakking telt mee</strong> — Een mooi ingepakt cadeau maakt meer indruk. Overweeg Sinterklaas-thema cadeaupapier en een persoonlijk gedicht (hoeft niet te rijmen!).<br><br><strong>5. Bestel op tijd</strong> — Sinterklaas is 5 december. Bestel uiterlijk 25 november om leverproblemen te voorkomen. Amazon Prime geeft vaak next-day delivery maar reken op 3-5 dagen voor zekerheid.',
       },
 
       { type: 'heading', content: '🎁 Budget Indeling: Wat Kun Je Verwachten?' },
       {
         type: 'paragraph',
         content:
-          '**Budget (€15-30):** Kleine attentie zoals geurkaarsen, sokken set, leuke mok of boek.\n\n**Mid-range (€30-75):** Draadloze oordopjes, spa set, diffuser, koffie cadeau pakket.\n\n**Premium (€75-150):** Smartwatch, massage apparaat, luxe kaasplank, e-reader.\n\n**Luxe (€150+):** High-end tech, designer items, complete wellness pakket.',
+          '<strong>Budget (€15-30):</strong> Kleine attentie zoals aromatherapie diffuser, aquarel kit, kaasplank. Perfect voor collegacadeaus of secret santa.<br><br><strong>Mid-range (€30-75):</strong> Spa set, powerbank, cocktail set, Moleskine set, chocolade collectie. Dit is de sweet spot voor vrienden en familie.<br><br><strong>Premium (€75-150):</strong> Smartwatch, HUAWEI oordopjes, nekmassage apparaat, verzwaringsdeken, koffie probeerset. Voor speciale mensen of belangrijke gelegenheden.<br><br><strong>Luxe (€150+):</strong> Kindle Paperwhite. Voor partner, ouders of als groepscadeau.',
       },
 
-      { type: 'heading', content: '📦 Waar Koop Je Deze Cadeaus?' },
+      { type: 'heading', content: '📦 Waarom Amazon Voor Sinterklaas Cadeaus?' },
       {
         type: 'paragraph',
         content:
-          'Alle bovenstaande cadeaus zijn beschikbaar via **Amazon.nl** met snelle levering en betrouwbare klantenservice. Klik op de links bij elk product om direct naar de beste opties te gaan. Let op kortingen en deals in november — Black Friday valt vaak samen met de Sinterklaas periode!',
+          'Alle bovenstaande cadeaus zijn beschikbaar via <strong>Amazon.nl</strong> met belangrijke voordelen:<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700"><li><strong>Snelle levering:</strong> Prime members krijgen vaak next-day delivery, ideaal voor last-minute cadeaus</li><li><strong>Betrouwbare service:</strong> Gratis retourneren binnen 30 dagen als het niet bevalt</li><li><strong>Reviews van echte gebruikers:</strong> Check wat anderen vinden voordat je koopt</li><li><strong>Cadeauopties:</strong> Voeg een gift message toe en verberg de prijs op de pakbon</li><li><strong>Black Friday deals:</strong> Eind november zijn er vaak 20-40% kortingen op deze producten</li></ul><br>Let op kortingen in november — vaak vallen Black Friday en de Sinterklaas periode samen!',
       },
 
-      { type: 'heading', content: '✨ Nog Twijfels? Gebruik Onze Cadeau Coach' },
+      { type: 'heading', content: '✨ Nog Twijfels? Gebruik Onze Tools' },
       {
         type: 'paragraph',
         content:
-          'Weet je nog steeds niet wat te kiezen? Probeer onze **Cadeau Coach** op [gifteez.nl/quiz](/quiz). Beantwoord 3 snelle vragen over de ontvanger en krijg direct gepersonaliseerde suggesties. Of gebruik de **AI GiftFinder** voor nog meer inspiratie op basis van persoonlijkheid en budget.',
+          'Weet je nog steeds niet wat te kiezen? Probeer onze <strong>interactieve tools</strong>:<br><br><strong>🎯 <a href="/quiz" class="text-accent hover:underline">Cadeau Coach Quiz</a></strong> — Beantwoord 3 snelle vragen over de ontvanger en krijg direct gepersonaliseerde suggesties uit deze lijst.<br><br><strong>🤖 <a href="/giftfinder" class="text-accent hover:underline">AI GiftFinder</a></strong> — Beschrijf de persoon in eigen woorden en onze AI analyseert persoonlijkheid, interesses en budget voor custom aanbevelingen.<br><br><strong>💰 <a href="/deals" class="text-accent hover:underline">Deals Pagina</a></strong> — Check live kortingen op deze Sinterklaas-producten. We updaten dagelijks met de beste Amazon deals.',
+      },
+
+      {
+        type: 'faq',
+        items: [
+          {
+            question: 'Wat zijn de populairste Sinterklaas cadeaus van 2025?',
+            answer:
+              'Top 3 bestsellers dit jaar: (1) Smartwatch/fitness trackers — gezondheid is trending, (2) Wellness producten zoals spa sets en massage apparaten — self-care blijft belangrijk na COVID, (3) Smart home tech zoals Echo Dot — steeds meer mensen bouwen smart homes. Tech en wellness domineren.',
+          },
+          {
+            question: 'Hoe kies ik een cadeau voor iemand die "niks nodig heeft"?',
+            answer:
+              'Kies ervaringen of verbruikbare luxe. Koffie probeerset, chocolade collectie of spa set worden opgebruikt (geen clutter) maar voelen premium. Alternatief: kies iets dat een bestaande hobby upgradet (aquarel set voor iemand die tekent, cocktail set voor iemand die van drinks houdt).',
+          },
+          {
+            question: 'Zijn dure cadeaus (€100+) geschikt voor Sinterklaas?',
+            answer:
+              "Hangt af van de relatie en context. Voor partner of ouders kan €100+ normaal zijn. Voor vrienden/collega's kan het awkward voelen tenzij je afspreekt een hoger budget te hebben. Groepscadeaus zijn een goede oplossing — samen een Kindle (€180) kopen voor een docent bijvoorbeeld.",
+          },
+          {
+            question: 'Kan ik deze cadeaus combineren voor een groter pakket?',
+            answer:
+              'Absoluut! Top combinaties: (1) Spa set + diffuser + geurkaars = ultimate relaxation box (€100), (2) Koffie set + Moleskine = creative mornings pack (€90), (3) Smartwatch + powerbank = tech bundle (€100), (4) Kaasplank + cocktail set = entertainer special (€55). Combineer items uit hetzelfde thema.',
+          },
+          {
+            question: 'Wat als het product niet bevalt of kapot aankomt?',
+            answer:
+              "Amazon heeft 30 dagen gratis retourneren op de meeste producten. Bij schade tijdens verzending: maak foto's en start een retour via je account. Amazon vervangt of refund meestal binnen 3-5 werkdagen. Tip: bewaar de originele verpakking tot je zeker weet dat alles werkt.",
+          },
+        ],
       },
 
       { type: 'heading', content: '🎅 Conclusie: Sinterklaas 2025 Wordt Onvergetelijk' },
       {
         type: 'paragraph',
         content:
-          'Met deze 15 cadeau-ideeën heb je voor elk type persoon en budget een passend Sinterklaas cadeau. Van praktische tech tot ontspannende wellness en smakelijke culinaire verwennerij — het perfecte cadeau is binnen handbereik. Bestel op tijd, verpak met zorg, en maak dit jaar onvergetelijk!',
+          'Met deze 15 cadeau-ideeën heb je voor elk type persoon en budget een passend Sinterklaas cadeau. Van praktische tech die dagelijks wordt gebruikt tot ontspannende wellness en smakelijke culinaire verwennerij — het perfecte cadeau is binnen handbereik.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Onze top 3 all-round winners:</strong><br><br>🥇 <strong>Beste Overall:</strong> Spa Gift Set (€62,22) — werkt voor 90% van de ontvangers, voelt luxe<br>🥈 <strong>Beste Value:</strong> Smartwatch (€64,99) — dagelijks gebruik, hoge perceived value<br>🥉 <strong>Beste Budget:</strong> Aromatherapie Diffuser (€27,99) — betaalbaar maar impactvol',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>De Ultieme Sinterklaas Hack:</strong> Combineer het juiste cadeau met een persoonlijk verhaal. Een €30 diffuser verpakt met een kaart "Omdat je altijd voor anderen zorgt, tijd voor jouw rust" slaat harder dan een €100 gadget zonder gedachte. Het cadeau is het middel, de boodschap is de waarde.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Bestel op tijd (uiterlijk 25 november), verpak met zorg, en voeg een persoonlijk gedicht toe. Maak dit Sinterklaas onvergetelijk! 🎁',
       },
     ],
+    seo: {
+      metaTitle: 'Sinterklaas Cadeaus 2025: 15 Originele Ideeën (€21-€180)',
+      metaDescription:
+        'De beste Sinterklaas cadeaus 2025: van tech gadgets tot wellness, van €21 tot €180. Complete gids met smartwatch, spa sets, Kindle en meer. Bestel op tijd!',
+      keywords: [
+        'sinterklaas cadeaus 2025',
+        'sinterklaas cadeau ideeën',
+        'originele sinterklaas cadeaus',
+        'sinterklaas cadeau tips',
+        'cadeaus sinterklaas volwassenen',
+        'sinterklaas surprise',
+        'sinterklaas geschenken',
+        'sinterklaas gadgets',
+      ],
+      ogTitle: 'Sinterklaas Cadeaus 2025: 15 Ideeën Die Écht Blij Maken',
+      ogDescription:
+        'Van smartwatch tot spa set, van koffie tot Kindle — ontdek 15 originele Sinterklaas cadeaus voor elk budget en persoonlijkheid.',
+      ogImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.jpg',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Sinterklaas 2025: 15 Cadeaus Die Écht Scoren',
+      twitterDescription:
+        'Tech, wellness, culinair en creatief — 15 bewezen Sinterklaas cadeaus van €21 tot €180. Met tips, budget-indeling en combinatie-ideeën.',
+      twitterImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.jpg',
+      canonicalUrl: 'https://gifteez.nl/blog/sinterklaas-cadeaus-2025-originele-ideeen',
+    },
+    tags: ['sinterklaas', 'cadeaus', 'tech', 'wellness', 'culinair', 'creatief', 'gadgets', '2025'],
   },
 ]
