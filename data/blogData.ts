@@ -2303,4 +2303,88 @@ export const blogPosts: BlogPost[] = [
       'baard',
     ],
   },
+  {
+    slug: 'cadeautrends-2025',
+    title: 'Cadeautrends 2025: Dit Wil Iedereen Ontvangen',
+    excerpt:
+      'Ontdek de hotste cadeautrends van 2025. Van duurzame self-care tot culinaire verwennerij en slimme gadgets — dit zijn de cadeaus waar iedereen blij van wordt.',
+    publishedDate: '2025-10-25',
+    author: { name: 'Kevin van Gifteez', avatarUrl: 'https://i.pravatar.cc/150?u=kevin' },
+    category: 'Trends',
+    imageUrl: '/images/blog-cadeautrends-2025-header.png',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Cadeaus in 2025 draaien om aandacht, duurzaamheid en beleving. Geen snelle impulsaankopen, maar slimme keuzes die bij de ontvanger passen. In deze gids vind je de belangrijkste trends met concrete ideeën — van eco-vriendelijke must-haves tot relaxte self-care en culinaire verwennerij.',
+      },
+
+      {
+        type: 'heading',
+        content: 'Trend 1 — Duurzame cadeaus (lang plezier, kleine voetafdruk)',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Duurzaamheid is niet langer een niche. Kies voor herbruikbaar (waterflessen, koffiebekers), gerecyclede materialen of fair-trade pakketten. Denk aan een zero-waste starterkit of een luxe theeset met biologische blends.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Affiliate ideeën: herbruikbare waterfles of thermos • fair-trade koffie/thee • zero-waste starterkit. Winkels: Amazon, Coolblue, Shop Like You Give a Damn.',
+      },
+
+      { type: 'heading', content: 'Trend 2 — Wellness & self-care (geef ontspanning cadeau)' },
+      {
+        type: 'paragraph',
+        content:
+          "Zelfzorg blijft groot. Populair zijn spa-sets, aromadiffusers met etherische oliën, massagekussens en zachte handdoeken. Perfect voor drukke agenda's en thuiswerkers.",
+      },
+
+      {
+        type: 'heading',
+        content: 'Trend 3 — Culinaire cadeaus (kwaliteit boven kwantiteit)',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Gourmet blijft een schot in de roos: denk aan een mooie kaasplank met accessoires, luxe chocoladebox of een koffiespecialiteiten-pakket. Combineer met een handig keukengadget voor extra waarde.',
+      },
+
+      { type: 'heading', content: 'Trend 4 — Seizoens- en thema-cadeaus' },
+      {
+        type: 'paragraph',
+        content:
+          "Maak het moment leidend: winterse Sinterklaas/Kerst-pakketten, een zomerpicknick-set of themapakketten voor hobby's (wijn & kaas, tuinieren, fotografie).",
+      },
+
+      { type: 'heading', content: 'Snelle start: 6 concrete cadeau-ideeën' },
+      {
+        type: 'paragraph',
+        content:
+          '1) Herbruikbare waterfles met isolatie • 2) Zero-waste starterkit (wraps, produce bags) • 3) Spa-pakket met geurkaarsen • 4) Aromadiffuser + etherische olie • 5) Kaasplank met messen • 6) Luxe chocoladebox.',
+      },
+
+      { type: 'heading', content: 'Waar koop je ze? (affiliate-vriendelijk)' },
+      {
+        type: 'paragraph',
+        content:
+          'Amazon: herbruikbare flessen, spa-sets, chocolade. Coolblue: diffusers, yogamatten, keukenaccessoires. Shop Like You Give a Damn: duurzame en fair-trade opties. Voeg in je component de juiste affiliate-URL\'s toe met rel="sponsored noopener".',
+      },
+
+      { type: 'heading', content: 'Tip: laat onze cadeau-coach meedenken' },
+      {
+        type: 'paragraph',
+        content:
+          'Nog geen keuze kunnen maken? Bezoek /sinterklaas voor seizoensinspiratie of gebruik de cadeau-coach op /quiz: drie korte vragen en je krijgt direct passende suggesties.',
+      },
+
+      { type: 'heading', content: 'Conclusie' },
+      {
+        type: 'paragraph',
+        content:
+          'Kies in 2025 voor cadeaus die duurzaam zijn, ontspanning bieden of smaakvol verwennen — en geef er een persoonlijke twist aan. Zo voelt elk cadeau doordacht én bijzonder.',
+      },
+    ],
+  },
 ]
