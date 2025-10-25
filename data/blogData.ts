@@ -2537,7 +2537,7 @@ export const blogPosts: BlogPost[] = [
     publishedDate: '2025-10-25',
     author: { name: 'Kevin van Gifteez', avatarUrl: 'https://i.pravatar.cc/150?u=kevin' },
     category: 'Sinterklaas',
-    imageUrl: '/images/blog-sinterklaas-2025-header.jpg',
+    imageUrl: '/images/blog-sinterklaas-2025-header.png',
     content: [
       {
         type: 'paragraph',
@@ -2776,13 +2776,13 @@ export const blogPosts: BlogPost[] = [
       ogTitle: 'Sinterklaas Cadeaus 2025: 15 Ideeën Die Écht Blij Maken',
       ogDescription:
         'Van smartwatch tot spa set, van koffie tot Kindle — ontdek 15 originele Sinterklaas cadeaus voor elk budget en persoonlijkheid.',
-      ogImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.jpg',
+      ogImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.png',
       ogType: 'article',
       twitterCard: 'summary_large_image',
       twitterTitle: 'Sinterklaas 2025: 15 Cadeaus Die Écht Scoren',
       twitterDescription:
         'Tech, wellness, culinair en creatief — 15 bewezen Sinterklaas cadeaus van €21 tot €180. Met tips, budget-indeling en combinatie-ideeën.',
-      twitterImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.jpg',
+      twitterImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.png',
       canonicalUrl: 'https://gifteez.nl/blog/sinterklaas-cadeaus-2025-originele-ideeen',
     },
     tags: ['sinterklaas', 'cadeaus', 'tech', 'wellness', 'culinair', 'creatief', 'gadgets', '2025'],
