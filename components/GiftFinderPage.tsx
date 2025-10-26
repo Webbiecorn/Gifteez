@@ -215,6 +215,37 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       )
   }, [gender])
 
+  const primaryInterestLabel = useMemo(() => {
+    if (selectedInterestTags.length > 0) {
+      const first = selectedInterestTags[0]
+      const tagged = suggestedInterests.find((item) => item.name === first)
+      return tagged ? `${tagged.icon} ${tagged.name}` : first
+    }
+    if (interests.trim().length > 0) {
+      const firstTyped = interests.split(',')[0]?.trim()
+      if (firstTyped) {
+        const tagged = suggestedInterests.find(
+          (item) => item.name.toLowerCase() === firstTyped.toLowerCase()
+        )
+        return tagged ? `${tagged.icon} ${tagged.name}` : firstTyped
+      }
+    }
+    return 'Geen specifieke interesse'
+  }, [selectedInterestTags, interests, suggestedInterests])
+
+  const budgetRangeSummary = useMemo(() => {
+    const min = Math.max(5, budget - 20)
+    const max = budget + 20
+    if (min >= max) {
+      return `€${min}`
+    }
+    return `€${min} – €${max}`
+  }, [budget])
+
+  const answersSummary = useMemo(() => {
+  return `Jouw antwoorden: ${primaryInterestLabel} • Budget ${budgetRangeSummary} • Ontvanger: ${recipient} • Gelegenheid: ${occasion}`
+  }, [primaryInterestLabel, budgetRangeSummary, recipient, occasion])
+
   const fallbackSearchQuery = useMemo(() => {
     const base = [recipient, occasion].filter(Boolean).join(' ')
     const interestPart = interests ? ` ${interests}` : ''
@@ -245,7 +276,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       if (validOccasion) setOccasion(validOccasion)
     }
     pinterestPageVisit('gift_finder', `finder_${Date.now()}`)
-    gaPageView('/gift-finder', 'AI Gift Finder - Gifteez.nl')
+  gaPageView('/gift-finder', 'Cadeau Coach - Gifteez.nl')
   }, [initialData])
 
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -351,8 +382,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       emailBody += `\n`
     })
 
-    emailBody += `\nBekijk alle resultaten op: ${window.location.href}\n\n`
-    emailBody += `Veel plezier met het uitkiezen van het perfecte cadeau!\n\nGroetjes,\nGifteez AI`
+  emailBody += `\nBekijk alle resultaten op: ${window.location.href}\n\n`
+  emailBody += `Veel plezier met het uitkiezen van het perfecte cadeau!\n\nGroetjes,\nJe cadeau-coach van Gifteez`
 
     // Create mailto link
     const subject = `Mijn Gifteez cadeausuggesties voor ${recipient}`
@@ -638,21 +669,31 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
             .getElementById('gift-results')
             ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }, 300)
-      } catch (err: any) {
-        setError(err.message || 'An unexpected error occurred.')
+      } catch (err) {
+        setError((err as Error).message || 'An unexpected error occurred.')
         setNoAffiliateResults(false)
       } finally {
         setIsLoading(false)
       }
     },
-    [recipient, budget, occasion, interests, sortBy]
+    [
+      recipient,
+      budget,
+      occasion,
+      interests,
+      sortBy,
+      auth?.currentUser?.email,
+      gender,
+      selectedInterestTags,
+      showToast,
+    ]
   )
 
   return (
     <>
       <Meta
-        title="AI GiftFinder - Vind het perfecte cadeau in 30 seconden | Gifteez"
-        description="Gebruik onze slimme GiftFinder om binnen 30 seconden het perfecte cadeau te vinden. Vul budget, interesses en gelegenheid in en ontvang persoonlijke AI-aanbevelingen van Amazon en Coolblue."
+        title="Cadeau-coach | Vind snelle cadeau-inspiratie op maat"
+        description="Laat onze cadeau-coach helpen: vertel voor wie het is, welke interesses erbij passen en je budget. Binnen een minuut zie je warme cadeautips van bekende en lokale winkels."
       />
       <div className="min-h-screen bg-white">
         {/* New Hero Section with background image */}
@@ -666,10 +707,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-6 md:mb-12">
               <h2 className="text-xl md:text-3xl lg:text-4xl font-extrabold text-gray-900 mb-2 md:mb-4">
-                Hoe werkt het?
+                Zo werkt de cadeau-coach
               </h2>
               <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto">
-                In 3 simpele stappen vind je het perfecte cadeau met onze AI
+                Drie snelle stappen en je krijgt een persoonlijk cadeauadvies van onze coach
               </p>
             </div>
 
@@ -683,7 +724,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                   <div className="mt-3 md:mt-4">
                     <div className="text-3xl md:text-5xl mb-2 md:mb-4">🎯</div>
                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-1.5 md:mb-3">
-                      Vertel ons over de ontvanger
+                      Vertel kort over de ontvanger
                     </h3>
                     <p className="text-xs md:text-base text-gray-600">
                       Kies de relatie, geslacht en budget voor het perfecte cadeau
@@ -699,12 +740,12 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     2
                   </div>
                   <div className="mt-3 md:mt-4">
-                    <div className="text-3xl md:text-5xl mb-2 md:mb-4">🤖</div>
+                    <div className="text-3xl md:text-5xl mb-2 md:mb-4">💡</div>
                     <h3 className="text-base md:text-xl font-bold text-gray-900 mb-1.5 md:mb-3">
-                      AI doet de magie
+                      De coach koppelt ideeën
                     </h3>
                     <p className="text-xs md:text-base text-gray-600">
-                      Onze slimme AI analyseert duizenden producten in seconden
+                      Wij zoeken op basis van je antwoorden de warmste cadeau-opties uit
                     </p>
                   </div>
                 </div>
@@ -722,7 +763,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                       Krijg gepersonaliseerde tips
                     </h3>
                     <p className="text-xs md:text-base text-gray-600">
-                      Ontvang handgeplukte cadeaus die perfect bij de ontvanger passen
+                      Ontvang handgeplukte cadeaus die precies passen bij jullie moment
                     </p>
                   </div>
                 </div>
@@ -993,12 +1034,12 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     {isLoading ? (
                       <>
                         <SpinnerIcon className="animate-spin -ml-1 mr-3 h-7 w-7" />
-                        <span>AI zoekt de beste cadeaus...</span>
+                        <span>Je coach zoekt cadeaus...</span>
                       </>
                     ) : (
                       <>
                         <span className="text-3xl mr-3">🎁</span>
-                        <span>Vind Perfecte Cadeaus</span>
+                        <span>Laat de cadeau-coach zoeken</span>
                         <svg
                           className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-2"
                           fill="none"
@@ -1055,7 +1096,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                     >
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
-                    <span className="font-medium">AI-powered</span>
+                    <span className="font-medium">Persoonlijk advies</span>
                   </div>
                 </div>
               </div>
@@ -1146,16 +1187,16 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                 ))}
               {gifts.length > 0 && (
                 <div className="animate-fade-in">
-                  {/* Personalized AI Intro */}
+                  {/* Personalized coach intro */}
                   {personalizedIntro && (
                     <div className="mb-6 md:mb-8 p-4 md:p-6 bg-gradient-to-r from-primary/10 via-accent/10 to-secondary/20 rounded-lg md:rounded-xl border-2 border-primary/20 shadow-lg">
                       <div className="flex items-start gap-2 md:gap-4">
                         <div className="p-2 md:p-3 bg-white rounded-full shadow-md">
-                          <span className="text-xl md:text-3xl">🤖</span>
+                          <span className="text-xl md:text-3xl">🎁</span>
                         </div>
                         <div className="flex-1">
                           <h3 className="font-display text-base md:text-lg font-bold text-primary mb-1 md:mb-2">
-                            Jouw Persoonlijke AI Assistent
+                            Je cadeau-coach denkt mee
                           </h3>
                           <p className="text-sm md:text-base text-gray-700 leading-relaxed">
                             {personalizedIntro}
@@ -1168,10 +1209,13 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 md:mb-8 p-3 md:p-6 bg-white rounded-lg md:rounded-xl shadow-lg border border-gray-100 gap-3 md:gap-4">
                     <div className="mb-0">
                       <h2 className="font-display text-lg md:text-2xl font-bold text-primary">
-                        Hier zijn je AI-cadeautips!
+                        Dit tipt je cadeau-coach
                       </h2>
                       <p className="text-xs md:text-base text-gray-600">
                         {gifts.length} {gifts.length === 1 ? 'cadeau' : 'cadeaus'} gevonden
+                      </p>
+                      <p className="mt-1 text-[11px] md:text-sm text-gray-500 font-medium">
+                        {answersSummary}
                       </p>
                     </div>
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-4">
@@ -1336,10 +1380,10 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                             variant="accent"
                             className="px-6 py-3"
                           >
-                            {feedbackSubmitting ? 'Versturen...' : 'Stuur naar AI-team'}
+                            {feedbackSubmitting ? 'Versturen...' : 'Stuur naar het cadeau-team'}
                           </Button>
                           <span className="text-xs text-gray-500">
-                            We bewaren alleen de laatste 50 feedbacks om de AI te trainen. Geen
+                            We bewaren alleen de laatste 50 feedbacks om onze tips te verbeteren. Geen
                             e-mail nodig.
                           </span>
                         </div>

@@ -18,9 +18,9 @@ const OrganizationSchema: React.FC = () => {
     url: 'https://gifteez.nl',
     logo: 'https://gifteez.nl/logo.png',
     description:
-      'Vind binnen seconden het perfecte cadeau met AI. Gifteez helpt je met gepersonaliseerde cadeau-aanbevelingen op basis van interesses, budget en gelegenheid.',
+      'Expert gift guides en trending cadeaus voor elke gelegenheid. Van Sinterklaas tot Kerst — ontdek persoonlijk geteste producten met directe kooplinks.',
     foundingDate: '2024',
-    slogan: 'Slimme cadeau-inspiratie voor elk moment',
+    slogan: 'Trending Gifts & Expert Gift Guides',
     sameAs: [socialLinks.instagram, socialLinks.pinterest],
     contactPoint: {
       '@type': 'ContactPoint',

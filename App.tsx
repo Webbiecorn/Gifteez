@@ -316,7 +316,7 @@ const App: React.FC = () => {
       canonical.setAttribute('href', window.location.origin + path)
       const baseTitle = 'Gifteez.nl'
       const pageTitles: Record<string, string> = {
-        home: 'Vind binnen 30 seconden het perfecte cadeau met AI',
+        home: 'Trending Gifts & Expert Gift Guides voor Elk Moment',
         giftFinder: 'AI GiftFinder — Persoonlijke cadeau-ideeën',
         categories: "Cadeaucategorieën — Ontdek ideeënpagina's",
         favorites: 'Favoriete cadeaus — Deel & bewaar',

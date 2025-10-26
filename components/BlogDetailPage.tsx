@@ -26,7 +26,7 @@ import {
 import ImageWithFallback from './ImageWithFallback'
 import InternalLinkCTA from './InternalLinkCTA'
 import Meta from './Meta'
-import SocialShare from './SocialShare'
+// import SocialShare from './SocialShare'
 import type {
   BlogPost,
   NavigateTo,
@@ -90,7 +90,7 @@ interface BlogDetailPageProps {
   showToast: ShowToast
 }
 
-const BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
+const _BlogCardSmall: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
   post,
   navigateTo,
 }) => (
@@ -321,7 +321,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     }
   }, [post])
 
-  const relatedPosts = useMemo(
+  const _relatedPosts = useMemo(
     () =>
       post
         ? posts.filter((p) => p.category === post.category && p.slug !== post.slug).slice(0, 3)
@@ -471,7 +471,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
           url: shareUrl,
         })
       } catch (error) {
-        console.log('Error sharing:', error)
+        console.warn('Error sharing:', error)
       }
     } else {
       // Fallback to clipboard
@@ -480,7 +480,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     }
   }
 
-  const socialLinks = [
+  const _socialLinks = [
     {
       name: 'Facebook',
       icon: FacebookIcon,
@@ -580,19 +580,19 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
         return (
           <div
             key={index}
-            className="my-12 bg-gradient-to-r from-secondary to-muted-rose rounded-2xl p-8 border border-gray-100 shadow-lg"
+            className="my-12 bg-gradient-to-br from-rose-50 via-white to-pink-50 rounded-3xl p-6 sm:p-8 border-2 border-rose-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01]"
           >
             <GiftResultCard
               gift={block.content}
               index={index}
               showToast={showToast}
               isEmbedded={true}
-              imageHeightClass="h-32"
+              imageHeightClass="h-80 sm:h-96 lg:h-[28rem]"
               imageFit="contain"
             />
           </div>
         )
-      case 'comparisonTable':
+      case 'comparisonTable': {
         const tableBlock = block as ComparisonTableBlock
         return (
           <div
@@ -648,30 +648,32 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
             </table>
           </div>
         )
-      case 'prosCons':
+      }
+      case 'prosCons': {
         const prosConsBlock = block as ProsConsBlock
         return (
           <div
             key={index}
             className={`my-12 grid grid-cols-1 md:grid-cols-${prosConsBlock.items.length} gap-8`}
           >
-            {prosConsBlock.items.map((item, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
-              >
-                <div className="bg-gradient-to-r from-accent to-accent-hover p-6">
-                  <h4 className="font-display font-bold text-xl text-white text-center">
-                    {item.title}
-                  </h4>
-                </div>
-                <div className="p-6">
-                  <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <CheckIcon className="w-5 h-5 text-green-600" />
-                      </div>
-                      <h5 className="font-bold text-green-700 text-lg">Pluspunten</h5>
+            {prosConsBlock.items.map((item, i) => {
+              return (
+                <div
+                  key={i}
+                  className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
+                >
+                  <div className="bg-gradient-to-r from-accent to-accent-hover p-6">
+                    <h4 className="font-display font-bold text-xl text-white text-center">
+                      {item.title}
+                    </h4>
+                  </div>
+                  <div className="p-6">
+                    <div className="mb-6">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <CheckIcon className="w-5 h-5 text-green-600" />
+                        </div>
+                        <h5 className="font-bold text-green-700 text-lg">Pluspunten</h5>
                     </div>
                     <ul className="space-y-3">
                       {item.pros.map((pro, j) => (
@@ -700,10 +702,12 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                   </div>
                 </div>
               </div>
-            ))}
+            )
+            })}
           </div>
         )
-      case 'verdict':
+      }
+      case 'verdict': {
         const verdictBlock = block as VerdictBlock
         return (
           <div
@@ -726,6 +730,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
             </div>
           </div>
         )
+      }
+      default:
+        return null
     }
   }
 
@@ -775,7 +782,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
         {heroDisplaySrc && (
           <section className="mb-12">
             <div
-              className={`relative overflow-hidden rounded-3xl border border-gray-100 shadow-2xl ${heroFitMode === 'cover' ? 'h-[340px] sm:h-[420px] lg:h-[520px]' : 'bg-white p-6 sm:p-10'}`}
+              className={`relative overflow-hidden rounded-3xl border border-gray-100 shadow-2xl ${heroFitMode === 'cover' ? 'h-[420px] sm:h-[520px] lg:h-[620px]' : 'bg-white p-6 sm:p-10'}`}
             >
               {heroFitMode === 'cover' ? (
                 <img

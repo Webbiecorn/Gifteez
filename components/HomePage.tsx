@@ -73,13 +73,23 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
     scale: 1,
   }))
 
+  const partyProPost = useMemo(
+    () => blogPosts.find((post) => post.slug === 'partypro-feestdecoratie-partner'),
+    [blogPosts]
+  )
+
   // Trending: Most recent posts (simulates popularity - could track views in future)
   const trendingPosts = useMemo(() => {
-    // Sort by published date descending and take top 3 most recent
-    return [...blogPosts]
-      .sort((a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
-      .slice(0, 3)
-  }, [blogPosts])
+    const sorted = [...blogPosts].sort(
+      (a, b) => new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime()
+    )
+
+    if (partyProPost) {
+      return sorted.filter((post) => post.slug !== partyProPost.slug).slice(0, 3)
+    }
+
+    return sorted.slice(0, 3)
+  }, [blogPosts, partyProPost])
 
   // Latest: Same as trending for now, but separated for future differentiation
   const latestPosts = useMemo(() => {
@@ -89,7 +99,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
   }, [blogPosts])
 
   useEffect(() => {
-    document.title = 'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI'
+    document.title = 'Gifteez.nl — Trending Gifts & Expert Gift Guides voor Elk Moment'
 
     const ensure = (selector: string, create: () => HTMLElement) => {
       let el = document.head.querySelector(selector) as HTMLElement | null
@@ -101,7 +111,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
     }
 
     const description =
-      'Gebruik de AI GiftFinder om razendsnel een persoonlijk cadeau-idee te vinden voor elke gelegenheid en elk budget.'
+      'Ontdek expert gift guides voor Sinterklaas, Kerst en elke gelegenheid. Van tech gadgets tot wellness — vind het perfecte cadeau met directe kooplinks.'
     const metaDesc = ensure('meta[name="description"]', () =>
       Object.assign(document.createElement('meta'), { name: 'description' })
     )
@@ -127,7 +137,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
     setMeta(
       'property',
       'og:title',
-      'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI'
+      'Gifteez.nl — Trending Gifts & Expert Gift Guides voor Elk Moment'
     )
     setMeta('property', 'og:description', description)
     setMeta('property', 'og:type', 'website')
@@ -137,7 +147,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
     setMeta(
       'name',
       'twitter:title',
-      'Gifteez.nl — Vind binnen 30 seconden het perfecte cadeau met AI'
+      'Gifteez.nl — Trending Gifts & Expert Gift Guides voor Elk Moment'
     )
     setMeta('name', 'twitter:description', description)
     setMeta('name', 'twitter:image', window.location.origin + '/og-image.png')
@@ -177,7 +187,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
   const handleNewsletterSubmit = (event: FormEvent) => {
     event.preventDefault()
     if (newsletterEmail && /\S+@\S+\.\S+/.test(newsletterEmail)) {
-      console.log('Subscribing email:', newsletterEmail)
+      // console.log('Subscribing email:', newsletterEmail)
       navigateTo('download')
     }
   }
@@ -227,37 +237,36 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
         <Container size="xl" className="relative z-10 py-16 lg:py-24">
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
             <div className="space-y-8 text-center lg:text-left">
-              <div className="inline-flex items-center gap-3 rounded-full bg-white/80 px-6 py-2.5 text-sm font-semibold text-green-600 shadow-md backdrop-blur-lg border border-white/50">
+              <div className="inline-flex items-center gap-3 rounded-full bg-white/80 px-6 py-2.5 text-sm font-semibold text-rose-600 shadow-md backdrop-blur-lg border border-white/50">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400/80"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400/80"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
                 </span>
-                AI-Powered Gift Discovery
+                🎁 Trending Gifts & Seasonal Guides
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight">
-                <span className="text-slate-900 block">Vind het</span>
-                <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 bg-clip-text text-transparent block">
-                  perfecte cadeau
+                <span className="text-slate-900 block">Ontdek de</span>
+                <span className="bg-gradient-to-r from-rose-600 via-purple-500 to-pink-500 bg-clip-text text-transparent block">
+                  beste cadeaus
                 </span>
-                <span className="text-slate-900 block">in 30 seconden</span>
+                <span className="text-slate-900 block">voor elk moment</span>
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Laat onze AI 1000+ cadeaus scannen en ontvang direct een persoonlijke shortlist
-                inclusief kooplinks en expert tips.
+                Van Sinterklaas tot Kerst, van tech gadgets tot wellness — onze expert gift guides helpen je het perfecte cadeau te vinden met directe kooplinks.
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2 text-left">
                 <div className="rounded-2xl bg-white/80 p-4 shadow-lg border border-white/60 backdrop-blur-lg">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
-                      <QuestionMarkCircleIcon className="h-5 w-5" />
+                      <BookOpenIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Slimme vragen</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Expert gift guides</h3>
                       <p className="text-xs text-slate-600">
-                        AI leest tussen de regels en begrijpt jouw ontvanger.
+                        Uitgebreide blogs met persoonlijk geteste producten.
                       </p>
                     </div>
                   </div>
@@ -268,9 +277,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <TagIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Handmatige selectie</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Directe kooplinks</h3>
                       <p className="text-xs text-slate-600">
-                        Elk cadeau persoonlijk beoordeeld op kwaliteit en originaliteit.
+                        Klik door naar je favoriete webshop en bestel direct.
                       </p>
                     </div>
                   </div>
@@ -281,9 +290,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <CalendarIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Altijd actueel</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Seizoenscontent</h3>
                       <p className="text-xs text-slate-600">
-                        Dagelijks aangevuld met seizoensfavorieten.
+                        Van Sinterklaas tot Kerst — altijd actueel.
                       </p>
                     </div>
                   </div>
@@ -291,12 +300,12 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                 <div className="rounded-2xl bg-white/80 p-4 shadow-lg border border-white/60 backdrop-blur-lg">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
-                      <BookOpenIcon className="h-5 w-5" />
+                      <QuestionMarkCircleIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Direct inspiratie</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">AI-tool beschikbaar</h3>
                       <p className="text-xs text-slate-600">
-                        Voor elke gelegenheid en elk type ontvanger.
+                        Nog geen idee? Gebruik onze slimme GiftFinder.
                       </p>
                     </div>
                   </div>
@@ -316,21 +325,21 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
               >
                 <Button
                   variant="accent"
-                  onClick={() => navigateTo('giftFinder')}
+                  onClick={() => navigateTo('blog')}
                   className="text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all duration-300 hover:-translate-y-1"
                   style={{
                     background: 'linear-gradient(135deg, #f43f5e, #9333ea)',
                     boxShadow: '0 25px 55px -18px rgba(147, 51, 234, 0.45)',
                   }}
                 >
-                  🎁 Start Gratis
+                  📖 Bekijk Gift Guides
                 </Button>
                 <button
                   type="button"
-                  onClick={() => navigateTo('quiz')}
+                  onClick={() => navigateTo('giftFinder')}
                   className="flex items-center gap-2 rounded-2xl border border-purple-200 bg-white/80 px-6 py-3.5 text-base font-semibold text-purple-700 shadow-lg transition hover:border-purple-300 hover:shadow-xl backdrop-blur-lg"
                 >
-                  🎯 Doe de Quiz
+                  💡 Of gebruik AI tool
                 </button>
               </animated.div>
 
@@ -343,7 +352,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="font-medium">Gratis te gebruiken</span>
+                  <span className="font-medium">Gratis toegang</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
@@ -353,13 +362,13 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="font-medium">Beveiligd & veilig</span>
+                  <span className="font-medium">Betrouwbare retailers</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg className="h-5 w-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="font-medium">50.000+ tevreden gebruikers</span>
+                  <span className="font-medium">Expert getest</span>
                 </div>
               </div>
             </div>
@@ -419,6 +428,47 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
             Ontdek onze populairste gidsen voor cadeau-inspiratie
           </p>
         </div>
+        {partyProPost && (
+          <div className="mb-12 overflow-hidden rounded-3xl border border-accent/20 bg-gradient-to-r from-rose-50 via-white to-orange-50 shadow-xl">
+            <div className="flex flex-col md:flex-row">
+              <div className="relative md:w-1/2">
+                <ImageWithFallback
+                  src={partyProPost.imageUrl}
+                  alt={partyProPost.title}
+                  className="h-64 w-full object-cover md:h-full"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent" />
+              </div>
+              <div className="flex flex-1 flex-col justify-center gap-4 p-8 md:w-1/2 md:p-12">
+                <span className="inline-flex items-center gap-2 self-start rounded-full bg-white/80 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-primary shadow">
+                  Nieuwe partner
+                </span>
+                <h3 className="font-display text-2xl font-bold text-primary md:text-3xl">
+                  {partyProPost.title}
+                </h3>
+                <p className="text-sm text-gray-700 md:text-base">{partyProPost.excerpt}</p>
+                <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    variant="accent"
+                    onClick={() => navigateTo('blogDetail', { slug: partyProPost.slug })}
+                    className="sm:w-auto"
+                  >
+                    Lees de spotlight
+                  </Button>
+                  <a
+                    href="https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl"
+                    rel="nofollow sponsored noopener"
+                    target="_blank"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/30 bg-white px-6 py-3 text-sm font-semibold text-primary shadow-md transition-all hover:border-primary/60 hover:bg-rose-50"
+                  >
+                    Bekijk PartyPro collectie
+                    <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {blogLoading ? (
             Array.from({ length: 3 }).map((_, index) => (

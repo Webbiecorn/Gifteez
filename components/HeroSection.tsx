@@ -111,24 +111,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
             <span className="text-xs md:text-sm font-semibold text-rose-600 uppercase tracking-wider">
-              AI-Powered Gift Discovery
+              Je cadeau-coach staat klaar
             </span>
           </div>
 
           {/* Heading */}
           <div>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight">
-              <span className="block text-rose-600 mb-1 md:mb-2">Vind het perfecte</span>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold leading-tight text-rose-600">
+              Nog geen cadeau-idee?
               <span className="block bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 bg-clip-text text-transparent">
-                cadeau
+                Laat onze coach meedenken
               </span>
             </h1>
           </div>
 
           {/* Description */}
           <p className="text-base md:text-xl text-gray-700 leading-relaxed max-w-xl">
-            Beantwoord een paar vragen en onze AI vindt binnen 30 seconden het perfecte cadeau,
-            <span className="font-semibold text-rose-600"> speciaal voor jou</span>.
+            Hoi, ik ben je cadeau-coach 🎁. Stel drie snelle vragen en ik zoek persoonlijk met je mee naar een match die past bij jullie moment.
           </p>
 
           {/* Feature Pills */}
@@ -147,9 +146,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span className="text-xs md:text-sm font-medium text-gray-700">
-                Gratis te gebruiken
-              </span>
+              <span className="text-xs md:text-sm font-medium text-gray-700">3 korte vragen</span>
             </div>
             <div className="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white/60 backdrop-blur-sm border border-rose-100">
               <svg
@@ -166,7 +163,25 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
                 />
               </svg>
               <span className="text-xs md:text-sm font-medium text-gray-700">
-                Binnen 30 seconden
+                Meteen warme tips
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white/60 backdrop-blur-sm border border-amber-100">
+              <svg
+                className="w-4 md:w-5 h-4 md:h-5 text-amber-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6l3 3"
+                />
+              </svg>
+              <span className="text-xs md:text-sm font-medium text-gray-700">
+                Direct shopklare cadeaus
               </span>
             </div>
           </div>
@@ -188,7 +203,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
                 focus:outline-none focus:ring-4 focus:ring-rose-300
               "
             >
-              <span>Start GiftFinder</span>
+              <span>Start je cadeau-coach</span>
               <svg
                 className="w-4 md:w-5 h-4 md:h-5 transition-transform group-hover:translate-x-1"
                 fill="none"
@@ -220,9 +235,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span>
-                Vertrouwd door <strong>10.000+</strong> cadeaugevers
-              </span>
+              <span>Vertrouwd door <strong>10.000+</strong> cadeaugevers</span>
             </p>
           </div>
         </div>

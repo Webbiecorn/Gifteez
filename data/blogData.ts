@@ -706,7 +706,7 @@ const gift_sinterklaas_oordopjes: Gift = {
         'https://www.amazon.nl/HUAWEI-Ooromsluitend-draagcomfort-Dual-driver-Verbinding/dp/B0F2TD7MBZ?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&content-id=amzn1.sym.26978089-8dca-4887-9d0c-70fdc84d83da%3Aamzn1.sym.26978089-8dca-4887-9d0c-70fdc84d83da&crid=E0JGMFQ878PL&cv_ct_cx=Draadloze%2BOordopjes%2B%28%E2%82%AC30-150%29&keywords=Draadloze%2BOordopjes%2B%28%E2%82%AC30-150%29&pd_rd_i=B0F2TD7MBZ&pd_rd_r=0de7b84a-f735-4024-a025-849518c3ec21&pd_rd_w=DiSME&pd_rd_wg=oQUId&pf_rd_p=26978089-8dca-4887-9d0c-70fdc84d83da&pf_rd_r=Y2RHN0E1CH8DZK7BKQCF&qid=1761417955&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sprefix=draadloze%2Boordopjes%2B30-150%2B%2Caps%2C162&sr=1-1-07652b71-81e3-41f8-9097-e46726928fb7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=53ad9181479e8ff14296c9dbb3a1649a&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/51dHwi38shL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/31TzGjuFzjL.jpg',
 }
 
 const gift_sinterklaas_echo: Gift = {
@@ -721,7 +721,7 @@ const gift_sinterklaas_echo: Gift = {
         'https://www.amazon.nl/amazon-echo-dot-5e-generatie-2022-release-smartspeaker-met-wifi-bluetooth-en-alexa-charcoal/dp/B09B8X9RGM?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=PD9QQEOAI20E&dib=eyJ2IjoiMSJ9.1jV0IWOsEv5fyB632CujUR4MmpZbFKcEZQ8lQm7Ehu1W14c9zn1jwGXUA_Chh398NmNOoyLjWRj8xH-8iE0pFxTBBCdZ1OAnxZaqg9JZwDcu69Ou25PvoxIFg9Jay4mhYVwJaDC6xbeXYZqxduRalCmF9CvbSivxYjOdIRC_32o4DYPPGPLdY-K4R57dj5DkBk2BsWV7ilHvf9m3nHxEs6I4V5tr-g0I1r5_Xd8poHMXgVaIisjbxcueCraDiHh75Y8vdcWLJ3tbc3u4ricCuO7zYj-oz9PuB9bLQVNeYyI.RhcgFlBvQ_WmV_dJFinJUFCm2Yu5RETHtKTrAz1_jgI&dib_tag=se&keywords=Slimme%2BSpeaker%2B%28&qid=1761418273&sprefix=slimme%2Bspeaker%2B%2Caps%2C167&sr=8-6&th=1&linkCode=ll1&tag=gifteez77-21&linkId=59b6a19f503203b3dae2101583786fd2&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71kWHAL7pnL._AC_SL1000_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/51RcU+HQjSL.jpg',
 }
 
 const gift_sinterklaas_powerbank: Gift = {
@@ -736,7 +736,7 @@ const gift_sinterklaas_powerbank: Gift = {
         'https://www.amazon.nl/NOBIS-Powerbank-Draagbare-Snelladen-Compatibel/dp/B0D63H6KKV?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3MS7EIHVNCHGO&dib=eyJ2IjoiMSJ9._N6JUc02my6K40SVzoka_bYnOuNIU3WtbPbcS7kLjWK670AadozQuLO68Mx1T2wUZzQG0Gk8ZnKFpktWsultAkkRMDpV0BIspRFmcmeWHkV7df6gbLDVCOUwKeuvEThO7msk_eQ_vhjqOUT1f14pmCEIKZvaSOsYl4w9tW8NmpvSfytavKZTtMVkuSRVdRfkh73GJaR4DURHGF6Ncv9tQ-q3n0OMKwZ3uvb0JYwJRf1biaoCQWRCrp1rAoJeV-W8S4uxB3vrY4i70P1JPAXDMGaGTggFtEKJXk33zIxpocc.hYNnkdAkOw0a8qL662kzGwG8AbWE3yKvdOQoo8mzUeM&dib_tag=se&keywords=powerbank%2Bmet%2Bsnellader&qid=1761418506&sprefix=powerbank%2Bmet%2Bsnelladen%2B%2Caps%2C135&sr=8-13&th=1&linkCode=ll1&tag=gifteez77-21&linkId=36e88a130b2a506064ffd204cabebcc2&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/61D6xQQzsDL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/31dI6GM7fdL.jpg',
 }
 
 const gift_sinterklaas_spa: Gift = {
@@ -751,7 +751,7 @@ const gift_sinterklaas_spa: Gift = {
         'https://www.amazon.nl/Zelfzorgset-Voor-Vrouwen-Ontspanning-Echtgenote/dp/B0FBGJH28X?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1XUQ2EVRVZ4LF&dib=eyJ2IjoiMSJ9.GZoVOA29P2iw1Tlnr4GDihYA4GjnHYCow7_8_SjlLvUPBwRstF5khIy5JAHh71Z2GAZVq3oC6Dr8ov24C0v-Z_jEVFq-tjkYxycLOLccuRj0r8UAJw-IN6TQp4ux8GFtMep0qpMqnMGW8UG9GayONS_cjp08l16vBstz_rRn70e0xFyPw0Mh_PwoTq9XZWxhp0AIimbJMAWuHLefZkb8Kt-Sr2_gR84VVwkWraJU6QWA4NR6D8d53mVouYAs0U3OY4f1K49Sk6_6jKdTOoT5_oiN_iTB60YW2tny0U2PG5Q.NkdaIZ4isAuzBza9OcGBMDtii31NaKcoviHVDNc1hL8&dib_tag=se&keywords=Luxe+Spa+Set&qid=1761418816&sprefix=luxe+spa+set%2Caps%2C158&sr=8-51-spons&xpid=kZMbOLA_agIYv&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGZfbmV4dA&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=2f4ce1c11ea19e28e8cb006ec822cf6f&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/81bFtLIFjcL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/41jHoqV-bwL.jpg',
 }
 
 const gift_sinterklaas_diffuser: Gift = {
@@ -766,7 +766,7 @@ const gift_sinterklaas_diffuser: Gift = {
         'https://www.amazon.nl/ZOVHYYA-Luchtbevochtiger-Afstandsbediening-Automatische-Uitschakeling/dp/B0CSYY5GXR?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=234VBCG09QJCP&dib=eyJ2IjoiMSJ9.HIGeuxq_twxDW4v7nqDke7ZgaKHY3hJXJBkQJWuwz-3X9QU8UZ3-rwLUMM31i3EhGcoI4p-um2RDY7CKogkB5CO7UMsqqBoNDE2a766P8Hx4FxY3IeMnaqmYT5WmKStuP2a7PGK0Ev9ZENAJrbgELI-yJL-WMj_yNG_qFPXlNc8Apz9pRRqx-BnlG5y_EiVXeBsqDb2s0T0JI5KcuWLHrRvWnb9cZuQE31kmckvafIpwdUrJT_BixYbpldo9j1Y6VY-feaHpECkmoUlUA3DrkYrl88o_rHLsgX5_So0vFWo.x0GHphTDrheQC8s6VCfrWXx4CeaB7dpnc4eZFh-tZg0&dib_tag=se&keywords=Diffuser%2Bmet%2Betherische%2Boli%C3%ABn&qid=1761418955&sprefix=diffuser%2Bmet%2Betherische%2Boli%C3%ABn%2Caps%2C98&sr=8-7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f8fcb484f93df677699365ca15080418&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71T8xeCZDcL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/51xpksjk5FL.jpg',
 }
 
 const gift_sinterklaas_massage: Gift = {
@@ -781,7 +781,7 @@ const gift_sinterklaas_massage: Gift = {
         'https://www.amazon.nl/Nekmassageapparaat-2025-Shiatsu-massage-grafeenverwarming-draagstijlen/dp/B0F53MKHBT?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3FWPHEOJSFWEI&dib=eyJ2IjoiMSJ9.Jg1_kQsjjdQ7fDSMTAoAXjh1wsSiWCktqKKy_3FMRYOtGFawmqPd7tolbNllHl7xB_Cm02EErdSInsVzR-Qpv56i8jwi3NsM0fFkBg9roKnocl6faN4i_S19j47wy3MpJT-9q1hi7WOkpNR-NxboyI06Qd7kRYSjSjYvC-OiVWyTlYEsin3oP6lhv-B4I-LoPgmFIV7B2ViUuCHpPhVHJtHe6zfethv2hipUnjmeQ6W7ec_Mwlx0v9WdaYWCB9sMvCUlh_7yOOfLR-VxwNrh3rttsdc2fnejSz4ROUSw5KM.yow9Nzzs9pZm8eNzQgMiX4Jdxj2fQxI7QrDmeHY0CVw&dib_tag=se&keywords=Massage%2BApparaat&qid=1761419143&sprefix=massage%2Bapparaat%2B%2Caps%2C159&sr=8-27&th=1&linkCode=ll1&tag=gifteez77-21&linkId=bdf5193e8522ea73424a71d5727b1853&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/51ZVXF5wE0L._AC_SL1200_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/41n8uJf3qML.jpg',
 }
 
 const gift_sinterklaas_deken: Gift = {
@@ -796,7 +796,7 @@ const gift_sinterklaas_deken: Gift = {
         'https://www.amazon.nl/Polar-Night-verzwaringsdeken-voor-volwassenen/dp/B08ZSSCVG7?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2BNOYA0089QWE&dib=eyJ2IjoiMSJ9.COdKxLAokkVRY37v54qwxlw06aeNpwosfd7oxieMBse4zB49m7GE3bWG1JwNkzWdFYLyEJ85t2Z183fMdBYqYMrYQnp-WELJX7zI_qCEKGWQ2ag8SC994tKlHnnZV5WfLA8GWi7G-WPGFKL8XLZygcSuuzOYN9kJBZYKpO53dwWYy_y9OacXAWeUkGers0zZucGOiZ-es7FBSULwrhrcs3lYC25VX_T4tT3ke8f5vANWQbkI8UaX6kvDwKb0bTqwixubnNIcyTc8YIGbbYKaa23-ruygSY0fdviBeC9qvm0.hS4aZUpPH9XP__iop1jN_CxOXnqqbTuTQcA7df0iCjQ&dib_tag=se&keywords=zware%2Bdeken%2Bvoor%2Bbeter%2Bslaap&qid=1761419333&sprefix=zware%2Bdeken%2Bvoor%2Bbetere%2Bslaap%2Caps%2C143&sr=8-8&th=1&linkCode=ll1&tag=gifteez77-21&linkId=e9313e1bcd2dd01430fc931157c809eb&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/81A4JZkRUpL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/41trDj0an1L.jpg',
 }
 
 const gift_sinterklaas_koffie: Gift = {
@@ -811,7 +811,7 @@ const gift_sinterklaas_koffie: Gift = {
         'https://www.amazon.nl/Koffiecadeau-probeerset-geroosterd-koffiebonen-volautomaat/dp/B093DLP5MS?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=471KQUSSLVOM&dib=eyJ2IjoiMSJ9.uE6d5FqEuwCaTG_Y3ac94rrjfOZjJcwNIG_IsfXigydjTuqCleajJ26b_B8yo2vcnxqu1_3tjLq9DI7W57o0R_m59_nvHnV2cvM6XSLoyKK89pLHdIjsfqm-JvJbz9ma2neVcYYwzVK4HRfK7SWw_w.cceMCdmgxNOWfP8y1bAhUFhvHie_gz75E2-tJ0GulzM&dib_tag=se&keywords=specialty+koffieman+s+pers+gift&qid=1761419487&sprefix=specialty+koffieman+frans+pers+gift%2Caps%2C59&sr=8-7&linkCode=ll1&tag=gifteez77-21&linkId=46bd415088db236bc00fed70438756e7&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/91vRlVmXmIL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/51u9di2StkL.jpg',
 }
 
 const gift_sinterklaas_chocolade: Gift = {
@@ -826,7 +826,7 @@ const gift_sinterklaas_chocolade: Gift = {
         'https://www.amazon.nl/Anthon-Berg-Chocolade-Liquor-Chocolates/dp/B09HT6L72D?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1LBO4XQI5M5CH&dib=eyJ2IjoiMSJ9.4WQh2soq0fx0bCI8sAwxKzMkgjTFr22s83DGWO7ueuVmst_wZTrL9vvFrPqCwMLNbDkrtbMT_9g2vv2F97ZNBOtCMKsVxzzmavSYLZwZa394iwKYKvZQAx27QF8foqzo_RqAE0Y0HlhuO6E2U9cddnHi3yDZD9y7NcQb5kQAvzzA9E_mHXJND9o1MmQmBg9y-TfYTWad-iSrpGLJTTyq3A1r9arW_V7tZMI1GwbRqRABKZq_vgImVL0t46_jBu91hat5utO4o7w7m27Yvc0WU9L1PSqgd48BCPZ8UxyjzzQ.pkevTzlkUvQapJNffksC4h6MS0xeOYaFaPWDUX_1IRQ&dib_tag=se&keywords=Premium+chocolade&qid=1761419626&sprefix=premium+chocolade%2Caps%2C98&sr=8-6&linkCode=ll1&tag=gifteez77-21&linkId=af9fbf387d5464eba5479fc5432de08a&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/715WpBqIdyL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/51C61SeRtKL.jpg',
 }
 
 const gift_sinterklaas_kaasplank: Gift = {
@@ -841,7 +841,7 @@ const gift_sinterklaas_kaasplank: Gift = {
         'https://www.amazon.nl/StarBlue-Kaasplankenset-Kaassnijplank-housewarming-Verjaardagscadeaus/dp/B08Q2WTJQX?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2LFXG54MNZ44Q&dib=eyJ2IjoiMSJ9.DGrZYMC_Ya7h-f5WE9clFplnpZIK9yp4Q17q1Er-cPTyWOxJQvJF-2Lc5JxSOgDgUisz9zgWqx8mQYefKJW4GzkMLPxkZ-urRIIA8Jp8KwIFXS6mmTal48QoA-pEpPwnCZBPGVdfaeFWWAiCD-a-AIZiyvtH0kACZai-0BJgAyZOuyhW6Wa2uOXF2q0uKID0aqQm-MbZa4X5p0cJwG9Sr3lsLJEQ1ZZt5yeJEpgHVwXb8-D0nI3Puh23w73wKfiiEqV2zuQGLmQBpiVGPHPS105Inl_Zzhsaos6IeEHEcY4.OkITwlhSW5T_vRJkeG87vQGSvxq8SgWQfau0MgqkWmE&dib_tag=se&keywords=Kaasplank%2Bmet%2BAccessoires&qid=1761420001&sprefix=kaasplank%2Bmet%2Baccessoires%2B%2Caps%2C66&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=50c16ecafaeab85edc9af61152214670&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/91L0v9RKv9L._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/51EPlbJWcmS.jpg',
 }
 
 const gift_sinterklaas_cocktail: Gift = {
@@ -856,7 +856,7 @@ const gift_sinterklaas_cocktail: Gift = {
         'https://www.amazon.nl/Bar-Dedicated-Cocktail-Receptenboek-Cadeauverpakking/dp/B0CRRRMPDR?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3B0PR0PMBB8DM&dib=eyJ2IjoiMSJ9.OJgY61HztquEAX7Im-RBf6_FSLeAI8gFACeUHPVCCRd4qfPh57UiO9L-ruD5yWUb8j_4Q2ex8DskXtOoaN8BmIsTu4-h2VEjP1bAfCXMmH0AtjBYGP5w8ozVnRe7DSmMlmVPpPFtJfaMAq7_3SlWhn93HJ8pFmD1fwVLk6xfOdRGYRU0sYCdjoYNuqhxnN1x2psi6J5rpV72kQRNCMkKPQdKCZel3dZB1IaR9AjKe8Ts7MBbsYC9tVXQ0WbS7MtPd8eMfEFEsqq5ac8rRoR4d_-YWMkzU_Q39As6h2ZpGys.anCewwaLeosiU4sU5CAkx_QHu34tDmF8c4F3o3kw2UQ&dib_tag=se&keywords=Cocktail%2BShaker%2BSet%2Bmet%2Brecepten&qid=1761420174&sprefix=cocktail%2Bshaker%2Bset%2Bmet%2Brecepten%2Caps%2C69&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=5551719dedb4bbb5114efb8036d4fd55&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71R+YYkSN3L._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/41CNCoL7ltL.jpg',
 }
 
 const gift_sinterklaas_kindle: Gift = {
@@ -871,7 +871,7 @@ const gift_sinterklaas_kindle: Gift = {
         'https://www.amazon.nl/kindle-paperwhite-2024/dp/B0CFPWLGF2?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2EC8JA1QB76XZ&dib=eyJ2IjoiMSJ9.FKzPUyoHrssudTJsNuD3Ws32HbHjYgMPah4UfH6R6k2CgyT_INf0CjXGhspnThn27mqORtnw9ImpWjoBLUBw9tJlJgIfm18mvhmodu_1dhYQpfzyqnC8dC9o0105Xiou-PGF13Jw2jqHsSf5yPxME8tRaNH7ab04ygZnizw7I2UoiHKGRBi-lwMyFuuyOgTkHurC2n4AsuviaWrc71_iCK_BUebBAuZiSJnBJCiiB3YFYBDAdNDHSyGWRmR6RdWjCLywuT_ZWgSokgDrd-OYtWLetCTDUxZ9qSlS2Rjcn90.3f9hbYUiIsUqm8bHGrC5sPzreUox8npEs3RFeYmy4GA&dib_tag=se&keywords=e-reader%2Bkindle&qid=1761420317&sprefix=e-reader%2Bkindle%2Caps%2C77&sr=8-2&th=1&linkCode=ll1&tag=gifteez77-21&linkId=2da07ee307e2e3c2a23c6aa5f5ea5e9a&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/51QCk7e7pAL._AC_SL1000_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/41upTx2wgDL.jpg',
 }
 
 const gift_sinterklaas_moleskine: Gift = {
@@ -886,7 +886,7 @@ const gift_sinterklaas_moleskine: Gift = {
         'https://www.amazon.nl/Moleskine-Essential-gelinieerd-notitieboek-rollerballpen/dp/B0B55XSNNV?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=193JL0OAC0G4W&dib=eyJ2IjoiMSJ9.5v5Ib_JNlCqBQteQqdnjv1P9VmbATWyfgO53YYcxkPAx44C82t_zG-xq0xdluogrspe_102lFv7o1gJdGqWWTeUXfX0HHG313iAW4TkQAQFbwdzx5QsE2-RXk47Xdxw7rh6oCoHE9z7ZR_G4unPCePwlPcgynL4b7VgUsGPDLr6ro0xoo7POO3fIgLQmvNYrNCET9WA3Jsj0wqJGkGUCnZKwperd77lBQvo1SRtRj7RLEKQFqXw75HElMJFTWfgE6wR5a2N-S1DkyyIEU67TNiR9Qo2euVQCaHQnGiAh20Y.feLhkfw_dBJkEUqwYRhWNXQXqrUtsfYR8uomwWvPu1g&dib_tag=se&keywords=Premium%2BNotitieboek%2BSet%2BMoleskine&qid=1761420549&sprefix=premium%2Bnotitieboek%2Bset%2Bmoleskine%2Caps%2C97&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=d634f8f8715767a52f7103844195e7e2&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71nA98u8yuL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/21JIrROun7L.jpg',
 }
 
 const gift_sinterklaas_aquarel: Gift = {
@@ -901,10 +901,300 @@ const gift_sinterklaas_aquarel: Gift = {
         'https://www.amazon.nl/Faber-Castell-Creative-Aquarellen-meerkleurig-universiteit/dp/B0828LQX8R?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1RQ2ILV1LEQ2L&dib=eyJ2IjoiMSJ9.b75x5TzwBLuR_2l8aq1o6rluZoFacjpLDYBM8Cfif3v2KaeXhPzZhQHQhvrB_ocX-U3-Bs0-YjHKSSe7XeFq8W0eClAcFi92GZ6INC1lTMsY3sUS5_izpAFvWmUX1irqXZhj1PxN5bWWZ4eMdapytf0LiNb2-J-Zrbqnbf5dnbaG7fPV7qgU5OdgSZ29sy9lDgfRU63DVYLEi3LLGBADgGJkDM123Zqlo_7JTWgTP2oJldEdAtRzOaNHmPyPFiyiJEtILwJpjwBaEFp2H4wnSN580_9a1vt-gRoRQR_cQyQ.3gWXDbiNHdl3NjJfC_pyIAPLqqwDrZqxt3K0Btelcbg&dib_tag=se&keywords=creative%2Bhobby%2Bkit%2Baquarel&qid=1761420739&sprefix=creative%2Bhobby%2Bkit%2Baquarel%2Caps%2C64&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=b79ac2d1aa3b2722fc9164171f22f675&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/91bTyTlOkKL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/51rJSOXVZXL.jpg',
+}
+
+const gift_partypro_balloon_arch: Gift = {
+  productName: 'PartyPro Ballonnenboog Wit-Goud (5 m)',
+  description:
+    'Complete ballonboog met 100+ ballonnen, ballonstrip, lijmdruppels en haken voor een chique entree of photo corner.',
+  priceRange: '€13,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fballonnenboog-wit-goud',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/Ballon04_R01.png?v=1678485217',
+  tags: ['ballonnen', 'DIY', 'entree'],
+  giftType: 'physical',
+  matchReason:
+    'Wordt geleverd met strip, haken en visdraad waardoor je zonder stylist een professionele boog maakt.',
+}
+
+const gift_partypro_bachelorette_bride: Gift = {
+  productName: 'PartyPro Bachelor Party Bride Decoratie',
+  description:
+    'Rosé-gouden vrijgezellenset met ringfolieballon, confettiballonnen en backdrop voor instant partyvibes.',
+  priceRange: '€14,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fbachelor-party-bride',
+    },
+  ],
+  imageUrl: 'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/bachelor.png?v=1620730825',
+  tags: ['bachelorette', 'ballonnen', 'feestset'],
+  giftType: 'physical',
+  matchReason:
+    'Combineert backdrop, folieballonnen en confettibundels in één pakket dat binnen tien minuten hangt.',
+}
+
+const gift_partypro_gender_reveal_2: Gift = {
+  productName: 'PartyPro Gender Reveal Decoratieset #2',
+  description:
+    'Complete reveal kit met "Oh Baby" slinger, folieletters en metallic tassels voor een Instagram-ready onthulling.',
+  priceRange: '€15,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fgender-reveal-2',
+    },
+  ],
+  imageUrl: 'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/Gender1.png?v=1620730930',
+  tags: ['gender reveal', 'ballonnenset'],
+  giftType: 'physical',
+  matchReason:
+    'Met foliebanners, tassels en mix van blauw/roze ballonnen regel je de reveal-zone zonder extra shopping.',
+}
+
+const gift_partypro_confetti_gold_46: Gift = {
+  productName: 'PartyPro Gouden Confetti Ballonnen 46 cm (10x)',
+  description:
+    'XL latexballonnen met goudconfetti die 5-7 uur zweven met helium en elke ruimte meteen luxe maken.',
+  priceRange: '€8,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2F10-grote-ballonnen-gouden-confetti-46cm',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/goudenconfettiballon46cm.jpg?v=1620730944',
+  tags: ['confetti', 'ballonnen', 'goud'],
+  giftType: 'physical',
+  matchReason:
+    'De 46 cm diameter levert meer volume dan standaard setjes en combineert ideaal met witte of zwarte accenten.',
+}
+
+const gift_partypro_confetti_rose_46: Gift = {
+  productName: 'PartyPro Rosé Confetti Ballonnen 46 cm (10x)',
+  description:
+    'Koperkleurige confettiballonnen met luxe glans; perfect voor bruiloften, jubileums of rosé themafeestjes.',
+  priceRange: '€8,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2F10-grote-ballonnen-koperen-confetti-46cm',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/roseconfettiballon46cm.jpg?v=1620731013',
+  tags: ['confetti', 'ballonnen', 'rosé'],
+  giftType: 'physical',
+  matchReason:
+    'Transparante latex laat de koperconfetti zweven, ideaal om te mixen met chrome of pastel ballonnen.',
+}
+
+const gift_partypro_confetti_blue_30: Gift = {
+  productName: 'PartyPro Blauwe Confetti Ballonnen 30 cm (10x)',
+  description:
+    'Budgetvriendelijke confettiballonnen voor babyshowers of themafeesten; vullen in minuten met lucht of helium.',
+  priceRange: '€3,50',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fblauwe-confetti-ballonnen-10-stuks-30cm',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/confettiblauw.jpg?v=1637078981',
+  tags: ['confetti', 'babyshower', 'budget'],
+  giftType: 'physical',
+  matchReason:
+    'Compact formaat voor tafels, ballonkluwens of mix met grotere 46 cm varianten voor speelse hoogteverschillen.',
+}
+
+const gift_partypro_baby_unicorn_girl: Gift = {
+  productName: "PartyPro Babyshower Unicorn Decoratie (It's a Girl)",
+  description:
+    'Pastelkleurige babyshower set met unicorn folieballon, GIRL letters, 18 latexballonnen en dubbele vlaggenlijn.',
+  priceRange: '€9,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fbabyshower-unicorn-meisje',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/babyshower_girl1.png?v=1620730825',
+  tags: ['babyshower', 'unicorn', 'ballonnenset'],
+  giftType: 'physical',
+  matchReason:
+    'Ready-to-hang pakket met banners en folieballon zodat de ontvangstruimte in één keer af is.',
+}
+
+const gift_partypro_giftbox_baby_pink: Gift = {
+  productName: 'PartyPro Giftbox Baby Roze (20 stuks)',
+  description:
+    'Set van 20 treat boxes met roze voetjes; ideaal voor bedankjes na babyshower of kraamfeest.',
+  priceRange: '€7,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fbaby-roze-20st',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/Promotional-vivid-colored-small-chocolate-candy-box.png?v=1620730930',
+  tags: ['bedankje', 'babyshower', 'giftbox'],
+  giftType: 'physical',
+  matchReason:
+    'Vouwen kost minder dan twee minuten per box en je kunt ze vullen met lekkers of polaroids als aandenken.',
+}
+
+const gift_partypro_reuze_ballonnen_blauw: Gift = {
+  productName: 'PartyPro Reuzenballonnen Blauw 90 cm (10x)',
+  description:
+    'Gigantische 90 cm ballonnen voor outdoor reveals of photomomenten; vullen met helium zorgt voor maximaal effect.',
+  priceRange: '€24,95',
+  retailers: [
+    {
+      name: 'PartyPro.nl',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl%2Fproducts%2Fgrote-ballonnen-blauw-10-stuks-90cm',
+    },
+  ],
+  imageUrl:
+    'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/blue_d15dfe4f-af48-4733-8cf8-409eb6537098.png?v=1620730858',
+  tags: ['reveal', 'statement', 'outdoor'],
+  giftType: 'physical',
+  matchReason:
+    'Met 90 cm doorsnede creëer je dramatische luchtfoto’s of een highlight boven desserttafel of DJ booth.',
 }
 
 export const blogPosts: BlogPost[] = [
+  {
+    slug: 'partypro-feestdecoratie-partner',
+    title: 'PartyPro.nl Partner Spotlight: Instant Feestdecor Voor Elke Viering',
+    excerpt:
+      'We brengen PartyPro’s ballonnenbogen, confettisets en gender reveal decor rechtstreeks naar onze feestcollecties.',
+  imageUrl: '/images/blog-partypro-headerafb.png',
+    category: 'Partner Spotlight',
+    author: {
+      name: 'Gifteez Redactie',
+      avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-partypro',
+    },
+    publishedDate: '2025-10-26',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'PartyPro.nl is onze nieuwste partner binnen de Gifteez feestcategorie. Het Nederlandse feestwarenhuis levert ballonbogen, confetti sets en complete thema-boxen die we nu rechtstreeks in onze feestcollecties en inspiratieblogs uitlichten.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'We synchroniseren dagelijks met PartyPro zodat voorraadstanden, prijzen en afbeeldingen automatisch up-to-date blijven. Zo combineren we feestdecor nu net zo soepel met cadeaus als je al gewend bent van onze gift guides.',
+      },
+      {
+        type: 'image',
+        src: 'https://cdn.shopify.com/s/files/1/0265/6819/6193/products/bachelor.png?v=1620730825',
+        alt: 'PartyPro vrijgezellen decoratie set met rosé ballonnen, folie ring en backdrop',
+        caption:
+          'Van DIY ballonbogen tot vrijgezellensets: alles komt direct uit de nieuwe PartyPro feed.',
+      },
+      { type: 'heading', content: 'Waarom PartyPro.nl perfect bij Gifteez past' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Complete styling</strong>: ballonbogen, confettikanonnen en treat boxes in één pakket voor last-minute planners.</li><li><strong>Betaalbare bundels</strong>: veel sets starten onder de €15, waardoor je eenvoudig combinaties maakt voor je cadeaushopping.</li><li><strong>Helium-ready latex</strong>: ballonnen zweven 5–7 uur en zijn geoptimaliseerd voor onze decor tips.</li><li><strong>Thema’s per moment</strong>: van gender reveal tot bachelorette, waardoor we snel seizoenscollecties kunnen cureren.</li></ul>',
+      },
+      { type: 'heading', content: 'Zo gebruik je de nieuwe feestdecor-sectie' },
+      {
+        type: 'paragraph',
+        content:
+          'Je vindt de PartyPro selectie vanaf nu bovenaan onze Trending Gifts en in de feestdecor-collecties. Liever personaliseren? Gebruik dan de filter “Feestdecor & Party” in de GiftFinder als extra hulpmiddel. We labelen alle items automatisch op kleur, gelegenheid en prijs zodat je in één klik een totale feestlook hebt.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Klik je door naar PartyPro via onze <a href="https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl" rel="nofollow sponsored">affiliate link</a>? Dan steun je de verdere ontwikkeling van Gifteez zonder extra kosten. Wij investeren die commissie direct in nieuwe themagidsen en productfotografie.',
+      },
+      { type: 'heading', content: 'Statement decor voor entree en photoshoots' },
+      {
+        type: 'paragraph',
+        content:
+          'Wil je dat gasten meteen weten waar het feestje is? Kies voor een ballonboog, voeg een vrijgezellen backdrop toe of bouw een reveal-zone met metallic letters.',
+      },
+      { type: 'gift', content: gift_partypro_balloon_arch },
+      { type: 'gift', content: gift_partypro_bachelorette_bride },
+      { type: 'gift', content: gift_partypro_gender_reveal_2 },
+      {
+        type: 'paragraph',
+        content:
+          'Tip: combineer de boog met een polaroid station en noteer in onze checklist welke extra props (zoals LED-letters) je nodig hebt.',
+      },
+      { type: 'heading', content: 'Confetti combinaties voor instant sfeer' },
+      {
+        type: 'paragraph',
+        content:
+          'Mix de verschillende confettimaten voor diepte in je styling. De 46 cm varianten zweven boven eye-level, terwijl 30 cm ballonnen perfect zijn voor tafels of stoelclusters.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Wil je je voorraad slim inkopen richting het grote kortingsseizoen? Gebruik onze <a href="/blog/deal-hunting-tips-tricks" class="text-rose-600 underline">Deal Hunting 101 gids</a> voor Black Friday timingtips en bundelstrategieën.',
+      },
+      { type: 'gift', content: gift_partypro_confetti_gold_46 },
+      { type: 'gift', content: gift_partypro_confetti_rose_46 },
+      { type: 'gift', content: gift_partypro_confetti_blue_30 },
+      {
+        type: 'paragraph',
+        content:
+          'Gebruik helium voor de grote varianten en lucht voor de kleinere, zo creëer je multi-level wolken zonder extra gewicht.',
+      },
+      { type: 'heading', content: 'Babyshower & bedankjes zonder stress' },
+      {
+        type: 'paragraph',
+        content:
+          'PartyPro levert complete babyshower kits én bijpassende bedankjes. Voeg een reuzenballon toe voor het reveal moment en geef gasten een gevulde treat box mee naar huis.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Zoek je duurzame bedankjes of cadeautjes die bij deze styling passen? Bekijk dan ook onze <a href="/blog/shop-like-you-give-a-damn-duurzame-cadeaus" class="text-rose-600 underline">Shop Like You Give A Damn partnergids</a> voor eco babyshower favorieten.',
+      },
+      { type: 'gift', content: gift_partypro_baby_unicorn_girl },
+      { type: 'gift', content: gift_partypro_giftbox_baby_pink },
+      { type: 'gift', content: gift_partypro_reuze_ballonnen_blauw },
+      {
+        type: 'paragraph',
+        content:
+          'Meer vieren? Bekijk ook onze <a href="/blog/sinterklaas-cadeaus-2025-originele-ideeen" class="text-rose-600 underline">Sinterklaas Cadeaus 2025 gids</a> voor cadeau-inspiratie die perfect matcht met deze feestdecoratie.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="mt-10 mb-4 rounded-2xl border border-accent/20 bg-gradient-to-r from-rose-50 to-orange-50 p-6 text-center shadow-sm"><p class="mb-4 text-sm text-gray-700">Klaar om je decor direct te bestellen? Via onze partnerlink staat de PartyPro collectie voor je klaar.</p><a href="https://www.awin1.com/cread.php?awinmid=102231&awinaffid=2566111&ued=https%3A%2F%2Fwww.partypro.nl" rel="nofollow sponsored noopener" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors duration-200 hover:bg-accent">Bekijk de PartyPro collectie →</a></div>',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Prijzen en beschikbaarheid komen direct uit de PartyPro feed en kunnen veranderen. Check altijd de productpagina voor de actuele status.',
+      },
+    ],
+    tags: ['partypro', 'feestdecoratie', 'ballonnen', 'babyshower', 'gender reveal'],
+  },
   {
     slug: 'shop-like-you-give-a-damn-duurzame-cadeaus',
     title: 'Shop Like You Give A Damn: Duurzame Cadeaus Met Impact',
@@ -2537,7 +2827,7 @@ export const blogPosts: BlogPost[] = [
     publishedDate: '2025-10-25',
     author: { name: 'Kevin van Gifteez', avatarUrl: 'https://i.pravatar.cc/150?u=kevin' },
     category: 'Sinterklaas',
-    imageUrl: '/images/blog-sinterklaas-2025-header.png',
+    imageUrl: '/images/blog-sinterklaas-2025-header.png?v=2',
     content: [
       {
         type: 'paragraph',
@@ -2776,13 +3066,13 @@ export const blogPosts: BlogPost[] = [
       ogTitle: 'Sinterklaas Cadeaus 2025: 15 Ideeën Die Écht Blij Maken',
       ogDescription:
         'Van smartwatch tot spa set, van koffie tot Kindle — ontdek 15 originele Sinterklaas cadeaus voor elk budget en persoonlijkheid.',
-      ogImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.png',
+      ogImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.png?v=2',
       ogType: 'article',
       twitterCard: 'summary_large_image',
       twitterTitle: 'Sinterklaas 2025: 15 Cadeaus Die Écht Scoren',
       twitterDescription:
         'Tech, wellness, culinair en creatief — 15 bewezen Sinterklaas cadeaus van €21 tot €180. Met tips, budget-indeling en combinatie-ideeën.',
-      twitterImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.png',
+      twitterImage: 'https://gifteez.nl/images/blog-sinterklaas-2025-header.png?v=2',
       canonicalUrl: 'https://gifteez.nl/blog/sinterklaas-cadeaus-2025-originele-ideeen',
     },
     tags: ['sinterklaas', 'cadeaus', 'tech', 'wellness', 'culinair', 'creatief', 'gadgets', '2025'],

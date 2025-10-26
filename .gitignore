@@ -31,3 +31,4 @@ scripts/temp-*.mjs
 *.sln
 *.sw?
 data/new-partner-feed.csv
+coolblue-feed.csv
