@@ -32,3 +32,9 @@ scripts/temp-*.mjs
 *.sw?
 data/new-partner-feed.csv
 coolblue-feed.csv
+
+# Screenshot testing
+screenshots/
+
+# Raw feed data
+data/*.csv
