@@ -68,12 +68,19 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   const [products, setProducts] = useState<DealItem[]>(initialProducts)
   const [isLoading, setIsLoading] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
+  const [dataLoaded, setDataLoaded] = useState(initialProducts.length > 0)
 
   // Load products if categoryId is provided but products are empty
   useEffect(() => {
     const loadCategoryData = async () => {
-      // Only load if we have a categoryId but no products
-      if (!categoryId || products.length > 0) return
+      // Only load if we have a categoryId but no products loaded yet
+      if (!categoryId) return
+      if (dataLoaded) return
+      if (initialProducts.length > 0) {
+        setProducts(initialProducts)
+        setDataLoaded(true)
+        return
+      }
 
       setIsLoading(true)
       setLoadError(null)
@@ -90,7 +97,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           loadedProducts = partyProducts.map(p => ({
             id: p.id,
             name: p.name,
-            price: `€${p.price.toFixed(2)}`,
+            price: `€${typeof p.price === 'number' ? p.price.toFixed(2) : p.price}`,
             image: p.imageUrl,
             imageUrl: p.imageUrl,
             affiliateLink: p.affiliateLink,
@@ -106,7 +113,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           loadedProducts = sustainableProducts.map(p => ({
             id: p.id,
             name: p.name,
-            price: `€${p.price.toFixed(2)}`,
+            price: `€${typeof p.price === 'number' ? p.price.toFixed(2) : p.price}`,
             image: p.imageUrl,
             imageUrl: p.imageUrl,
             affiliateLink: p.affiliateLink,
@@ -120,6 +127,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         }
 
         setProducts(loadedProducts)
+        setDataLoaded(true)
       } catch (error) {
         console.error('Error loading category products:', error)
         setLoadError('Kon producten niet laden. Probeer het later opnieuw.')
@@ -129,12 +137,13 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     }
 
     loadCategoryData()
-  }, [categoryId, products.length])
+  }, [categoryId, dataLoaded, initialProducts])
 
   // Update products when initialProducts change
   useEffect(() => {
     if (initialProducts.length > 0) {
       setProducts(initialProducts)
+      setDataLoaded(true)
     }
   }, [initialProducts])
 
