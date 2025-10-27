@@ -16,6 +16,9 @@ const staticRoutes = [
   { loc: `${SITE}/deals`, changefreq: "daily", priority: "0.8" },
   { loc: `${SITE}/blog`, changefreq: "daily", priority: "0.7" },
   { loc: `${SITE}/categories`, changefreq: "weekly", priority: "0.6" },
+  // Category pages
+  { loc: `${SITE}/deals/category/feest-party-partypro`, changefreq: "weekly", priority: "0.7" },
+  { loc: `${SITE}/deals/category/duurzame-cadeaus-slygad`, changefreq: "weekly", priority: "0.7" },
 ];
 
 // Als je later blogposts als Markdown toevoegt, zet ze in src/content/posts/*.md
