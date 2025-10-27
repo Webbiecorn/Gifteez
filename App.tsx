@@ -216,7 +216,20 @@ const App: React.FC = () => {
       case 'deals':
         if (second === 'category' && third) {
           setCurrentPage('categoryDetail')
-          // Category data will be fetched by CategoryDetailPage component
+          // Set basic category info from URL slug
+          if (!categoryDetailData || categoryDetailData.categoryId !== third) {
+            const categoryTitle = third
+              .split('-')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+            
+            setCategoryDetailData({
+              categoryId: third,
+              categoryTitle: categoryTitle,
+              categoryDescription: '',
+              products: []
+            })
+          }
         } else {
           setCurrentPage('deals')
         }

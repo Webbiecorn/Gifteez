@@ -63,8 +63,81 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   categoryId,
   categoryTitle,
   categoryDescription,
-  products,
+  products: initialProducts,
 }) => {
+  const [products, setProducts] = useState<DealItem[]>(initialProducts)
+  const [isLoading, setIsLoading] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+
+  // Load products if categoryId is provided but products are empty
+  useEffect(() => {
+    const loadCategoryData = async () => {
+      // Only load if we have a categoryId but no products
+      if (!categoryId || products.length > 0) return
+
+      setIsLoading(true)
+      setLoadError(null)
+
+      try {
+        // Detect category type from ID
+        const isPartyProCategory = categoryId.includes('party') || categoryId.includes('partypro')
+        const isSLYGADCategory = categoryId.includes('duurza') || categoryId.includes('slygad')
+
+        let loadedProducts: DealItem[] = []
+
+        if (isPartyProCategory) {
+          const partyProducts = await PartyProService.loadProducts()
+          loadedProducts = partyProducts.map(p => ({
+            id: p.id,
+            name: p.name,
+            price: `€${p.price.toFixed(2)}`,
+            image: p.imageUrl,
+            imageUrl: p.imageUrl,
+            affiliateLink: p.affiliateLink,
+            description: p.description,
+            category: p.category,
+            brand: p.brand,
+            giftScore: p.giftScore,
+            inStock: p.inStock,
+            merchant: p.merchant || 'PartyPro.nl'
+          }))
+        } else if (isSLYGADCategory) {
+          const sustainableProducts = await ShopLikeYouGiveADamnService.loadProducts()
+          loadedProducts = sustainableProducts.map(p => ({
+            id: p.id,
+            name: p.name,
+            price: `€${p.price.toFixed(2)}`,
+            image: p.imageUrl,
+            imageUrl: p.imageUrl,
+            affiliateLink: p.affiliateLink,
+            description: p.description,
+            category: p.category,
+            brand: p.brand,
+            giftScore: p.giftScore,
+            inStock: p.inStock,
+            merchant: p.merchant || 'Shop Like You Give A Damn'
+          }))
+        }
+
+        setProducts(loadedProducts)
+      } catch (error) {
+        console.error('Error loading category products:', error)
+        setLoadError('Kon producten niet laden. Probeer het later opnieuw.')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadCategoryData()
+  }, [categoryId, products.length])
+
+  // Update products when initialProducts change
+  useEffect(() => {
+    if (initialProducts.length > 0) {
+      setProducts(initialProducts)
+    }
+  }, [initialProducts])
+
   useEffect(() => {
     document.title = `${categoryTitle} | Gifteez.nl Collecties`
     window.scrollTo(0, 0)
@@ -425,6 +498,37 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         canonical={`/deals/category/${categoryId}`}
       />
 
+      {/* Loading state */}
+      {isLoading && (
+        <Container>
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+              <p className="text-gray-600">Producten laden...</p>
+            </div>
+          </div>
+        </Container>
+      )}
+
+      {/* Error state */}
+      {loadError && !isLoading && (
+        <Container>
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center max-w-md">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Oeps!</h2>
+              <p className="text-gray-600 mb-4">{loadError}</p>
+              <Button onClick={() => navigateTo('deals')}>
+                Terug naar deals
+              </Button>
+            </div>
+          </div>
+        </Container>
+      )}
+
+      {/* Content */}
+      {!isLoading && !loadError && (
+      <>
       {/* Structured Data for Breadcrumbs - Essential for SEO */}
       <script
         type="application/ld+json"
@@ -1035,6 +1139,8 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           )}
         </Container>
       </div>
+      </>
+      )}
     </>
   )
 }
