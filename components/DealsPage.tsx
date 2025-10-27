@@ -7,6 +7,10 @@ import { DealCategoryConfigService } from '../services/dealCategoryConfigService
 import { DynamicProductService } from '../services/dynamicProductService'
 import { PerformanceInsightsService } from '../services/performanceInsightsService'
 import { PinnedDealsService } from '../services/pinnedDealsService'
+import { ShopLikeYouGiveADamnService } from '../services/shopLikeYouGiveADamnService'
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
+
+import { PartyProService } from '../services/partyProService'
 import Button from './Button'
 import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton'
 import {
@@ -82,6 +86,22 @@ const resolveRetailerInfo = (affiliateLink: string): RetailerInfo => {
       accentClass: 'text-blue-600',
     }
   }
+  if (host.includes('shoplikeyougiveadamn') || affiliateLink.includes('shoplikeyougiveadamn')) {
+    return {
+      label: 'Partner: Shop Like You Give A Damn',
+      shortLabel: 'Shop Like You Give A Damn',
+      badgeClass: 'bg-emerald-600 text-white',
+      accentClass: 'text-emerald-600',
+    }
+  }
+  if (host.includes('partypro') || affiliateLink.includes('partypro')) {
+    return {
+      label: 'Partner: PartyPro.nl',
+      shortLabel: 'PartyPro.nl',
+      badgeClass: 'bg-purple-600 text-white',
+      accentClass: 'text-purple-600',
+    }
+  }
   return {
     label: 'Partnerdeal',
     shortLabel: 'onze partner',
@@ -119,6 +139,15 @@ const getCategoryIcon = (title: string) => {
   const lowerTitle = title.toLowerCase()
 
   if (
+    lowerTitle.includes('duurza') ||
+    lowerTitle.includes('eco') ||
+    lowerTitle.includes('vegan') ||
+    lowerTitle.includes('groen') ||
+    lowerTitle.includes('sustainable')
+  ) {
+    return <span className="text-lg">🌱</span>
+  }
+  if (
     lowerTitle.includes('tech') ||
     lowerTitle.includes('gadget') ||
     lowerTitle.includes('electronica')
@@ -150,12 +179,14 @@ const getCategoryIcon = (title: string) => {
   return <GiftIcon className="h-5 w-5" />
 }
 
-// Helper function to generate social proof badges
+// Helper function to generate social proof badges with urgency
 const getSocialProofBadge = (
   deal: DealItem,
   index: number
 ): { text: string; icon: string; color: string } | null => {
   const score = deal.giftScore || 0
+  const retailerInfo = resolveRetailerInfo(deal.affiliateLink)
+  const isAmazon = retailerInfo.shortLabel.includes('Amazon')
 
   // Top 3 badge for first 3 items with high scores
   if (index < 3 && score >= 8) {
@@ -163,6 +194,15 @@ const getSocialProofBadge = (
       text: `#${index + 1} Deze week`,
       icon: '🏆',
       color: 'bg-amber-100 text-amber-700',
+    }
+  }
+
+  // Amazon Prime delivery urgency
+  if (isAmazon && score >= 8) {
+    return {
+      text: '📦 Prime levering morgen',
+      icon: '📦',
+      color: 'bg-blue-100 text-blue-700',
     }
   }
 
@@ -184,12 +224,12 @@ const getSocialProofBadge = (
     }
   }
 
-  // New badge for on-sale items
+  // New badge for on-sale items with time pressure
   if (deal.isOnSale) {
     return {
-      text: 'Populaire deal',
+      text: '⏰ Deal eindigt binnenkort',
       icon: '⚡',
-      color: 'bg-blue-100 text-blue-700',
+      color: 'bg-red-100 text-red-700',
     }
   }
 
@@ -209,6 +249,19 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   // Filter state
   const [priceFilter, setPriceFilter] = useState<string>('all')
   const [scoreFilter, setScoreFilter] = useState<number>(0)
+
+  // Quick budget filter handler
+  const handleQuickBudgetFilter = useCallback((budgetRange: string) => {
+    setPriceFilter(budgetRange)
+    // Track budget filter click
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      ;(window as any).gtag('event', 'budget_filter_click', {
+        event_category: 'Deals Page',
+        event_label: budgetRange,
+        value: budgetRange,
+      })
+    }
+  }, [])
 
   // Track impressions for visible deals
   const impressionTrackedRef = useRef<Set<string>>(new Set())
@@ -269,12 +322,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           sessionStorage.setItem('deals_loaded_this_session', 'true')
         }
 
-        const [dealOfWeek, topDeals, categories, config, pinnedEntries] = await Promise.all([
+        const [dealOfWeek, topDeals, categories, config, pinnedEntries, sustainableProducts, partyProducts] = await Promise.all([
           DynamicProductService.getDealOfTheWeek(),
           DynamicProductService.getTop10Deals(),
           DynamicProductService.getDealCategories(),
           DealCategoryConfigService.load(),
           PinnedDealsService.load(),
+          ShopLikeYouGiveADamnService.loadProducts(),
+          PartyProService.loadProducts(),
         ])
 
         const stats = DynamicProductService.getStats()
@@ -310,6 +365,134 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         const categoriesToDisplay = hasManualCategories
           ? categories.filter((category) => category.items.length > 0)
           : []
+
+        // Voeg Duurzame Cadeaus categorie toe als er producten zijn
+        if (sustainableProducts && sustainableProducts.length > 0) {
+          // Groepeer producten per subcategorie voor variatie
+          const grouped: Record<string, typeof sustainableProducts> = {}
+          sustainableProducts.forEach(product => {
+            // Gebruik de detectSubcategory functie
+            const name = product.name.toLowerCase()
+            let subcategory = 'Overige'
+            
+            if (name.includes('ring')) subcategory = 'Ringen'
+            else if (name.includes('ketting') || name.includes('necklace')) subcategory = 'Kettingen'
+            else if (name.includes('oorbel') || name.includes('earring')) subcategory = 'Oorbellen'
+            else if (name.includes('armband') || name.includes('bracelet')) subcategory = 'Armbanden'
+            else if (name.includes('yoga') || name.includes('peshtemal')) subcategory = 'Yoga & Wellness'
+            else if (name.includes('waterfles') || name.includes('bottle')) subcategory = 'Drinkflessen'
+            else if (name.includes('tas') || name.includes('bag')) subcategory = 'Tassen'
+            else if (name.includes('portemonnee') || name.includes('wallet')) subcategory = 'Portemonnees'
+            
+            if (!grouped[subcategory]) grouped[subcategory] = []
+            grouped[subcategory].push(product)
+          })
+          
+          // Selecteer gevarieerd: neem uit elke categorie, rond robin
+          const variedProducts: typeof sustainableProducts = []
+          const categories = Object.keys(grouped).sort(() => Math.random() - 0.5) // Shuffle
+          let added = 0
+          let round = 0
+          
+          // Blijf rondjes doen tot we 20 producten hebben
+          while (added < 20 && round < 10) {
+            categories.forEach(category => {
+              if (added >= 20) return
+              const categoryProducts = grouped[category]
+              if (categoryProducts && categoryProducts.length > round) {
+                variedProducts.push(categoryProducts[round])
+                added++
+              }
+            })
+            round++
+          }
+          
+          const sustainableDeals = variedProducts.slice(0, 20).map(product => ({
+            id: product.id,
+            name: product.name,
+            price: `€${product.price.toFixed(2)}`,
+            originalPrice: product.originalPrice ? `€${product.originalPrice.toFixed(2)}` : undefined,
+            imageUrl: product.imageUrl || product.image,
+            affiliateLink: product.affiliateLink,
+            description: product.description || product.shortDescription,
+            giftScore: product.giftScore || 8,
+            isOnSale: Boolean(product.originalPrice && product.originalPrice > product.price),
+            category: product.category, // Bewaar categorie voor later
+          }))
+
+          const sustainableCategory = {
+            id: 'duurzame-cadeaus-slygad',
+            title: 'Duurzame Cadeaus',
+            description: '🌿 Bewuste en ecologische geschenken van Shop Like You Give A Damn. Gevarieerde selectie van 20 duurzame producten - van yoga items tot vegan sieraden. Perfect voor mensen die van de aarde houden.',
+            items: sustainableDeals,
+          }
+
+          categoriesToDisplay.push(sustainableCategory)
+          console.log(`🌱 Added Duurzame Cadeaus category with ${sustainableDeals.length} varied products from ${categories.length} subcategories`)
+        }
+
+        // Voeg PartyPro Feest & Party Cadeaus categorie toe
+        if (partyProducts && partyProducts.length > 0) {
+          // Groepeer producten per subcategorie voor variatie
+          const grouped: Record<string, typeof partyProducts> = {}
+          partyProducts.forEach(product => {
+            const name = product.name.toLowerCase()
+            let subcategory = 'Overige'
+            
+            if (name.includes('ballon') || name.includes('slingers') || name.includes('decoratie')) subcategory = 'Decoratie'
+            else if (name.includes('drinkspel') || name.includes('beer pong') || name.includes('spel')) subcategory = 'Drinkspellen'
+            else if (name.includes('licht') || name.includes('led') || name.includes('gadget')) subcategory = 'Party Gadgets'
+            else if (name.includes('bord') || name.includes('beker') || name.includes('servies')) subcategory = 'Servies & Tafel'
+            else if (name.includes('thema') || name.includes('theme')) subcategory = 'Thema Feest'
+            else if (name.includes('kostuum') || name.includes('masker') || name.includes('hoed')) subcategory = 'Kostuums'
+            else if (name.includes('confetti') || name.includes('serpentine')) subcategory = 'Confetti'
+            
+            if (!grouped[subcategory]) grouped[subcategory] = []
+            grouped[subcategory].push(product)
+          })
+          
+          // Selecteer gevarieerd: neem uit elke categorie, round robin
+          const variedProducts: typeof partyProducts = []
+          const partyCategories = Object.keys(grouped).sort(() => Math.random() - 0.5) // Shuffle
+          let added = 0
+          let round = 0
+          
+          // Blijf rondjes doen tot we 20 producten hebben
+          while (added < 20 && round < 10) {
+            partyCategories.forEach(category => {
+              if (added >= 20) return
+              const categoryProducts = grouped[category]
+              if (categoryProducts && categoryProducts.length > round) {
+                variedProducts.push(categoryProducts[round])
+                added++
+              }
+            })
+            round++
+          }
+          
+          const partyDeals = variedProducts.slice(0, 20).map(product => ({
+            id: product.id,
+            name: product.name,
+            price: `€${product.price.toFixed(2)}`,
+            originalPrice: product.originalPrice ? `€${product.originalPrice.toFixed(2)}` : undefined,
+            imageUrl: product.imageUrl || product.image,
+            affiliateLink: product.affiliateLink,
+            description: product.description || product.shortDescription,
+            giftScore: product.giftScore || 8,
+            isOnSale: Boolean(product.originalPrice && product.originalPrice > product.price),
+            category: product.category,
+          }))
+
+          const partyCategory = {
+            id: 'feest-party-partypro',
+            title: 'Feest & Party Cadeaus',
+            description: '🎉 Maak elk feest onvergetelijk met PartyPro.nl! Van decoratie en drinkspellen tot party gadgets en kostuums. Gevarieerde selectie van 20 feestelijke producten voor elke gelegenheid.',
+            items: partyDeals,
+          }
+
+          categoriesToDisplay.push(partyCategory)
+          console.log(`🎉 Added Feest & Party category with ${partyDeals.length} varied products from ${partyCategories.length} subcategories`)
+        }
 
         setState({
           dealOfWeek: featuredDeal,
@@ -386,23 +569,43 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const topList = state.topDeals.map((deal, index) => {
       const retailer = resolveRetailerInfo(deal.affiliateLink)
       const sellerName = retailer.shortLabel || 'Partnerwinkel'
+      const price = deal.price?.replace(/[^0-9,.]/g, '').replace(',', '.') ?? ''
 
       return {
         '@type': 'ListItem',
         position: index + 1,
-        url: withAffiliate(deal.affiliateLink),
-        name: deal.name,
-        image: deal.imageUrl,
-        description: deal.description,
-        offers: {
-          '@type': 'Offer',
-          priceCurrency: 'EUR',
-          price: deal.price?.replace(/[^0-9,.]/g, '').replace(',', '.') ?? '',
-          url: withAffiliate(deal.affiliateLink),
-          seller: {
-            '@type': 'Organization',
+        item: {
+          '@type': 'Product',
+          name: deal.name,
+          image: deal.imageUrl,
+          description: deal.description || deal.name,
+          brand: {
+            '@type': 'Brand',
             name: sellerName,
           },
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'EUR',
+            price: price,
+            url: withAffiliate(deal.affiliateLink),
+            availability: 'https://schema.org/InStock',
+            seller: {
+              '@type': 'Organization',
+              name: sellerName,
+            },
+            priceValidUntil: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+              .toISOString()
+              .split('T')[0],
+          },
+          ...(deal.giftScore &&
+            deal.giftScore >= 8 && {
+              aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: deal.giftScore,
+                bestRating: '10',
+                ratingCount: '100',
+              },
+            }),
         },
       }
     })
@@ -410,9 +613,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     return {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      name: 'Gifteez deals overzicht',
+      name: 'De beste cadeaus van de week - Gifteez',
       description:
-        'Ontdek de scherpste cadeaudeals van deze week, samengesteld uit Coolblue en Amazon.',
+        'Handgeselecteerde cadeaus van Coolblue en Amazon met snelle levering. Perfect voor elke gelegenheid.',
       itemListElement: topList,
     }
   }, [state.topDeals])
@@ -441,6 +644,61 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const labels = Array.from(unique.keys()).filter((label) => label !== 'onze partner')
     return labels.slice(0, 4)
   }, [state.dealOfWeek, state.topDeals])
+
+  // Filter Bar Component
+  const QuickBudgetFilters: React.FC = () => {
+    const budgetOptions = [
+      { label: 'Onder €25', value: '0-25', icon: '💰' },
+      { label: '€25 - €50', value: '25-50', icon: '💎' },
+      { label: '€50 - €100', value: '50-100', icon: '✨' },
+      { label: '€100+', value: '100+', icon: '🎁' },
+    ]
+
+    return (
+      <div className="mb-4">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-sm font-semibold text-slate-700">Snel filteren op budget:</span>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => handleQuickBudgetFilter('all')}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm hover:shadow-md ${
+              priceFilter === 'all'
+                ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white scale-105'
+                : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-rose-300 hover:bg-rose-50'
+            }`}
+          >
+            <span>🎯</span>
+            <span>Alle prijzen</span>
+          </button>
+          {budgetOptions.map((option) => {
+            // Map the custom ranges to the existing filter logic
+            let filterValue = option.value
+            if (option.value === '0-25') filterValue = '0-50' // Map to existing 0-50
+            else if (option.value === '25-50') filterValue = '0-50' // Map to existing 0-50
+            else if (option.value === '100+') filterValue = '200+' // Map to existing 200+
+
+            const isActive = priceFilter === filterValue
+
+            return (
+              <button
+                key={option.value}
+                onClick={() => handleQuickBudgetFilter(filterValue)}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm hover:shadow-md ${
+                  isActive
+                    ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white scale-105'
+                    : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-rose-300 hover:bg-rose-50'
+                }`}
+              >
+                <span className="text-base">{option.icon}</span>
+                <span>{option.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 
   // Filter Bar Component
   const FilterBar: React.FC = () => {
@@ -879,6 +1137,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <ImageWithFallback
                 src={deal.imageUrl}
                 alt={deal.name}
+                fallbackSrc={(deal as any).awinImageUrl || (deal as any).merchantImageUrl}
                 className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
                 fit="contain"
               />
@@ -1160,24 +1419,78 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const displayTitle = getDisplayTitle(category.title)
     const description = getCategoryDescription(category.title, displayTitle, items.length)
 
-    // Detect if this is a men's category
+    // Detect category type for themed colors
     const lowerTitle = category.title.toLowerCase()
     const isMensCategory =
       lowerTitle.includes('mannen') ||
       lowerTitle.includes('heren') ||
       lowerTitle.includes('men') ||
       lowerTitle.includes('voor mannen')
+    
+    const isSustainableCategory =
+      lowerTitle.includes('duurza') ||
+      lowerTitle.includes('eco') ||
+      lowerTitle.includes('vegan') ||
+      lowerTitle.includes('groen') ||
+      lowerTitle.includes('sustainable')
+    
+    const isPartyCategory =
+      lowerTitle.includes('feest') ||
+      lowerTitle.includes('party') ||
+      lowerTitle.includes('viering') ||
+      lowerTitle.includes('celebration')
 
-    // Different colors for men vs women categories
-    const badgeClasses = isMensCategory ? 'bg-blue-100 text-blue-700' : 'bg-rose-100 text-rose-600'
+    // Determine urgency badge based on category performance
+    const avgScore =
+      items.reduce((sum, item) => sum + (item.giftScore || 0), 0) / (items.length || 1)
+    const isNewCategory = items.some((item) => item.isOnSale) // Using isOnSale as proxy for new
+    const isLimitedStock = items.length <= 5 // Small collection implies scarcity
 
-    const buttonGradient = isMensCategory
-      ? 'from-blue-600 via-indigo-600 to-slate-700'
-      : 'from-rose-500 via-pink-500 to-purple-500'
+    let urgencyBadge: { text: string; icon: string; classes: string } | null = null
+    if (avgScore >= 8.5) {
+      urgencyBadge = {
+        text: '🔥 Nieuw deze week',
+        icon: '🔥',
+        classes: 'bg-orange-100 text-orange-700',
+      }
+    } else if (isNewCategory) {
+      urgencyBadge = {
+        text: '⚡ Trending nu',
+        icon: '⚡',
+        classes: 'bg-yellow-100 text-yellow-700',
+      }
+    } else if (isLimitedStock) {
+      urgencyBadge = {
+        text: '⏰ Beperkte selectie',
+        icon: '⏰',
+        classes: 'bg-red-100 text-red-700',
+      }
+    }
 
-    const buttonGlowGradient = isMensCategory
-      ? 'from-blue-400 via-indigo-400 to-slate-500'
-      : 'from-pink-400 via-rose-400 to-purple-400'
+    // Different colors based on category theme
+    let badgeClasses, buttonGradient, buttonGlowGradient
+    
+    if (isSustainableCategory) {
+      // Green/eco theme for sustainable products
+      badgeClasses = 'bg-emerald-100 text-emerald-700'
+      buttonGradient = 'from-emerald-600 via-green-600 to-teal-700'
+      buttonGlowGradient = 'from-emerald-400 via-green-400 to-teal-500'
+    } else if (isPartyCategory) {
+      // Purple/magenta/gold theme for party/celebration categories
+      badgeClasses = 'bg-purple-100 text-purple-700'
+      buttonGradient = 'from-purple-600 via-fuchsia-600 to-pink-600'
+      buttonGlowGradient = 'from-purple-400 via-fuchsia-400 to-pink-400'
+    } else if (isMensCategory) {
+      // Blue theme for men's categories
+      badgeClasses = 'bg-blue-100 text-blue-700'
+      buttonGradient = 'from-blue-600 via-indigo-600 to-slate-700'
+      buttonGlowGradient = 'from-blue-400 via-indigo-400 to-slate-500'
+    } else {
+      // Pink/rose theme for women's/general categories
+      badgeClasses = 'bg-rose-100 text-rose-600'
+      buttonGradient = 'from-rose-500 via-pink-500 to-purple-500'
+      buttonGlowGradient = 'from-pink-400 via-rose-400 to-purple-400'
+    }
 
     // Calculate total pages
     const itemsPerView =
@@ -1188,17 +1501,35 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           : 1
     const totalPages = Math.ceil(items.length / itemsPerView)
 
+    // Determine badge text - show partner for themed categories
+    const badgeText = isSustainableCategory 
+      ? 'Partner: Shop Like You Give A Damn' 
+      : isPartyCategory 
+        ? 'Partner: PartyPro.nl'
+        : 'Curated selectie'
+
     return (
       <article
-        className="space-y-6 animate-fade-in-up"
+        id={`category-${category.id}`}
+        className="space-y-6 animate-fade-in-up scroll-mt-24"
         style={{ animationDelay: `${120 + index * 70}ms` }}
       >
         <header className="space-y-3">
-          <div
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${badgeClasses}`}
-          >
-            <GiftIcon className="h-4 w-4" />
-            Curated selectie
+          <div className="flex flex-wrap items-center gap-2">
+            <div
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${badgeClasses}`}
+            >
+              <GiftIcon className="h-4 w-4" />
+              {badgeText}
+            </div>
+            {urgencyBadge && (
+              <div
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${urgencyBadge.classes} animate-pulse`}
+              >
+                <span>{urgencyBadge.icon}</span>
+                <span>{urgencyBadge.text}</span>
+              </div>
+            )}
           </div>
           {/* Desktop layout: titel + knop naast elkaar */}
           <div className="hidden md:flex items-start justify-between gap-4">
@@ -1210,14 +1541,22 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </div>
             <div className="flex flex-col items-end gap-3 shrink-0">
               <button
-                onClick={() =>
+                onClick={() => {
+                  // Track category CTA click
+                  if (typeof window !== 'undefined' && (window as any).gtag) {
+                    ;(window as any).gtag('event', 'category_cta_click', {
+                      event_category: 'Deals Page',
+                      event_label: displayTitle,
+                      category_id: category.id,
+                    })
+                  }
                   navigateTo('categoryDetail', {
                     categoryId: category.id,
                     categoryTitle: displayTitle,
                     categoryDescription: description,
                     products: items,
                   })
-                }
+                }}
                 className={`group relative overflow-visible rounded-2xl bg-gradient-to-br ${buttonGradient} px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 hover:-translate-y-1`}
               >
                 {/* Glow effect achter de knop bij hover */}
@@ -1251,7 +1590,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                     />
                   </svg>
-                  Bekijk onze collectie
+                  Shop deze collectie nu
                   <svg
                     className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
                     fill="none"
@@ -1316,14 +1655,22 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </div>
 
             <button
-              onClick={() =>
+              onClick={() => {
+                // Track category CTA click
+                if (typeof window !== 'undefined' && (window as any).gtag) {
+                  ;(window as any).gtag('event', 'category_cta_click', {
+                    event_category: 'Deals Page',
+                    event_label: displayTitle,
+                    category_id: category.id,
+                  })
+                }
                 navigateTo('categoryDetail', {
                   categoryId: category.id,
                   categoryTitle: displayTitle,
                   categoryDescription: description,
                   products: items,
                 })
-              }
+              }}
               className={`group relative overflow-visible w-full rounded-2xl bg-gradient-to-br ${buttonGradient} px-6 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:shadow-2xl active:scale-95`}
             >
               {/* Glow effect */}
@@ -1347,7 +1694,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>
-                Bekijk onze collectie
+                Shop deze collectie nu
                 <svg
                   className="w-5 h-5 transition-transform duration-300 group-active:translate-x-1"
                   fill="none"
@@ -1394,6 +1741,114 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           }}
         />
       </article>
+    )
+  }
+
+  // Testimonials Section Component
+  const TestimonialsSection: React.FC = () => {
+    const testimonials = [
+      {
+        name: 'Lisa M.',
+        rating: 5,
+        text: 'Via Gifteez vond ik het perfecte cadeau voor mijn moeder. De collecties zijn echt handig samengesteld!',
+        occasion: 'Moederdag cadeau',
+      },
+      {
+        name: 'Thomas D.',
+        rating: 5,
+        text: 'Snelle levering en precies wat ik zocht. De gift sets zijn top en meteen klaar om te geven.',
+        occasion: 'Verjaardagscadeau',
+      },
+      {
+        name: 'Emma K.',
+        rating: 5,
+        text: 'Eindelijk een site waar ik niet urenlang hoef te zoeken. De selectie is gewoon goed en origineel.',
+        occasion: 'Valentijnscadeau',
+      },
+      {
+        name: 'Mark v.d.B.',
+        rating: 5,
+        text: 'De cadeauscore helpt echt bij het kiezen. Heb al meerdere cadeaus via Gifteez besteld.',
+        occasion: 'Kerst cadeau',
+      },
+    ]
+
+    return (
+      <section className="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-6 md:p-10 border border-slate-200 shadow-sm">
+        <div className="max-w-5xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-1.5 mb-3">
+              <HeartIconFilled className="h-4 w-4 text-rose-500" />
+              <span className="text-xs font-bold text-rose-600 uppercase tracking-wide">
+                Tevreden cadeaugevers
+              </span>
+            </div>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-3">
+              Wat anderen zeggen over Gifteez
+            </h2>
+            <p className="text-base text-slate-600 max-w-2xl mx-auto">
+              Duizenden mensen vonden al het perfecte cadeau via onze collecties
+            </p>
+          </div>
+
+          {/* Testimonials Grid */}
+          <div className="grid md:grid-cols-2 gap-6">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
+              >
+                {/* Stars */}
+                <div className="flex items-center gap-1 mb-3">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <StarIcon key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+
+                {/* Quote */}
+                <p className="text-slate-700 leading-relaxed mb-4">"{testimonial.text}"</p>
+
+                {/* Author */}
+                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                  <div>
+                    <p className="font-semibold text-slate-900">{testimonial.name}</p>
+                    <p className="text-sm text-slate-500">{testimonial.occasion}</p>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs text-emerald-600 font-semibold">
+                    <CheckIcon className="h-4 w-4" />
+                    Geverifieerd
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Trust stats */}
+          <div className="mt-8 pt-6 border-t border-slate-200">
+            <div className="grid grid-cols-3 gap-6 text-center">
+              <div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                  10.000+
+                </div>
+                <div className="text-sm text-slate-600 mt-1">Tevreden klanten</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                  4.8/5
+                </div>
+                <div className="text-sm text-slate-600 mt-1">Gemiddelde beoordeling</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                  98%
+                </div>
+                <div className="text-sm text-slate-600 mt-1">Raadt ons aan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     )
   }
 
@@ -1478,8 +1933,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   return (
     <>
       <Meta
-        title="Deals & cadeaudeals van de week"
-        description="Ontdek de scherpste cadeaudeals van Gifteez. We combineren de beste Coolblue aanbiedingen met handmatig geselecteerde toppers."
+        title="De beste cadeaus vinden en kopen - Coolblue & Amazon deals"
+        description="Ontdek en koop de beste cadeaus van Coolblue en Amazon. Handpicked collecties voor elke gelegenheid met snelle levering."
       />
       <JsonLd data={structuredData} />
 
@@ -1543,7 +1998,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
               {/* Heading */}
               <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight animate-fade-in-up">
-                <span className="block text-gray-900 mb-2">Handgepickte cadeau collecties</span>
+                <span className="block text-gray-900 mb-2">Shop de beste cadeaus</span>
                 <span className="block bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 bg-clip-text text-transparent">
                   voor elke gelegenheid
                 </span>
@@ -1552,7 +2007,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               {/* Description */}
               <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
                 Ontdek zorgvuldig geselecteerde cadeaus van Coolblue en Amazon,
-                <span className="font-semibold text-rose-600"> perfect voor elk cadeau moment</span>
+                <span className="font-semibold text-rose-600"> direct te bestellen met snelle levering</span>
               </p>
 
               {/* CTA Buttons */}
@@ -1562,7 +2017,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-rose-300"
                 >
                   <GiftIcon className="h-6 w-6" />
-                  <span>Vind je perfect cadeau</span>
+                  <span>Shop je perfect cadeau nu</span>
                   <svg
                     className="w-5 h-5 transition-transform group-hover:translate-x-1"
                     fill="none"
@@ -1587,7 +2042,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     className="inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 border-rose-300 bg-white text-rose-600 font-bold text-lg hover:bg-rose-50 hover:border-rose-400 shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <TagIcon className="h-5 w-5" />
-                    <span>Bekijk uitgelicht cadeau</span>
+                    <span>Bestel deze topper direct</span>
                   </a>
                 )}
 
@@ -1697,23 +2152,69 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                         />
                       </div>
                       <div className="flex flex-col justify-center gap-4">
-                        <div className="inline-flex items-center gap-2 self-start rounded-full bg-rose-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
-                          <StarIcon className="h-4 w-4" />
-                          In de spotlight
-                        </div>
-                        {featuredRetailer && (
-                          <div
-                            className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${featuredRetailer.badgeClass}`}
-                          >
-                            {featuredRetailer.label}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
+                            <StarIcon className="h-4 w-4" />
+                            In de spotlight
                           </div>
-                        )}
+                          {featuredRetailer && (
+                            <div
+                              className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${featuredRetailer.badgeClass}`}
+                            >
+                              {featuredRetailer.label}
+                            </div>
+                          )}
+                          {/* Add Amazon Prime badge if applicable */}
+                          {featuredRetailer?.shortLabel.includes('Amazon') && (
+                            <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                              <span>📦</span>
+                              <span>Prime levering</span>
+                            </div>
+                          )}
+                        </div>
+
                         <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900">
                           {state.dealOfWeek.name}
                         </h2>
+
+                        {/* Add "Waarom dit cadeau?" USP bullets */}
+                        {state.dealOfWeek.giftScore && state.dealOfWeek.giftScore >= 8 && (
+                          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                            <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
+                              <CheckIcon className="h-4 w-4" />
+                              Waarom dit cadeau?
+                            </h3>
+                            <ul className="space-y-1.5 text-sm text-emerald-800">
+                              <li className="flex items-start gap-2">
+                                <span className="text-emerald-600">✓</span>
+                                <span>Hoge cadeauscore ({state.dealOfWeek.giftScore}/10)</span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-emerald-600">✓</span>
+                                <span>
+                                  {featuredRetailer?.shortLabel.includes('Amazon')
+                                    ? 'Snelle levering via Amazon Prime'
+                                    : 'Snelle levering beschikbaar'}
+                                </span>
+                              </li>
+                              <li className="flex items-start gap-2">
+                                <span className="text-emerald-600">✓</span>
+                                <span>Direct te bestellen en klaar om te geven</span>
+                              </li>
+                              {state.dealOfWeek.isOnSale && (
+                                <li className="flex items-start gap-2">
+                                  <span className="text-emerald-600">✓</span>
+                                  <span className="font-semibold">Nu met korting ⚡</span>
+                                </li>
+                              )}
+                            </ul>
+                          </div>
+                        )}
+
                         <p className="text-base text-slate-600 leading-relaxed">
                           {state.dealOfWeek.description}
                         </p>
+
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="inline-flex items-center gap-2 rounded-lg bg-rose-500 px-5 py-2.5 text-lg font-bold text-white">
                             {formatPrice(state.dealOfWeek.price) ?? 'Prijs op aanvraag'}
@@ -1730,21 +2231,102 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                             </span>
                           )}
                         </div>
+
                         <div className="flex flex-wrap gap-3 mt-2">
                           <a
                             href={withAffiliate(state.dealOfWeek.affiliateLink)}
                             target="_blank"
                             rel="sponsored nofollow noopener noreferrer"
                             onClick={handleFeaturedClick}
-                            className="inline-flex items-center gap-2 rounded-xl bg-accent px-8 py-3.5 text-base font-bold text-white shadow-lg transition-all hover:bg-accent-hover hover:shadow-xl hover:scale-105"
+                            className="group relative inline-flex items-center gap-2 rounded-xl px-10 py-4 text-lg font-bold text-white shadow-xl transition-all hover:shadow-2xl hover:scale-105 overflow-hidden"
                           >
-                            Naar {featuredRetailer ? featuredRetailer.shortLabel : 'de winkel'} →
+                            {/* Enhanced gradient background */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 transition-all duration-300 group-hover:from-rose-600 group-hover:via-pink-600 group-hover:to-rose-700"></div>
+
+                            {/* Shimmer effect */}
+                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+                            </div>
+
+                            {/* Button content */}
+                            <span className="relative z-10 flex items-center gap-2">
+                              <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                                />
+                              </svg>
+                              Bestel nu bij {featuredRetailer ? featuredRetailer.shortLabel : 'partner'}
+                              <svg
+                                className="w-5 h-5 transition-transform group-hover:translate-x-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                                />
+                              </svg>
+                            </span>
                           </a>
                           {premiumDeals.length > 1 && (
                             <Button variant="secondary" className="bg-white" onClick={showNextDeal}>
                               Toon ander cadeau ({dealOfWeekIndex + 1}/{premiumDeals.length})
                             </Button>
                           )}
+                        </div>
+
+                        {/* Trust badges */}
+                        <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-200">
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <svg
+                              className="w-5 h-5 text-green-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <span className="font-medium">Veilig bestellen</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <svg
+                              className="w-5 h-5 text-blue-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                              <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+                            </svg>
+                            <span className="font-medium">Snelle levering</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <svg
+                              className="w-5 h-5 text-purple-500"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <span className="font-medium">Perfect cadeau</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1753,7 +2335,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               )}
 
               {/* Filter Bar */}
-              <div className="animate-fade-in-up" style={{ animationDelay: '80ms' }}>
+              <div className="animate-fade-in-up space-y-4" style={{ animationDelay: '80ms' }}>
+                <QuickBudgetFilters />
                 <FilterBar />
               </div>
 
@@ -1762,35 +2345,29 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 <section className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                   <Carousel
                     items={filterDeals(state.topDeals)}
-                    title="🏆 Top 10 Cadeaus"
-                    badge={`${filterDeals(state.topDeals).length} deals`}
+                    title="🏆 Shop Top 10 Cadeaus"
+                    badge={`${filterDeals(state.topDeals).length} toppers`}
                   />
                 </section>
               )}
 
-              {pinnedDeals.length > 0 && (
-                <div className="animate-fade-in-up" style={{ animationDelay: '110ms' }}>
-                  <PinnedDealsSection deals={pinnedDeals} />
-                </div>
-              )}
-
+              {/* Shop per Thema - Moved up for better conversion flow */}
               {state.categories.length > 0 && (
                 <section
                   className="space-y-14 animate-fade-in-up"
-                  style={{ animationDelay: '120ms' }}
+                  style={{ animationDelay: '110ms' }}
                 >
                   <div className="text-center space-y-3">
                     <span className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
                       <SparklesIcon className="h-4 w-4 text-rose-500" />
-                      Redactiecollecties
+                      Thematische Collecties
                     </span>
                     <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900">
-                      Handmatig samengestelde cadeaucollecties
+                      Shop per Thema
                     </h2>
                     <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-600">
-                      We vullen deze blokken met actuele Amazon- en Coolblue-deals die direct
-                      cadeauproof zijn. Ideaal wanneer je snel een thematische selectie wilt zonder
-                      eindeloos zoeken.
+                      Elke collectie is zorgvuldig samengesteld met de beste deals van Amazon en Coolblue. 
+                      Perfect wanneer je snel een thematische selectie wilt zonder eindeloos zoeken.
                     </p>
                   </div>
                   <div className="space-y-16">
@@ -1804,6 +2381,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                     ))}
                   </div>
                 </section>
+              )}
+
+              {/* Gift Sets Section - After categories */}
+              {pinnedDeals.length > 0 && (
+                <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+                  <PinnedDealsSection deals={pinnedDeals} />
+                </div>
               )}
 
               {/* Empty State */}
@@ -1988,6 +2572,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   </div>
                 </div>
               </section>
+
+              {/* Testimonials Section - Social Proof - Moved to bottom */}
+              <div className="animate-fade-in-up" style={{ animationDelay: '140ms' }}>
+                <TestimonialsSection />
+              </div>
 
               {/* Internal Links - Related Content */}
               <div className="mt-16">

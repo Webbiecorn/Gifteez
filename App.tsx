@@ -32,6 +32,7 @@ const AdminPage = ReactLazy(() => import('./components/AdminPage'))
 const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'))
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'))
 const FloatingCTA = ReactLazy(() => import('./components/FloatingCTA'))
+const FloatingCadeauCoachButton = ReactLazy(() => import('./components/FloatingCadeauCoachButton'))
 import ErrorBoundary from './components/ErrorBoundary'
 import { SpinnerIcon } from './components/IconComponents'
 import Layout from './components/layout/Layout'
@@ -568,6 +569,21 @@ const App: React.FC = () => {
           ].includes(currentPage) && (
             <React.Suspense fallback={null}>
               <FloatingCTA navigateTo={navigateTo} />
+            </React.Suspense>
+          )}
+
+          {/* FloatingCadeauCoachButton - Cadeau-Coach toegang */}
+          {![
+            'giftFinder',
+            'cart',
+            'checkoutSuccess',
+            'admin',
+            'adminDealsPreview',
+            'login',
+            'signup',
+          ].includes(currentPage) && (
+            <React.Suspense fallback={null}>
+              <FloatingCadeauCoachButton navigateTo={navigateTo} />
             </React.Suspense>
           )}
 

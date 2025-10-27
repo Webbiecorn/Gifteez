@@ -23,6 +23,12 @@ Voordeel: idempotente image variant generatie + snelle feedback zonder per ongel
 ## Environment
 Zet sleutels in `.env` met VITE_ prefix (zie `.env.example`).
 
+## PartyPro Feed Automation
+- Dagelijkse sync draait via `.github/workflows/partypro-feed-refresh.yml` (05:00 UTC) en gebruikt `scripts/run-partypro-feed-job.mjs`.
+- Vereiste GitHub Secrets: `FIREBASE_SERVICE_ACCOUNT_JSON` (volledige service-account JSON) en `PARTYPRO_FEED_WEBHOOK` (Slack webhook).
+- Handmatig draaien: `AUTO_CONFIRM=1 node scripts/run-partypro-feed-job.mjs`. Voeg `SKIP_FIREBASE=1` toe voor een dry-run zonder Firestore writes.
+- Het script meldt status + productaantal in Slack; wanneer geen webhook is ingesteld wordt alleen naar stdout gelogd.
+
 ## SEO
 - Canonical, robots.txt, sitemap.xml (auto via prebuild script)
 - OG/Twitter tags met social image (`public/og-image-*.png`)

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { AuthContext } from '../contexts/AuthContext'
 import Button from './Button'
 import {
-  GiftIcon,
   HeartIcon,
   HeartIconFilled,
   MenuIcon,
@@ -11,8 +11,8 @@ import {
   LogOutIcon,
   TagIcon,
   BookOpenIcon,
-  MailIcon,
-  SparklesIcon,
+  ChevronDownIcon,
+  SearchIcon,
 } from './IconComponents'
 import { Container } from './layout/Container'
 import Logo from './Logo'
@@ -23,10 +23,38 @@ interface HeaderProps {
   currentPage: Page
 }
 
+// Submenu item type
+interface SubMenuItem {
+  page: Page
+  label: string
+  description?: string
+  scrollTo?: string // ID om naar toe te scrollen
+}
+
+// Navigation items configuration with dropdown support
+interface NavItem {
+  page: Page
+  label: string
+  icon?: React.ElementType
+  submenu?: SubMenuItem[]
+}
+
 const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [mobileExpandedMenu, setMobileExpandedMenu] = useState<string | null>(null)
+  const closeTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
   const auth = useContext(AuthContext)
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,23 +71,53 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset'
   }, [isMobileMenuOpen])
 
-  const navItems: { page: Page; label: string; icon?: React.ElementType }[] = [
-    { page: 'giftFinder', label: 'GiftFinder', icon: GiftIcon },
-    { page: 'deals', label: 'Collections', icon: TagIcon },
-    { page: 'categories', label: 'Categorieën', icon: SparklesIcon },
+  const navItems: NavItem[] = [
+    { 
+      page: 'deals', 
+      label: 'Shop Cadeaus', 
+      icon: TagIcon,
+      submenu: [
+        { page: 'deals', label: 'Alle Collecties', description: 'Ontdek al onze cadeaucollecties' },
+        { page: 'deals', label: 'Duurzame Cadeaus', description: '🌱 Bewuste en ecologische geschenken', scrollTo: 'category-duurzame-cadeaus-slygad' },
+        { page: 'deals', label: 'Feest & Party', description: '🎉 Alles voor onvergetelijke feesten', scrollTo: 'category-feest-party-partypro' },
+        { page: 'deals', label: 'Gift Sets voor Haar', description: 'Luxe cadeausets voor vrouwen' },
+        { page: 'deals', label: 'Gift Sets voor Hem', description: 'Stoere cadeausets voor mannen' },
+        { page: 'deals', label: 'Budget onder €50', description: 'Betaalbare cadeau-ideeën' },
+        { page: 'deals', label: 'Top 10 Deze Week', description: 'Populairste cadeaus nu' },
+      ]
+    },
     { page: 'blog', label: 'Blog', icon: BookOpenIcon },
-    { page: 'about', label: 'Over Ons', icon: UserCircleIcon },
-    { page: 'contact', label: 'Contact', icon: MailIcon },
+    { page: 'about', label: 'Over Ons', icon: BookOpenIcon },
+    { page: 'contact', label: 'Contact', icon: BookOpenIcon },
   ]
 
-  const handleNavClick = (page: Page) => {
+  const handleNavClick = (page: Page, scrollTo?: string) => {
     navigateTo(page)
     setIsMobileMenuOpen(false)
+    setOpenDropdown(null)
+    
+    // Scroll naar specifiek element als scrollTo is opgegeven
+    if (scrollTo) {
+      // Wacht tot de pagina is geladen, probeer dan te scrollen
+      const attemptScroll = (attempts = 0, maxAttempts = 20) => {
+        const element = document.getElementById(scrollTo)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        } else if (attempts < maxAttempts) {
+          // Probeer opnieuw na 100ms als element nog niet bestaat
+          setTimeout(() => attemptScroll(attempts + 1, maxAttempts), 100)
+        }
+      }
+      
+      // Start met kleine delay voor page transition
+      setTimeout(() => attemptScroll(), 150)
+    }
   }
 
   const handleLogout = () => {
     auth?.logout()
     setIsMobileMenuOpen(false)
+    setOpenDropdown(null)
     navigateTo('home')
   }
 
@@ -77,32 +135,120 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
     <nav className="hidden lg:flex items-center gap-1" aria-label="Hoofdnavigatie">
       {navItems.map((item) => {
         const isActive = currentPage === item.page
-        const isHighlight = item.page === 'quiz' || item.page === 'deals'
+        const hasSubmenu = item.submenu && item.submenu.length > 0
+        const isDropdownOpen = openDropdown === item.label
+
+        const handleMouseEnter = () => {
+          if (hasSubmenu) {
+            if (closeTimeoutRef.current) {
+              clearTimeout(closeTimeoutRef.current)
+              closeTimeoutRef.current = null
+            }
+            setOpenDropdown(item.label)
+          }
+        }
+
+        const handleMouseLeave = () => {
+          if (hasSubmenu) {
+            closeTimeoutRef.current = setTimeout(() => {
+              setOpenDropdown(null)
+            }, 150) // 150ms delay before closing
+          }
+        }
 
         return (
-          <button
-            key={item.page}
-            onClick={() => handleNavClick(item.page)}
-            aria-label={`Ga naar ${item.label}`}
-            aria-current={isActive ? 'page' : undefined}
-            className={`relative flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
-              isActive
-                ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-lg shadow-primary/20'
-                : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-            } ${!isActive && isHighlight ? 'hover:text-accent' : ''}`}
+          <div 
+            key={item.page} 
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
-            {item.icon && (
-              <item.icon
-                className={`w-4 h-4 transition-transform duration-200 ${
-                  isActive ? '' : 'group-hover:scale-110'
-                }`}
-                aria-hidden="true"
-              />
+            <button
+              onClick={() => !hasSubmenu && handleNavClick(item.page)}
+              aria-label={`Ga naar ${item.label}`}
+              aria-current={isActive ? 'page' : undefined}
+              aria-expanded={hasSubmenu ? isDropdownOpen : undefined}
+              className={`relative flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+                isActive
+                  ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-lg shadow-primary/20'
+                  : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+              }`}
+            >
+              {item.icon && (
+                <item.icon
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    isActive ? '' : 'group-hover:scale-110'
+                  }`}
+                  aria-hidden="true"
+                />
+              )}
+              <span>{item.label}</span>
+              {hasSubmenu && (
+                <ChevronDownIcon 
+                  className={`w-4 h-4 transition-transform duration-200 ${
+                    isDropdownOpen ? 'rotate-180' : ''
+                  }`}
+                  aria-hidden="true"
+                />
+              )}
+            </button>
+
+            {/* Dropdown Menu */}
+            {hasSubmenu && isDropdownOpen && (
+              <div 
+                className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-fade-in"
+                onMouseEnter={() => {
+                  if (closeTimeoutRef.current) {
+                    clearTimeout(closeTimeoutRef.current)
+                    closeTimeoutRef.current = null
+                  }
+                  setOpenDropdown(item.label)
+                }}
+                onMouseLeave={() => {
+                  closeTimeoutRef.current = setTimeout(() => {
+                    setOpenDropdown(null)
+                  }, 150)
+                }}
+              >
+                {item.submenu!.map((subItem, index) => (
+                  <button
+                    key={`${subItem.page}-${index}`}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (closeTimeoutRef.current) {
+                        clearTimeout(closeTimeoutRef.current)
+                      }
+                      setOpenDropdown(null)
+                      handleNavClick(subItem.page, subItem.scrollTo)
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors duration-150 group"
+                  >
+                    <div className="font-semibold text-sm text-gray-900 group-hover:text-primary transition-colors">
+                      {subItem.label}
+                    </div>
+                    {subItem.description && (
+                      <div className="text-xs text-gray-500 mt-0.5">
+                        {subItem.description}
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
             )}
-            <span>{item.label}</span>
-          </button>
+          </div>
         )
       })}
+      
+      {/* Search Icon */}
+      <button
+        onClick={() => {
+          // TODO: Implement search functionality
+        }}
+        aria-label="Zoeken"
+        className="relative flex items-center justify-center rounded-lg w-10 h-10 text-gray-700 hover:text-primary hover:bg-gray-50 transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2"
+      >
+        <SearchIcon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" aria-hidden="true" />
+      </button>
     </nav>
   )
 
@@ -253,21 +399,65 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                 <nav className="space-y-2" aria-label="Mobiele navigatie">
                   {navItems.map((item) => {
                     const isActive = currentPage === item.page
+                    const hasSubmenu = item.submenu && item.submenu.length > 0
+                    const isExpanded = mobileExpandedMenu === item.label
+                    
                     return (
-                      <button
-                        key={item.page}
-                        onClick={() => handleNavClick(item.page)}
-                        aria-label={`Ga naar ${item.label}`}
-                        aria-current={isActive ? 'page' : undefined}
-                        className={`w-full text-left py-3 px-4 rounded-lg flex items-center gap-3 font-semibold transition-all duration-200 ${
-                          isActive
-                            ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-md'
-                            : 'text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        {item.icon && <item.icon className="w-5 h-5" aria-hidden="true" />}
-                        {item.label}
-                      </button>
+                      <div key={item.page}>
+                        <button
+                          onClick={() => {
+                            if (hasSubmenu) {
+                              setMobileExpandedMenu(isExpanded ? null : item.label)
+                            } else {
+                              handleNavClick(item.page)
+                            }
+                          }}
+                          aria-label={`Ga naar ${item.label}`}
+                          aria-current={isActive ? 'page' : undefined}
+                          aria-expanded={hasSubmenu ? isExpanded : undefined}
+                          className={`w-full text-left py-3 px-4 rounded-lg flex items-center gap-3 font-semibold transition-all duration-200 ${
+                            isActive
+                              ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-md'
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {item.icon && <item.icon className="w-5 h-5" aria-hidden="true" />}
+                          <span className="flex-1">{item.label}</span>
+                          {hasSubmenu && (
+                            <ChevronDownIcon 
+                              className={`w-4 h-4 transition-transform duration-200 ${
+                                isExpanded ? 'rotate-180' : ''
+                              }`}
+                              aria-hidden="true"
+                            />
+                          )}
+                        </button>
+                        
+                        {/* Submenu Accordion */}
+                        {hasSubmenu && isExpanded && (
+                          <div className="mt-1 ml-4 space-y-1 animate-fade-in">
+                            {item.submenu!.map((subItem, index) => (
+                              <button
+                                key={`${subItem.page}-${index}`}
+                                onClick={() => {
+                                  setMobileExpandedMenu(null)
+                                  handleNavClick(subItem.page, subItem.scrollTo)
+                                }}
+                                className="w-full text-left py-2 px-4 rounded-lg text-sm hover:bg-gray-50 transition-colors duration-150"
+                              >
+                                <div className="font-medium text-gray-900">
+                                  {subItem.label}
+                                </div>
+                                {subItem.description && (
+                                  <div className="text-xs text-gray-500 mt-0.5">
+                                    {subItem.description}
+                                  </div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     )
                   })}
                 </nav>

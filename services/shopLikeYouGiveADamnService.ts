@@ -1,6 +1,8 @@
-import { collection, getDocs, query, where, limit as firestoreLimit } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 import { productCache } from './productCacheService'
+
+/* eslint-disable no-console */
 
 export interface SLYGADProduct {
   id: string
@@ -64,7 +66,7 @@ export class ShopLikeYouGiveADamnService {
       this.lastLoaded = new Date()
       this.isLoading = false
       console.log(`✅ Loaded ${cached.length} SLYGAD products from cache`)
-      return
+      return this.products
     }
 
     try {
@@ -130,11 +132,13 @@ export class ShopLikeYouGiveADamnService {
 
       // If Firebase fails, try to load from public folder (no bundle bloat)
       try {
-        const response = await fetch('/data/shop-like-you-give-a-damn-import-ready.json')
+        // Add cache-busting timestamp to force fresh load
+        const timestamp = new Date().getTime()
+        const response = await fetch(`/data/shop-like-you-give-a-damn-import-ready.json?v=${timestamp}`)
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-        const localProducts = await response.json()
+        const localProducts = (await response.json()) as SLYGADProduct[]
 
-        this.products = (localProducts as any[]).map((p) => ({
+        this.products = localProducts.map((p) => ({
           ...p,
           source: 'shop-like-you-give-a-damn' as const,
         }))
@@ -205,6 +209,84 @@ export class ShopLikeYouGiveADamnService {
       .filter((p) => p.price >= min && p.price <= max)
       .sort((a, b) => (b.giftScore || 0) - (a.giftScore || 0))
       .slice(0, limit)
+  }
+
+  /**
+   * Detect subcategory from product name
+   */
+  static detectSubcategory(productName: string): string {
+    const lower = productName.toLowerCase()
+    
+    // Jewelry categories
+    if (lower.includes('ring')) return 'Ringen'
+    if (lower.includes('ketting') || lower.includes('necklace')) return 'Kettingen'
+    if (lower.includes('oorbel') || lower.includes('earring')) return 'Oorbellen'
+    if (lower.includes('armband') || lower.includes('bracelet')) return 'Armbanden'
+    
+    // Yoga & Wellness
+    if (lower.includes('yoga') || lower.includes('peshtemal')) return 'Yoga & Wellness'
+    if (lower.includes('waterfles') || lower.includes('bottle')) return 'Drinkflessen'
+    
+    // Accessories
+    if (lower.includes('tas') || lower.includes('bag')) return 'Tassen'
+    if (lower.includes('portemonnee') || lower.includes('wallet')) return 'Portemonnees'
+    
+    // Default
+    return 'Overige'
+  }
+
+  /**
+   * Get products grouped by subcategory
+   */
+  static getProductsBySubcategory(): Record<string, SLYGADProduct[]> {
+    const grouped: Record<string, SLYGADProduct[]> = {}
+    
+    this.products.forEach(product => {
+      const subcategory = this.detectSubcategory(product.name)
+      if (!grouped[subcategory]) {
+        grouped[subcategory] = []
+      }
+      grouped[subcategory].push(product)
+    })
+    
+    return grouped
+  }
+
+  /**
+   * Get products from a specific subcategory
+   */
+  static getProductsBySubcategoryName(subcategoryName: string): SLYGADProduct[] {
+    return this.products.filter(product => 
+      this.detectSubcategory(product.name) === subcategoryName
+    )
+  }
+
+  /**
+   * Get available subcategories with product counts
+   */
+  static getSubcategories(): Array<{ name: string; count: number; emoji: string }> {
+    const grouped = this.getProductsBySubcategory()
+    
+    const emojiMap: Record<string, string> = {
+      'Ringen': '💍',
+      'Kettingen': '📿',
+      'Oorbellen': '✨',
+      'Armbanden': '🔗',
+      'Yoga & Wellness': '🧘',
+      'Drinkflessen': '💧',
+      'Tassen': '👜',
+      'Portemonnees': '👛',
+      'Overige': '🎁'
+    }
+    
+    return Object.entries(grouped)
+      .map(([name, products]) => ({
+        name,
+        count: products.length,
+        emoji: emojiMap[name] || '🌱'
+      }))
+      .filter(cat => cat.count > 0)
+      .sort((a, b) => b.count - a.count)
   }
 
   /**

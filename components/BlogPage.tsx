@@ -19,10 +19,12 @@ import Meta from './Meta'
 import { NewsletterSignup } from './NewsletterSignup'
 import type { BlogPost, NavigateTo } from '../types'
 
+// Cache-bust version: 2025-10-26-v3-fixed-author-join
 const getReadingTime = (text: string) => {
   if (!text) return 1
   const wordCount = text.split(/\s+/).filter(Boolean).length
-  return Math.max(1, Math.ceil(wordCount / 200))
+  const wordsPerMinute = 200 // Average reading speed
+  return Math.max(1, Math.ceil(wordCount / wordsPerMinute))
 }
 
 const SpotlightHeroCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
@@ -140,11 +142,7 @@ const SpotlightSupportCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; i
 
         <div className="flex items-center gap-3 pt-2">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
-            {post.author.name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')
-              .slice(0, 2)}
+            ✍️
           </div>
           <div className="text-sm text-gray-600">
             <p className="font-semibold text-gray-900">{post.author.name}</p>
@@ -275,11 +273,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
         <div className="mt-6 flex items-center justify-between border-t border-slate-100/70 pt-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
-              {post.author.name
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .slice(0, 2)}
+              ✍️
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-900">{post.author.name}</p>
@@ -847,8 +841,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
                   Uit het archief
                 </h2>
                 <p className="max-w-2xl text-gray-600">
-                  Blijf ontdekken met eerdere cadeaugidsen die nog steeds boordevol inspiratie
-                  zitten.
+                  Blijf ontdekken met eerdere cadeaugidsen vol inspiratie.
                 </p>
               </div>
               <div className="hidden md:inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-accent backdrop-blur">

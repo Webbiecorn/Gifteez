@@ -24,28 +24,28 @@ type IconType = React.ComponentType<{ className?: string }>
 
 const pageTitle = 'Over Gifteez | Cadeaus geven zonder stress'
 const pageDescription =
-  'Leer het verhaal achter Gifteez kennen, ontdek hoe onze AI GiftFinder cadeaustress wegneemt en ontmoet het team dat dagelijks werkt aan verrassende cadeau-inspiratie.'
+  'Leer het verhaal achter Gifteez kennen, ontdek hoe we cadeaustress wegnemen met slimme inspiratie en ontmoet het team dat dagelijks werkt aan verrassende cadeau-ideeën.'
 const canonicalUrl = 'https://gifteez.nl/over-ons'
 const heroImageUrl = 'https://gifteez.nl/images/gifteez-over-ons-blij.png'
 const stressImageUrl = 'https://gifteez.nl/images/gifteez-over-ons-stress.png'
 
 const differentiators: Array<{ title: string; description: string; icon: IconType }> = [
   {
-    title: 'Superslimme GiftFinder',
+    title: 'Handpicked cadeaucollecties',
     description:
-      'Onze AI scant continu meer dan 15.000 cadeaus en rekent meteen af met keuzestress.',
+      'Ons team filtert dagelijks het aanbod van retailers en niche makers tot bruikbare shortlistjes.',
     icon: SparklesIcon,
   },
   {
-    title: 'Persoonlijk op maat',
+    title: 'Community & data inzichten',
     description:
-      'We combineren data met menselijke input, zodat elke suggestie voelt alsof jij hem zelf hebt uitgezocht.',
+      'We combineren feedback van cadeaugevers met data, zodat trends en persoonlijke wensen samenkomen.',
     icon: HeartIcon,
   },
   {
-    title: 'Binnen 3 minuten klaar',
+    title: 'Partners & snelle links',
     description:
-      'Van vraag tot kant-en-klare cadeaulijst met winkel links — razendsnel en moeiteloos.',
+      'We onderhouden warme relaties met betrouwbare winkels voor actuele voorraden, deals en directe shoplinks.',
     icon: TargetIcon,
   },
 ]
@@ -65,9 +65,9 @@ const milestones: Array<{ year: string; title: string; description: string }> = 
   },
   {
     year: '2025',
-    title: 'GiftFinder 2.0',
+    title: 'Slimme matching 2.0',
     description:
-      'We koppelden realtime productfeeds en slimme filters zodat de AI altijd frisse inspiratie serveert.',
+      'We koppelden realtime productfeeds en slimme filters zodat we altijd frisse inspiratie serveren.',
   },
   {
     year: 'Vandaag',
@@ -80,10 +80,10 @@ const milestones: Array<{ year: string; title: string; description: string }> = 
 const teamMembers = [
   {
     name: 'Kevin',
-    role: 'Oprichter & Lead AI Developer',
+    role: 'Oprichter & Lead Developer',
     initial: 'K',
     color: 'from-blue-500 to-indigo-600',
-    bio: 'Kevin is het technische brein achter de GiftFinder. Hij bouwt slimme algoritmes die duizenden cadeaus in seconden matchen met de perfecte ontvanger.',
+    bio: 'Kevin is het technische brein achter Gifteez. Hij bouwt slimme algoritmes die duizenden cadeaus in seconden matchen met de perfecte ontvanger.',
   },
   {
     name: 'Bianca',
@@ -112,9 +112,9 @@ const steps: Array<{
 }> = [
   {
     number: '1',
-    title: 'Vertel wie je wilt verrassen',
+    title: 'We luisteren naar jouw verhaal',
     description:
-      "Kies relatie, budget, gelegenheid en hobby's. Hoe specifieker, hoe scherper de aanbevelingen.",
+      'Via quiz, e-mail en socials verzamelen we context: voor wie, welke gelegenheid en wat echt belangrijk is.',
     accentClass: 'from-primary to-accent',
     iconTint: 'text-primary',
     iconBg: 'bg-primary/10',
@@ -122,9 +122,9 @@ const steps: Array<{
   },
   {
     number: '2',
-    title: 'Laat AI het voorwerk doen',
+    title: 'We cureren en testen',
     description:
-      'De GiftFinder weegt duizenden cadeaus af op relevantie, persoonlijkheid en beschikbaarheid in realtime.',
+      'Ons team combineert trenddata met echte proefcadeaus en feedback van partners om lijsten scherp te houden.',
     accentClass: 'from-blue-500 to-indigo-600',
     iconTint: 'text-blue-600',
     iconBg: 'bg-blue-500/10',
@@ -132,9 +132,9 @@ const steps: Array<{
   },
   {
     number: '3',
-    title: 'Kies het perfecte cadeau',
+    title: 'Jij kiest en verrast',
     description:
-      'Je ontvangt een shortlist met direct te bestellen cadeaus en alternatieven voor verschillende prijspunten.',
+      'We bundelen inspiratielijsten, gidsen en snelle shoplinks per budget en stijl zodat je direct kunt handelen.',
     accentClass: 'from-pink-500 to-purple-500',
     iconTint: 'text-pink-600',
     iconBg: 'bg-pink-100',
@@ -185,9 +185,9 @@ const structuredData = {
 
 const aboutFAQs = [
   {
-    question: 'Wat is Gifteez en hoe werkt het?',
+    question: 'Wat is Gifteez en hoe helpt het?',
     answer:
-      'Gifteez is een slimme AI-powered gift finder die je helpt het perfecte cadeau te vinden. Je vult simpelweg je budget, gelegenheid en interesses in, en onze AI scant 1000+ cadeaus om je een persoonlijke shortlist te geven met directe kooplinks.',
+      'Gifteez is je cadeaupartner. We combineren handgecurateerde gidsen, dagelijkse deals en een slimme cadeau-coach zodat jij zonder stress iets passends vindt.',
   },
   {
     question: 'Is Gifteez gratis te gebruiken?',
@@ -200,9 +200,9 @@ const aboutFAQs = [
       'We tonen producten van gerenommeerde online retailers zoals Coolblue en Amazon. Alle producten worden dagelijks bijgewerkt met de nieuwste prijzen en deals.',
   },
   {
-    question: 'Hoe werkt de AI GiftFinder precies?',
+    question: 'Hoe werkt de cadeau-coach precies?',
     answer:
-      'Onze AI analyseert je input (budget, gelegenheid, interesses) en match dit met productkenmerken, reviews, populariteit en seizoenstrends. Zo krijg je binnen 30 seconden een gepersonaliseerde shortlist van cadeaus die het beste passen.',
+      'Onze coach analyseert je input (budget, gelegenheid, interesses) en matcht dit met productkenmerken, reviews, populariteit en seizoenstrends. Zo krijg je binnen 30 seconden een gepersonaliseerde shortlist van cadeaus die het beste passen.',
   },
   {
     question: 'Kan ik mijn favoriete cadeaus opslaan?',
@@ -247,18 +247,18 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               </span>
             </h1>
             <p className="typo-lead text-gray-700">
-              We bouwen aan de slimste cadeau-assistent van Nederland. Bij Gifteez combineren we
-              empathie, data en design om voor iedereen de perfecte verrassing te vinden.
+              We bouwen aan hét startpunt voor cadeauinspiratie. Bij Gifteez combineren we curatie,
+              data en empathie om verrassende ideeën te brengen voor elk moment.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 variant="accent"
-                onClick={() => navigateTo('giftFinder')}
+                onClick={() => navigateTo('categories')}
                 className="px-10 py-4 text-lg font-semibold shadow-lg transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-xl"
               >
                 <SparklesIcon className="h-5 w-5" />
-                Ontdek de GiftFinder
+                Bekijk cadeaucollecties
               </Button>
               <button
                 onClick={() => navigateTo('contact')}
@@ -286,7 +286,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             <div className="absolute inset-0 -left-6 -top-6 rounded-3xl bg-gradient-to-tr from-primary/30 via-transparent to-accent/30 blur-xl" />
             <ImageWithFallback
               src="/images/gifteez-over-ons-blij.png"
-              alt="Blij Gifteez cadeaudoos met de GiftFinder op een laptop"
+              alt="Blij Gifteez cadeaudoos helpt met cadeau-inspiratie"
               width={1152}
               height={768}
               showSkeleton
@@ -294,7 +294,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               className="relative overflow-hidden rounded-3xl border border-white/60 bg-white shadow-2xl"
             />
             <figcaption className="mt-4 text-sm text-gray-600">
-              Cadeauvreugde in actie: onze AI GiftFinder helpt je live kiezen.
+              Cadeauvreugde in actie: elk idee testen we zelf voordat het in een gids belandt.
             </figcaption>
           </figure>
         </div>
@@ -349,7 +349,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               className="relative rounded-3xl border border-white/60 bg-white shadow-2xl"
             />
             <figcaption className="mt-4 text-sm text-gray-600">
-              We herkennen de stress. Daarom laten we de GiftFinder het moeilijke werk doen.
+              We herkennen de stress. Daarom helpen we je met het moeilijke werk.
             </figcaption>
           </figure>
 
@@ -363,8 +363,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             </h2>
             <p className="text-gray-600">
               Cadeaustress kennen we als geen ander: beperkte tijd, eindeloze opties en de druk om
-              origineel te zijn. Met onze AI, curatie en persoonlijke tone-of-voice begeleiden we je
-              stap voor stap naar een cadeau dat past als gegoten.
+              origineel te zijn. Met onze curatie, data-inzichten en persoonlijke tone-of-voice
+              begeleiden we je stap voor stap naar een cadeau dat past als gegoten.
             </p>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start gap-3">
@@ -410,8 +410,8 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
               In drie stappen van idee naar cadeau dat raakt.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-              Je hoeft geen research-marathon te lopen. Onze AI vertaalt jouw input direct naar een
-              shortlist met cadeaus die kloppen voor het moment.
+              Je hoeft geen research-marathon te lopen. We vertalen jouw input en feedback naar
+              concrete shortlistjes, gidsen en deals die passen bij het moment.
             </p>
           </div>
 
@@ -480,7 +480,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-semibold uppercase text-white shadow-lg">
-              Het team achter de GiftFinder
+              Het Gifteez-team
             </div>
             <h2 className="typo-h2 mt-6 text-gray-900">
               Wij combineren tech met warme cadeaulogica.
@@ -544,13 +544,12 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                 </div>
 
                 <h2 className="typo-h1 mt-6 bg-gradient-to-r from-primary via-rose-600 to-purple-600 bg-clip-text text-transparent">
-                  Vind het perfecte cadeau in 30 seconden
+                  Blader door de beste cadeaulijsten
                 </h2>
 
                 <p className="typo-body mt-6 text-gray-700">
-                  Geen eindeloos scrollen meer. Onze AI GiftFinder vraagt jou 5 simpele vragen en
-                  matcht direct met duizenden cadeaus. Gepersonaliseerd, snel en altijd passend bij
-                  jouw budget.
+                  Dagelijkse inspiratie uit gidsen, collecties en partnerdeals. Geen eindeloos
+                  scrollen meer, maar direct bruikbare ideeën voor elk budget.
                 </p>
 
                 {/* Features list */}
@@ -568,7 +567,7 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                       </svg>
                     </div>
                     <span className="text-sm font-medium text-gray-700">
-                      Slimme vragen die direct tot matches leiden
+                      Curatie door experts én cadeaugevers
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -609,18 +608,18 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
                 <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
                   <Button
                     variant="primary"
-                    onClick={() => navigateTo('giftFinder')}
+                    onClick={() => navigateTo('categories')}
                     className="group px-8 py-4 text-base font-semibold shadow-xl transition-all hover:-translate-y-0.5 hover:shadow-2xl"
                   >
                     <GiftIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
-                    Start GiftFinder
+                    Bekijk cadeaucollecties
                   </Button>
                   <button
-                    onClick={() => navigateTo('blog')}
+                    onClick={() => navigateTo('giftFinder')}
                     className="inline-flex items-center gap-2 font-semibold text-gray-700 transition-colors hover:text-primary"
                   >
                     <UserIcon className="h-5 w-5" />
-                    Of lees eerst onze tips
+                    Of laat de cadeau-coach helpen
                   </button>
                 </div>
               </div>
