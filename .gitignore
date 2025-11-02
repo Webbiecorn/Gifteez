@@ -38,3 +38,8 @@ screenshots/
 
 # Raw feed data
 data/*.csv
+
+# Playwright outputs
+test-results/
+playwright-report/
+e2e-screenshots/
