@@ -176,6 +176,25 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     return new Intl.NumberFormat('nl-NL').format(estimatedViews)
   }, [estimatedViews])
 
+  // Compute content blocks early to keep hook order stable across renders
+  const contentBlocks = useMemo<ContentBlock[]>(() => {
+    if (!post) {
+      return []
+    }
+    if (Array.isArray(post.content)) {
+      return post.content
+    }
+    if (typeof post.content === 'string' && post.content.trim()) {
+      return [
+        {
+          type: 'paragraph',
+          content: post.content,
+        } as ContentBlock,
+      ]
+    }
+    return []
+  }, [post])
+
   useEffect(() => {
     if (postsLoading) {
       return
@@ -310,8 +329,17 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
 
     appendJsonLd(breadcrumbSchema)
 
-    pinterestPageVisit('blog_article', `blog_${post.slug}_${Date.now()}`)
-    gaPageView(`/blog/${post.slug}`, post.title)
+    // Guard tracking calls to avoid any runtime breakages
+    try {
+      pinterestPageVisit('blog_article', `blog_${post.slug}_${Date.now()}`)
+    } catch (e) {
+      console.warn('Pinterest tracking failed:', e)
+    }
+    try {
+      gaPageView(`/blog/${post.slug}`, post.title)
+    } catch (e) {
+      console.warn('GA pageview failed:', e)
+    }
 
     return () => {
       window.removeEventListener('scroll', updateScrollProgress)
@@ -412,23 +440,6 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
       </div>
     )
   }
-  const contentBlocks = useMemo<ContentBlock[]>(() => {
-    if (!post) {
-      return []
-    }
-    if (Array.isArray(post.content)) {
-      return post.content
-    }
-    if (typeof post.content === 'string' && post.content.trim()) {
-      return [
-        {
-          type: 'paragraph',
-          content: post.content,
-        } as ContentBlock,
-      ]
-    }
-    return []
-  }, [post])
 
   // Calculate reading time
   const calculateReadingTime = (content: ContentBlock[]): number => {
@@ -768,9 +779,12 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
         title={`${post.title} | Gifteez Blog`}
         description={post.excerpt}
         canonical={`https://gifteez.nl/blog/${post.slug}`}
-        ogImage={
-          post.imageUrl.startsWith('http') ? post.imageUrl : `https://gifteez.nl${post.imageUrl}`
-        }
+        ogImage={(function () {
+          const src = post.imageUrl || '/og-image.png'
+          if (src.startsWith('http')) return src
+          const normalized = src.startsWith('/') ? src : `/${src}`
+          return `https://gifteez.nl${normalized}`
+        })()}
         pinterestImage={
           post.seo?.pinterestImage
             ? post.seo.pinterestImage.startsWith('http')

@@ -68,7 +68,25 @@ export const BlogProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useBlogContext = (): BlogContextValue => {
   const context = useContext(BlogContext)
   if (!context) {
-    throw new Error('useBlogContext moet binnen een BlogProvider worden gebruikt')
+    // Safety fallback: avoid throwing during transient renders (e.g. lazy/Suspense boundaries)
+    // Returning a no-op context prevents hook order mismatches in production.
+    if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+      console.warn(
+        '[BlogContext] useBlogContext called outside provider. Returning fallback value.'
+      )
+    }
+    return {
+      posts: [],
+      rawPosts: [],
+      loading: false,
+      error: new Error('BlogContext not available'),
+
+      refresh: async (_options?: { includeDrafts?: boolean }) => {},
+
+      findPostBySlug: (_slug: string) => undefined,
+
+      findRawPostBySlug: (_slug: string) => undefined,
+    }
   }
   return context
 }

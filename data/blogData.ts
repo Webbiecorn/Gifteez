@@ -1088,7 +1088,8 @@ export const blogPosts: BlogPost[] = [
     title: 'Cadeaugidsen: snel starten per budget en thema',
     excerpt:
       'Zo vind je in 2 minuten het juiste cadeau. Kies je budget of thema en klik door naar de beste gidsen: onder €25, onder €50 voor haar/hem, duurzaam en gamer.',
-    imageUrl: '/images/Blog-afb-opening.png',
+    imageUrl:
+      '/images/Blog-afbeelding-Cadeaugidsen:%20snel%20starten%20per%20budget%20en%20thema.png',
     category: 'Cadeaugids',
     author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-guides' },
     publishedDate: '2025-11-02',
@@ -1140,13 +1141,17 @@ export const blogPosts: BlogPost[] = [
       ogTitle: 'Cadeaugidsen: snel starten per budget en thema',
       ogDescription:
         'Klik door naar onze populairste cadeaugidsen: onder €25, onder €50 voor haar/hem, duurzaam en gamer.',
-      ogImage: 'https://gifteez.nl/images/Blog-afb-opening.png',
+      ogImage:
+        'https://gifteez.nl/images/Blog-afbeelding-Cadeaugidsen:%20snel%20starten%20per%20budget%20en%20thema.png',
       ogType: 'article',
       twitterCard: 'summary_large_image',
       twitterTitle: 'Snel starten met cadeaugidsen',
       twitterDescription: 'Vind in 2 minuten het juiste cadeau met onze budget- en themagidsen.',
-      twitterImage: 'https://gifteez.nl/images/Blog-afb-opening.png',
+      twitterImage:
+        'https://gifteez.nl/images/Blog-afbeelding-Cadeaugidsen:%20snel%20starten%20per%20budget%20en%20thema.png',
       canonicalUrl: 'https://gifteez.nl/blog/cadeaugidsen-snel-starten',
+      // Pinterest-optimized portrait (1000x1500) with overlayed title
+      pinterestImage: 'https://gifteez.nl/images/pinterest/cadeaugidsen-snel-starten-portrait.png',
     },
     tags: [
       'cadeaugids',

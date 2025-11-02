@@ -13,7 +13,10 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
     }
 
     if (typeof post.content === 'string') {
-      return post.content.replace(/<[^>]*>/g, ' ').trim().slice(0, 5000)
+      return post.content
+        .replace(/<[^>]*>/g, ' ')
+        .trim()
+        .slice(0, 5000)
     }
 
     return post.content
@@ -38,10 +41,14 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
   const authorName = post.author?.name || 'Kevin van Gifteez'
   const authorAvatar = post.author?.avatarUrl || 'https://i.pravatar.cc/150?u=kevin'
 
-  // Ensure proper image URLs (handle both relative and absolute)
-  const imageUrl = post.imageUrl?.startsWith('http')
-    ? post.imageUrl
-    : `https://gifteez.nl${post.imageUrl}`
+  // Ensure proper image URLs (handle both relative and absolute) with safe fallback
+  const imageUrl = (() => {
+    const src = post.imageUrl || '/og-image.png'
+    if (src.startsWith('http')) return src
+    // ensure leading slash
+    const normalized = src.startsWith('/') ? src : `/${src}`
+    return `https://gifteez.nl${normalized}`
+  })()
 
   const mentions: Array<Record<string, unknown>> = []
 

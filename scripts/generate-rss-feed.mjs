@@ -47,9 +47,11 @@ async function loadBlogPosts() {
       const postContent = blogDataContent.substring(slugIndex, endIndex);
       
       // Extract fields from this post's content
-      const titleMatch = postContent.match(/title:\s*'([^']+)',/);
-      const excerptMatch = postContent.match(/excerpt:\s*[\n\s]*["']([\s\S]+?)["'],/);
-      const imageUrlMatch = postContent.match(/imageUrl:\s*'([^']+)',/);
+  const titleMatch = postContent.match(/title:\s*'([^']+)',/);
+  const excerptMatch = postContent.match(/excerpt:\s*[\n\s]*["']([\s\S]+?)["'],/);
+  const imageUrlMatch = postContent.match(/imageUrl:\s*'([^']+)',/);
+  // Prefer a Pinterest-optimized image when available
+  const pinterestImageMatch = postContent.match(/pinterestImage:\s*["']([^"']+)["']/);
       const categoryMatch = postContent.match(/category:\s*'([^']+)',/);
       const publishedDateMatch = postContent.match(/publishedDate:\s*'([^']+)',/);
       
@@ -58,7 +60,7 @@ async function loadBlogPosts() {
           slug,
           title: titleMatch[1],
           excerpt: excerptMatch[1],
-          imageUrl: imageUrlMatch[1],
+          imageUrl: (pinterestImageMatch && pinterestImageMatch[1]) || imageUrlMatch[1],
           category: categoryMatch[1],
           publishedAt: `${publishedDateMatch[1]}T10:00:00Z`,
           updatedAt: `${publishedDateMatch[1]}T10:00:00Z`
