@@ -3,7 +3,8 @@ import {
   navigateTo,
   waitForPageLoad,
   expectUrlToContain,
-  hasText
+  hasText,
+  isMobileViewport
 } from './helpers'
 
 test.describe('Navigation Flow', () => {
@@ -44,6 +45,17 @@ test.describe('Navigation Flow', () => {
 
       expectUrlToContain(page, '/blog')
       await expect(page.locator('h1')).toContainText('Blog')
+    })
+
+    test('should navigate to Cadeaugidsen hub from header', async ({ page }) => {
+      // Only applicable for desktop navigation (hidden behind hamburger on mobile)
+      if (isMobileViewport(page)) test.skip()
+      await page.locator('[data-testid="nav-cadeausHub"]:visible').first().click()
+      await waitForPageLoad(page)
+
+      expectUrlToContain(page, '/cadeaus')
+      // The hub page hero uses an H1 with "Cadeaugidsen" text
+      await expect(page.locator('h1, h2').first()).toContainText(/Cadeaugidsen/i)
     })
 
     test('should navigate back to homepage when clicking logo', async ({ page }) => {

@@ -458,3 +458,12 @@ test.describe('Blog Flow', () => {
     })
   })
 })
+
+test.describe('Specific Blog Post: Cadeaugidsen quick-start', () => {
+  test('should open the Cadeaugidsen quick-start blog by slug', async ({ page }) => {
+    await navigateTo(page, '/blog/cadeaugidsen-snel-starten')
+    await waitForPageLoad(page)
+
+    await expect(page.locator('h1').first()).toContainText('Cadeaugidsen')
+  })
+})
