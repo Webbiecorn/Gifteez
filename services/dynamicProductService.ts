@@ -1022,27 +1022,44 @@ export class DynamicProductService {
 
     const searchTerm = query.toLowerCase().trim()
 
-    const results = this.getAllProducts()
+    // Get all matches and score them
+    const matches = this.getAllProducts()
       .filter((p) => {
         const text =
           `${p.name} ${p.description} ${p.category} ${(p.tags || []).join(' ')}`.toLowerCase()
         return text.includes(searchTerm)
       })
-      .filter((p) => p.giftScore >= 5)
-      .sort((a, b) => {
-        // Prioritize name matches
-        const aNameMatch = a.name.toLowerCase().includes(searchTerm)
-        const bNameMatch = b.name.toLowerCase().includes(searchTerm)
-
-        if (aNameMatch !== bNameMatch) {
-          return aNameMatch ? -1 : 1
-        }
-
-        return b.giftScore - a.giftScore
+      .filter((p) => (p.giftScore || 0) >= 5)
+      .map((p) => {
+        const nameMatch = p.name.toLowerCase().includes(searchTerm)
+        const score = (p.giftScore || 0) + (nameMatch ? 2 : 0)
+        return { product: p, score }
       })
-      .slice(0, limit)
+      .sort((a, b) => b.score - a.score)
 
-    return results.map((p) => this.convertToDealItem(p))
+    // Group by source for diversity
+    const bySource: { [key: string]: typeof matches } = {}
+    for (const item of matches) {
+      const source = item.product.source || 'unknown'
+      if (!bySource[source]) bySource[source] = []
+      bySource[source].push(item)
+    }
+
+    // Interleave sources for variety
+    const sources = Object.keys(bySource)
+    const results: any[] = []
+    let sourceIndex = 0
+
+    while (results.length < limit && sources.some(s => bySource[s].length > 0)) {
+      const source = sources[sourceIndex % sources.length]
+      if (bySource[source] && bySource[source].length > 0) {
+        const item = bySource[source].shift()
+        if (item) results.push(item.product)
+      }
+      sourceIndex++
+    }
+
+    return results.slice(0, limit).map((p) => this.convertToDealItem(p))
   }
 
   /**
@@ -1059,19 +1076,41 @@ export class DynamicProductService {
       return []
     }
 
-    const results = this.getAllProducts()
+    // Get all matching products
+    const allMatches = this.getAllProducts()
       .filter((p) => p.price >= minPrice && p.price <= maxPrice)
-      .filter((p) => p.giftScore >= 6)
-      .sort((a, b) => {
-        // Prefer products on sale
-        if (a.isOnSale !== b.isOnSale) {
-          return a.isOnSale ? -1 : 1
-        }
-        return b.giftScore - a.giftScore
-      })
-      .slice(0, limit)
+      .filter((p) => p.giftScore >= 5) // Lower threshold to include more AWIN products
 
-    return results.map((p) => this.convertToDealItem(p))
+    // Group by source for diversity
+    const bySource: { [key: string]: any[] } = {}
+    for (const p of allMatches) {
+      const source = p.source || 'unknown'
+      if (!bySource[source]) bySource[source] = []
+      bySource[source].push(p)
+    }
+
+    // Sort each source group by score
+    for (const source in bySource) {
+      bySource[source].sort((a, b) => {
+        if (a.isOnSale !== b.isOnSale) return a.isOnSale ? -1 : 1
+        return (b.giftScore || 0) - (a.giftScore || 0)
+      })
+    }
+
+    // Interleave products from different sources for variety
+    const sources = Object.keys(bySource)
+    const results: any[] = []
+    let sourceIndex = 0
+
+    while (results.length < limit && sources.some(s => bySource[s].length > 0)) {
+      const source = sources[sourceIndex % sources.length]
+      if (bySource[source].length > 0) {
+        results.push(bySource[source].shift())
+      }
+      sourceIndex++
+    }
+
+    return results.slice(0, limit).map((p) => this.convertToDealItem(p))
   }
 
   static async findDealItemById(id: string): Promise<DealItem | null> {
