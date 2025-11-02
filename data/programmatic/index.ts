@@ -118,8 +118,20 @@ const VARIANTS: ProgrammaticConfig[] = [
     ],
     filters: {
       maxPrice: 25,
-      keywords: ['sinterklaas', 'kinderen', 'kids'],
-      boostKeywords: ['lego', 'spel', 'speelgoed', 'knutsel'],
+      keywords: ['sinterklaas', 'kinderen', 'kids', 'pakjesavond'],
+      boostKeywords: ['lego', 'playmobil', 'spel', 'speelgoed', 'knutsel', 'puzzel', 'boek'],
+      excludeKeywords: [
+        // Vermijd 18+ of niet-kindgericht
+        'whisky',
+        'bier',
+        'wijn',
+        'barbecue',
+        'sieraad',
+        'ketting',
+        'oorbel',
+        'lipstick',
+      ],
+      preferredMerchants: ['bol', 'bol.com', 'amazon', 'intertoys'],
     },
     internalLinks: [
       { href: '/cadeaus/kerst/voor-kinderen', label: 'Kerstcadeaus voor kinderen' },
@@ -141,7 +153,7 @@ const VARIANTS: ProgrammaticConfig[] = [
       maxPrice: 100,
       keywords: ['gaming', 'gamer', 'console', 'pc'],
       boostKeywords: ['rgb', 'headset', 'controller', 'pc gaming'],
-      excludeKeywords: ['shirt', 'sokken'],
+      excludeKeywords: ['shirt', 'sokken', 'mug'],
       preferredMerchants: ['coolblue', 'bol', 'bol.com', 'amazon'],
     },
     internalLinks: [
@@ -164,8 +176,16 @@ const VARIANTS: ProgrammaticConfig[] = [
       maxPrice: 50,
       eco: true,
       keywords: ['duurzaam', 'eco', 'vegan'],
-      boostKeywords: ['recycled', 'organic', 'fair', 'plasticvrij'],
-      excludeKeywords: ['leder', 'lear'],
+      boostKeywords: [
+        'recycled',
+        'organic',
+        'fair',
+        'plasticvrij',
+        'bamboe',
+        'herbruikbaar',
+        'refill',
+      ],
+      excludeKeywords: ['leder', 'leer', 'leather'],
       preferredMerchants: ['shop like you give a damn', 'greenjump', 'seepje', 'dille & kamille'],
     },
     internalLinks: [
