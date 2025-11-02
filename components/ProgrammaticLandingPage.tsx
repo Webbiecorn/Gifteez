@@ -185,8 +185,10 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
                   <div className="aspect-square bg-gray-50 overflow-hidden">
                     <img 
                       src={deal.imageUrl || deal.image || '/images/placeholder.png'} 
-                      alt={deal.name} 
-                      className="w-full h-full object-cover" 
+                      alt={deal.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+                      style={{ maxWidth: '100%', height: 'auto' }}
                     />
                   </div>
                   <div className="p-3">
