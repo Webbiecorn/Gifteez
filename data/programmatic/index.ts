@@ -1,3 +1,5 @@
+export type ProgrammaticAudience = 'men' | 'women' | 'gamers' | 'parents' | 'kids' | 'sustainable'
+
 export type ProgrammaticConfig = {
   slug: string
   occasion?: string
@@ -19,6 +21,7 @@ export type ProgrammaticConfig = {
     excludeMerchants?: string[]
     preferredMerchants?: string[]
   }
+  audience?: ProgrammaticAudience[]
   faq?: { q: string; a: string }[]
   internalLinks?: { href: string; label: string }[]
 }
@@ -36,6 +39,7 @@ const VARIANTS: ProgrammaticConfig[] = [
       'Mix van tech, games en gadgets',
       'Partners: Coolblue, Amazon & Bol via AWIN',
     ],
+    audience: ['men'],
     filters: {
       maxPrice: 50,
       fastDelivery: true,
@@ -79,6 +83,7 @@ const VARIANTS: ProgrammaticConfig[] = [
       'Altijd onder €50 en snel online te bestellen',
       'Focus op partners met hoge review scores',
     ],
+    audience: ['women'],
     filters: {
       maxPrice: 50,
       fastDelivery: true,
@@ -141,6 +146,7 @@ const VARIANTS: ProgrammaticConfig[] = [
       'Budgetproof: alles onder €25',
       'Mix van educatief, creatief en fun',
     ],
+    audience: ['kids'],
     filters: {
       maxPrice: 25,
       keywords: ['sinterklaas', 'kinderen', 'kids', 'pakjesavond'],
@@ -174,6 +180,7 @@ const VARIANTS: ProgrammaticConfig[] = [
       'Budget onder €100, toch premium gear',
       'Met reviews vanuit de community',
     ],
+    audience: ['gamers'],
     filters: {
       maxPrice: 100,
       keywords: ['gaming', 'gamer', 'console', 'pc'],
@@ -197,6 +204,7 @@ const VARIANTS: ProgrammaticConfig[] = [
       'Kleinschalige merken via AWIN & SLYGAD',
       'Onder €50 en vaak klimaatneutraal verzonden',
     ],
+    audience: ['sustainable'],
     filters: {
       maxPrice: 50,
       eco: true,

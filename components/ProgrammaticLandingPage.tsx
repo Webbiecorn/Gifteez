@@ -33,6 +33,8 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         const regex = new RegExp(`(^|[^a-zà-ÿ])${escapeRegExp(word)}([^a-zà-ÿ]|$)`, 'i')
         return regex.test(hay)
       }
+      const matchesKeyword = (hay: string, kw: string) =>
+        kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)
       const maxPrice = filters.maxPrice ?? config?.budgetMax
       const keywordList = (filters.keywords ?? [])
         .concat([config?.occasion ?? '', config?.recipient ?? '', config?.interest ?? ''])
@@ -46,6 +48,157 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
       const preferredMerchants = (filters.preferredMerchants ?? [])
         .map((m) => m.trim().toLowerCase())
         .filter(Boolean)
+
+      type Audience = ProgrammaticConfig['audience'] extends (infer U)[] ? U : never
+
+      const audienceProfiles: Record<Audience, { include: string[]; exclude?: string[] }> = {
+        men: {
+          include: [
+            'voor hem',
+            'mannen',
+            'man',
+            "men's",
+            'heren',
+            'his',
+            'hij',
+            'grooming',
+            'scheerset',
+            'barbecue',
+            'whisky',
+            'whiskey',
+            'bier',
+            'baard',
+            'aftershave',
+            'gadgets voor hem',
+          ],
+          exclude: ['voor haar', 'vrouw', 'vrouwen', 'dames', 'ladies', "women's"],
+        },
+        women: {
+          include: [
+            'voor haar',
+            'vrouw',
+            'vrouwen',
+            'dames',
+            'lady',
+            'ladies',
+            'selfcare',
+            'beauty',
+            'wellness',
+            'spa',
+            'giftset',
+            'gift set',
+            'cadeauset',
+            'cadeau set',
+            'cadeaubox',
+            'geschenkset',
+            'verwenpakket',
+            'sieraad',
+            'ketting',
+            'oorbel',
+            'armband',
+            'ring',
+            'cosy',
+            'verzorgingsset',
+            'beauty box',
+          ],
+          exclude: ['voor hem', 'mannen', 'man', 'heren', "men's"],
+        },
+        gamers: {
+          include: [
+            'gaming',
+            'gamer',
+            'console',
+            'playstation',
+            'ps5',
+            'xbox',
+            'nintendo',
+            'switch',
+            'pc gaming',
+            'rgb',
+            'headset',
+            'controller',
+            'gaming muis',
+            'gaming toetsenbord',
+            'steam deck',
+          ],
+        },
+        parents: {
+          include: [
+            'ouders',
+            'ouder',
+            'voor ouders',
+            'voor mama',
+            'voor papa',
+            'mom',
+            'dad',
+            'ouders cadeau',
+            'family',
+          ],
+        },
+        kids: {
+          include: [
+            'kind',
+            'kinderen',
+            'kids',
+            'kinder',
+            'jongen',
+            'meisje',
+            'speelgoed',
+            'lego',
+            'playmobil',
+            'knutsel',
+            'puzzel',
+            'kleurboek',
+            'pop ',
+            'racebaan',
+            'kinderkamer',
+          ],
+          exclude: ['whisky', 'bier', 'wijn', 'gin', 'rum'],
+        },
+        sustainable: {
+          include: [
+            'duurzaam',
+            'eco',
+            'ecologisch',
+            'vegan',
+            'organic',
+            'biologisch',
+            'fair',
+            'recycled',
+            'recycle',
+            'bamboe',
+            'herbruikbaar',
+            'plasticvrij',
+            'zero waste',
+            'milieuvriendelijk',
+            'klimaatneutraal',
+            'sustainable',
+            'refill',
+            'circular',
+            'planet proof',
+          ],
+          exclude: ['leder', 'leer', 'leather'],
+        },
+      }
+
+      const detectAudiences = (hay: string): Audience[] => {
+        const matches: Audience[] = []
+        ;(
+          Object.entries(audienceProfiles) as [
+            Audience,
+            { include: string[]; exclude?: string[] },
+          ][]
+        ).forEach(([audienceId, profile]) => {
+          const hasInclude = profile.include.some((kw) => matchesKeyword(hay, kw))
+          if (!hasInclude) return
+          const hasExclude = (profile.exclude ?? []).some((kw) => matchesKeyword(hay, kw))
+          if (hasExclude) return
+          matches.push(audienceId)
+        })
+        return matches
+      }
+
+      const sustainableForbidden = ['leder', 'leer', 'leather', 'suede']
 
       // Heuristics: type-detectie voor diversiteit (één per type)
       const getTypeKey = (item: DealItem) => {
@@ -68,6 +221,10 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
           if (/(controller)/.test(cat)) return 'controller'
           if (/(puzzel)/.test(cat)) return 'puzzel'
           if (/(boek|book)/.test(cat)) return 'boek'
+          if (/(cadeaubon|gift ?card|cadeaukaart)/.test(cat)) return 'cadeaubon'
+          if (/(experience|ervaring|workshop|tickets)/.test(cat)) return 'ervaring'
+          if (/powerbank/.test(cat)) return 'powerbank'
+          if (/(scheerapparaat|trimmer|shaver|baardtrimmer)/.test(cat)) return 'scheerapparaat'
         }
 
         // Tags/naam heuristieken
@@ -100,7 +257,23 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         if (has('controller')) return 'controller'
         if (has('puzzel')) return 'puzzel'
         if (has('boek') || has('book')) return 'boek'
+        if (has('cadeaubon') || has('giftcard') || has('cadeaukaart')) return 'cadeaubon'
+        if (has('ervaring') || has('experience') || has('workshop') || has('tickets'))
+          return 'ervaring'
+        if (has('powerbank')) return 'powerbank'
+        if (
+          has('scheerapparaat') ||
+          has('trimmer') ||
+          has('shaver') ||
+          has('baardtrimmer') ||
+          has('grooming kit')
+        )
+          return 'scheerapparaat'
         return null
+      }
+
+      const typeLimits: Record<string, number> = {
+        giftset: 4,
       }
 
       const enforceTypeDiversity = (arr: DealItem[], perType = 1) => {
@@ -112,8 +285,9 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
             kept.push(it) // laat onbekenden toe (reeds ontdubbeld op naam)
             continue
           }
+          const limit = typeLimits[key] ?? perType
           const n = counts.get(key) ?? 0
-          if (n < perType) {
+          if (n < limit) {
             kept.push(it)
             counts.set(key, n + 1)
           }
@@ -127,12 +301,14 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
           // Haal een ruimer aanbod op en scoor daarna op relevantie i.p.v. hard filteren
           const priced = await DynamicProductService.getProductsByPriceRange(0, maxPrice, 120)
 
-          // Filter duplicaten op basis van productnaam (case-insensitive)
-          const seenNames = new Set<string>()
+          // Filter duplicaten op basis van product-id of productnaam (case-insensitive)
+          const seenKeys = new Set<string>()
           const unique = priced.filter((p) => {
             const normalized = p.name.toLowerCase().trim()
-            if (seenNames.has(normalized)) return false
-            seenNames.add(normalized)
+            const idKey = (p.id || '').toLowerCase().trim()
+            const key = idKey || normalized
+            if (seenKeys.has(key)) return false
+            seenKeys.add(key)
             return true
           })
 
@@ -159,6 +335,23 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
                   kw ? (kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)) : false
                 )
                 if (hasExcludedKeyword) return { p, score: -999 }
+              }
+
+              const productAudiences = detectAudiences(hay)
+
+              if (config?.audience?.length) {
+                const matchesTarget = config.audience.some((aud) => productAudiences.includes(aud))
+                if (!matchesTarget) return { p, score: -999 }
+                const targetHits = productAudiences.filter((aud) =>
+                  config.audience?.includes(aud)
+                ).length
+                if (targetHits) bonus += 2.5 * targetHits
+                if (
+                  config.audience.includes('sustainable') &&
+                  sustainableForbidden.some((kw) => matchesKeyword(hay, kw))
+                ) {
+                  return { p, score: -999 }
+                }
               }
 
               // Gender detectie
@@ -207,7 +400,7 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
                     if (isWomensProduct) return { p, score: -999 }
                     bonus += 2.5
                   } else {
-                    const match = kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)
+                    const match = matchesKeyword(hay, kw)
                     if (match) bonus += 1
                   }
                 }
@@ -216,7 +409,7 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
               if (boostKeywords.length) {
                 for (const kw of boostKeywords) {
                   if (!kw) continue
-                  const match = kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)
+                  const match = matchesKeyword(hay, kw)
                   if (match) bonus += 1.5
                 }
               }
@@ -276,7 +469,22 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         results = results.filter((item) => {
           const hay =
             `${item.name} ${item.description} ${(item.tags || []).join(' ')} ${item.merchant ?? ''} ${item.brand ?? ''}`.toLowerCase()
-          return !excludeKeywords.some((kw) => kw && hay.includes(kw))
+          return !excludeKeywords.some((kw) => kw && matchesKeyword(hay, kw))
+        })
+      }
+
+      if (config?.audience?.length) {
+        results = results.filter((item) => {
+          const hay =
+            `${item.name} ${item.description} ${(item.tags || []).join(' ')} ${item.merchant ?? ''} ${item.brand ?? ''}`.toLowerCase()
+          const productAudiences = detectAudiences(hay)
+          if (
+            config.audience?.includes('sustainable') &&
+            sustainableForbidden.some((kw) => matchesKeyword(hay, kw))
+          ) {
+            return false
+          }
+          return config.audience.some((aud) => productAudiences.includes(aud))
         })
       }
 
