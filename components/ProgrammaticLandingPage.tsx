@@ -178,21 +178,25 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
                       abVariant: variantSlug,
                       cardIndex: index,
                     })}
-                    rel="noopener noreferrer sponsored nofollow"
-                    target="_blank"
-                    className="block bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden h-full"
-                  >
-                    <div className="aspect-square bg-gray-50 overflow-hidden">
-                      <img src={deal.image} alt={deal.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="p-3">
-                      <div className="text-sm text-gray-500">{deal.merchant ?? deal.brand ?? 'Partner'}</div>
-                      <div className="font-semibold text-gray-900 line-clamp-2 min-h-[3.4rem]">{deal.name}</div>
-                      <div className="mt-1 text-accent font-bold">{deal.price ?? 'Bekijk prijs'}</div>
-                      <div className="mt-2 text-primary text-sm font-semibold">Bekijk bij partner →</div>
-                    </div>
-                  </a>
-                </li>
+                  rel="noopener noreferrer sponsored nofollow"
+                  target="_blank"
+                  className="block bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden h-full"
+                >
+                  <div className="aspect-square bg-gray-50 overflow-hidden">
+                    <img 
+                      src={deal.imageUrl || deal.image || '/images/placeholder.png'} 
+                      alt={deal.name} 
+                      className="w-full h-full object-cover" 
+                    />
+                  </div>
+                  <div className="p-3">
+                    <div className="text-sm text-gray-500">{deal.merchant ?? deal.brand ?? 'Partner'}</div>
+                    <div className="font-semibold text-gray-900 line-clamp-2 min-h-[3.4rem]">{deal.name}</div>
+                    <div className="mt-1 text-accent font-bold">{deal.price ?? 'Bekijk prijs'}</div>
+                    <div className="mt-2 text-primary text-sm font-semibold">Bekijk bij partner →</div>
+                  </div>
+                </a>
+              </li>
               ))}
             </ul>
           )}
