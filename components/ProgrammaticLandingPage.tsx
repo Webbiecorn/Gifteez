@@ -48,6 +48,7 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
       const preferredMerchants = (filters.preferredMerchants ?? [])
         .map((m) => m.trim().toLowerCase())
         .filter(Boolean)
+      const targetCount = Math.max(8, Math.min(filters.maxResults ?? 24, 60))
 
       type Audience = ProgrammaticConfig['audience'] extends (infer U)[] ? U : never
 
@@ -276,30 +277,71 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         giftset: 4,
       }
 
-      const enforceTypeDiversity = (arr: DealItem[], perType = 1) => {
-        const kept: DealItem[] = []
-        const counts = new Map<string, number>()
-        for (const it of arr) {
-          const key = getTypeKey(it)
-          if (!key) {
-            kept.push(it) // laat onbekenden toe (reeds ontdubbeld op naam)
-            continue
+      const selectAdaptive = (arr: DealItem[], target: number, perType = 1) => {
+        if (!arr.length || target <= 0) return []
+
+        const selected: DealItem[] = []
+        const usedKeys = new Set<string>()
+        const typeCounts = new Map<string, number>()
+        let fallbackCounter = 0
+        const keyOf = (item: DealItem) => {
+          const idKey = (item.id ? String(item.id) : '').toLowerCase().trim()
+          if (idKey) return idKey
+          const nameKey = (item.name ?? '').toLowerCase().trim()
+          if (nameKey) return nameKey
+          const fallback = `${item.merchant ?? ''}-${item.brand ?? ''}-${item.price ?? ''}`
+            .toLowerCase()
+            .trim()
+          if (fallback) return fallback
+          fallbackCounter += 1
+          return `fallback-${fallbackCounter}`
+        }
+
+        const tryAdd = (item: DealItem, extra: number) => {
+          if (selected.length >= target) return
+          const uniqueKey = keyOf(item)
+          if (usedKeys.has(uniqueKey)) return
+          const typeKey = getTypeKey(item)
+          if (typeKey) {
+            const baseLimit = typeLimits[typeKey] ?? perType
+            const limit = baseLimit + extra
+            const current = typeCounts.get(typeKey) ?? 0
+            if (current >= limit) return
+            typeCounts.set(typeKey, current + 1)
           }
-          const limit = typeLimits[key] ?? perType
-          const n = counts.get(key) ?? 0
-          if (n < limit) {
-            kept.push(it)
-            counts.set(key, n + 1)
+          selected.push(item)
+          usedKeys.add(uniqueKey)
+        }
+
+        const attempt = (extraAllowance: number) => {
+          for (const item of arr) {
+            if (selected.length >= target) break
+            tryAdd(item, extraAllowance)
           }
         }
-        return kept
+
+        attempt(0)
+        if (selected.length < target) attempt(1)
+        if (selected.length < target) attempt(2)
+
+        if (selected.length < target) {
+          for (const item of arr) {
+            if (selected.length >= target) break
+            const uniqueKey = keyOf(item)
+            if (usedKeys.has(uniqueKey)) continue
+            usedKeys.add(uniqueKey)
+            selected.push(item)
+          }
+        }
+
+        return selected.slice(0, target)
       }
 
       let results: DealItem[] = []
       try {
         if (typeof maxPrice === 'number' && !isNaN(maxPrice)) {
           // Haal een ruimer aanbod op en scoor daarna op relevantie i.p.v. hard filteren
-          const priced = await DynamicProductService.getProductsByPriceRange(0, maxPrice, 120)
+          const priced = await DynamicProductService.getProductsByPriceRange(0, maxPrice, 240)
 
           // Filter duplicaten op basis van product-id of productnaam (case-insensitive)
           const seenKeys = new Set<string>()
@@ -441,10 +483,10 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
             })
             .filter(({ score }) => score > 0) // Remove excluded products
             .sort((a, b) => b.score - a.score)
-            .slice(0, 48)
-            .map(({ p }) => p)
 
-          results = scored
+          const ordered = scored.slice(0, 120).map(({ p }) => p)
+
+          results = ordered
         } else if (keywordList.length) {
           const joined = keywordList.join(' ')
           results = await DynamicProductService.searchProducts(joined, 48)
@@ -505,8 +547,8 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         results = [...preferred, ...others]
       }
 
-      // Diversiteit: maximaal 1 per type (riem, lamp, mok, sieraad, enz.)
-      results = enforceTypeDiversity(results, 1)
+      // Diversiteit + vulling: voorkom duplicaten en vul tot targetCount
+      results = selectAdaptive(results, targetCount, 1)
 
       setItems(results)
     }

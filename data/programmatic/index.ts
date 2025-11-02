@@ -20,6 +20,7 @@ export type ProgrammaticConfig = {
     excludeKeywords?: string[]
     excludeMerchants?: string[]
     preferredMerchants?: string[]
+    maxResults?: number
   }
   audience?: ProgrammaticAudience[]
   faq?: { q: string; a: string }[]
@@ -43,6 +44,7 @@ const VARIANTS: ProgrammaticConfig[] = [
     filters: {
       maxPrice: 50,
       fastDelivery: true,
+      maxResults: 24,
       // Inclusieve trefwoorden voor mannendoelgroep + zinsdelen
       keywords: ['kerst', 'voor hem', 'mannen', 'heren', 'man', 'hij'],
       // Extra boosts voor typische mannencadeaus
@@ -87,6 +89,7 @@ const VARIANTS: ProgrammaticConfig[] = [
     filters: {
       maxPrice: 50,
       fastDelivery: true,
+      maxResults: 24,
       // Inclusieve trefwoorden voor vrouwendoelgroep + zinsdelen
       keywords: ['kerst', 'voor haar', 'haar', 'vrouw', 'vrouwen', 'dames', 'zij'],
       boostKeywords: [
@@ -149,6 +152,7 @@ const VARIANTS: ProgrammaticConfig[] = [
     audience: ['kids'],
     filters: {
       maxPrice: 25,
+      maxResults: 24,
       keywords: ['sinterklaas', 'kinderen', 'kids', 'pakjesavond'],
       boostKeywords: ['lego', 'playmobil', 'spel', 'speelgoed', 'knutsel', 'puzzel', 'boek'],
       excludeKeywords: [
@@ -183,6 +187,7 @@ const VARIANTS: ProgrammaticConfig[] = [
     audience: ['gamers'],
     filters: {
       maxPrice: 100,
+      maxResults: 24,
       keywords: ['gaming', 'gamer', 'console', 'pc'],
       boostKeywords: ['rgb', 'headset', 'controller', 'pc gaming'],
       excludeKeywords: ['shirt', 'sokken', 'mug'],
@@ -208,6 +213,7 @@ const VARIANTS: ProgrammaticConfig[] = [
     filters: {
       maxPrice: 50,
       eco: true,
+      maxResults: 24,
       keywords: ['duurzaam', 'eco', 'vegan'],
       boostKeywords: [
         'recycled',
