@@ -32,17 +32,52 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
           // Haal een ruimer aanbod op en scoor daarna op relevantie i.p.v. hard filteren
           const priced = await DynamicProductService.getProductsByPriceRange(0, maxPrice, 120)
 
-          const scored = priced
+          // Filter duplicaten op basis van productnaam (case-insensitive)
+          const seenNames = new Set<string>()
+          const unique = priced.filter(p => {
+            const normalized = p.name.toLowerCase().trim()
+            if (seenNames.has(normalized)) return false
+            seenNames.add(normalized)
+            return true
+          })
+
+          const scored = unique
             .map((p) => {
               const base = p.giftScore ?? 7
               const hay = `${p.name} ${p.description} ${(p.tags || []).join(' ')}`.toLowerCase()
               let bonus = 0
+              
               if (keywordList.length) {
                 for (const kw of keywordList) {
-                  if (kw && hay.includes(kw)) bonus += 1
+                  if (!kw) continue
+                  
+                  // Special handling voor 'haar' (her/woman, not hair)
+                  if (kw === 'haar') {
+                    if (
+                      hay.includes('vrouw') ||
+                      hay.includes('woman') ||
+                      hay.includes('dames') ||
+                      hay.includes('ladies') ||
+                      hay.includes('voor haar')
+                    ) {
+                      bonus += 2
+                    }
+                    // Penalty voor haarproducten als we zoeken naar "voor haar"
+                    if (
+                      hay.includes('shampoo') ||
+                      hay.includes('conditioner') ||
+                      hay.includes('haarverzorging') ||
+                      hay.includes('hair care')
+                    ) {
+                      bonus -= 1
+                    }
+                  } else if (hay.includes(kw)) {
+                    bonus += 1
+                  }
                 }
               }
-              // Specifieke boosts voor kerst/hem
+              
+              // Specifieke boosts
               if (hay.includes('kerst') || hay.includes('christmas')) bonus += 1
               if (
                 hay.includes('man') ||
@@ -54,6 +89,7 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
               )
                 bonus += 1
               if (p.isOnSale) bonus += 0.5
+              
               return { p, score: base + bonus }
             })
             .sort((a, b) => b.score - a.score)
