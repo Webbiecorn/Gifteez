@@ -47,6 +47,80 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         .map((m) => m.trim().toLowerCase())
         .filter(Boolean)
 
+      // Heuristics: type-detectie voor diversiteit (één per type)
+      const getTypeKey = (item: DealItem) => {
+        const name = (item.name || '').toLowerCase()
+        const tags = (item.tags || []).map((t) => t.toLowerCase())
+        const cat = (item.category || '').toLowerCase()
+
+        const has = (w: string) => name.includes(w) || tags.some((t) => t.includes(w))
+
+        // Directe categorie
+        if (cat) {
+          if (/(belt|riem)/.test(cat)) return 'riem'
+          if (/lamp/.test(cat)) return 'lamp'
+          if (/(mug|mok|beker)/.test(cat)) return 'mok'
+          if (/(sok|sokken)/.test(cat)) return 'sokken'
+          if (/(kaars|candle)/.test(cat)) return 'kaars'
+          if (/(jewel|sieraad|ketting|oorbel|armband|ring)/.test(cat)) return 'sieraad'
+          if (/(parfum|eau de)/.test(cat)) return 'parfum'
+          if (/(headset|koptelefoon)/.test(cat)) return 'headset'
+          if (/(controller)/.test(cat)) return 'controller'
+          if (/(puzzel)/.test(cat)) return 'puzzel'
+          if (/(boek|book)/.test(cat)) return 'boek'
+        }
+
+        // Tags/naam heuristieken
+        if (
+          has('gift set') ||
+          has('giftset') ||
+          has('cadeauset') ||
+          has('cadeau set') ||
+          has('cadeaubox') ||
+          has('geschenkset') ||
+          has('verwenpakket')
+        )
+          return 'giftset'
+        if (has('riem') || has('belt')) return 'riem'
+        if (
+          has('lamp') ||
+          has('tafellamp') ||
+          has('vloerlamp') ||
+          has('wandlamp') ||
+          has('zaklamp')
+        )
+          return 'lamp'
+        if (has('mug') || has('mok') || has('beker')) return 'mok'
+        if (has('sok')) return 'sokken'
+        if (has('kaars') || has('candle') || has('geurkaars')) return 'kaars'
+        if (has('parfum') || has('eau de')) return 'parfum'
+        if (has('ketting') || has('oorbel') || has('armband') || has('ring') || has('sieraad'))
+          return 'sieraad'
+        if (has('headset') || has('koptelefoon')) return 'headset'
+        if (has('controller')) return 'controller'
+        if (has('puzzel')) return 'puzzel'
+        if (has('boek') || has('book')) return 'boek'
+        return null
+      }
+
+      const enforceTypeDiversity = (arr: DealItem[], perType = 1) => {
+        const kept: DealItem[] = []
+        const counts = new Map<string, number>()
+        for (const it of arr) {
+          const key = getTypeKey(it)
+          if (!key) {
+            kept.push(it) // laat onbekenden toe (reeds ontdubbeld op naam)
+            continue
+          }
+          const n = counts.get(key) ?? 0
+          if (n < perType) {
+            kept.push(it)
+            counts.set(key, n + 1)
+          }
+        }
+        return kept
+      }
+
       let results: DealItem[] = []
       try {
         if (typeof maxPrice === 'number' && !isNaN(maxPrice)) {
@@ -222,6 +296,9 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
         })
         results = [...preferred, ...others]
       }
+
+      // Diversiteit: maximaal 1 per type (riem, lamp, mok, sieraad, enz.)
+      results = enforceTypeDiversity(results, 1)
 
       setItems(results)
     }
