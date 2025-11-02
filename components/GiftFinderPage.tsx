@@ -206,6 +206,18 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   const [showEmailModal, setShowEmailModal] = useState<boolean>(false)
   const auth = useContext(AuthContext)
 
+  const emailModalGifts = useMemo(
+    () =>
+      gifts.map((gift) => ({
+        title: gift.productName,
+        price: gift.priceRange,
+        imageUrl: gift.imageUrl,
+        affiliateLink: gift.retailers[0]?.affiliateLink ?? '',
+        description: gift.description,
+      })),
+    [gifts]
+  )
+
   const suggestedInterests = useMemo(() => {
     // Filter interests based on selected gender
     return baseSuggestedInterests
@@ -243,7 +255,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
   }, [budget])
 
   const answersSummary = useMemo(() => {
-  return `Jouw antwoorden: ${primaryInterestLabel} • Budget ${budgetRangeSummary} • Ontvanger: ${recipient} • Gelegenheid: ${occasion}`
+    return `Jouw antwoorden: ${primaryInterestLabel} • Budget ${budgetRangeSummary} • Ontvanger: ${recipient} • Gelegenheid: ${occasion}`
   }, [primaryInterestLabel, budgetRangeSummary, recipient, occasion])
 
   const fallbackSearchQuery = useMemo(() => {
@@ -255,7 +267,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
 
   const amazonFallbackUrl = useMemo(() => {
     const url = `https://www.amazon.nl/s?k=${encodeURIComponent(fallbackSearchQuery)}`
-    return withAffiliate(url)
+    return withAffiliate(url, { pageType: 'giftfinder', placement: 'fallback-search-amazon' })
   }, [fallbackSearchQuery])
 
   const coolblueFallbackUrl = useMemo(() => {
@@ -276,7 +288,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       if (validOccasion) setOccasion(validOccasion)
     }
     pinterestPageVisit('gift_finder', `finder_${Date.now()}`)
-  gaPageView('/gift-finder', 'Cadeau Coach - Gifteez.nl')
+    gaPageView('/gift-finder', 'Cadeau Coach - Gifteez.nl')
   }, [initialData])
 
   const handleProfileSelect = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -382,8 +394,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
       emailBody += `\n`
     })
 
-  emailBody += `\nBekijk alle resultaten op: ${window.location.href}\n\n`
-  emailBody += `Veel plezier met het uitkiezen van het perfecte cadeau!\n\nGroetjes,\nJe cadeau-coach van Gifteez`
+    emailBody += `\nBekijk alle resultaten op: ${window.location.href}\n\n`
+    emailBody += `Veel plezier met het uitkiezen van het perfecte cadeau!\n\nGroetjes,\nJe cadeau-coach van Gifteez`
 
     // Create mailto link
     const subject = `Mijn Gifteez cadeausuggesties voor ${recipient}`
@@ -1383,8 +1395,8 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
                             {feedbackSubmitting ? 'Versturen...' : 'Stuur naar het cadeau-team'}
                           </Button>
                           <span className="text-xs text-gray-500">
-                            We bewaren alleen de laatste 50 feedbacks om onze tips te verbeteren. Geen
-                            e-mail nodig.
+                            We bewaren alleen de laatste 50 feedbacks om onze tips te verbeteren.
+                            Geen e-mail nodig.
                           </span>
                         </div>
                       </>
@@ -1469,7 +1481,7 @@ const GiftFinderPage: React.FC<GiftFinderPageProps> = ({ initialData, showToast 
         <EmailGiftResultsModal
           isOpen={showEmailModal}
           onClose={() => setShowEmailModal(false)}
-          gifts={gifts}
+          gifts={emailModalGifts}
           searchParams={{
             recipient,
             occasion,

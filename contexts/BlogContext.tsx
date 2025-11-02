@@ -72,3 +72,7 @@ export const useBlogContext = (): BlogContextValue => {
   }
   return context
 }
+
+export const useOptionalBlogContext = (): BlogContextValue | undefined => {
+  return useContext(BlogContext)
+}

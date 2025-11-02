@@ -9,6 +9,8 @@ Allow: /blog/*
 Allow: /giftfinder
 Allow: /deals
 Allow: /deals/*
+Allow: /cadeaus
+Allow: /cadeaus/*
 
 # Crawl-delay for respectful bots
 Crawl-delay: 1

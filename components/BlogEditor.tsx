@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { blogPosts } from '../data/blogData'
-import { AmazonProductLibrary, type AmazonProduct } from '../services/amazonProductLibrary'
+import { AmazonProductLibrary } from '../services/amazonProductLibrary'
 import BlogService from '../services/blogService'
 import {
   contentBlocksToDrafts,
@@ -10,7 +10,7 @@ import {
   stringToDrafts,
   normalizeDraftList,
 } from '../services/contentDraftMapper'
-import CoolblueFeedService, { CoolblueProduct } from '../services/coolblueFeedService'
+import CoolblueFeedService from '../services/coolblueFeedService'
 import { BlogPreview } from './BlogPreview'
 import ContentBuilder, { generateId } from './ContentBuilder'
 import ImageUpload from './ImageUpload'
@@ -23,6 +23,8 @@ import type {
 } from './ContentBuilder'
 import type { BlogPostData } from '../services/blogService'
 import type { SEOData } from '../services/seoManager'
+import type { BlogSeoMetadata } from '../types'
+import type { Timestamp } from 'firebase/firestore'
 
 type ProductSource = 'coolblue' | 'amazon'
 
@@ -44,6 +46,54 @@ type BlogEditorProps = {
   postId?: string | null
   postSlug?: string | null
   initialPost?: BlogPostData | null
+}
+
+const toSeoData = (metadata?: BlogSeoMetadata | null): SEOData | null => {
+  if (!metadata) {
+    return null
+  }
+
+  return {
+    metaTitle: metadata.metaTitle ?? '',
+    metaDescription: metadata.metaDescription ?? '',
+    keywords: metadata.keywords ?? [],
+    ogTitle: metadata.ogTitle,
+    ogDescription: metadata.ogDescription,
+    ogImage: metadata.ogImage,
+    ogType: metadata.ogType,
+    twitterCard: metadata.twitterCard,
+    twitterTitle: metadata.twitterTitle,
+    twitterDescription: metadata.twitterDescription,
+    twitterImage: metadata.twitterImage,
+    canonicalUrl: metadata.canonicalUrl,
+  }
+}
+
+const hasToDate = (value: unknown): value is { toDate: () => Date } =>
+  Boolean(value && typeof (value as { toDate?: unknown }).toDate === 'function')
+
+const toIsoString = (value?: string | Timestamp | Date | null): string | undefined => {
+  if (!value) {
+    return undefined
+    }
+
+  if (typeof value === 'string') {
+    return value
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString()
+  }
+
+  if (hasToDate(value)) {
+    try {
+      return value.toDate().toISOString()
+    } catch {
+      return undefined
+    }
+  }
+
+  return undefined
 }
 
 const DUTCH_STOPWORDS = new Set([
@@ -187,6 +237,7 @@ const countWords = (value?: string) => {
 }
 
 const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, initialPost }) => {
+  const hasWindow = typeof window !== 'undefined'
   const [post, setPost] = useState<BlogPostData | null>(null)
   const [title, setTitle] = useState('')
   const [excerpt, setExcerpt] = useState('')
@@ -209,6 +260,14 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
   const [slugValue, setSlugValue] = useState('')
   const [hasCustomSlug, setHasCustomSlug] = useState(false)
   const [tagsValue, setTagsValue] = useState('')
+
+  const showAlert = (message: string) => {
+    if (hasWindow) {
+      window.alert(message)
+      return
+    }
+    console.warn('Alert skipped (no window available):', message)
+  }
 
   const plainTextContent = useMemo(() => draftsToPlainText(contentDrafts), [contentDrafts])
   const htmlContent = useMemo(() => draftsToHtml(contentDrafts), [contentDrafts])
@@ -397,8 +456,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
     )
     setContentDrafts(drafts)
     setImageUrl(existingPost.imageUrl || '')
-    setIsDraft(existingPost.isDraft ?? true)
-    setSeoData(existingPost.seo ?? null)
+  setIsDraft(existingPost.isDraft ?? true)
+  setSeoData(toSeoData(existingPost.seo))
     setSlugValue(existingPost.slug || '')
     setHasCustomSlug(Boolean(existingPost.slug))
     setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '')
@@ -436,8 +495,11 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
           setHasCustomSlug(Boolean(existingPost.slug))
 
           // Convert content blocks to simple text for now
-          const drafts = normalizeDraftList(contentBlocksToDrafts(existingPost.content))
+          const drafts = Array.isArray(existingPost.content)
+            ? normalizeDraftList(contentBlocksToDrafts(existingPost.content))
+            : normalizeDraftList(stringToDrafts(existingPost.content || ''))
           setContentDrafts(drafts)
+          setSeoData(toSeoData(existingPost.seo))
           setTagsValue(
             existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || ''
           )
@@ -646,12 +708,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
 
   const handleSave = async (publish = false) => {
     if (!title.trim()) {
-      alert('Titel is verplicht')
+      showAlert('Titel is verplicht')
       return
     }
 
     if (!structuredBlocks.length || !htmlContent.trim()) {
-      alert('Voeg contentblokken toe voordat je opslaat.')
+      showAlert('Voeg contentblokken toe voordat je opslaat.')
       return
     }
 
@@ -699,29 +761,42 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       if (postId) {
         // Update bestaande post
         await BlogService.updatePost(postId, postData)
-        alert(`Blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}!`)
+        showAlert(`Blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}!`)
       } else {
         // Nieuwe post aanmaken
         const newPostId = await BlogService.createPost(postData)
-        alert(`Nieuwe blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}! ID: ${newPostId}`)
+        showAlert(`Nieuwe blog post ${publish ? 'gepubliceerd' : 'opgeslagen'}! ID: ${newPostId}`)
       }
 
       onClose()
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving post:', error)
-      alert(`Fout bij opslaan: ${error.message}`)
+      const message = error instanceof Error ? error.message : 'Onbekende fout'
+      showAlert(`Fout bij opslaan: ${message}`)
     } finally {
       setIsSaving(false)
     }
   }
 
-  const handleImageUpload = (url: string, filename: string) => {
+  const handleImageUpload = (url: string, _filename: string) => {
     setImageUrl(url)
   }
 
   const handleImageDelete = () => {
     setImageUrl('')
   }
+
+  const previewFallbackDate = new Date().toISOString()
+  const previewCreatedAt = toIsoString(post?.createdAt) ?? previewFallbackDate
+  const previewUpdatedAt = toIsoString(post?.updatedAt) ?? previewCreatedAt
+  const previewPublishedDate = post?.publishedDate || previewFallbackDate
+  const previewPublishedAt = toIsoString(post?.publishedDate) ?? previewCreatedAt
+  const previewAuthor = {
+    name: post?.author?.name ?? 'Gifteez',
+    avatarUrl: post?.author?.avatarUrl ?? 'https://i.pravatar.cc/150?u=blog-preview',
+  }
+  const previewImageUrl = imageUrl || post?.imageUrl || ''
+  const previewTags = parsedTags.length ? parsedTags : post?.tags ?? []
 
   if (isLoading) {
     return (
@@ -1244,19 +1319,20 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
       {showPreview && (
         <BlogPreview
           post={{
-            id: post?.id || 'new',
             title,
             excerpt,
             content: htmlContent,
             category,
-            imageUrl: imageUrl || undefined,
+            imageUrl: previewImageUrl,
             slug: post?.slug || slugPreview,
+            author: previewAuthor,
             published: !isDraft,
             isDraft,
-            publishedAt: post?.publishedAt || new Date().toISOString(),
-            createdAt: post?.createdAt || new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            tags: parsedTags,
+            publishedDate: previewPublishedDate,
+            publishedAt: previewPublishedAt,
+            createdAt: previewCreatedAt,
+            updatedAt: previewUpdatedAt,
+            tags: previewTags.length ? previewTags : undefined,
           }}
           isOpen={showPreview}
           onClose={() => setShowPreview(false)}

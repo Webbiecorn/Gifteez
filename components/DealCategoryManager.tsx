@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -6,7 +6,6 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragOverlay,
 } from '@dnd-kit/core'
 import {
   arrayMove,
@@ -24,7 +23,10 @@ import {
   type CategoryBlockConfig,
 } from '../services/dealCategoryConfigService'
 import { DynamicProductService } from '../services/dynamicProductService'
-import { SmartSuggestionsService } from '../services/smartSuggestionsService'
+import {
+  SmartSuggestionsService,
+  type ProductSuggestion,
+} from '../services/smartSuggestionsService'
 import Button from './Button'
 import {
   PlusIcon,
@@ -42,10 +44,80 @@ import LoadingSpinner from './LoadingSpinner'
 import QuickActionsToolbar from './QuickActionsToolbar'
 import TemplatePanel from './TemplatePanel'
 import type { DealItem } from '../types'
-import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import type { DragEndEvent } from '@dnd-kit/core'
 
 interface DealCategoryManagerProps {
   onSaved?: () => void
+}
+
+type RawDynamicProduct = {
+  id: string | number
+  name: string
+  price: string | number | null | undefined
+  affiliateLink?: string
+  giftScore?: number
+  description?: string
+  shortDescription?: string
+  image?: string
+  imageUrl?: string
+  originalPrice?: string | number | null | undefined
+  tags?: string[]
+  isOnSale?: boolean
+}
+
+const isRawDynamicProduct = (value: unknown): value is RawDynamicProduct => {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const candidate = value as Partial<RawDynamicProduct>
+  const hasValidId = typeof candidate.id === 'string' || typeof candidate.id === 'number'
+  const hasName = typeof candidate.name === 'string'
+  const hasPrice = typeof candidate.price === 'string' || typeof candidate.price === 'number'
+
+  return hasValidId && hasName && hasPrice
+}
+
+const formatPrice = (price: RawDynamicProduct['price']): string => {
+  if (typeof price === 'number') {
+    return `€${price.toFixed(2)}`
+  }
+
+  if (typeof price === 'string' && price.trim().length > 0) {
+    return price
+  }
+
+  return '€0.00'
+}
+
+const formatOptionalPrice = (price: RawDynamicProduct['originalPrice']): string | undefined => {
+  if (typeof price === 'number') {
+    return `€${price.toFixed(2)}`
+  }
+
+  if (typeof price === 'string' && price.trim().length > 0) {
+    return price
+  }
+
+  return undefined
+}
+
+const toDealItem = (product: RawDynamicProduct): DealItem => {
+  const priceString = formatPrice(product.price)
+  const originalPriceString = formatOptionalPrice(product.originalPrice)
+
+  return {
+    id: String(product.id),
+    name: product.name,
+    description: product.description ?? product.shortDescription ?? '',
+    imageUrl: product.image ?? product.imageUrl ?? '',
+    price: priceString,
+    affiliateLink: product.affiliateLink ?? '#',
+    originalPrice: originalPriceString,
+    isOnSale: product.isOnSale,
+    tags: product.tags,
+    giftScore: product.giftScore,
+  }
 }
 
 const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) => {
@@ -64,13 +136,12 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
   } = useUndoRedo<CategoryBlockConfig[]>([])
 
   const [allProducts, setAllProducts] = useState<DealItem[]>([])
-  const [activeId, setActiveId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState<number | null>(null)
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set())
   const [bulkMode, setBulkMode] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
-  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [suggestions, setSuggestions] = useState<ProductSuggestion[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -91,18 +162,10 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
       try {
         await DynamicProductService.loadProducts()
         const allDeals = DynamicProductService.getProducts()
-          .filter((p: any) => p.giftScore && p.giftScore >= 6)
-          .map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            price: p.price,
-            image: p.image || p.imageUrl,
-            affiliateLink: p.affiliateLink,
-            giftScore: p.giftScore,
-            category: p.category,
-            description: p.description || p.shortDescription,
-          }))
-          .sort((a: any, b: any) => (b.giftScore || 0) - (a.giftScore || 0))
+          .filter(isRawDynamicProduct)
+          .filter((product) => (product.giftScore ?? 0) >= 6)
+          .map(toDealItem)
+          .sort((a, b) => (b.giftScore ?? 0) - (a.giftScore ?? 0))
 
         setAllProducts(allDeals)
 
@@ -126,7 +189,7 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
     }
 
     void loadConfig()
-  }, [])
+  }, [setCategories])
 
   const handleAddCategory = () => {
     const newCategory: CategoryBlockConfig = {
@@ -339,13 +402,8 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
     })
   )
 
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string)
-  }
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
-    setActiveId(null)
 
     if (!over || active.id === over.id) return
 
@@ -391,10 +449,6 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
         )
       }
     }
-  }
-
-  const handleDragCancel = () => {
-    setActiveId(null)
   }
 
   const handleSave = async () => {
@@ -528,13 +582,7 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
         isSaving={saving}
       />
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragCancel={handleDragCancel}
-      >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <div className="space-y-6">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -907,7 +955,7 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
                             }`}
                           >
                             <ImageWithFallback
-                              src={product.image || ''}
+                              src={product.imageUrl}
                               alt={product.name}
                               className="w-14 h-14 object-cover rounded"
                             />
@@ -922,7 +970,7 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
                                 </span>
                               </div>
                               <div className="mt-1 flex flex-wrap gap-1">
-                                {suggestion.reasons.map((reason: string, idx: number) => (
+                                {suggestion.reasons.map((reason, idx) => (
                                   <span
                                     key={idx}
                                     className="text-xs text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full"
@@ -991,7 +1039,7 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
                           />
                         )}
                         <ImageWithFallback
-                          src={product.image || ''}
+                          src={product.imageUrl}
                           alt={product.name}
                           className="w-16 h-16 object-cover rounded"
                         />
@@ -1000,7 +1048,7 @@ const DealCategoryManager: React.FC<DealCategoryManagerProps> = ({ onSaved }) =>
                             {product.name}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <p className="text-xs text-gray-600">€{product.price}</p>
+                            <p className="text-xs text-gray-600">{product.price}</p>
                             <span className="text-xs px-2 py-0.5 bg-rose-100 text-rose-700 rounded">
                               Score: {product.giftScore}
                             </span>
@@ -1202,7 +1250,7 @@ const SortableProduct: React.FC<SortableProductProps> = ({
     >
       <span className="text-gray-400 flex-shrink-0">☰</span>
       <ImageWithFallback
-        src={product.image || ''}
+        src={product.imageUrl}
         alt={product.name}
         className="w-12 h-12 object-cover rounded"
       />

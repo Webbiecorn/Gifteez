@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ActivityLogService from '../services/activityLogService'
-import { ClockIcon, TrashIcon } from './IconComponents'
+import { ClockIcon } from './IconComponents'
 import LoadingSpinner from './LoadingSpinner'
 import type { ActivityLogEntry } from '../services/activityLogService'
 

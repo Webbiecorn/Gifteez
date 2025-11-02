@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { useBlogContext } from '../contexts/BlogContext'
+import { useOptionalBlogContext } from '../contexts/BlogContext'
 import { blogPosts as staticBlogPosts } from '../data/blogData'
 import { quizQuestions, quizResults } from '../data/quizData'
 import Button from './Button'
@@ -219,12 +219,7 @@ const QuizPage: React.FC<QuizPageProps> = ({ navigateTo }) => {
   const [resultKey, setResultKey] = useState<PersonaKey | null>(null)
   const [result, setResult] = useState<QuizResultType | null>(null)
 
-  let blogContext: ReturnType<typeof useBlogContext> | undefined
-  try {
-    blogContext = useBlogContext()
-  } catch (error) {
-    blogContext = undefined
-  }
+  const blogContext = useOptionalBlogContext()
 
   const blogPostList: BlogPost[] = blogContext?.posts?.length ? blogContext.posts : staticBlogPosts
 

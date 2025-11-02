@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { withAffiliate } from '../services/affiliate'
 import { logClickEvent } from '../services/giftFinderAnalyticsService'
@@ -62,9 +62,6 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
 }) => {
   const auth = useContext(AuthContext)
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
-  const [hovered, setHovered] = useState(false)
-  const [favoritePulse, setFavoritePulse] = useState(false)
-  const favoritePulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Add Product Schema for SEO
   useEffect(() => {
@@ -132,15 +129,6 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
     }
   }, [gift, auth, isReadOnly])
 
-  useEffect(
-    () => () => {
-      if (favoritePulseTimeoutRef.current) {
-        clearTimeout(favoritePulseTimeoutRef.current)
-      }
-    },
-    []
-  )
-
   const handleToggleFavorite = () => {
     if (isReadOnly) return
 
@@ -171,16 +159,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
 
     setIsFavorite(isNowFavorite)
     if (isNowFavorite) {
-      if (favoritePulseTimeoutRef.current) {
-        clearTimeout(favoritePulseTimeoutRef.current)
-      }
-      setFavoritePulse(true)
-      favoritePulseTimeoutRef.current = setTimeout(() => {
-        setFavoritePulse(false)
-      }, 220)
       showToast?.('Cadeau opgeslagen!')
-    } else {
-      setFavoritePulse(false)
     }
     onFavoriteChange?.(gift.productName, isNowFavorite)
   }
@@ -395,7 +374,11 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
         {gift.retailers && gift.retailers.length > 0 && (
           <div className={`mt-6 space-y-2 ${candidateVariant ? 'w-full mt-auto' : ''}`}>
             {gift.retailers.map((retailer, i) => {
-              const affiliateUrl = withAffiliate(retailer.affiliateLink)
+              const affiliateUrl = withAffiliate(retailer.affiliateLink, {
+                pageType: 'giftfinder',
+                placement: 'result-card-cta',
+                cardIndex: i,
+              })
               const handleClick = () => {
                 // Log AI analytics click event
                 logClickEvent(
@@ -421,12 +404,12 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
                   ts: Date.now(),
                 }
                 // Console debug
-                console.log('🛒 Affiliate click', eventPayload)
-                // dataLayer push (GTM)
-                // @ts-ignore
-                window.dataLayer = window.dataLayer || []
-                // @ts-ignore
-                window.dataLayer.push(eventPayload)
+                console.warn('🛒 Affiliate click', eventPayload)
+                const globalWindow = window as typeof window & {
+                  dataLayer?: Array<Record<string, unknown>>
+                }
+                globalWindow.dataLayer = globalWindow.dataLayer ?? []
+                globalWindow.dataLayer.push(eventPayload)
               }
               return (
                 <a
@@ -468,11 +451,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
   )
 
   return (
-    <div
-      className="relative h-full group"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
+    <div className="relative h-full group">
       {isEmbedded ? (
         <div className={outerWrapperClasses}>
           <div className={containerClasses}>{cardContent}</div>

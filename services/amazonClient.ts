@@ -20,10 +20,10 @@ export async function amazonSearch(
 ) {
   const params = new URLSearchParams({ q })
   if (opts?.page) params.set('page', String(opts.page))
-  if (opts?.minPrice != null) params.set('minPrice', String(opts.minPrice))
-  if (opts?.maxPrice != null) params.set('maxPrice', String(opts.maxPrice))
+  if (typeof opts?.minPrice === 'number') params.set('minPrice', String(opts.minPrice))
+  if (typeof opts?.maxPrice === 'number') params.set('maxPrice', String(opts.maxPrice))
   if (opts?.sort) params.set('sort', opts.sort)
-  if (opts?.prime != null) params.set('prime', String(opts.prime))
+  if (typeof opts?.prime === 'boolean') params.set('prime', String(opts.prime))
   const res = await fetch(`${API_BASE}/api/amazon-search?${params.toString()}`)
   if (!res.ok) throw new Error(`Amazon search failed: ${res.status}`)
   return res.json() as Promise<{ items: AmazonItem[]; fetchedAtISO: string; cached?: boolean }>

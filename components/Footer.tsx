@@ -49,27 +49,31 @@ const Footer: React.FC<FooterProps> = ({ navigateTo, showToast }) => {
           {/* Background decorative elements */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
-          
+
           <div className="relative z-10 max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-accent to-primary rounded-2xl shadow-lg">
-              <span className="text-3xl" aria-hidden="true">✨</span>
+              <span className="text-3xl" aria-hidden="true">
+                ✨
+              </span>
             </div>
-            
+
             <h3 className="text-3xl md:text-4xl font-bold text-primary mb-4 bg-gradient-to-r from-accent via-primary to-highlight bg-clip-text text-transparent">
               Hulp nodig bij het kiezen?
             </h3>
-            
+
             <p className="text-lg text-primary/80 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Onze slimme Cadeau-Coach helpt je binnen een paar klikken het perfecte cadeau te vinden. 
-              Beantwoord een paar vragen en ontvang gepersonaliseerde cadeau-aanbevelingen!
+              Onze slimme Cadeau-Coach helpt je binnen een paar klikken het perfecte cadeau te
+              vinden. Beantwoord een paar vragen en ontvang gepersonaliseerde cadeau-aanbevelingen!
             </p>
-            
+
             <button
               onClick={() => navigateTo('giftFinder')}
               className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-accent via-primary to-accent bg-size-200 bg-pos-0 hover:bg-pos-100 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               aria-label="Start de Cadeau-Coach"
             >
-              <span className="text-2xl" aria-hidden="true">🎁</span>
+              <span className="text-2xl" aria-hidden="true">
+                🎁
+              </span>
               <span>Start Cadeau-Coach</span>
               <svg
                 className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
@@ -78,7 +82,12 @@ const Footer: React.FC<FooterProps> = ({ navigateTo, showToast }) => {
                 viewBox="0 0 24 24"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </button>
           </div>

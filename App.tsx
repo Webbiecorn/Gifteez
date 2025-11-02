@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react'
+import React, { useState, useCallback, useEffect, useContext, useRef } from 'react'
 const ReactLazy = React.lazy
 const Header = ReactLazy(() => import('./components/Header'))
 const Footer = ReactLazy(() => import('./components/Footer'))
@@ -46,7 +46,7 @@ import { usePerformanceMonitor } from './hooks/usePerformanceMonitor'
 import { BlogNotificationService } from './services/blogNotificationService'
 import { PerformanceInsightsService } from './services/performanceInsightsService'
 import { wecantrackService } from './services/wecantrackService'
-import type { Page, InitialGiftFinderData, Gift, DealItem } from './types'
+import type { Page, InitialGiftFinderData, Gift, DealItem, ToastVariant } from './types'
 
 const App: React.FC = () => {
   const [sharedGifts, setSharedGifts] = useState<Gift[] | null>(null)
@@ -82,9 +82,13 @@ const App: React.FC = () => {
     productId: string
     product: DealItem
   } | null>(null)
+  const [programmaticSlug, setProgrammaticSlug] = useState<string | null>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [comparisonData, setComparisonData] = useState<any>(null)
-  const [toastMessage, setToastMessage] = useState('')
+  const [toastState, setToastState] = useState<{ message: string; variant: ToastVariant } | null>(
+    null
+  )
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pathFor = (page: Page, data?: any) => {
@@ -134,6 +138,10 @@ const App: React.FC = () => {
         return '/privacy'
       case 'affiliateDisclosure':
         return '/affiliate-disclosure'
+      case 'cadeausHub':
+        return '/cadeaus'
+      case 'programmatic':
+        return `/cadeaus/${data?.slug ?? ''}`
       case 'notFound':
         return '/404'
       case 'error':
@@ -157,6 +165,23 @@ const App: React.FC = () => {
     }
     const [first, second, third] = parts
     switch (first) {
+      case 'cadeaus': {
+        // Support both /cadeaus/<slug-with-dashes> and /cadeaus/kerst/voor-hem/onder-50
+        let slug = ''
+        if (second && second.includes('-')) {
+          slug = second
+        } else if (second) {
+          slug = parts.slice(1).join('-')
+        }
+        if (slug) {
+          setProgrammaticSlug(slug)
+          setCurrentPage('programmatic')
+        } else {
+          setProgrammaticSlug(null)
+          setCurrentPage('cadeausHub')
+        }
+        break
+      }
       case 'giftfinder':
         setCurrentPage('giftFinder')
         break
@@ -220,14 +245,14 @@ const App: React.FC = () => {
           if (!categoryDetailData || categoryDetailData.categoryId !== third) {
             const categoryTitle = third
               .split('-')
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
               .join(' ')
-            
+
             setCategoryDetailData({
               categoryId: third,
               categoryTitle: categoryTitle,
               categoryDescription: '',
-              products: []
+              products: [],
             })
           }
         } else {
@@ -345,6 +370,7 @@ const App: React.FC = () => {
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Handgepickte Collecties',
+  cadeausHub: 'Cadeaus voor elk Moment',
         categoryDetail: data?.categoryTitle
           ? `${data.categoryTitle} — Collectie`
           : 'Categorie — Collectie',
@@ -390,9 +416,26 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const showToast = useCallback((message: string) => {
-    setToastMessage(message)
-    setTimeout(() => setToastMessage(''), 3000)
+  const showToast = useCallback(
+    (message: string, variant: ToastVariant = 'default') => {
+      setToastState({ message, variant })
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current)
+      }
+      toastTimeoutRef.current = setTimeout(() => {
+        setToastState(null)
+        toastTimeoutRef.current = null
+      }, 3000)
+    },
+    []
+  )
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current)
+      }
+    }
   }, [])
 
   if (auth?.loading) {
@@ -427,7 +470,7 @@ const App: React.FC = () => {
       case 'favorites':
         return <FavoritesPage navigateTo={navigateTo} showToast={showToast} />
       case 'contact':
-        return <ContactPage showToast={showToast} />
+        return <ContactPage navigateTo={navigateTo} showToast={showToast} />
       case 'about':
         return <AboutPage navigateTo={navigateTo} />
       case 'login':
@@ -452,6 +495,26 @@ const App: React.FC = () => {
         return <CheckoutSuccessPage navigateTo={navigateTo} />
       case 'deals':
         return <DealsPage navigateTo={navigateTo} />
+      case 'cadeausHub':
+        return (
+          <React.Suspense fallback={<div className="py-24"><LoadingSpinner size="lg" message="Pagina laden…" /></div>}>
+            {React.createElement(ReactLazy(() => import('./components/CadeausHubPage')), {
+              navigateTo,
+            } as any)}
+          </React.Suspense>
+        )
+      case 'programmatic':
+        if (!programmaticSlug) {
+          return <NotFoundPage navigateTo={navigateTo} />
+        }
+        return (
+          <React.Suspense fallback={<div className="py-24"><LoadingSpinner size="lg" message="Pagina laden…" /></div>}>
+            {React.createElement(ReactLazy(() => import('./components/ProgrammaticLandingPage')), {
+              variantSlug: programmaticSlug,
+              navigateTo,
+            } as any)}
+          </React.Suspense>
+        )
       case 'categoryDetail':
         return (
           <CategoryDetailPage
@@ -600,7 +663,7 @@ const App: React.FC = () => {
             </React.Suspense>
           )}
 
-          <Toast message={toastMessage} />
+          <Toast message={toastState?.message ?? ''} variant={toastState?.variant} />
           {showBanner && (
             <React.Suspense fallback={null}>
               <CookieBanner onAccept={acceptCookies} onDecline={declineCookies} />

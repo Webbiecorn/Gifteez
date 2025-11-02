@@ -25,13 +25,17 @@ export type Page =
   | 'affiliateDisclosure'
   | 'admin'
   | 'adminDealsPreview'
+  | 'programmatic'
+  | 'cadeausHub'
   | 'notFound'
   | 'error'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type NavigateTo = (_page: Page, _data?: any) => void
 
-export type ShowToast = (_message: string) => void
+export type ToastVariant = 'default' | 'success' | 'info' | 'warning' | 'error'
+
+export type ShowToast = (_message: string, _variant?: ToastVariant) => void
 
 export interface InitialGiftFinderData {
   recipient?: string
@@ -196,9 +200,14 @@ export interface BlogPost {
   category: string
   author: Author
   publishedDate: string
-  content: ContentBlock[]
+  content: ContentBlock[] | string
   seo?: BlogSeoMetadata
   tags?: string[]
+  createdAt?: string
+  updatedAt?: string
+  publishedAt?: string
+  published?: boolean
+  isDraft?: boolean
 }
 
 export interface Category {
@@ -343,10 +352,20 @@ export interface DealItem {
   isOnSale?: boolean
   tags?: string[]
   giftScore?: number
+  image?: string
+  category?: string
+  brand?: string
+  merchant?: string
+  inStock?: boolean
+  rating?: number
+  reviewCount?: number
+  deliveryInfo?: string
 }
 
 export interface DealCategory {
+  id?: string
   title: string
+  description?: string
   items: DealItem[]
 }
 

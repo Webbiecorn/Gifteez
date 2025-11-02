@@ -243,8 +243,6 @@ export function generateSemanticLabels(
   tags: string[] = []
 ): SemanticProfile {
   // Combine all text for analysis
-  const fullText = `${title} ${description} ${category} ${tags.join(' ')}`.toLowerCase()
-
   const profile: SemanticProfile = {
     romantic: 0,
     sustainable: 0,
@@ -261,10 +259,9 @@ export function generateSemanticLabels(
   // Calculate scores for each semantic dimension
   Object.keys(LABEL_KEYWORDS).forEach((labelKey) => {
     const keywords = LABEL_KEYWORDS[labelKey as keyof typeof LABEL_KEYWORDS]
-    let matchCount = 0
     let totalWeight = 0
 
-    keywords.forEach((keyword, index) => {
+    keywords.forEach((keyword) => {
       // Give more weight to matches in title vs description
       const titleMatch = title.toLowerCase().includes(keyword)
       const descMatch = description.toLowerCase().includes(keyword)
@@ -272,16 +269,12 @@ export function generateSemanticLabels(
       const tagMatch = tags.some((tag) => tag.toLowerCase().includes(keyword))
 
       if (titleMatch) {
-        matchCount += 3 // Title matches are most important
         totalWeight += 3
       } else if (categoryMatch) {
-        matchCount += 2 // Category matches are important
         totalWeight += 2
       } else if (tagMatch) {
-        matchCount += 2 // Tag matches are important
         totalWeight += 2
       } else if (descMatch) {
-        matchCount += 1 // Description matches are least important
         totalWeight += 1
       }
     })
@@ -323,8 +316,8 @@ export function generateSemanticLabels(
 export function getTopLabels(profile: SemanticProfile, threshold: number = 0.3): string[] {
   return Object.entries(profile)
     .filter(([_, score]) => score >= threshold)
-    .sort(([_, a], [__, b]) => b - a)
-    .map(([label, _]) => label)
+    .sort(([, a], [, b]) => b - a)
+    .map(([label]) => label)
 }
 
 /**

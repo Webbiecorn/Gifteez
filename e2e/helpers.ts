@@ -9,8 +9,16 @@ import type { Page } from '@playwright/test'
  * Wait for page to be fully loaded
  */
 export async function waitForPageLoad(page: Page) {
-  await page.waitForLoadState('networkidle')
   await page.waitForLoadState('domcontentloaded')
+
+  try {
+    await page.waitForLoadState('networkidle', { timeout: 5000 })
+  } catch (error) {
+    // Externe CDN-resources kunnen een networkidle-blokkade veroorzaken; ga in dat geval gewoon verder.
+    if (process.env.DEBUG_PLAYWRIGHT_WAIT === 'true') {
+      console.warn('waitForLoadState("networkidle") timeout:', error)
+    }
+  }
 }
 
 /**

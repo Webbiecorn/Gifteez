@@ -76,7 +76,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           const users: User[] = JSON.parse(localStorage.getItem(USERS_KEY) || '[]')
           const user = users.find((u) => u.id === currentUserId)
           if (user) {
-            const { password, ...userWithoutPassword } = user
+            const userWithoutPassword = { ...user }
+            delete (userWithoutPassword as Partial<User>).password
             setCurrentUser(userWithoutPassword)
           }
         }
@@ -147,7 +148,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const updatedUsers = users.map((u) => (u.id === user?.id ? user : u))
       saveUsers(updatedUsers)
       localStorage.setItem(CURRENT_USER_ID_KEY, user.id)
-      const { password, ...userWithoutPassword } = user
+      const userWithoutPassword = { ...user }
+      delete (userWithoutPassword as Partial<User>).password
       setCurrentUser(userWithoutPassword)
       return userWithoutPassword
     }
@@ -165,7 +167,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         if (cred.user && name) {
           try {
             await fbUpdateProfile(cred.user, { displayName: name })
-          } catch {}
+          } catch (updateError) {
+            console.warn('Kon displayName niet bijwerken', updateError)
+          }
         }
         let newUser: User = {
           id: cred.user.uid,
@@ -205,7 +209,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     newUser = mergeGuestFavorites(newUser)
     saveUsers([...users, newUser])
     localStorage.setItem(CURRENT_USER_ID_KEY, newUser.id)
-    const { password, ...userWithoutPassword } = newUser
+    const userWithoutPassword = { ...newUser }
+    delete (userWithoutPassword as Partial<User>).password
     setCurrentUser(userWithoutPassword)
     return userWithoutPassword
   }
@@ -282,7 +287,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (userIndex !== -1) {
       users[userIndex] = { ...users[userIndex], ...updatedUser }
       saveUsers(users)
-      const { password, ...userWithoutPassword } = users[userIndex]
+      const userWithoutPassword = { ...users[userIndex] }
+      delete (userWithoutPassword as Partial<User>).password
       setCurrentUser(userWithoutPassword)
     }
   }

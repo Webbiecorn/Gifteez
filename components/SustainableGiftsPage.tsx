@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { ShopLikeYouGiveADamnService, type SLYGADProduct } from '../services/shopLikeYouGiveADamnService'
 import { withAffiliate } from '../services/affiliate'
+import {
+  ShopLikeYouGiveADamnService,
+  type SLYGADProduct,
+} from '../services/shopLikeYouGiveADamnService'
 import Breadcrumbs from './Breadcrumbs'
 import Button from './Button'
-import {
-  ChevronLeftIcon,
-  SparklesIcon,
-} from './IconComponents'
+import { ChevronLeftIcon, SparklesIcon } from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
+import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
-import JsonLd from './JsonLd'
 /* eslint-disable no-console, @typescript-eslint/no-explicit-any */
-import { TrustBadges, SocialProofBadge } from './UrgencyBadges'
+import { TrustBadges } from './UrgencyBadges'
 import type { NavigateTo } from '../types'
 
 interface SustainableGiftsPageProps {
@@ -58,7 +58,7 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
 
   const trackProductClick = (product: SLYGADProduct) => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'select_item', {
+      ;(window as any).gtag('event', 'select_item', {
         item_list_id: 'sustainable_gifts',
         item_list_name: 'Duurzame Cadeaus',
         items: [
@@ -112,7 +112,16 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
       <Meta
         title="Duurzame Cadeaus Kopen | Shop Like You Give A Damn | Gifteez"
         description="Shop bewuste en duurzame cadeaus van Shop Like You Give A Damn. Ecologisch, veganistisch en ethisch verantwoord. Perfecte geschenken voor mensen die om de wereld geven. ♻️🌱"
-        keywords="duurzame cadeaus, ecologische geschenken, veganistische cadeaus, bewuste cadeaus, ethische cadeaus, shop like you give a damn, duurzaam cadeau, groene cadeaus"
+        keywords={[
+          'duurzame cadeaus',
+          'ecologische geschenken',
+          'veganistische cadeaus',
+          'bewuste cadeaus',
+          'ethische cadeaus',
+          'shop like you give a damn',
+          'duurzaam cadeau',
+          'groene cadeaus',
+        ]}
         canonical="/duurzame-cadeaus"
         ogImage="/assets/og-sustainable-gifts.jpg"
       />
@@ -133,8 +142,14 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700 py-16 md:py-20 px-6 md:px-12 mb-12 shadow-2xl">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-green-400/30 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-emerald-300/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '2s' }} />
+          <div
+            className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/30 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: '1s' }}
+          />
+          <div
+            className="absolute top-1/2 left-1/3 w-48 h-48 bg-emerald-300/20 rounded-full blur-2xl animate-pulse"
+            style={{ animationDelay: '2s' }}
+          />
 
           <div className="relative z-10 max-w-4xl mx-auto text-center text-white">
             {/* Badge */}
@@ -226,7 +241,10 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
                   'Geef een cadeau met een verhaal. Toon dat je om de ontvanger én de wereld geeft.',
               },
             ].map((item, index) => (
-              <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-green-100">
+              <div
+                key={index}
+                className="bg-white rounded-xl p-6 shadow-sm border border-green-100"
+              >
                 <div className="text-4xl mb-4">{item.icon}</div>
                 <h3 className="font-semibold text-lg text-gray-900 mb-2">{item.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
@@ -258,7 +276,9 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
               <span className="text-3xl">🌱</span>
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Nog geen producten</h3>
-            <p className="text-gray-600 mb-6">We zijn bezig met het toevoegen van duurzame cadeaus</p>
+            <p className="text-gray-600 mb-6">
+              We zijn bezig met het toevoegen van duurzame cadeaus
+            </p>
             <Button variant="primary" onClick={() => navigateTo('deals')}>
               Bekijk andere collecties
             </Button>
@@ -268,9 +288,7 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
             {/* Product Count */}
             <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  🌿 Alle Duurzame Cadeaus
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900">🌿 Alle Duurzame Cadeaus</h2>
                 <p className="text-gray-600 mt-1">
                   {products.length} bewuste geschenken · van Shop Like You Give A Damn
                 </p>
@@ -298,11 +316,10 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
                       Duurzaam
                     </div>
                     {product.giftScore && product.giftScore >= 8 && (
-                      <SocialProofBadge
-                        text="Top Keuze"
-                        icon="⭐"
-                        color="bg-amber-100 text-amber-700"
-                      />
+                      <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700 shadow">
+                        <span>⭐</span>
+                        <span>Top keuze</span>
+                      </div>
                     )}
                   </div>
 
@@ -310,9 +327,7 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
                   <div className="p-4">
                     {/* Brand */}
                     {product.brand && (
-                      <div className="text-xs text-gray-500 mb-1 font-medium">
-                        {product.brand}
-                      </div>
+                      <div className="text-xs text-gray-500 mb-1 font-medium">{product.brand}</div>
                     )}
 
                     {/* Product Name */}
@@ -357,7 +372,10 @@ const SustainableGiftsPage: React.FC<SustainableGiftsPageProps> = ({ navigateTo 
 
                     {/* Buy Button */}
                     <a
-                      href={withAffiliate(product.affiliateLink, 'sustainable-gifts-page')}
+                      href={withAffiliate(product.affiliateLink, {
+                        pageType: 'sustainable-gifts',
+                        placement: 'card-cta',
+                      })}
                       target="_blank"
                       rel="noopener noreferrer sponsored"
                       onClick={() => trackProductClick(product)}

@@ -269,11 +269,10 @@ const ComparisonPage: React.FC<ComparisonPageProps> = ({
               <div className="text-white/90">
                 <Breadcrumbs
                   items={[
-                    { label: 'Home', path: '/' },
-                    { label: 'Deals', path: '/deals' },
-                    { label: `Top 5 ${categoryTitle}`, path: `/compare/${categoryId}` },
+                    { label: 'Home', href: '/' },
+                    { label: 'Deals', href: '/deals' },
+                    { label: `Top 5 ${categoryTitle}`, href: `/compare/${categoryId}` },
                   ]}
-                  navigateTo={navigateTo}
                 />
               </div>
             </div>
@@ -328,7 +327,7 @@ const ComparisonPage: React.FC<ComparisonPageProps> = ({
         <Container size="xl" className="py-12">
           {/* Trust Badges */}
           <div className="mb-12">
-            <TrustBadges layout="grid" />
+            <TrustBadges />
           </div>
 
           {/* Winner Spotlight */}
@@ -381,7 +380,11 @@ const ComparisonPage: React.FC<ComparisonPageProps> = ({
                   {winner.description && <p className="text-slate-600">{winner.description}</p>}
 
                   <a
-                    href={withAffiliate(winner.affiliateLink)}
+                    href={withAffiliate(winner.affiliateLink, {
+                      pageType: 'comparison',
+                      placement: 'winner-cta',
+                      cardIndex: 0,
+                    })}
                     target="_blank"
                     rel="sponsored nofollow noopener noreferrer"
                     className="group/btn relative mt-4 inline-block overflow-hidden rounded-xl px-6 py-3 text-center font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-2xl"
@@ -566,7 +569,11 @@ const ComparisonPage: React.FC<ComparisonPageProps> = ({
                       </div>
 
                       <a
-                        href={withAffiliate(product.affiliateLink)}
+                        href={withAffiliate(product.affiliateLink, {
+                          pageType: 'comparison',
+                          placement: 'card-cta',
+                          cardIndex: index,
+                        })}
                         target="_blank"
                         rel="sponsored nofollow noopener noreferrer"
                         className="group/btn relative mt-6 block overflow-hidden rounded-xl px-4 py-3 text-center font-bold text-white shadow-lg transition-all hover:scale-105 hover:shadow-2xl"
@@ -604,15 +611,9 @@ const ComparisonPage: React.FC<ComparisonPageProps> = ({
 
           {/* Social Proof Section */}
           <div className="mb-12 grid gap-4 md:grid-cols-3">
+            <SocialProofBadge viewCount={Math.floor(300 + Math.random() * 200)} />
             <SocialProofBadge
-              type="viewers"
-              count={Math.floor(300 + Math.random() * 200)}
-              label="Bezoekers bekeken deze vergelijking"
-            />
-            <SocialProofBadge
-              type="purchases"
-              count={Math.floor(topProducts.length * 25 + Math.random() * 50)}
-              label="Verkocht via deze vergelijking"
+              purchaseCount={Math.floor(topProducts.length * 25 + Math.random() * 50)}
             />
             <div className="flex items-center gap-3 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-sm">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-600 text-white">

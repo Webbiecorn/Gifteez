@@ -12,6 +12,7 @@
  * - Admin dashboard integration
  */
 
+import { logger } from '../lib/logger'
 import { pushToDataLayer } from './dataLayerService'
 
 // ============================================================================
@@ -185,7 +186,10 @@ export function getVariant<T>(
   // Track impression in GTM
   trackVariantImpression(testName, assignedVariant)
 
-  console.log(`[ABTest] Assigned variant "${assignedVariant}" for test "${testName}"`)
+  logger.info('ABTest variant assigned', {
+    testName,
+    variant: assignedVariant,
+  })
 
   return assignedVariant
 }
@@ -241,7 +245,10 @@ export function forceVariant(testName: string, variant: string): void {
 
   localStorage.setItem(ASSIGNMENT_KEY, JSON.stringify(assignments))
 
-  console.log(`[ABTest] Forced variant "${variant}" for test "${testName}"`)
+  logger.warn('ABTest variant forced', {
+    testName,
+    variant,
+  })
 }
 
 // ============================================================================
@@ -308,7 +315,11 @@ export function trackVariantConversion(
   // Update metrics
   updateMetrics(testName, variant, 'conversion', timeSinceImpression)
 
-  console.log(`[ABTest] Conversion for "${testName}" variant "${variant}" (${action})`)
+  logger.info('ABTest conversion recorded', {
+    testName,
+    variant,
+    action,
+  })
 }
 
 // ============================================================================
@@ -444,7 +455,7 @@ export function getAllTestMetrics(): ABTestMetrics[] {
 export function clearAllTests(): void {
   localStorage.removeItem(ASSIGNMENT_KEY)
   localStorage.removeItem(METRICS_KEY)
-  console.log('[ABTest] Cleared all A/B test data')
+  logger.info('ABTest storage cleared')
 }
 
 /**
@@ -463,7 +474,7 @@ export function clearTest(testName: string): void {
   delete allMetrics[testName]
   localStorage.setItem(METRICS_KEY, JSON.stringify(allMetrics))
 
-  console.log(`[ABTest] Cleared test: ${testName}`)
+  logger.info('ABTest test cleared', { testName })
 }
 
 /**

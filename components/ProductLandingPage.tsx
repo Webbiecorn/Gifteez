@@ -16,6 +16,7 @@ import {
 import ImageWithFallback from './ImageWithFallback'
 import { Container } from './layout/Container'
 import Meta from './Meta'
+import JsonLd from './JsonLd'
 import { SocialShare } from './SocialShare'
 import StickyAffiliateBar from './StickyAffiliateBar'
 import { CountdownTimer, SocialProofBadge, TrustBadges } from './UrgencyBadges'
@@ -95,7 +96,7 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
   const auth = useContext(AuthContext)
   const [isFavorite, setIsFavorite] = useState(false)
   const [favoritePulse, setFavoritePulse] = useState(false)
-  const favoritePulseTimeoutRef = useRef<number | null>(null)
+  const favoritePulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
 
   const retailer = useMemo(() => getRetailerInfo(product.affiliateLink), [product.affiliateLink])
@@ -105,22 +106,25 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
   )
 
   // Convert to Gift format for favorites
-  const productAsGift = useMemo(
-    () => ({
+  const productAsGift = useMemo<Gift>(() => {
+    const formattedPrice = formatPrice(product.price) || product.price || ''
+    return {
       productName: product.name,
       description: product.description || '',
+      priceRange: formattedPrice,
+      retailers: [
+        {
+          name: retailer.name,
+          affiliateLink: product.affiliateLink,
+        },
+      ],
       imageUrl: product.imageUrl,
-      affiliateLink: product.affiliateLink,
-      price: formatPrice(product.price) || '',
-      occasion: '',
-      recipientType: '',
-      interests: [],
-      ageRange: '',
-      priceRange: formatPrice(product.price) || '',
-      relationship: '',
-    }),
-    [product]
-  )
+      category: product.category,
+      tags: product.tags,
+      availability: product.inStock === false ? 'out-of-stock' : 'in-stock',
+      matchReason: product.description,
+    }
+  }, [product, retailer])
 
   // Check favorite status
   useEffect(() => {
@@ -141,6 +145,7 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
     () => () => {
       if (favoritePulseTimeoutRef.current) {
         clearTimeout(favoritePulseTimeoutRef.current)
+        favoritePulseTimeoutRef.current = null
       }
     },
     []
@@ -174,16 +179,19 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
         console.error('Failed to update guest favorites', e)
         return
       }
+            <JsonLd id={`ld-product-${product.id}`} data={productSchema} />
     }
 
     setIsFavorite(isNowFavorite)
     if (isNowFavorite) {
       if (favoritePulseTimeoutRef.current) {
         clearTimeout(favoritePulseTimeoutRef.current)
+        favoritePulseTimeoutRef.current = null
       }
       setFavoritePulse(true)
       favoritePulseTimeoutRef.current = setTimeout(() => {
         setFavoritePulse(false)
+        favoritePulseTimeoutRef.current = null
       }, 220)
     }
   }
@@ -191,6 +199,41 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
   const scrollToCTA = () => {
     ctaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
+
+  const numericPrice = useMemo(() => {
+    if (!product.price) return undefined
+    const clean = product.price.replace(/[^0-9,.]/g, '').replace(',', '.')
+    return clean || undefined
+  }, [product.price])
+
+  const productSchema = useMemo(() => {
+    const retailerBrand = retailer.shortName || 'Partner'
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      image: product.imageUrl,
+      description: product.description || product.name,
+      brand: { '@type': 'Brand', name: retailerBrand },
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'EUR',
+        price: numericPrice,
+        url: withAffiliate(product.affiliateLink, { pageType: 'product-landing', placement: 'schema' }),
+        availability: product.inStock === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+      },
+      ...(product.giftScore && product.giftScore >= 8
+        ? {
+            aggregateRating: {
+              '@type': 'AggregateRating',
+              ratingValue: product.giftScore,
+              bestRating: '10',
+              ratingCount: '100',
+            },
+          }
+        : {}),
+    }
+  }, [product.name, product.imageUrl, product.description, product.affiliateLink, product.inStock, product.giftScore, retailer.shortName, numericPrice])
 
   // Generate mock review rating (in production, would come from data)
   const mockRating = product.giftScore ? product.giftScore / 2 : 4.5
@@ -236,7 +279,7 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
           product.description ||
           `Ontdek ${product.name} met de beste prijs. Handmatig geselecteerd door onze experts. ${savings ? `Bespaar ${savings.percentage}%!` : ''}`
         }
-        image={product.imageUrl}
+        ogImage={product.imageUrl}
         canonical={`/product/${product.id}`}
       />
 
@@ -272,11 +315,10 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
           <div className="mb-6">
             <Breadcrumbs
               items={[
-                { label: 'Home', path: '/' },
-                { label: 'Deals', path: '/deals' },
-                { label: product.name, path: `/product/${product.id}` },
+                { label: 'Home', href: '/' },
+                { label: 'Deals', href: '/deals' },
+                { label: product.name, href: `/product/${product.id}` },
               ]}
-              navigateTo={navigateTo}
             />
           </div>
 
@@ -431,7 +473,10 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
               {/* Main CTA */}
               <div ref={ctaRef} className="space-y-3">
                 <a
-                  href={withAffiliate(product.affiliateLink)}
+                  href={withAffiliate(product.affiliateLink, {
+                    pageType: 'product-landing',
+                    placement: 'product-landing-cta',
+                  })}
                   target="_blank"
                   rel="sponsored nofollow noopener noreferrer"
                   className="group relative block w-full overflow-hidden rounded-2xl text-center font-bold text-white shadow-2xl transition-all hover:scale-105 px-8 py-5 text-lg"
@@ -472,23 +517,7 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
                     Deel dit product met vrienden
                   </span>
                 </div>
-                <SocialShare
-                  item={{
-                    productName: product.name,
-                    description: product.description || '',
-                    imageUrl: product.imageUrl,
-                    affiliateLink: product.affiliateLink,
-                    price: formatPrice(product.price) || '',
-                    occasion: '',
-                    recipientType: '',
-                    interests: [],
-                    ageRange: '',
-                    priceRange: formatPrice(product.price) || '',
-                    relationship: '',
-                  }}
-                  type="gift"
-                  variant="compact"
-                />
+                <SocialShare item={productAsGift} type="gift" variant="compact" />
               </div>
             </div>
           </div>

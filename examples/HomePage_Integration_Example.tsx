@@ -11,7 +11,7 @@ import React, { useEffect } from 'react'
 import { useABTest } from '../hooks/useABTest'
 import { useFunnelTracking } from '../hooks/useFunnelTracking'
 import { trackStartGiftFinder } from '../services/analyticsEventService'
-import Button from './Button'
+import Button from '../components/Button'
 import type { NavigateTo } from '../types'
 
 interface HomePageProps {

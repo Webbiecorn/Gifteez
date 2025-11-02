@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { EmailNotificationService } from '../services/emailNotificationService'
 import { NewsletterService } from '../services/newsletterService'
+import type { ShowToast } from '../types'
 
 interface NewsletterSignupProps {
   variant?: 'inline' | 'modal'
@@ -10,6 +11,7 @@ interface NewsletterSignupProps {
   description?: string
   defaultCategories?: string[]
   defaultFrequency?: 'immediate' | 'daily' | 'weekly'
+  showToast?: ShowToast
 }
 
 export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
@@ -20,6 +22,7 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
   description,
   defaultCategories,
   defaultFrequency,
+  showToast,
 }) => {
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
@@ -41,7 +44,8 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
 
   const showMessage = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text })
-    setTimeout(() => setMessage(null), 4000)
+  showToast?.(text, type === 'success' ? 'success' : 'error')
+    window.setTimeout(() => setMessage(null), 4000)
   }
 
   const availableCategories = [

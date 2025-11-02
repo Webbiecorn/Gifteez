@@ -21,9 +21,16 @@ export class DynamicProductService {
   private static coolblueProducts: CoolblueProduct[] = []
   private static amazonProducts: any[] = []
   private static slygadProducts: SLYGADProduct[] = []
+  private static awinProducts: any[] = []
   private static lastUpdated: Date | null = null
   private static isLoading = false
   private static loadingPromise: Promise<void> | null = null
+
+  private static debugLog(message: string, ...optionalParams: unknown[]): void {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(message, ...optionalParams)
+    }
+  }
 
   /**
    * Load products from multiple sources
@@ -38,14 +45,14 @@ export class DynamicProductService {
       this.isLoading = true
 
       try {
-        console.log('📦 Loading products from multiple sources...')
+        this.debugLog('📦 Loading products from multiple sources...')
 
         // Check if we need to force refresh (e.g., after deployment)
         const CACHE_VERSION = '2025-10-21-v4' // Update this after each deployment
         const lastCacheVersion = localStorage.getItem('gifteez_cache_version')
 
         if (lastCacheVersion !== CACHE_VERSION) {
-          console.log('🔄 New deployment detected (v3), clearing ALL caches...')
+          this.debugLog('🔄 New deployment detected (v3), clearing ALL caches...')
           this.clearCache()
           CoolblueFeedService.clearCache()
           DealCategoryConfigService.clearCache()
@@ -60,21 +67,21 @@ export class DynamicProductService {
           keysToRemove.forEach((key) => {
             try {
               localStorage.removeItem(key)
-              console.log(`🗑️  Cleared: ${key}`)
+              this.debugLog(`🗑️  Cleared: ${key}`)
             } catch (e) {
               console.warn(`Could not clear ${key}:`, e)
             }
           })
 
           localStorage.setItem('gifteez_cache_version', CACHE_VERSION)
-          console.log('✅ All caches cleared for v3 deployment')
+          this.debugLog('✅ All caches cleared for v3 deployment')
         }
 
         // Load Coolblue products (managed feed)
         try {
           const coolblueData = await CoolblueFeedService.loadProducts()
           this.coolblueProducts = coolblueData
-          console.log(
+          this.debugLog(
             `🔵 Loaded ${this.coolblueProducts.length} Coolblue products via feed service`
           )
         } catch (error) {
@@ -92,28 +99,103 @@ export class DynamicProductService {
             imageUrl: product.imageLarge ?? product.image,
             shortDescription: product.shortDescription ?? product.description,
           }))
-          console.log(`🟠 Loaded ${this.amazonProducts.length} Amazon products`)
+          this.debugLog(`🟠 Loaded ${this.amazonProducts.length} Amazon products`)
         } catch (error) {
           console.warn('⚠️  Could not load Amazon products:', error)
           this.amazonProducts = []
         }
 
-        // Load Shop Like You Give A Damn products (sustainable/vegan)
+                // Load Shop Like You Give A Damn products (sustainable/vegan)
         try {
           const slygadData = await ShopLikeYouGiveADamnService.loadProducts()
           this.slygadProducts = Array.isArray(slygadData) ? slygadData : []
-          console.log(`🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`)
+          this.debugLog(
+            `🌱 Loaded ${this.slygadProducts.length} Shop Like You Give A Damn products`
+          )
         } catch (error) {
           console.warn('⚠️  Could not load Shop Like You Give A Damn products:', error)
           this.slygadProducts = []
         }
 
+        // Load AWIN products — prefer shards via index, fallback to combined
+        try {
+          const mapProduct = (p: any) => ({
+            id: String(p.id),
+            name: String(p.name),
+            price: Number(p.price) || 0,
+            image: p.image || p.imageUrl,
+            imageUrl: p.imageUrl || p.image,
+            affiliateLink: p.affiliateLink || p.url,
+            description: p.description || '',
+            brand: p.brand,
+            category: p.category,
+            source: 'awin',
+            isOnSale: false,
+            giftScore: 6,
+          })
+
+          // Try loading shards via index first
+          const idxRes = await fetch('/data/awin-index.json', {
+            headers: { 'cache-control': 'no-cache' },
+          })
+          if (idxRes.ok) {
+            const idx = await idxRes.json()
+            const shards: string[] = Array.isArray(idx?.shards)
+              ? idx.shards.map((s: any) => s?.shard).filter(Boolean)
+              : []
+            
+            if (shards.length > 0) {
+              const awin: any[] = []
+              for (const rel of shards) {
+                try {
+                  const sres = await fetch(`/${rel}`, {
+                    headers: { 'cache-control': 'no-cache' },
+                  })
+                  if (sres.ok) {
+                    const arr = await sres.json()
+                    if (Array.isArray(arr)) {
+                      for (const p of arr) {
+                        if (p && p.id && p.name && typeof p.price === 'number') {
+                          awin.push(mapProduct(p))
+                        }
+                      }
+                    }
+                  }
+                } catch {}
+              }
+              this.awinProducts = awin
+              this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (shards)`)
+            } else {
+              // Index exists but no shards listed, fallback to combined
+              this.awinProducts = []
+            }
+          } else {
+            // No index, try combined file
+            const res = await fetch('/data/awin-import-ready.json', {
+              headers: { 'cache-control': 'no-cache' },
+            })
+            if (res.ok) {
+              const json = await res.json()
+              const arr = Array.isArray(json?.products) ? json.products : []
+              this.awinProducts = arr
+                .filter((p: any) => p && p.id && p.name && typeof p.price === 'number')
+                .map(mapProduct)
+              this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (combined)`)
+            } else {
+              this.awinProducts = []
+            }
+          }
+        } catch (error) {
+          console.warn('⚠️  Could not load AWIN products:', error)
+          this.awinProducts = []
+        }
+
         this.lastUpdated = new Date()
 
         const totalProducts =
-          this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length
-        console.log(
-          `📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD)`
+          this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length + this.awinProducts.length
+        this.debugLog(
+          `📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD + ${this.awinProducts.length} AWIN)`
         )
 
         try {
@@ -130,7 +212,7 @@ export class DynamicProductService {
           this.coolblueProducts = sampleData
           this.amazonProducts = []
           this.lastUpdated = new Date()
-          console.log(`📦 Loaded ${this.coolblueProducts.length} products from fallback data`)
+          this.debugLog(`📦 Loaded ${this.coolblueProducts.length} products from fallback data`)
         } catch (importError) {
           console.error('❌ Failed to load any product data:', importError)
           this.coolblueProducts = []
@@ -152,6 +234,7 @@ export class DynamicProductService {
     this.coolblueProducts = []
     this.amazonProducts = []
     this.slygadProducts = []
+    this.awinProducts = []
     this.lastUpdated = null
     this.isLoading = false
     this.loadingPromise = null
@@ -174,13 +257,14 @@ export class DynamicProductService {
     const coolblue = Array.isArray(this.coolblueProducts) ? this.coolblueProducts : []
     const amazon = Array.isArray(this.amazonProducts) ? this.amazonProducts : []
     const slygad = Array.isArray(this.slygadProducts) ? this.slygadProducts : []
-    return [...coolblue, ...amazon, ...slygad]
+    const awin = Array.isArray(this.awinProducts) ? this.awinProducts : []
+    return [...coolblue, ...amazon, ...slygad, ...awin]
   }
 
   /**
    * Get products by source
    */
-  static getProductsBySource(source: 'coolblue' | 'amazon' | 'slygad' | 'all' = 'all'): any[] {
+  static getProductsBySource(source: 'coolblue' | 'amazon' | 'slygad' | 'awin' | 'all' = 'all'): any[] {
     switch (source) {
       case 'coolblue':
         return Array.isArray(this.coolblueProducts) ? this.coolblueProducts : []
@@ -188,6 +272,8 @@ export class DynamicProductService {
         return Array.isArray(this.amazonProducts) ? this.amazonProducts : []
       case 'slygad':
         return Array.isArray(this.slygadProducts) ? this.slygadProducts : []
+      case 'awin':
+        return Array.isArray(this.awinProducts) ? this.awinProducts : []
       case 'all':
       default:
         return this.getAllProducts()
@@ -857,6 +943,40 @@ export class DynamicProductService {
     }
 
     return combinedDeals.slice(0, MAX_TOTAL)
+  }
+
+  /**
+   * Get top N deals (flexible version of getTop10Deals)
+   * @param limit Number of deals to return (default 20)
+   */
+  static async getTopDeals(limit: number = 20): Promise<DealItem[]> {
+    await this.loadProducts()
+
+    const allProducts = this.getAllProducts()
+
+    if (!allProducts.length) {
+      return this.getFallbackTop10Deals().slice(0, limit)
+    }
+
+    // Get high-scoring products with variety across sources
+    const topProducts = allProducts
+      .filter((p) => p.giftScore >= 6) // Good quality threshold
+      .filter((p) => typeof p.price === 'number' && p.price > 0 && p.price < 1000)
+      .sort((a, b) => {
+        // Prioritize higher gift scores
+        if (b.giftScore !== a.giftScore) {
+          return b.giftScore - a.giftScore
+        }
+        // Then prefer items on sale
+        if (a.isOnSale !== b.isOnSale) {
+          return a.isOnSale ? -1 : 1
+        }
+        // Finally prefer lower price for value
+        return a.price - b.price
+      })
+      .slice(0, limit)
+
+    return topProducts.map((p) => this.convertToDealItem(p))
   }
 
   /**

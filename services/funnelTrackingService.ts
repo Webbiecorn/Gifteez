@@ -88,7 +88,6 @@ export const FUNNEL_DEFINITIONS = {
 // ============================================================================
 
 const STORAGE_PREFIX = 'gifteez_funnel_'
-const SESSION_KEY = 'gifteez_funnel_session'
 const METRICS_KEY = 'gifteez_funnel_metrics'
 const MAX_SESSIONS_STORED = 100 // Keep last 100 sessions per funnel
 

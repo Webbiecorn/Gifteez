@@ -7,9 +7,7 @@ import {
   TagIcon,
   BookmarkIcon,
   CheckCircleIcon,
-  XCircleIcon,
   ClockIcon,
-  TrendingUpIcon,
   AlertTriangleIcon,
 } from './IconComponents'
 import LoadingSpinner from './LoadingSpinner'
@@ -32,6 +30,13 @@ interface DashboardStats {
     category: string
   }>
   warnings: string[]
+}
+
+type DashboardProduct = {
+  id?: string
+  name?: string
+  giftScore?: number
+  category?: string
 }
 
 const AdminDashboard: React.FC = () => {
@@ -58,7 +63,7 @@ const AdminDashboard: React.FC = () => {
           }),
         ])
 
-        const products = DynamicProductService.getProducts()
+        const products = DynamicProductService.getProducts() as DashboardProduct[]
         const productStats = DynamicProductService.getStats()
 
         // Calculate blog stats
@@ -67,13 +72,15 @@ const AdminDashboard: React.FC = () => {
 
         // Get top performers
         const topPerformers = products
-          .filter((p: any) => p.giftScore && p.giftScore >= 8)
-          .sort((a: any, b: any) => (b.giftScore || 0) - (a.giftScore || 0))
+          .filter((product): product is DashboardProduct & { giftScore: number } => {
+            return typeof product.giftScore === 'number' && product.giftScore >= 8
+          })
+          .sort((a, b) => b.giftScore - a.giftScore)
           .slice(0, 5)
-          .map((p: any) => ({
-            name: p.name,
-            score: p.giftScore || 0,
-            category: p.category || 'Onbekend',
+          .map((product) => ({
+            name: product.name ?? 'Onbekend',
+            score: product.giftScore,
+            category: product.category ?? 'Onbekend',
           }))
 
         // Check for warnings
@@ -102,8 +109,8 @@ const AdminDashboard: React.FC = () => {
         if (config?.categories) {
           const lowScoreCount = config.categories.reduce((count, cat) => {
             const lowScoreItems = cat.itemIds.filter((id) => {
-              const product = products.find((p: any) => p.id === id)
-              return product && product.giftScore && product.giftScore < 6
+              const product = products.find((productItem) => productItem.id === id)
+              return typeof product?.giftScore === 'number' && product.giftScore < 6
             })
             return count + lowScoreItems.length
           }, 0)

@@ -196,7 +196,10 @@ const QuickCompareWidget: React.FC<QuickCompareWidgetProps> = ({ products, onClo
                         {selectedProducts.map((product) => (
                           <td key={product.id} className="px-4 py-3 text-center">
                             <a
-                              href={withAffiliate(product.affiliateLink)}
+                              href={withAffiliate(product.affiliateLink, {
+                                pageType: 'comparison',
+                                placement: 'quick-compare-cta',
+                              })}
                               target="_blank"
                               rel="sponsored nofollow noopener noreferrer"
                               onClick={handleCompare}

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * Centralized Logging Service
  *
@@ -16,7 +17,7 @@ interface LogContext {
   action?: string
   userId?: string
   timestamp?: number
-  [key: string]: any
+  [key: string]: unknown
 }
 
 interface LogEntry {
@@ -53,7 +54,7 @@ class Logger {
   /**
    * Get console method based on log level
    */
-  private getConsoleMethod(level: LogLevel): (...args: any[]) => void {
+  private getConsoleMethod(level: LogLevel): typeof console.log {
     switch (level) {
       case 'debug':
         return console.debug

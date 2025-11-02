@@ -257,24 +257,28 @@ class FeatureFlagService {
    * Enable debug mode (shows all feature flags in console)
    */
   debug(): void {
-    console.group('🚩 Feature Flags Debug')
-
     const flags = this.getAllFlags()
-    Object.entries(flags).forEach(([flag, enabled]) => {
-      const override = this.overrides.get(flag as FeatureFlag)
-      console.log(`${enabled ? '✅' : '❌'} ${flag}`, override ? '(overridden)' : '')
+    const overrides = Array.from(this.overrides.values()).map((override) => ({
+      flag: override.flag,
+      enabled: override.enabled,
+      expiresAt: override.expiresAt,
+    }))
+
+    logger.info('Feature Flags Debug Snapshot', {
+      flags,
+      overrides,
     })
 
     if (this.abTests.size > 0) {
-      console.group('A/B Tests')
-      this.abTests.forEach((test, name) => {
-        const variant = this.getABTestVariant(name)
-        console.log(`${name}: ${variant}`, test)
-      })
-      console.groupEnd()
-    }
+      const tests = Array.from(this.abTests.entries()).map(([name, test]) => ({
+        name,
+        variants: test.variants,
+        distribution: test.distribution,
+        assignedVariant: this.getABTestVariant(name),
+      }))
 
-    console.groupEnd()
+      logger.info('Feature Flags A/B Tests Debug Snapshot', { tests })
+    }
   }
 }
 

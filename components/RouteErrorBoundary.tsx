@@ -9,34 +9,49 @@
  * - User-friendly error messages
  */
 
-import React from 'react'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { logger } from '../lib/logger'
 import Button from './Button'
 
+const hasWindow = typeof window !== 'undefined'
+const hasNavigator = typeof navigator !== 'undefined'
+
+const getRoutePath = (): string => {
+  if (hasWindow) {
+    return window.location.pathname
+  }
+  return 'unknown-route'
+}
+
+const showAlert = (message: string): void => {
+  if (hasWindow) {
+    window.alert(message)
+    return
+  }
+  logger.warn('Alert skipped (no window available)', { message })
+}
+
 interface ErrorBoundaryProps {
-  children: React.ReactNode
-  fallback?: React.ReactNode
+  children: ReactNode
+  fallback?: ReactNode
   routeName?: string
-  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+  onError?: (error: Error, errorInfo: ErrorInfo) => void
   showDetails?: boolean
 }
 
 interface ErrorBoundaryState {
   hasError: boolean
   error: Error | null
-  errorInfo: React.ErrorInfo | null
+  errorInfo: ErrorInfo | null
   errorCount: number
 }
 
-class RouteErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props)
-    this.state = {
-      hasError: false,
-      error: null,
-      errorInfo: null,
-      errorCount: 0,
-    }
+class RouteErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  public state: ErrorBoundaryState = {
+    hasError: false,
+    error: null,
+    errorInfo: null,
+    errorCount: 0,
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -46,9 +61,10 @@ class RouteErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBounda
     }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    const routePath = this.props.routeName ?? getRoutePath()
     logger.error('React Error Boundary caught error', {
-      route: this.props.routeName || window.location.pathname,
+      route: routePath,
       error: error.message,
       componentStack: errorInfo.componentStack,
       errorCount: this.state.errorCount + 1,
@@ -63,9 +79,9 @@ class RouteErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBounda
     logger.flush()
   }
 
-  handleReset = () => {
+  private handleReset = () => {
     logger.info('Error boundary reset', {
-      route: this.props.routeName,
+      route: this.props.routeName ?? getRoutePath(),
     })
 
     this.setState({
@@ -75,29 +91,44 @@ class RouteErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBounda
     })
   }
 
-  handleReload = () => {
+  private handleReload = () => {
     logger.info('Page reload triggered from error boundary')
-    window.location.reload()
+    if (hasWindow) {
+      window.location.reload()
+      return
+    }
+    logger.warn('Reload skipped (no window available)')
   }
 
-  handleGoHome = () => {
+  private handleGoHome = () => {
     logger.info('Navigating to home from error boundary')
-    window.location.href = '/'
+    if (hasWindow) {
+      window.location.href = '/'
+      return
+    }
+    logger.warn('Navigation skipped (no window available)')
   }
 
-  handleCopyError = () => {
+  private handleCopyError = () => {
     const { error, errorInfo } = this.state
+    const routePath = this.props.routeName ?? getRoutePath()
     const errorText = `
 Error: ${error?.message}
-Route: ${this.props.routeName || window.location.pathname}
+Route: ${routePath}
 Stack: ${error?.stack}
 Component Stack: ${errorInfo?.componentStack}
     `.trim()
 
-    navigator.clipboard.writeText(errorText).then(() => {
-      logger.info('Error details copied to clipboard')
-      alert('Foutdetails gekopieerd naar klembord')
-    })
+    if (hasNavigator && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(errorText).then(() => {
+        logger.info('Error details copied to clipboard')
+        showAlert('Foutdetails gekopieerd naar klembord')
+      })
+      return
+    }
+
+    logger.warn('Clipboard API not available to copy error details')
+    showAlert('Clipboard niet beschikbaar in deze omgeving')
   }
 
   render() {

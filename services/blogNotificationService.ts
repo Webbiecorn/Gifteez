@@ -1,6 +1,7 @@
 import { EmailNotificationService } from './emailNotificationService'
 import { NewsletterService } from './newsletterService'
 import type { BlogPost } from '../types'
+import type { NewsletterSubscriber } from './emailNotificationService'
 
 export class BlogNotificationService {
   private static scheduledNotifications = new Map<string, NodeJS.Timeout>()
@@ -19,9 +20,6 @@ export class BlogNotificationService {
 
       if (relevantSubscribers.length > 0) {
         await EmailNotificationService.sendNewBlogPostNotification(post, relevantSubscribers)
-        console.log(
-          `Sent immediate notifications to ${relevantSubscribers.length} subscribers for post: ${post.title}`
-        )
       }
     } catch (error) {
       console.error('Error sending immediate blog notifications:', error)
@@ -33,7 +31,7 @@ export class BlogNotificationService {
       const dailySubscribers = await NewsletterService.getSubscribersByFrequency('daily')
 
       if (dailySubscribers.length === 0) {
-        console.log('No daily subscribers found')
+        console.warn('No daily subscribers found')
         return
       }
 
@@ -44,7 +42,7 @@ export class BlogNotificationService {
       const recentPosts = await this.getRecentPosts(yesterday)
 
       if (recentPosts.length === 0) {
-        console.log('No new posts in the last 24 hours')
+        console.warn('No new posts in the last 24 hours')
         return
       }
 
@@ -65,10 +63,6 @@ export class BlogNotificationService {
           }
         }
       }
-
-      console.log(
-        `Sent daily digest to ${dailySubscribers.length} subscribers with ${recentPosts.length} posts`
-      )
     } catch (error) {
       console.error('Error sending daily digest:', error)
     }
@@ -79,7 +73,7 @@ export class BlogNotificationService {
       const weeklySubscribers = await NewsletterService.getSubscribersByFrequency('weekly')
 
       if (weeklySubscribers.length === 0) {
-        console.log('No weekly subscribers found')
+        console.warn('No weekly subscribers found')
         return
       }
 
@@ -90,7 +84,7 @@ export class BlogNotificationService {
       const recentPosts = await this.getRecentPosts(oneWeekAgo)
 
       if (recentPosts.length === 0) {
-        console.log('No new posts in the last week')
+        console.warn('No new posts in the last week')
         return
       }
 
@@ -108,10 +102,6 @@ export class BlogNotificationService {
           }
         }
       }
-
-      console.log(
-        `Sent weekly digest to ${weeklySubscribers.length} subscribers with ${recentPosts.length} posts`
-      )
     } catch (error) {
       console.error('Error sending weekly digest:', error)
     }
@@ -132,21 +122,27 @@ export class BlogNotificationService {
     }
   }
 
-  private static groupSubscribersByCategory(subscribers: any[]) {
-    const groups = new Map<string, any[]>()
+  private static groupSubscribersByCategory(
+    subscribers: NewsletterSubscriber[]
+  ): Array<[string[], NewsletterSubscriber[]]> {
+    const groups = new Map<string, NewsletterSubscriber[]>()
 
     for (const subscriber of subscribers) {
-      const categoryKey = subscriber.preferences.categories.sort().join(',') || 'all'
+      const sortedCategories = [...subscriber.preferences.categories].sort()
+      const categoryKey = sortedCategories.length === 0 ? 'all' : sortedCategories.join(',')
 
       if (!groups.has(categoryKey)) {
         groups.set(categoryKey, [])
       }
-      groups.get(categoryKey)!.push(subscriber)
+
+      const group = groups.get(categoryKey)
+      if (group) {
+        group.push(subscriber)
+      }
     }
 
-    return Array.from(groups.entries()).map(
-      ([categoryString, subs]) =>
-        [categoryString === 'all' ? [] : categoryString.split(','), subs] as [string[], any[]]
+    return Array.from(groups.entries()).map<[string[], NewsletterSubscriber[]]>(
+      ([categoryString, subs]) => [categoryString === 'all' ? [] : categoryString.split(','), subs]
     )
   }
 
@@ -168,8 +164,6 @@ export class BlogNotificationService {
     this.scheduleWeeklyTask('weekly-digest', 1, '09:00', () => {
       this.sendWeeklyDigest()
     })
-
-    console.log('Email notification schedules configured')
   }
 
   private static scheduleDailyTask(id: string, time: string, task: () => void): void {
@@ -226,11 +220,10 @@ export class BlogNotificationService {
   }
 
   static clearSchedules(): void {
-    for (const [id, timeoutId] of this.scheduledNotifications) {
+    for (const timeoutId of this.scheduledNotifications.values()) {
       clearTimeout(timeoutId)
     }
     this.scheduledNotifications.clear()
-    console.log('All email notification schedules cleared')
   }
 
   static getScheduleStatus(): Record<string, boolean> {

@@ -57,7 +57,10 @@ const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a
-                href={withAffiliate(dealOfWeek.affiliateLink)}
+                href={withAffiliate(dealOfWeek.affiliateLink, {
+                  pageType: 'home',
+                  placement: 'preview-spotlight-cta',
+                })}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
                 className="inline-flex items-center gap-3 rounded-lg bg-rose-500 px-6 py-3 text-sm font-semibold text-white shadow transition hover:bg-rose-600"
@@ -162,7 +165,10 @@ const DealsPreviewSections: React.FC<DealsPreviewSectionsProps> = ({
                       </div>
                     </div>
                     <a
-                      href={withAffiliate(item.affiliateLink)}
+                      href={withAffiliate(item.affiliateLink, {
+                        pageType: 'home',
+                        placement: 'preview-card-cta',
+                      })}
                       target="_blank"
                       rel="noopener noreferrer sponsored"
                       className="inline-flex items-center justify-center rounded-lg bg-rose-500 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-rose-600"

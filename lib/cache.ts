@@ -35,7 +35,7 @@ interface CacheStats {
 }
 
 class CacheService {
-  private memoryCache: Map<string, CacheEntry<any>> = new Map()
+  private memoryCache: Map<string, CacheEntry<unknown>> = new Map()
   private namespace: string = 'gifteez'
   private stats: CacheStats = {
     hits: 0,
@@ -56,7 +56,7 @@ class CacheService {
   /**
    * Check if entry is expired
    */
-  private isExpired(entry: CacheEntry<any>): boolean {
+  private isExpired(entry: CacheEntry<unknown>): boolean {
     return Date.now() > entry.expiresAt
   }
 
@@ -144,6 +144,7 @@ class CacheService {
    * Get from IndexedDB (uses productCache service)
    */
   private async getFromIndexedDB<T>(key: string): Promise<T | null> {
+    void key
     // For now, delegate to productCacheService
     // In the future, this can be a more generic IndexedDB implementation
     return null
@@ -153,6 +154,9 @@ class CacheService {
    * Set in IndexedDB
    */
   private async setInIndexedDB<T>(key: string, value: T, ttl: number): Promise<void> {
+    void key
+    void value
+    void ttl
     // For now, delegate to productCacheService
     // In the future, this can be a more generic IndexedDB implementation
   }

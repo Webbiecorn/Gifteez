@@ -6,7 +6,6 @@ import type { DealItem } from '../types'
 interface ExitIntentPopupProps {
   topProduct?: DealItem
   onClose: () => void
-  // eslint-disable-next-line no-unused-vars
   onProductClick: (product: DealItem) => void
 }
 

@@ -1,10 +1,9 @@
-import type { ReactElement } from 'react'
-import { AuthProvider } from '@contexts/AuthContext'
-import { CartProvider } from '@contexts/CartContext'
-import { FavoritesProvider } from '@contexts/FavoritesContext'
+import { type ReactElement, type ReactNode } from 'react'
+import { AuthProvider } from '@/contexts/AuthContext'
+import { CartProvider } from '@/contexts/CartContext'
 import { render } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
 import type { RenderOptions } from '@testing-library/react'
+import { vi } from 'vitest'
 
 /**
  * Custom render function with all providers
@@ -22,18 +21,14 @@ import type { RenderOptions } from '@testing-library/react'
 
 // All providers wrapper
 interface AllProvidersProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 function AllProviders({ children }: AllProvidersProps) {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <FavoritesProvider>{children}</FavoritesProvider>
-        </CartProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <AuthProvider>
+      <CartProvider>{children}</CartProvider>
+    </AuthProvider>
   )
 }
 

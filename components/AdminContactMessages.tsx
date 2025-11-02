@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { collection, getDocs, query, orderBy, updateDoc, doc } from 'firebase/firestore'
 import { db } from '../services/firebase'
-import { MailIcon, CheckCircleIcon, XCircleIcon } from './IconComponents'
+import { MailIcon, CheckCircleIcon } from './IconComponents'
 import type { ContactMessage } from '../types'
 
 export const AdminContactMessages: React.FC = () => {

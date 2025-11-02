@@ -1,16 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef, useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
+import { logger } from '../lib/logger'
 import { withAffiliate } from '../services/affiliate'
 import CoolblueAffiliateService from '../services/coolblueAffiliateService'
 import CoolblueFeedService from '../services/coolblueFeedService'
 import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
 import { DynamicProductService } from '../services/dynamicProductService'
+import { PartyProService } from '../services/partyProService'
 import { PerformanceInsightsService } from '../services/performanceInsightsService'
 import { PinnedDealsService } from '../services/pinnedDealsService'
 import { ShopLikeYouGiveADamnService } from '../services/shopLikeYouGiveADamnService'
-/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
-
-import { PartyProService } from '../services/partyProService'
 import Button from './Button'
 import { FeaturedDealSkeleton, CarouselSkeleton } from './DealCardSkeleton'
 import {
@@ -33,6 +32,7 @@ import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
 import ProductCarousel from './ProductCarousel'
+import type { ProductCarouselControls } from './ProductCarousel'
 import { SocialShare } from './SocialShare'
 import type { NavigateTo, DealCategory, DealItem, Gift } from '../types'
 
@@ -132,6 +132,86 @@ const DEFAULT_STATE: DealsPageState = {
   dealOfWeek: null,
   topDeals: [],
   categories: [],
+}
+
+type GtagFunction = (...args: unknown[]) => void
+
+interface AnalyticsWindow extends Window {
+  gtag?: GtagFunction
+}
+
+const getAnalyticsTracker = (): GtagFunction | null => {
+  if (typeof window === 'undefined') {
+    return null
+  }
+
+  const gtag = (window as AnalyticsWindow).gtag
+  return typeof gtag === 'function' ? gtag : null
+}
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message
+  }
+
+  if (typeof error === 'string' && error.trim()) {
+    return error
+  }
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as { message?: unknown }).message === 'string'
+  ) {
+    const message = ((error as { message: string }).message ?? '').trim()
+    if (message) {
+      return message
+    }
+  }
+
+  return fallback
+}
+
+const logUnknownError = (
+  message: string,
+  error: unknown,
+  context?: Record<string, unknown>
+): void => {
+  if (error instanceof Error) {
+    logger.error(message, {
+      ...context,
+      errorName: error.name,
+      errorMessage: error.message,
+      errorStack: error.stack,
+    })
+    return
+  }
+
+  logger.error(message, { ...context, error })
+}
+
+const getFallbackImageUrl = (deal: DealItem): string | undefined => {
+  const record = deal as unknown as Record<string, unknown>
+  const awinImage = record.awinImageUrl
+  if (typeof awinImage === 'string' && awinImage.trim()) {
+    return awinImage
+  }
+
+  const merchantImage = record.merchantImageUrl
+  if (typeof merchantImage === 'string' && merchantImage.trim()) {
+    return merchantImage
+  }
+
+  return undefined
+}
+
+const trackAnalyticsEvent = (eventName: string, params: Record<string, unknown>): void => {
+  const gtag = getAnalyticsTracker()
+  if (!gtag) {
+    return
+  }
+  gtag('event', eventName, params)
 }
 
 // Helper function to get icon based on category title
@@ -236,6 +316,765 @@ const getSocialProofBadge = (
   return null
 }
 
+// Hero Carousel Component
+interface HeroCarouselProps {
+  topDeals: DealItem[]
+  dealOfWeek: DealItem | null
+  navigateTo: NavigateTo
+  handleFeaturedClick: () => void
+  handleRefresh: () => void
+  lastUpdated: Date | null
+  formatDate: (value?: Date | string | null) => string | null
+  partnerBadges: string[]
+}
+
+const HeroCarousel: React.FC<HeroCarouselProps> = ({
+  topDeals,
+  dealOfWeek,
+  navigateTo,
+  handleFeaturedClick,
+  handleRefresh,
+  lastUpdated,
+  formatDate,
+  partnerBadges,
+}) => {
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [isHovering, setIsHovering] = useState(false)
+  const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  // Helper to parse Euro formatted strings like "€314,00" to number 314.00
+  const parseEuro = useCallback((input?: string): number | null => {
+    if (!input) return null
+    try {
+      const normalized = input
+        .toString()
+        .replace(/[^0-9,.-]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.')
+      const num = Number.parseFloat(normalized)
+      return Number.isNaN(num) ? null : num
+    } catch {
+      return null
+    }
+  }, [])
+
+  // Get featured deals for carousel (max 6 for better variety)
+  const featuredDeals = useMemo(() => {
+    const deals = dealOfWeek ? [dealOfWeek, ...topDeals.slice(0, 5)] : topDeals.slice(0, 6)
+    return deals.filter(Boolean)
+  }, [topDeals, dealOfWeek])
+
+  // Auto-play functionality - faster for more dynamic feel
+  useEffect(() => {
+    if (isAutoPlaying && featuredDeals.length > 1 && !isHovering) {
+      autoPlayRef.current = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % featuredDeals.length)
+      }, 5000)
+    }
+
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current)
+      }
+    }
+  }, [isAutoPlaying, featuredDeals.length, isHovering])
+
+  const handlePrevious = () => {
+    setCurrentSlide((prev) => (prev - 1 + featuredDeals.length) % featuredDeals.length)
+  }
+
+  const handleNext = () => {
+    setCurrentSlide((prev) => (prev + 1) % featuredDeals.length)
+  }
+
+  const handleDotClick = (index: number) => {
+    setCurrentSlide(index)
+  }
+
+  if (featuredDeals.length === 0) {
+    return null
+  }
+
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-rose-900 py-8 md:py-12">
+      {/* Animated gradient mesh background */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-0 -left-4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-rose-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-8 left-20 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
+      </div>
+
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIwLjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20" />
+
+      <Container size="xl" padded className="relative">
+        {/* Header Section */}
+        <div className="text-center mb-8 lg:mb-10 space-y-4">
+          {/* Animated badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-lg">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-sm font-bold text-white">
+              Live • {featuredDeals.length} Toppers vandaag
+            </span>
+          </div>
+
+          {/* Main heading */}
+          <div className="space-y-3">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black leading-none">
+              <span className="block text-white drop-shadow-2xl mb-2">De beste</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-400 to-orange-400 animate-text-shimmer">
+                cadeaus deals
+              </span>
+            </h1>
+            <p className="text-lg md:text-xl text-white/90 font-medium max-w-2xl mx-auto">
+              Ontdek exclusieve aanbiedingen met{' '}
+              <span className="text-pink-300 font-bold">tot 50% korting</span>
+            </p>
+          </div>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap gap-6 justify-center text-sm">
+            <div className="text-center">
+              <div className="text-2xl font-black text-white">{featuredDeals.length}+</div>
+              <div className="text-xs text-white/70 font-medium">Top Deals</div>
+            </div>
+            <div className="w-px bg-white/20" />
+            <div className="text-center">
+              <div className="text-2xl font-black text-white">50%</div>
+              <div className="text-xs text-white/70 font-medium">Korting</div>
+            </div>
+            <div className="w-px bg-white/20" />
+            <div className="text-center">
+              <div className="text-2xl font-black text-white">24u</div>
+              <div className="text-xs text-white/70 font-medium">Levering</div>
+            </div>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap gap-3 justify-center">
+            <button
+              onClick={() => navigateTo('giftFinder')}
+              className="group relative px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full font-bold text-white shadow-2xl hover:shadow-pink-500/50 hover:scale-105 transition-all duration-300"
+            >
+              <span className="relative flex items-center gap-2">
+                <SparklesIcon className="h-5 w-5" />
+                Ontdek deals
+                <svg
+                  className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </span>
+            </button>
+
+            <button
+              onClick={handleRefresh}
+              className="px-5 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full font-semibold text-white hover:bg-white/20 transition-all duration-300"
+            >
+              <span className="flex items-center gap-2">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                Vernieuwen
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {/* Carousel Section */}
+        <div
+          className="relative max-w-5xl mx-auto"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          {/* Cards container - 3D perspective effect */}
+          <div className="relative h-[420px] lg:h-[450px] flex items-center justify-center perspective-1000">
+            {featuredDeals.map((deal, index) => {
+              const dealRetailerInfo = resolveRetailerInfo(deal.affiliateLink)
+              const socialProof = getSocialProofBadge(deal, index)
+              const currentPrice = parseEuro(deal.price)
+              const originalPrice = parseEuro(deal.originalPrice)
+              const discountPct =
+                originalPrice && currentPrice && originalPrice > 0
+                  ? Math.max(0, Math.round(((originalPrice - currentPrice) / originalPrice) * 100))
+                  : null
+              
+              // Calculate position relative to current slide
+              const offset = (index - currentSlide + featuredDeals.length) % featuredDeals.length
+              const isCenter = offset === 0
+              const isPrev = offset === featuredDeals.length - 1
+              const isNext = offset === 1
+              const isVisible = isCenter || isPrev || isNext
+
+              // Calculate transform based on position
+              let transform = ''
+              let zIndex = 0
+              let opacity = 0
+              let scale = 0.8
+
+              if (isCenter) {
+                transform = 'translateX(0) translateZ(0) rotateY(0deg)'
+                zIndex = 30
+                opacity = 1
+                scale = 1
+              } else if (isPrev) {
+                transform = 'translateX(-90%) translateZ(-150px) rotateY(30deg)'
+                zIndex = 10
+                opacity = 0.5
+                scale = 0.8
+              } else if (isNext) {
+                transform = 'translateX(90%) translateZ(-150px) rotateY(-30deg)'
+                zIndex = 10
+                opacity = 0.5
+                scale = 0.8
+              }
+
+              return (
+                <div
+                  key={deal.id}
+                  className={`absolute inset-0 transition-all duration-700 ease-out ${
+                    isVisible ? 'pointer-events-auto' : 'pointer-events-none'
+                  }`}
+                  style={{
+                    transform,
+                    zIndex,
+                    opacity: isVisible ? opacity : 0,
+                    transformStyle: 'preserve-3d',
+                  }}
+                >
+                  <div className="w-full h-full max-w-sm mx-auto flex items-center justify-center px-4">
+                    <a
+                      href={withAffiliate(deal.affiliateLink, {
+                        pageType: 'deals',
+                        placement: 'hero-3d-card',
+                        cardIndex: index,
+                        retailer: (dealRetailerInfo?.shortLabel || '').toLowerCase(),
+                      })}
+                      target="_blank"
+                      rel="sponsored nofollow noopener noreferrer"
+                      onClick={() => {
+                        if (index === 0 && dealOfWeek) {
+                          handleFeaturedClick()
+                        }
+                        try {
+                          // Optional GTM event for affiliate click attribution
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          ;(window as any)?.dataLayer?.push({
+                            event: 'affiliate_click',
+                            source: 'deals_hero',
+                            retailer: dealRetailerInfo.shortLabel,
+                            deal_id: deal.id,
+                            price: deal.price,
+                          })
+                        } catch {
+                          // no-op
+                        }
+                      }}
+                      className={`block w-full group ${!isCenter ? 'pointer-events-none' : ''}`}
+                      style={{ transform: `scale(${scale})` }}
+                    >
+                      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden hover:shadow-pink-500/30 transition-all duration-500">
+                        {/* Image section */}
+                        <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 aspect-square w-full flex items-center justify-center overflow-hidden">
+                          {/* Rotating glow ring behind product */}
+                          <div className="ring-gradient animate-spin-slower" aria-hidden="true" />
+                          {/* Badges */}
+                          <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-2 z-10">
+                            {index === 0 && dealOfWeek && (
+                              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white font-bold text-xs shadow-xl">
+                                <StarIcon className="h-4 w-4" />
+                                <span>DEAL WEEK</span>
+                              </div>
+                            )}
+                            {discountPct !== null && discountPct > 0 && (
+                              <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-rose-600 text-white font-extrabold text-[11px] shadow-xl">
+                                <TagIcon className="h-4 w-4" />
+                                <span>-{discountPct}%</span>
+                              </div>
+                            )}
+                            {socialProof && (
+                              <div
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg font-bold text-xs shadow-md ${socialProof.color}`}
+                              >
+                                <span>{socialProof.icon}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Product image */}
+                          <div className="relative w-full h-full p-8 flex items-center justify-center">
+                            <ImageWithFallback
+                              src={deal.imageUrl}
+                              alt={deal.name}
+                              fallbackSrc={getFallbackImageUrl(deal)}
+                              className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
+                            />
+                          </div>
+
+                          {/* Retailer badge */}
+                          <div className="absolute bottom-3 right-3">
+                            <div
+                              className={`inline-flex items-center px-3 py-1.5 rounded-lg font-bold text-xs shadow-lg ${dealRetailerInfo.badgeClass}`}
+                            >
+                              {dealRetailerInfo.shortLabel}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Content section */}
+                        <div className="p-5 bg-white space-y-3">
+                          {/* Title */}
+                          <h2 className="font-display text-xl font-black text-slate-900 leading-tight group-hover:text-rose-600 transition-colors line-clamp-2">
+                            {deal.name}
+                          </h2>
+
+                          {/* Price */}
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            {deal.isOnSale && deal.originalPrice && (
+                              <span className="text-base text-slate-400 line-through font-semibold">
+                                {deal.originalPrice}
+                              </span>
+                            )}
+                            <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-600">
+                              {deal.price || 'Bekijk prijs'}
+                            </span>
+                          </div>
+
+                          {/* CTA Button */}
+                          <button className="w-full py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl font-bold text-base shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                            <span>Shop bij {dealRetailerInfo.shortLabel}</span>
+                            <svg
+                              className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 7l5 5m0 0l-5 5m5-5H6"
+                              />
+                            </svg>
+                          </button>
+                          <p className="text-[11px] text-slate-500 text-center mt-1">
+                            Partnerlink • wij kunnen commissie ontvangen
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Navigation arrows */}
+          {featuredDeals.length > 1 && (
+            <>
+              <button
+                onClick={handlePrevious}
+                className="absolute left-0 lg:-left-12 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white shadow-2xl flex items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
+                aria-label="Vorige"
+              >
+                <ChevronLeftIcon className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="absolute right-0 lg:-right-12 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white shadow-2xl flex items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
+                aria-label="Volgende"
+              >
+                <ChevronRightIcon className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Progress indicators */}
+        {featuredDeals.length > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-8">
+            {featuredDeals.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleDotClick(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentSlide
+                    ? 'w-10 bg-gradient-to-r from-pink-400 to-rose-400 shadow-lg'
+                    : 'w-2 bg-white/40 hover:bg-white/60'
+                }`}
+                aria-label={`Ga naar deal ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Bottom info */}
+        <div className="mt-8 pt-6 border-t border-white/10">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
+            <div className="flex items-center gap-2 text-white/80">
+              <CheckIcon className="h-4 w-4 text-green-400" />
+              <span>Gratis verzending</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/80">
+              <CheckIcon className="h-4 w-4 text-green-400" />
+              <span>Snelle levering</span>
+            </div>
+            <div className="flex items-center gap-2 text-white/80">
+              <CheckIcon className="h-4 w-4 text-green-400" />
+              <span>Top retailers</span>
+            </div>
+          </div>
+          
+          {partnerBadges.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-3 text-xs mt-4">
+              <span className="font-semibold text-white/70">Partnerwinkels:</span>
+              {partnerBadges.slice(0, 4).map((badge, idx) => (
+                <span
+                  key={idx}
+                  className="px-3 py-1.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+// Pro hero with two-column layout and spotlight card
+interface ProDealsHeroProps extends HeroCarouselProps {
+  themeCategories?: DealCategory[]
+}
+
+const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
+  const {
+    topDeals,
+    dealOfWeek,
+    navigateTo,
+    handleFeaturedClick,
+    handleRefresh,
+    lastUpdated,
+    formatDate,
+    partnerBadges = [],
+    themeCategories = [],
+  } = props
+
+  // Theme selection: 'spotlight' (default) or category id
+  const [selectedTheme, setSelectedTheme] = React.useState<string>('spotlight')
+
+  const selectedCategory = React.useMemo(() => {
+    if (!themeCategories || selectedTheme === 'spotlight') return null
+    return themeCategories.find((c) => (c.id || c.title) === selectedTheme) || null
+  }, [themeCategories, selectedTheme])
+
+  const deck = React.useMemo(() => {
+    const sourceDeals = selectedCategory
+      ? selectedCategory.items || []
+      : (dealOfWeek ? [dealOfWeek, ...topDeals] : topDeals)
+    const arr = (sourceDeals || []).filter(Boolean)
+    // Deduplicate by id
+    const map = new Map(arr.map((d) => [d.id, d]))
+    return Array.from(map.values()).slice(0, 12)
+  }, [topDeals, dealOfWeek, selectedCategory])
+
+  const [idx, setIdx] = React.useState(0)
+
+  // Ensure required partner brands are always present in the hero marquee
+  const requiredPartners = ['Coolblue', 'Shop Like You Give A Damn', 'PartyPro.nl']
+  const marqueeBrands = React.useMemo(() => {
+    const lower = new Set(partnerBadges.map((b) => b.toLowerCase()))
+    const merged = [...partnerBadges]
+    requiredPartners.forEach((r) => {
+      if (!lower.has(r.toLowerCase())) merged.push(r)
+    })
+    // Deduplicate while preserving order
+    return Array.from(new Map(merged.map((v) => [v.toLowerCase(), v])).values())
+  }, [partnerBadges])
+
+  const active = deck[idx] ?? null
+  const prev = () => setIdx((p) => (p - 1 + deck.length) % deck.length)
+  const next = () => setIdx((p) => (p + 1) % deck.length)
+
+  const parseEuro = React.useCallback((input?: string): number | null => {
+    if (!input) return null
+    const normalized = input.replace(/[^0-9,.-]/g, '').replace(/\./g, '').replace(',', '.')
+    const n = Number.parseFloat(normalized)
+    return Number.isNaN(n) ? null : n
+  }, [])
+
+  // Theme-driven background and blob colors (must be before any early returns to keep hook order stable)
+  const themeVisuals = React.useMemo(() => {
+    const def = {
+      // Spotlight (default): nóg lichter, maar nog leesbaar met witte tekst
+      bg: 'from-rose-500 via-pink-400 to-fuchsia-400',
+      blob1: 'bg-pink-100',
+      blob2: 'bg-rose-100',
+      blob3: 'bg-fuchsia-200',
+    }
+    if (!selectedCategory) return def
+    const t = (selectedCategory.title || '').toLowerCase()
+    if (t.includes('duurza') || t.includes('eco') || t.includes('vegan') || t.includes('groen')) {
+      return {
+        bg: 'from-emerald-950 via-green-900 to-lime-800',
+        blob1: 'bg-emerald-500',
+        blob2: 'bg-lime-500',
+        blob3: 'bg-green-600',
+      }
+    }
+    if (t.includes('feest') || t.includes('party')) {
+      return {
+        // Nog iets lichter en gradient omgedraaid (van fuchsia naar rose)
+        bg: 'from-fuchsia-500 via-pink-500 to-rose-500',
+        blob1: 'bg-pink-200',
+        blob2: 'bg-rose-200',
+        blob3: 'bg-fuchsia-300',
+      }
+    }
+    return def
+  }, [selectedCategory])
+
+  if (!active) return null
+
+  const retailer = resolveRetailerInfo(active.affiliateLink)
+  const curr = parseEuro(active.price)
+  const orig = parseEuro(active.originalPrice)
+  const pct = orig && curr ? Math.max(0, Math.round(((orig - curr) / orig) * 100)) : null
+
+  return (
+    <section className={`relative deals-hero overflow-hidden bg-gradient-to-br ${themeVisuals.bg}`}>
+      {/* background accents */}
+      <div className="absolute inset-0 opacity-30">
+        <div className={`absolute -top-12 -left-8 w-[420px] h-[420px] ${themeVisuals.blob1} rounded-full mix-blend-multiply filter blur-3xl animate-blob`} />
+        <div className={`absolute -bottom-16 left-1/3 w-[420px] h-[420px] ${themeVisuals.blob2} rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000`} />
+        <div className={`absolute -top-10 -right-10 w-[520px] h-[520px] ${themeVisuals.blob3} rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000`} />
+      </div>
+
+      <Container size="xl" padded className="relative py-10 md:py-14">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* Left copy */}
+          <div className="text-center lg:text-left space-y-6">
+            {/* Theme tabs */}
+            <div className="flex flex-wrap items-center gap-2 mb-1 justify-center lg:justify-start">
+              {[
+                { id: 'spotlight', title: 'Spotlight' },
+                ...themeCategories.slice(0, 4).map((c) => ({ id: c.id || c.title, title: c.title })),
+              ].map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => {
+                    setIdx(0)
+                    setSelectedTheme(t.id)
+                  }}
+                  className={`px-3.5 py-1.5 rounded-full text-sm font-semibold transition-all shadow-sm ${
+                    selectedTheme === t.id
+                      ? 'bg-white text-slate-900'
+                      : 'bg-white/10 text-white/80 border border-white/20 hover:bg-white/20'
+                  }`}
+                >
+                  {t.title}
+                </button>
+              ))}
+            </div>
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              <span className="text-white text-sm font-bold">Live • {deck.length} toppers vandaag</span>
+            </div>
+
+            <h1 className="font-display leading-tight font-black text-4xl md:text-5xl lg:text-6xl text-white">
+              {selectedCategory ? (
+                <>
+                  {selectedCategory.title} deals zonder keuzestress
+                </>
+              ) : (
+                <>
+                  <span className="block">Beste cadeau deals</span>
+                  <span className="block">van Amazon, Coolblue & partners</span>
+                </>
+              )}
+            </h1>
+            {/* Subregel voor spotlight verwijderd op verzoek (hoogte blijft geborgd via beschrijving) */}
+            <p className="text-white/90 text-lg md:text-xl leading-relaxed line-clamp-4 max-w-xl lg:max-w-none min-h-[112px] md:min-h-[132px]">
+              {selectedCategory?.description || (
+                <>Handgepickt van top retailers als {marqueeBrands[0] ?? 'onze partners'}. Snelle levering, hoge scores en scherpe prijzen.</>
+              )}
+            </p>
+
+            {/* Thematic helper badge */}
+            {selectedCategory && (
+              <div className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full bg-white/15 text-white/90 border border-white/20">
+                {selectedCategory.title.toLowerCase().includes('duurzaam') ? '✨ Impactvolle keuzes' : '🎉 Direct feestklaar'}
+              </div>
+            )}
+
+            <div className="flex flex-wrap gap-3 lg:gap-4 justify-center lg:justify-start">
+              <button
+                onClick={() => navigateTo('giftFinder')}
+                className="group relative px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full font-bold text-white shadow-xl hover:shadow-pink-500/40 hover:scale-105 transition-all"
+              >
+                <span className="relative flex items-center gap-2">
+                  <SparklesIcon className="h-5 w-5" />
+                  {selectedCategory ? `Shop ${selectedCategory.title}` : 'Ontdek deals'}
+                </span>
+              </button>
+              <button
+                onClick={handleRefresh}
+                className="px-5 py-3 rounded-full border border-white/25 text-white/90 hover:bg-white/10 backdrop-blur-md font-semibold"
+              >
+                Vernieuwen
+              </button>
+            </div>
+
+            {/* trust mini row */}
+            <div className="flex flex-wrap gap-4 items-center justify-center lg:justify-start text-xs text-white/80">
+              <div className="flex items-center gap-2"><CheckIcon className="h-4 w-4 text-green-400"/>Gratis verzending</div>
+              <div className="w-px h-4 bg-white/20"/>
+              <div className="flex items-center gap-2"><CheckIcon className="h-4 w-4 text-green-400"/>Snelle levering</div>
+              <div className="w-px h-4 bg-white/20"/>
+              <div className="flex items-center gap-2"><CheckIcon className="h-4 w-4 text-green-400"/>Top retailers</div>
+            </div>
+
+            {/* brand marquee */}
+            {marqueeBrands.length > 0 && (
+              <div className="hero-marquee border-white/30 bg-white/70">
+                <div className="hero-marquee-track">
+                  {marqueeBrands.concat(marqueeBrands).map((b, i) => (
+                    <span key={`${b}-${i}`} className="hero-marquee-item">{b}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {lastUpdated && (
+              <div className="text-white/60 text-xs">Laatst bijgewerkt: {formatDate(lastUpdated)}</div>
+            )}
+          </div>
+
+          {/* Right spotlight card */}
+          <div className="relative">
+            <div className="relative mx-auto w-full max-w-sm">
+              <div className="absolute -inset-6 bg-gradient-to-br from-rose-500/20 via-pink-500/10 to-purple-500/10 blur-2xl rounded-[2rem]"/>
+              <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div className="relative aspect-square flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+                  <div className="ring-gradient animate-spin-slower" />
+                  {pct !== null && pct > 0 && (
+                    <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-extrabold shadow-lg">
+                      <TagIcon className="h-4 w-4" /> -{pct}%
+                    </div>
+                  )}
+                  <div className={`absolute bottom-3 right-3 inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg ${retailer.badgeClass}`}>
+                    {retailer.shortLabel}
+                  </div>
+                  <div className="relative w-full h-full p-8">
+                    <ImageWithFallback
+                      src={active.imageUrl}
+                      alt={active.name}
+                      fallbackSrc={getFallbackImageUrl(active)}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+                <div className="p-5 space-y-3">
+                  <h2 className="font-display text-xl font-black text-slate-900 line-clamp-2">{active.name}</h2>
+                  <div className="flex items-baseline gap-2">
+                    {active.isOnSale && active.originalPrice && (
+                      <span className="text-slate-400 line-through text-sm font-semibold">{active.originalPrice}</span>
+                    )}
+                    <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-600">{active.price || 'Bekijk prijs'}</span>
+                  </div>
+                  <a
+                    href={withAffiliate(active.affiliateLink, {
+                      pageType: 'deals',
+                      theme: selectedTheme,
+                      placement: 'hero-spotlight-cta',
+                      cardIndex: idx,
+                      retailer: (retailer.shortLabel || '').toLowerCase(),
+                    })}
+                    target="_blank"
+                    rel="sponsored nofollow noopener noreferrer"
+                    onClick={handleFeaturedClick}
+                    className="w-full block text-center py-3 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl font-bold text-base shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all"
+                  >
+                    Shop bij {retailer.shortLabel}
+                  </a>
+                  <p className="text-[11px] text-slate-500 text-center">Partnerlink • wij kunnen commissie ontvangen</p>
+                </div>
+              </div>
+            </div>
+
+            {/* nav arrows */}
+            {deck.length > 1 && (
+              <>
+                <button
+                  onClick={prev}
+                  className="absolute -left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition"
+                  aria-label="Vorige"
+                >
+                  <ChevronLeftIcon className="h-6 w-6 text-slate-700" />
+                </button>
+                <button
+                  onClick={next}
+                  className="absolute -right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition"
+                  aria-label="Volgende"
+                >
+                  <ChevronRightIcon className="h-6 w-6 text-slate-700" />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+class DealsErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; message?: string }>{
+  constructor(props: { children: React.ReactNode }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+  static getDerivedStateFromError(error: unknown) {
+    return { hasError: true, message: error instanceof Error ? error.message : String(error) }
+  }
+  componentDidCatch(error: unknown, errorInfo: unknown) {
+    try {
+      // Best-effort logging without breaking the UI
+      // eslint-disable-next-line no-console
+      console.error('Deals page runtime error:', error, errorInfo)
+    } catch {}
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-[40vh] flex items-center justify-center">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 max-w-xl text-center">
+            <p className="font-semibold mb-1">Er ging iets mis bij het laden van de deals.</p>
+            <p className="text-sm opacity-80">Probeer de pagina te verversen. Blijft dit gebeuren? Laat het ons weten.</p>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children as React.ReactElement
+  }
+}
+
 const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   const [state, setState] = useState<DealsPageState>(DEFAULT_STATE)
   const [isLoading, setIsLoading] = useState(true)
@@ -253,14 +1092,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   // Quick budget filter handler
   const handleQuickBudgetFilter = useCallback((budgetRange: string) => {
     setPriceFilter(budgetRange)
-    // Track budget filter click
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      ;(window as any).gtag('event', 'budget_filter_click', {
-        event_category: 'Deals Page',
-        event_label: budgetRange,
-        value: budgetRange,
-      })
-    }
+    trackAnalyticsEvent('budget_filter_click', {
+      event_category: 'Deals Page',
+      event_label: budgetRange,
+      value: budgetRange,
+    })
   }, [])
 
   // Track impressions for visible deals
@@ -318,13 +1154,24 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           // Only invalidate caches when explicitly requested to avoid unnecessary cold starts
           CoolblueFeedService.clearCache()
           DealCategoryConfigService.clearCache()
-          console.warn('🔄 Forcing fresh data load...')
+          logger.info('Forcing fresh deals data load', {
+            scope: 'deals.load',
+            reason: forceRefresh ? 'manual-refresh' : 'initial-load',
+          })
           sessionStorage.setItem('deals_loaded_this_session', 'true')
         }
 
-        const [dealOfWeek, topDeals, categories, config, pinnedEntries, sustainableProducts, partyProducts] = await Promise.all([
+        const [
+          dealOfWeek,
+          topDeals,
+          categories,
+          config,
+          pinnedEntries,
+          sustainableProducts,
+          partyProducts,
+        ] = await Promise.all([
           DynamicProductService.getDealOfTheWeek(),
-          DynamicProductService.getTop10Deals(),
+          DynamicProductService.getTopDeals(20),
           DynamicProductService.getDealCategories(),
           DealCategoryConfigService.load(),
           PinnedDealsService.load(),
@@ -370,33 +1217,38 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         if (sustainableProducts && sustainableProducts.length > 0) {
           // Groepeer producten per subcategorie voor variatie
           const grouped: Record<string, typeof sustainableProducts> = {}
-          sustainableProducts.forEach(product => {
+          sustainableProducts.forEach((product) => {
             // Gebruik de detectSubcategory functie
             const name = product.name.toLowerCase()
             let subcategory = 'Overige'
-            
+
             if (name.includes('ring')) subcategory = 'Ringen'
-            else if (name.includes('ketting') || name.includes('necklace')) subcategory = 'Kettingen'
+            else if (name.includes('ketting') || name.includes('necklace'))
+              subcategory = 'Kettingen'
             else if (name.includes('oorbel') || name.includes('earring')) subcategory = 'Oorbellen'
-            else if (name.includes('armband') || name.includes('bracelet')) subcategory = 'Armbanden'
-            else if (name.includes('yoga') || name.includes('peshtemal')) subcategory = 'Yoga & Wellness'
-            else if (name.includes('waterfles') || name.includes('bottle')) subcategory = 'Drinkflessen'
+            else if (name.includes('armband') || name.includes('bracelet'))
+              subcategory = 'Armbanden'
+            else if (name.includes('yoga') || name.includes('peshtemal'))
+              subcategory = 'Yoga & Wellness'
+            else if (name.includes('waterfles') || name.includes('bottle'))
+              subcategory = 'Drinkflessen'
             else if (name.includes('tas') || name.includes('bag')) subcategory = 'Tassen'
-            else if (name.includes('portemonnee') || name.includes('wallet')) subcategory = 'Portemonnees'
-            
+            else if (name.includes('portemonnee') || name.includes('wallet'))
+              subcategory = 'Portemonnees'
+
             if (!grouped[subcategory]) grouped[subcategory] = []
             grouped[subcategory].push(product)
           })
-          
+
           // Selecteer gevarieerd: neem uit elke categorie, rond robin
           const variedProducts: typeof sustainableProducts = []
           const categories = Object.keys(grouped).sort(() => Math.random() - 0.5) // Shuffle
           let added = 0
           let round = 0
-          
+
           // Blijf rondjes doen tot we 20 producten hebben
           while (added < 20 && round < 10) {
-            categories.forEach(category => {
+            categories.forEach((category) => {
               if (added >= 20) return
               const categoryProducts = grouped[category]
               if (categoryProducts && categoryProducts.length > round) {
@@ -406,12 +1258,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             })
             round++
           }
-          
-          const sustainableDeals = variedProducts.slice(0, 20).map(product => ({
+
+          const sustainableDeals = variedProducts.slice(0, 20).map((product) => ({
             id: product.id,
             name: product.name,
             price: `€${product.price.toFixed(2)}`,
-            originalPrice: product.originalPrice ? `€${product.originalPrice.toFixed(2)}` : undefined,
+            originalPrice: product.originalPrice
+              ? `€${product.originalPrice.toFixed(2)}`
+              : undefined,
             imageUrl: product.imageUrl || product.image,
             affiliateLink: product.affiliateLink,
             description: product.description || product.shortDescription,
@@ -423,43 +1277,58 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           const sustainableCategory = {
             id: 'duurzame-cadeaus-slygad',
             title: 'Duurzame Cadeaus',
-            description: '🌿 Bewuste en ecologische geschenken van Shop Like You Give A Damn. Gevarieerde selectie van 20 duurzame producten - van yoga items tot vegan sieraden. Perfect voor mensen die van de aarde houden.',
+            description:
+              '🌿 Bewuste en ecologische geschenken van Shop Like You Give A Damn. Gevarieerde selectie van 20 duurzame producten - van yoga items tot vegan sieraden. Perfect voor mensen die van de aarde houden.',
             items: sustainableDeals,
           }
 
           categoriesToDisplay.push(sustainableCategory)
-          console.log(`🌱 Added Duurzame Cadeaus category with ${sustainableDeals.length} varied products from ${categories.length} subcategories`)
+          logger.info('Added sustainable deals category', {
+            scope: 'deals.load',
+            productCount: sustainableDeals.length,
+            subcategoryCount: categories.length,
+          })
         }
 
         // Voeg PartyPro Feest & Party Cadeaus categorie toe
         if (partyProducts && partyProducts.length > 0) {
           // Groepeer producten per subcategorie voor variatie
           const grouped: Record<string, typeof partyProducts> = {}
-          partyProducts.forEach(product => {
+          partyProducts.forEach((product) => {
             const name = product.name.toLowerCase()
             let subcategory = 'Overige'
-            
-            if (name.includes('ballon') || name.includes('slingers') || name.includes('decoratie')) subcategory = 'Decoratie'
-            else if (name.includes('drinkspel') || name.includes('beer pong') || name.includes('spel')) subcategory = 'Drinkspellen'
-            else if (name.includes('licht') || name.includes('led') || name.includes('gadget')) subcategory = 'Party Gadgets'
-            else if (name.includes('bord') || name.includes('beker') || name.includes('servies')) subcategory = 'Servies & Tafel'
+
+            if (name.includes('ballon') || name.includes('slingers') || name.includes('decoratie'))
+              subcategory = 'Decoratie'
+            else if (
+              name.includes('drinkspel') ||
+              name.includes('beer pong') ||
+              name.includes('spel')
+            )
+              subcategory = 'Drinkspellen'
+            else if (name.includes('licht') || name.includes('led') || name.includes('gadget'))
+              subcategory = 'Party Gadgets'
+            else if (name.includes('bord') || name.includes('beker') || name.includes('servies'))
+              subcategory = 'Servies & Tafel'
             else if (name.includes('thema') || name.includes('theme')) subcategory = 'Thema Feest'
-            else if (name.includes('kostuum') || name.includes('masker') || name.includes('hoed')) subcategory = 'Kostuums'
-            else if (name.includes('confetti') || name.includes('serpentine')) subcategory = 'Confetti'
-            
+            else if (name.includes('kostuum') || name.includes('masker') || name.includes('hoed'))
+              subcategory = 'Kostuums'
+            else if (name.includes('confetti') || name.includes('serpentine'))
+              subcategory = 'Confetti'
+
             if (!grouped[subcategory]) grouped[subcategory] = []
             grouped[subcategory].push(product)
           })
-          
+
           // Selecteer gevarieerd: neem uit elke categorie, round robin
           const variedProducts: typeof partyProducts = []
           const partyCategories = Object.keys(grouped).sort(() => Math.random() - 0.5) // Shuffle
           let added = 0
           let round = 0
-          
+
           // Blijf rondjes doen tot we 20 producten hebben
           while (added < 20 && round < 10) {
-            partyCategories.forEach(category => {
+            partyCategories.forEach((category) => {
               if (added >= 20) return
               const categoryProducts = grouped[category]
               if (categoryProducts && categoryProducts.length > round) {
@@ -469,12 +1338,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             })
             round++
           }
-          
-          const partyDeals = variedProducts.slice(0, 20).map(product => ({
+
+          const partyDeals = variedProducts.slice(0, 20).map((product) => ({
             id: product.id,
             name: product.name,
             price: `€${product.price.toFixed(2)}`,
-            originalPrice: product.originalPrice ? `€${product.originalPrice.toFixed(2)}` : undefined,
+            originalPrice: product.originalPrice
+              ? `€${product.originalPrice.toFixed(2)}`
+              : undefined,
             imageUrl: product.imageUrl || product.image,
             affiliateLink: product.affiliateLink,
             description: product.description || product.shortDescription,
@@ -486,12 +1357,17 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           const partyCategory = {
             id: 'feest-party-partypro',
             title: 'Feest & Party Cadeaus',
-            description: '🎉 Maak elk feest onvergetelijk met PartyPro.nl! Van decoratie en drinkspellen tot party gadgets en kostuums. Gevarieerde selectie van 20 feestelijke producten voor elke gelegenheid.',
+            description:
+              '🎉 Maak elk feest onvergetelijk met PartyPro.nl! Van decoratie en drinkspellen tot party gadgets en kostuums. Gevarieerde selectie van 20 feestelijke producten voor elke gelegenheid.',
             items: partyDeals,
           }
 
           categoriesToDisplay.push(partyCategory)
-          console.log(`🎉 Added Feest & Party category with ${partyDeals.length} varied products from ${partyCategories.length} subcategories`)
+          logger.info('Added party deals category', {
+            scope: 'deals.load',
+            productCount: partyDeals.length,
+            subcategoryCount: partyCategories.length,
+          })
         }
 
         setState({
@@ -499,9 +1375,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           topDeals,
           categories: categoriesToDisplay,
         })
-      } catch (loadError: any) {
-        console.error('Kon deals niet laden:', loadError)
-        setError(loadError?.message ?? 'Kon deals niet laden. Probeer het later opnieuw.')
+      } catch (loadError: unknown) {
+        logUnknownError('Kon deals niet laden', loadError, { scope: 'deals.load' })
+        setError(getErrorMessage(loadError, 'Kon deals niet laden. Probeer het later opnieuw.'))
         setState(DEFAULT_STATE)
       } finally {
         setIsLoading(false)
@@ -674,8 +1550,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           {budgetOptions.map((option) => {
             // Map the custom ranges to the existing filter logic
             let filterValue = option.value
-            if (option.value === '0-25') filterValue = '0-50' // Map to existing 0-50
-            else if (option.value === '25-50') filterValue = '0-50' // Map to existing 0-50
+            if (option.value === '0-25')
+              filterValue = '0-50' // Map to existing 0-50
+            else if (option.value === '25-50')
+              filterValue = '0-50' // Map to existing 0-50
             else if (option.value === '100+') filterValue = '200+' // Map to existing 200+
 
             const isActive = priceFilter === filterValue
@@ -825,8 +1703,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       if (!touchStart || !touchEnd) return
 
       const distance = touchStart - touchEnd
-      const isLeftSwipe = distance > 50
-      const isRightSwipe = distance < -50
+            const isLeftSwipe = distance > 50
+            const isRightSwipe = distance < -50
 
       if (isLeftSwipe && canScrollRight) {
         scroll('right')
@@ -840,12 +1718,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       setTouchEnd(0)
     }
 
-    const itemsPerView =
-      typeof window !== 'undefined' && window.innerWidth >= 1024
-        ? 3
-        : window.innerWidth >= 640
-          ? 2
-          : 1
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0
+    const itemsPerView = viewportWidth >= 1024 ? 3 : viewportWidth >= 640 ? 2 : 1
     const totalPages = Math.ceil(items.length / itemsPerView)
 
     return (
@@ -950,7 +1824,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     // Favorites state
     const [isFavorite, setIsFavorite] = useState(false)
     const [favoritePulse, setFavoritePulse] = useState(false)
-    const favoritePulseTimeoutRef = useRef<number | null>(null)
+  const favoritePulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     // Check if this is a top deal (score 9+) or hot deal (sale + score 8+)
     const isTopDeal = deal.giftScore && deal.giftScore >= 9
@@ -962,28 +1836,35 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     )
     const imageHeightClass =
       variant === 'feature' ? 'h-64 md:h-72' : variant === 'grid' ? 'h-44' : 'h-48'
-    const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4'
+  const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4'
+  // Reserve consistent content height for non-feature cards so all cards align
+  const contentMinHClass = variant === 'feature' ? '' : 'min-h-[190px]'
+  const metaRowMinHClass = variant === 'feature' ? '' : 'min-h-[28px]'
+  const titleMinHClass = variant === 'feature' ? '' : 'min-h-[44px]'
     const priceBadgeClass = variant === 'feature' ? 'px-4 py-2 text-base' : 'px-3 py-1.5 text-sm'
     const buttonPaddingClass =
       variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm'
 
+    const formattedPrice = formatPrice(deal.price) ?? deal.price ?? ''
+
     // Convert DealItem to Gift format for favorites
-    const dealAsGift = useMemo(
-      () => ({
+    const dealAsGift = useMemo<Gift>(() => {
+      const retailerLabel = retailerInfo?.shortLabel ?? 'Partnerdeal'
+
+      return {
         productName: deal.name,
-        description: deal.description || '',
+        description: deal.description || `Toppertje: ${deal.name} nu met korting!`,
+        priceRange: formattedPrice,
+        retailers: [
+          {
+            name: retailerLabel,
+            affiliateLink: deal.affiliateLink,
+          },
+        ],
         imageUrl: deal.imageUrl,
-        affiliateLink: deal.affiliateLink,
-        price: formatPrice(deal.price) || '',
-        occasion: '',
-        recipientType: '',
-        interests: [],
-        ageRange: '',
-        priceRange: formatPrice(deal.price) || '',
-        relationship: '',
-      }),
-      [deal]
-    )
+        tags: deal.tags,
+      }
+    }, [deal, formattedPrice, retailerInfo?.shortLabel])
 
     // Check favorite status
     useEffect(() => {
@@ -993,17 +1874,21 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         try {
           const favorites: Gift[] = JSON.parse(localStorage.getItem('gifteezFavorites') || '[]')
           setIsFavorite(favorites.some((fav: Gift) => fav.productName === deal.name))
-        } catch (e) {
-          console.error('Failed to parse guest favorites from localStorage', e)
+        } catch (parseError) {
+          logUnknownError('Failed to parse guest favorites from localStorage', parseError, {
+            scope: 'deals.favorites.load',
+            dealId: deal.id,
+          })
         }
       }
-    }, [deal.name, auth, dealAsGift])
+    }, [deal.id, deal.name, auth, dealAsGift])
 
     // Cleanup timeout on unmount
     useEffect(
       () => () => {
         if (favoritePulseTimeoutRef.current) {
           clearTimeout(favoritePulseTimeoutRef.current)
+          favoritePulseTimeoutRef.current = null
         }
       },
       []
@@ -1032,8 +1917,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           }
           localStorage.setItem('gifteezFavorites', JSON.stringify(updatedFavorites))
           isNowFavorite = !isCurrentlyFavorite
-        } catch (e) {
-          console.error('Failed to update guest favorites in localStorage', e)
+        } catch (updateError) {
+          logUnknownError('Failed to update guest favorites in localStorage', updateError, {
+            scope: 'deals.favorites.update',
+            dealId: deal.id,
+          })
           return
         }
       }
@@ -1042,10 +1930,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       if (isNowFavorite) {
         if (favoritePulseTimeoutRef.current) {
           clearTimeout(favoritePulseTimeoutRef.current)
+          favoritePulseTimeoutRef.current = null
         }
         setFavoritePulse(true)
         favoritePulseTimeoutRef.current = setTimeout(() => {
           setFavoritePulse(false)
+          favoritePulseTimeoutRef.current = null
         }, 220)
       }
     }
@@ -1116,28 +2006,28 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     }
 
     return (
-      <div ref={cardRef} className="h-full">
+      <div
+        ref={cardRef}
+        className="h-full"
+        data-testid={`deal-card-${variant}`}
+      >
         <div
           onClick={handleClick}
-          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] cursor-pointer ${
+          className={`group relative flex h-full flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] cursor-pointer p-[2px] ${
             isTopDeal
-              ? 'border-2 border-transparent bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 p-[2px] animate-gradient-xy'
-              : 'border border-slate-200'
+              ? 'bg-gradient-to-br from-emerald-400 via-teal-400 to-cyan-400 animate-gradient-xy'
+              : 'bg-slate-200/40'
           }`}
         >
-          {/* Inner card wrapper for TOP deals (creates gradient border effect) */}
-          <div
-            className={
-              isTopDeal ? 'bg-white rounded-2xl h-full flex flex-col overflow-hidden' : 'contents'
-            }
-          >
+          {/* Consistent inner wrapper so all cards keep the same outer size */}
+          <div className="bg-white rounded-2xl h-full flex flex-col overflow-hidden shadow-sm">
             <div
               className={`relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 to-white ${imageHeightClass}`}
             >
               <ImageWithFallback
                 src={deal.imageUrl}
                 alt={deal.name}
-                fallbackSrc={(deal as any).awinImageUrl || (deal as any).merchantImageUrl}
+                fallbackSrc={getFallbackImageUrl(deal)}
                 className="h-full w-full object-contain p-4 transition-transform duration-300 group-hover:scale-110"
                 fit="contain"
               />
@@ -1179,26 +2069,31 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 )}
               </div>
             </div>
-            <div className={`flex flex-1 flex-col gap-3 ${bodyPaddingClass}`}>
-              {/* Social Proof Badge */}
-              {socialProof && (
-                <div
-                  className={`inline-flex items-center gap-1.5 self-start rounded-full ${socialProof.color} px-3 py-1 text-xs font-semibold`}
-                >
-                  <span>{socialProof.icon}</span>
-                  <span>{socialProof.text}</span>
-                </div>
-              )}
-              {retailerInfo && (
-                <div
-                  className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}
-                >
-                  {retailerInfo.label}
-                </div>
-              )}
+            <div className={`flex flex-1 flex-col gap-3 ${bodyPaddingClass} ${contentMinHClass}`}>
+              {/* Reserved meta row so cards keep equal height whether badges show or not */}
+              <div className={`flex items-start gap-2 flex-wrap ${metaRowMinHClass}`}>
+                {socialProof && (
+                  <div
+                    className={`inline-flex items-center gap-1.5 self-start rounded-full ${socialProof.color} px-3 py-1 text-xs font-semibold`}
+                  >
+                    <span>{socialProof.icon}</span>
+                    <span>{socialProof.text}</span>
+                  </div>
+                )}
+                {retailerInfo && (
+                  <div
+                    className={`inline-flex items-center gap-2 self-start rounded-full px-3 py-1 text-xs font-semibold ${retailerInfo.badgeClass}`}
+                  >
+                    {retailerInfo.label}
+                  </div>
+                )}
+              </div>
 
-              <div className="space-y-1.5">
-                <h3 className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug">
+              <div className={`space-y-1.5 ${titleMinHClass}`}>
+                <h3
+                  className="font-display text-base font-semibold text-slate-900 line-clamp-2 leading-snug"
+                  data-testid="deal-title"
+                >
                   {displayName}
                 </h3>
                 {variant === 'feature' && deal.description && (
@@ -1227,7 +2122,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   </div>
                 )}
                 <a
-                  href={withAffiliate(deal.affiliateLink)}
+                  href={withAffiliate(deal.affiliateLink, {
+                    pageType: 'deals',
+                    placement: 'card-cta',
+                    cardIndex: index,
+                    retailer: (retailerInfo?.shortLabel || '').toLowerCase(),
+                  })}
                   target="_blank"
                   rel="sponsored nofollow noopener noreferrer"
                   onClick={(e) => {
@@ -1281,17 +2181,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                   <p className="mb-2 text-xs font-semibold text-slate-600">
                     Stuur deze deal naar een vriend
                   </p>
-                  <SocialShare
-                    item={
-                      {
-                        productName: deal.name,
-                        description: deal.description || `Toppertje: ${deal.name} nu met korting!`,
-                        imageUrl: deal.imageUrl,
-                      } as any
-                    }
-                    type="gift"
-                    variant="compact"
-                  />
+                  <SocialShare item={dealAsGift} type="gift" variant="compact" />
                 </div>
               </div>
             </div>
@@ -1371,7 +2261,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false)
     const [canScrollRight, setCanScrollRight] = useState(true)
     const [currentIndex, setCurrentIndex] = useState(0)
-    const carouselRef = useRef<{ scroll: () => void }>(null)
+  const carouselRef = useRef<ProductCarouselControls | null>(null)
 
     const retailerLabels = useMemo(() => {
       const unique = new Set<string>()
@@ -1405,11 +2295,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       return `${formatCurrency(min)} – ${formatCurrency(max)}`
     }, [items])
 
-    const renderProductCard = useCallback(
-      (deal: DealItem, dealIndex: number) => (
-        <DealCard key={deal.id} deal={deal} index={dealIndex} variant="grid" />
-      ),
-      []
+    const renderProductCard = (deal: DealItem, dealIndex: number) => (
+      <DealCard key={deal.id} deal={deal} index={dealIndex} variant="grid" />
     )
 
     if (!items.length) {
@@ -1426,14 +2313,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       lowerTitle.includes('heren') ||
       lowerTitle.includes('men') ||
       lowerTitle.includes('voor mannen')
-    
+
     const isSustainableCategory =
       lowerTitle.includes('duurza') ||
       lowerTitle.includes('eco') ||
       lowerTitle.includes('vegan') ||
       lowerTitle.includes('groen') ||
       lowerTitle.includes('sustainable')
-    
+
     const isPartyCategory =
       lowerTitle.includes('feest') ||
       lowerTitle.includes('party') ||
@@ -1469,7 +2356,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
     // Different colors based on category theme
     let badgeClasses, buttonGradient, buttonGlowGradient
-    
+
     if (isSustainableCategory) {
       // Green/eco theme for sustainable products
       badgeClasses = 'bg-emerald-100 text-emerald-700'
@@ -1493,18 +2380,14 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     }
 
     // Calculate total pages
-    const itemsPerView =
-      typeof window !== 'undefined' && window.innerWidth >= 1024
-        ? 3
-        : window.innerWidth >= 640
-          ? 2
-          : 1
+    const viewportWidth2 = typeof window !== 'undefined' ? window.innerWidth : 0
+    const itemsPerView = viewportWidth2 >= 1024 ? 3 : viewportWidth2 >= 640 ? 2 : 1
     const totalPages = Math.ceil(items.length / itemsPerView)
 
     // Determine badge text - show partner for themed categories
-    const badgeText = isSustainableCategory 
-      ? 'Partner: Shop Like You Give A Damn' 
-      : isPartyCategory 
+    const badgeText = isSustainableCategory
+      ? 'Partner: Shop Like You Give A Damn'
+      : isPartyCategory
         ? 'Partner: PartyPro.nl'
         : 'Curated selectie'
 
@@ -1542,14 +2425,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             <div className="flex flex-col items-end gap-3 shrink-0">
               <button
                 onClick={() => {
-                  // Track category CTA click
-                  if (typeof window !== 'undefined' && (window as any).gtag) {
-                    ;(window as any).gtag('event', 'category_cta_click', {
-                      event_category: 'Deals Page',
-                      event_label: displayTitle,
-                      category_id: category.id,
-                    })
-                  }
+                  trackAnalyticsEvent('category_cta_click', {
+                    event_category: 'Deals Page',
+                    event_label: displayTitle,
+                    category_id: category.id,
+                  })
                   navigateTo('categoryDetail', {
                     categoryId: category.id,
                     categoryTitle: displayTitle,
@@ -1656,14 +2536,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
             <button
               onClick={() => {
-                // Track category CTA click
-                if (typeof window !== 'undefined' && (window as any).gtag) {
-                  ;(window as any).gtag('event', 'category_cta_click', {
-                    event_category: 'Deals Page',
-                    event_label: displayTitle,
-                    category_id: category.id,
-                  })
-                }
+                trackAnalyticsEvent('category_cta_click', {
+                  event_category: 'Deals Page',
+                  event_label: displayTitle,
+                  category_id: category.id,
+                })
                 navigateTo('categoryDetail', {
                   categoryId: category.id,
                   categoryTitle: displayTitle,
@@ -1939,183 +2816,18 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       <JsonLd data={structuredData} />
 
       <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
-        {/* Hero Section - Modern Design */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50 min-h-[70vh] flex items-center">
-          {/* Animated background elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Floating sparkles */}
-            <div className="absolute top-[15%] left-[10%] animate-float-slow">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-                  fill="#f43f5e"
-                  fillOpacity="0.3"
-                />
-              </svg>
-            </div>
-            <div className="absolute top-[25%] right-[15%] animate-float-delayed">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-                  fill="#fb923c"
-                  fillOpacity="0.4"
-                />
-              </svg>
-            </div>
-            <div className="absolute bottom-[20%] left-[20%] animate-float-slow">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-                  fill="#f43f5e"
-                  fillOpacity="0.35"
-                />
-              </svg>
-            </div>
-            <div className="absolute top-[40%] right-[8%] animate-float-delayed">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z"
-                  fill="#fbbf24"
-                  fillOpacity="0.4"
-                />
-              </svg>
-            </div>
-
-            {/* Gradient glows */}
-            <div className="absolute top-[10%] right-[20%] w-96 h-96 bg-rose-300/20 rounded-full blur-3xl animate-pulse-slow" />
-            <div className="absolute bottom-[10%] left-[15%] w-80 h-80 bg-orange-300/20 rounded-full blur-3xl animate-pulse-slower" />
-          </div>
-
-          <Container size="xl" padded className="relative py-16 md:py-20">
-            <div className="max-w-5xl mx-auto text-center">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 rounded-full bg-white shadow-lg border border-rose-200 px-5 py-2.5 mb-6 animate-fade-in-up">
-                <SparklesIcon className="h-5 w-5 text-rose-500" />
-                <span className="text-sm font-bold bg-gradient-to-r from-rose-600 to-orange-600 bg-clip-text text-transparent">
-                  Dagelijks bijgewerkt
-                </span>
-              </div>
-
-              {/* Heading */}
-              <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight animate-fade-in-up">
-                <span className="block text-gray-900 mb-2">Shop de beste cadeaus</span>
-                <span className="block bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 bg-clip-text text-transparent">
-                  voor elke gelegenheid
-                </span>
-              </h1>
-
-              {/* Description */}
-              <p className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in-up">
-                Ontdek zorgvuldig geselecteerde cadeaus van Coolblue en Amazon,
-                <span className="font-semibold text-rose-600"> direct te bestellen met snelle levering</span>
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-wrap items-center justify-center gap-4 mb-8 animate-fade-in-up">
-                <button
-                  onClick={() => navigateTo('giftFinder')}
-                  className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-rose-300"
-                >
-                  <GiftIcon className="h-6 w-6" />
-                  <span>Shop je perfect cadeau nu</span>
-                  <svg
-                    className="w-5 h-5 transition-transform group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13 7l5 5m0 0l-5 5m5-5H6"
-                    />
-                  </svg>
-                </button>
-
-                {state.dealOfWeek && (
-                  <a
-                    href={withAffiliate(state.dealOfWeek.affiliateLink)}
-                    target="_blank"
-                    rel="sponsored nofollow noopener noreferrer"
-                    onClick={handleFeaturedClick}
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 border-rose-300 bg-white text-rose-600 font-bold text-lg hover:bg-rose-50 hover:border-rose-400 shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <TagIcon className="h-5 w-5" />
-                    <span>Bestel deze topper direct</span>
-                  </a>
-                )}
-
-                <button
-                  onClick={handleRefresh}
-                  className="inline-flex items-center gap-2 px-6 py-4 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 shadow-md hover:shadow-lg transition-all duration-300"
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                  <span>Vernieuw collectie</span>
-                </button>
-              </div>
-
-              {/* Info badges */}
-              <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600 mb-4">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="font-medium">Zorgvuldig samengesteld</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="font-medium">Dagelijks vernieuwd</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <HeartIcon className="w-5 h-5 text-rose-500" />
-                  <span className="font-medium">Kwaliteit voorop</span>
-                </div>
-              </div>
-
-              {/* Partner info */}
-              {(lastUpdated || manualConfigUpdatedAt) && (
-                <div className="text-sm text-gray-600 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 inline-block">
-                  {lastUpdated && <span>Laatst bijgewerkt: {formatDate(lastUpdated)}</span>}
-                </div>
-              )}
-              {partnerBadges.length > 0 && (
-                <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                  <span className="text-sm font-semibold text-gray-700">Partnerwinkels:</span>
-                  {partnerBadges.map((badge, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-700 shadow-sm"
-                    >
-                      {badge}
-                    </span>
-                  ))}
-                </div>
-              )}
-              <p className="mt-4 text-xs text-gray-500 max-w-2xl mx-auto">
-                Wij ontvangen een kleine commissie via deze partnerlinks – zonder extra kosten voor
-                jou.
-              </p>
-            </div>
-          </Container>
-        </section>
+        {/* Hero Section - Pro two-column spotlight design */}
+        <ProDealsHero
+          topDeals={state.topDeals}
+          dealOfWeek={state.dealOfWeek}
+          navigateTo={navigateTo}
+          handleFeaturedClick={handleFeaturedClick}
+          handleRefresh={handleRefresh}
+          lastUpdated={lastUpdated}
+          formatDate={formatDate}
+          partnerBadges={partnerBadges}
+          themeCategories={state.categories}
+        />
 
         <Container size="xl" padded className="py-12 space-y-12">
           {error && (
@@ -2129,7 +2841,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               {/* Featured deal skeleton */}
               <FeaturedDealSkeleton />
 
-              {/* Top 10 carousel skeleton */}
+              {/* Top 20 carousel skeleton */}
               <CarouselSkeleton />
 
               {/* Category carousels skeletons */}
@@ -2138,201 +2850,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </div>
           ) : (
             <>
-              {/* Deal of the Week - Featured Card */}
-              {state.dealOfWeek && (
-                <section className="animate-fade-in">
-                  <div className="overflow-hidden rounded-3xl border border-rose-200 bg-gradient-to-br from-white via-rose-50/30 to-orange-50/30 shadow-xl">
-                    <div className="grid lg:grid-cols-2 gap-6 p-6 md:p-8">
-                      <div className="flex items-center justify-center bg-white rounded-2xl p-6">
-                        <ImageWithFallback
-                          src={state.dealOfWeek.imageUrl}
-                          alt={state.dealOfWeek.name}
-                          className="w-full max-w-[320px] object-contain"
-                          fit="contain"
-                        />
-                      </div>
-                      <div className="flex flex-col justify-center gap-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <div className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">
-                            <StarIcon className="h-4 w-4" />
-                            In de spotlight
-                          </div>
-                          {featuredRetailer && (
-                            <div
-                              className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ${featuredRetailer.badgeClass}`}
-                            >
-                              {featuredRetailer.label}
-                            </div>
-                          )}
-                          {/* Add Amazon Prime badge if applicable */}
-                          {featuredRetailer?.shortLabel.includes('Amazon') && (
-                            <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                              <span>📦</span>
-                              <span>Prime levering</span>
-                            </div>
-                          )}
-                        </div>
-
-                        <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900">
-                          {state.dealOfWeek.name}
-                        </h2>
-
-                        {/* Add "Waarom dit cadeau?" USP bullets */}
-                        {state.dealOfWeek.giftScore && state.dealOfWeek.giftScore >= 8 && (
-                          <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                            <h3 className="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
-                              <CheckIcon className="h-4 w-4" />
-                              Waarom dit cadeau?
-                            </h3>
-                            <ul className="space-y-1.5 text-sm text-emerald-800">
-                              <li className="flex items-start gap-2">
-                                <span className="text-emerald-600">✓</span>
-                                <span>Hoge cadeauscore ({state.dealOfWeek.giftScore}/10)</span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-emerald-600">✓</span>
-                                <span>
-                                  {featuredRetailer?.shortLabel.includes('Amazon')
-                                    ? 'Snelle levering via Amazon Prime'
-                                    : 'Snelle levering beschikbaar'}
-                                </span>
-                              </li>
-                              <li className="flex items-start gap-2">
-                                <span className="text-emerald-600">✓</span>
-                                <span>Direct te bestellen en klaar om te geven</span>
-                              </li>
-                              {state.dealOfWeek.isOnSale && (
-                                <li className="flex items-start gap-2">
-                                  <span className="text-emerald-600">✓</span>
-                                  <span className="font-semibold">Nu met korting ⚡</span>
-                                </li>
-                              )}
-                            </ul>
-                          </div>
-                        )}
-
-                        <p className="text-base text-slate-600 leading-relaxed">
-                          {state.dealOfWeek.description}
-                        </p>
-
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="inline-flex items-center gap-2 rounded-lg bg-rose-500 px-5 py-2.5 text-lg font-bold text-white">
-                            {formatPrice(state.dealOfWeek.price) ?? 'Prijs op aanvraag'}
-                          </span>
-                          {state.dealOfWeek.originalPrice && (
-                            <span className="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-500">
-                              <s>{state.dealOfWeek.originalPrice}</s>
-                            </span>
-                          )}
-                          {state.dealOfWeek.giftScore && (
-                            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-100 px-3 py-2 text-sm font-semibold text-emerald-700">
-                              <CheckIcon className="h-4 w-4" />
-                              Score {state.dealOfWeek.giftScore}/10
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap gap-3 mt-2">
-                          <a
-                            href={withAffiliate(state.dealOfWeek.affiliateLink)}
-                            target="_blank"
-                            rel="sponsored nofollow noopener noreferrer"
-                            onClick={handleFeaturedClick}
-                            className="group relative inline-flex items-center gap-2 rounded-xl px-10 py-4 text-lg font-bold text-white shadow-xl transition-all hover:shadow-2xl hover:scale-105 overflow-hidden"
-                          >
-                            {/* Enhanced gradient background */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 transition-all duration-300 group-hover:from-rose-600 group-hover:via-pink-600 group-hover:to-rose-700"></div>
-
-                            {/* Shimmer effect */}
-                            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
-                            </div>
-
-                            {/* Button content */}
-                            <span className="relative z-10 flex items-center gap-2">
-                              <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                                />
-                              </svg>
-                              Bestel nu bij {featuredRetailer ? featuredRetailer.shortLabel : 'partner'}
-                              <svg
-                                className="w-5 h-5 transition-transform group-hover:translate-x-1"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                                />
-                              </svg>
-                            </span>
-                          </a>
-                          {premiumDeals.length > 1 && (
-                            <Button variant="secondary" className="bg-white" onClick={showNextDeal}>
-                              Toon ander cadeau ({dealOfWeekIndex + 1}/{premiumDeals.length})
-                            </Button>
-                          )}
-                        </div>
-
-                        {/* Trust badges */}
-                        <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-200">
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <svg
-                              className="w-5 h-5 text-green-500"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span className="font-medium">Veilig bestellen</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <svg
-                              className="w-5 h-5 text-blue-500"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                              <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
-                            </svg>
-                            <span className="font-medium">Snelle levering</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-600">
-                            <svg
-                              className="w-5 h-5 text-purple-500"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span className="font-medium">Perfect cadeau</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              )}
+              {/* Deal of the Week block intentionally removed per request */}
 
               {/* Filter Bar */}
               <div className="animate-fade-in-up space-y-4" style={{ animationDelay: '80ms' }}>
@@ -2340,12 +2858,16 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                 <FilterBar />
               </div>
 
-              {/* Top 10 Deals Carousel */}
+              {/* Top 20 Deals Carousel */}
               {state.topDeals.length > 0 && (
-                <section className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                <section
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: '100ms' }}
+                  data-testid="top-deals-section"
+                >
                   <Carousel
                     items={filterDeals(state.topDeals)}
-                    title="🏆 Shop Top 10 Cadeaus"
+                    title="🏆 Shop Top 20 Cadeaus"
                     badge={`${filterDeals(state.topDeals).length} toppers`}
                   />
                 </section>
@@ -2366,8 +2888,9 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       Shop per Thema
                     </h2>
                     <p className="mx-auto max-w-3xl text-sm md:text-base text-slate-600">
-                      Elke collectie is zorgvuldig samengesteld met de beste deals van Amazon en Coolblue. 
-                      Perfect wanneer je snel een thematische selectie wilt zonder eindeloos zoeken.
+                      Elke collectie is zorgvuldig samengesteld met de beste deals van Amazon en
+                      Coolblue. Perfect wanneer je snel een thematische selectie wilt zonder
+                      eindeloos zoeken.
                     </p>
                   </div>
                   <div className="space-y-16">
@@ -2450,10 +2973,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                           email: formData.get('email'),
                           timestamp: new Date().toISOString(),
                         }
-                        console.warn(
-                          'Community wishlist submission (TODO: add Firebase backend):',
-                          wishData
-                        )
+                        logger.info('Community wishlist submission (persist pending backend)', {
+                          scope: 'deals.wishlist',
+                          wishData,
+                        })
                         // TODO: Add Firebase backend to store wishes
                         window.alert(
                           'Bedankt voor je suggestie! We nemen dit mee in onze deal-selectie. 💜'
@@ -2605,7 +3128,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         </Container>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
@@ -2614,4 +3137,10 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   )
 }
 
-export default DealsPage
+const DealsPageWithBoundary: React.FC<DealsPageProps> = (props) => (
+  <DealsErrorBoundary>
+    <DealsPage {...props} />
+  </DealsErrorBoundary>
+)
+
+export default DealsPageWithBoundary

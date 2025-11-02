@@ -9,8 +9,6 @@ interface ContentPreviewProps {
 }
 
 export default function ContentPreview({ isOpen, onClose, post, title }: ContentPreviewProps) {
-  if (!isOpen) return null
-
   const previewBlocks = useMemo(() => {
     if (!post.content) {
       return [] as Array<ContentBlock | { type: 'legacy'; content: string }>
@@ -26,6 +24,8 @@ export default function ContentPreview({ isOpen, onClose, post, title }: Content
 
     return [] as Array<ContentBlock | { type: 'legacy'; content: string }>
   }, [post.content])
+
+  if (!isOpen) return null
 
   const renderBlock = (
     block: ContentBlock | { type: 'legacy'; content: string },

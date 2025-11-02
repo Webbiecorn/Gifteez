@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 type Props = {
   src: string
@@ -41,14 +41,16 @@ const ImageWithFallback: React.FC<Props> = ({
   loading = 'lazy',
   fetchPriority = 'auto',
 }) => {
-  const defaultFallback = fallbackSrc || 'https://picsum.photos/800/600?blur=2&random=5'
+  const defaultFallback = useMemo(
+    () => fallbackSrc || 'https://picsum.photos/800/600?blur=2&random=5',
+    [fallbackSrc]
+  )
   const [currentSrc, setCurrentSrc] = useState(src || defaultFallback)
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     setCurrentSrc(src || defaultFallback)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [src])
+  }, [src, defaultFallback])
 
   return (
     <div
@@ -58,7 +60,6 @@ const ImageWithFallback: React.FC<Props> = ({
       {showSkeleton && !loaded && (
         <div className="absolute inset-0 animate-pulse bg-gray-200 dark:bg-gray-700" />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={currentSrc}
         alt={alt}
@@ -78,7 +79,7 @@ const ImageWithFallback: React.FC<Props> = ({
             : '')
         }
         onLoad={() => setLoaded(true)}
-        onError={(e) => {
+        onError={() => {
           if (currentSrc !== defaultFallback) {
             console.error('Image load failed, swapping to fallback', { src: currentSrc, alt })
             setCurrentSrc(defaultFallback)

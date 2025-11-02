@@ -1,4 +1,3 @@
-import { User } from '../types'
 import type { BlogPost } from '../types'
 
 export interface EmailTemplate {

@@ -1088,7 +1088,7 @@ export const blogPosts: BlogPost[] = [
     title: 'PartyPro.nl Partner Spotlight: Instant Feestdecor Voor Elke Viering',
     excerpt:
       'We brengen PartyPro’s ballonnenbogen, confettisets en gender reveal decor rechtstreeks naar onze feestcollecties.',
-  imageUrl: '/images/blog-partypro-headerafb.png',
+    imageUrl: '/images/blog-partypro-headerafb.png',
     category: 'Partner Spotlight',
     author: {
       name: 'Gifteez Redactie',

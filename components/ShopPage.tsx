@@ -3,10 +3,9 @@ import { CartContext } from '../contexts/CartContext'
 import { shopProducts } from '../data/shopData'
 import Button from './Button'
 import ImageWithFallback from './ImageWithFallback'
-import type { NavigateTo, ShowToast, Product } from '../types'
+import type { ShowToast, Product } from '../types'
 
 interface ShopPageProps {
-  navigateTo: NavigateTo
   showToast: ShowToast
 }
 
@@ -39,7 +38,7 @@ const ProductCard: React.FC<{ product: Product; onAddToCart: () => void }> = ({
   )
 }
 
-const ShopPage: React.FC<ShopPageProps> = ({ navigateTo, showToast }) => {
+const ShopPage: React.FC<ShopPageProps> = ({ showToast }) => {
   const cart = useContext(CartContext)
 
   const handleAddToCart = (product: Product) => {

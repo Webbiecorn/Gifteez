@@ -8,8 +8,14 @@ interface BlogPostingSchemaProps {
 const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
   // Extract text content from blog for wordCount and articleBody
   const extractTextContent = () => {
-    if (!post.content || post.content.length === 0) return post.excerpt || ''
-    
+    if (!post.content || (Array.isArray(post.content) && post.content.length === 0)) {
+      return post.excerpt || ''
+    }
+
+    if (typeof post.content === 'string') {
+      return post.content.replace(/<[^>]*>/g, ' ').trim().slice(0, 5000)
+    }
+
     return post.content
       .map((block) => {
         if (block.type === 'paragraph' && typeof block.content === 'string') {
@@ -33,8 +39,8 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
   const authorAvatar = post.author?.avatarUrl || 'https://i.pravatar.cc/150?u=kevin'
 
   // Ensure proper image URLs (handle both relative and absolute)
-  const imageUrl = post.imageUrl?.startsWith('http') 
-    ? post.imageUrl 
+  const imageUrl = post.imageUrl?.startsWith('http')
+    ? post.imageUrl
     : `https://gifteez.nl${post.imageUrl}`
 
   const mentions: Array<Record<string, unknown>> = []
@@ -63,7 +69,7 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
       url: imageUrl,
       width: 1536,
       height: 1024,
-      caption: post.title
+      caption: post.title,
     },
     datePublished: post.publishedDate,
     dateModified: post.publishedDate,
@@ -72,10 +78,7 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
       name: authorName,
       url: 'https://gifteez.nl/over-ons',
       image: authorAvatar,
-      sameAs: [
-        'https://www.linkedin.com/company/gifteez',
-        'https://www.pinterest.com/gifteez_nl'
-      ]
+      sameAs: ['https://www.linkedin.com/company/gifteez', 'https://www.pinterest.com/gifteez_nl'],
     },
     publisher: {
       '@type': 'Organization',
@@ -85,19 +88,16 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
         '@type': 'ImageObject',
         url: 'https://gifteez.nl/images/gifteez-logo.png',
         width: 512,
-        height: 512
+        height: 512,
       },
-      sameAs: [
-        'https://www.pinterest.com/gifteez_nl',
-        'https://www.linkedin.com/company/gifteez'
-      ]
+      sameAs: ['https://www.pinterest.com/gifteez_nl', 'https://www.linkedin.com/company/gifteez'],
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `https://gifteez.nl/blog/${post.slug}`,
       url: `https://gifteez.nl/blog/${post.slug}`,
       name: post.title,
-      description: post.excerpt
+      description: post.excerpt,
     },
     articleSection: post.category || 'Cadeaus',
     keywords: post.tags?.join(', ') || 'cadeaus, cadeau-ideeën, sinterklaas, kerst, gifteez',
@@ -108,22 +108,23 @@ const BlogPostingSchema: React.FC<BlogPostingSchemaProps> = ({ post }) => {
     copyrightHolder: {
       '@type': 'Organization',
       name: 'Gifteez',
-      url: 'https://gifteez.nl'
+      url: 'https://gifteez.nl',
     },
     isAccessibleForFree: true,
     isPartOf: {
       '@type': 'Blog',
       '@id': 'https://gifteez.nl/blog',
       name: 'Gifteez Blog',
-      description: 'Cadeau-ideeën, gift guides en inspiratie voor elk moment'
+      description: 'Cadeau-ideeën, gift guides en inspiratie voor elk moment',
     },
-    ...(post.tags && post.tags.length > 0 && {
-      about: post.tags.slice(0, 5).map(tag => ({
-        '@type': 'Thing',
-        name: tag
-      }))
-    }),
-    ...(mentions.length > 0 && { mentions })
+    ...(post.tags &&
+      post.tags.length > 0 && {
+        about: post.tags.slice(0, 5).map((tag) => ({
+          '@type': 'Thing',
+          name: tag,
+        })),
+      }),
+    ...(mentions.length > 0 && { mentions }),
   }
 
   return (

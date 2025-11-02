@@ -68,14 +68,14 @@ export function truncate(str: string, maxLength: number): string {
  * @param delay - Delay in milliseconds
  * @returns Debounced function
  */
-export function debounce<T extends (...args: any[]) => any>(
-  fn: T,
+export function debounce<TArgs extends unknown[]>(
+  fn: (..._args: TArgs) => void,
   delay: number
-): (...args: Parameters<T>) => void {
+): (...callArgs: TArgs) => void {
   let timeoutId: ReturnType<typeof setTimeout>
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...callArgs: TArgs) {
     clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => fn.apply(this, args), delay)
+    timeoutId = setTimeout(() => fn.apply(this, callArgs), delay)
   }
 }
 

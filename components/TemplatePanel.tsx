@@ -17,12 +17,28 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
 }) => {
   const [templates, setTemplates] = useState<CategoryTemplate[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedTemplate, setSelectedTemplate] = useState<CategoryTemplate | null>(null)
-  const [showPreview, setShowPreview] = useState(false)
   const [showSaveDialog, setShowSaveDialog] = useState(false)
   const [saveTemplateName, setSaveTemplateName] = useState('')
   const [saveTemplateDesc, setSaveTemplateDesc] = useState('')
   const [saveTemplateIcon, setSaveTemplateIcon] = useState('📦')
+
+  const hasWindow = typeof window !== 'undefined'
+
+  const showAlert = (message: string): void => {
+    if (hasWindow) {
+      window.alert(message)
+      return
+    }
+    console.warn('Alert skipped (no window available):', message)
+  }
+
+  const confirmAction = (message: string): boolean => {
+    if (hasWindow) {
+      return window.confirm(message)
+    }
+    console.warn('Confirm skipped (no window available):', message)
+    return false
+  }
 
   // Load templates on mount
   useEffect(() => {
@@ -64,19 +80,23 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
       setSaveTemplateIcon('📦')
     } catch (error) {
       console.error('Error saving template:', error)
-      alert('Fout bij opslaan template')
+      showAlert('Fout bij opslaan template')
     }
   }
 
-  const handleDeleteTemplate = async (templateId: string) => {
-    if (!confirm('Weet je zeker dat je dit template wilt verwijderen?')) return
+  const handleDeleteTemplate = async (templateId: string | undefined) => {
+    if (!templateId) {
+      console.warn('Cannot delete template without an id')
+      return
+    }
+    if (!confirmAction('Weet je zeker dat je dit template wilt verwijderen?')) return
 
     try {
       await TemplateService.deleteTemplate(templateId)
       await loadTemplates()
     } catch (error) {
       console.error('Error deleting template:', error)
-      alert('Fout bij verwijderen template')
+      showAlert('Fout bij verwijderen template')
     }
   }
 
@@ -101,12 +121,12 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
       const text = await file.text()
       const template = TemplateService.importTemplate(text)
 
-      const templateId = await TemplateService.saveTemplate(template)
+      await TemplateService.saveTemplate(template)
       await loadTemplates()
-      alert('Template succesvol geïmporteerd!')
+      showAlert('Template succesvol geïmporteerd!')
     } catch (error) {
       console.error('Error importing template:', error)
-      alert('Fout bij importeren template. Controleer het JSON bestand.')
+      showAlert('Fout bij importeren template. Controleer het JSON bestand.')
     }
   }
 
@@ -307,7 +327,7 @@ const TemplatePanel: React.FC<TemplatePanelProps> = ({
                               </svg>
                             </button>
                             <button
-                              onClick={() => handleDeleteTemplate(template.id!)}
+                              onClick={() => handleDeleteTemplate(template.id)}
                               className="text-red-400 hover:text-red-600 transition-colors"
                               title="Verwijder template"
                             >

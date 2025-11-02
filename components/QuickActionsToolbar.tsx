@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { SearchIcon, CheckIcon } from './IconComponents'
 
 interface QuickAction {
   id: string

@@ -181,7 +181,10 @@ const DealQuickViewModal: React.FC<DealQuickViewModalProps> = ({ deal, isOpen, o
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <a
-                  href={withAffiliate(deal.affiliateLink)}
+                  href={withAffiliate(deal.affiliateLink, {
+                    pageType: 'deals',
+                    placement: 'quick-view-cta',
+                  })}
                   target="_blank"
                   rel="sponsored nofollow noopener noreferrer"
                   className="flex-1 rounded-xl bg-accent px-6 py-3.5 text-center text-base font-bold text-white shadow-lg transition-all hover:bg-accent-hover hover:shadow-xl hover:scale-105"

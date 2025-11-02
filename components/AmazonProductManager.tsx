@@ -45,6 +45,23 @@ const defaultQuickForm: QuickFormState = {
   reviewCount: '',
 }
 
+const hasWindow = typeof window !== 'undefined'
+
+const confirmAction = (message: string): boolean => {
+  if (hasWindow && typeof window.confirm === 'function') {
+    return window.confirm(message)
+  }
+  console.warn('Confirm skipped (no window available):', message)
+  return true
+}
+
+const toStringIfPresent = (value: unknown): string => {
+  if (value === null || value === undefined) {
+    return ''
+  }
+  return String(value)
+}
+
 const parsePrice = (value: string): number | undefined => {
   if (!value) return undefined
   const normalised = value.replace(/[^0-9.,]/g, '').replace(',', '.')
@@ -358,12 +375,12 @@ const AmazonProductManager: React.FC = () => {
       affiliateLink: product.affiliateLink ?? '',
       imageUrl: product.imageLarge ?? product.image ?? '',
       name: product.name ?? '',
-      price: product.price != null ? String(product.price) : '',
+      price: toStringIfPresent(product.price),
       prime: Boolean(product.prime),
       description: product.description ?? '',
       shortDescription: product.shortDescription ?? '',
-      rating: product.rating != null ? String(product.rating) : '',
-      reviewCount: product.reviewCount != null ? String(product.reviewCount) : '',
+      rating: toStringIfPresent(product.rating),
+      reviewCount: toStringIfPresent(product.reviewCount),
     })
     setShowAdvanced(true)
     setAutoFillState({ status: 'idle' })
@@ -443,7 +460,9 @@ const AmazonProductManager: React.FC = () => {
       await AmazonProductLibrary.loadProducts()
 
       resetForm()
-      window.setTimeout(() => setStatus(null), 3500)
+      if (hasWindow) {
+        window.setTimeout(() => setStatus(null), 3500)
+      }
     } catch (error: any) {
       console.error('Kon Amazon product niet opslaan:', error)
       setStatus({ type: 'error', message: error?.message ?? 'Onbekende fout bij opslaan.' })
@@ -453,7 +472,7 @@ const AmazonProductManager: React.FC = () => {
   }
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`"${name}" verwijderen uit de Amazon bibliotheek?`)) {
+    if (!confirmAction(`"${name}" verwijderen uit de Amazon bibliotheek?`)) {
       return
     }
 
@@ -463,7 +482,9 @@ const AmazonProductManager: React.FC = () => {
       if (editingId === id) {
         resetForm()
       }
-      window.setTimeout(() => setStatus(null), 3500)
+      if (hasWindow) {
+        window.setTimeout(() => setStatus(null), 3500)
+      }
     } catch (error: any) {
       console.error('Kon Amazon product niet verwijderen:', error)
       setStatus({ type: 'error', message: error?.message ?? 'Verwijderen mislukt.' })

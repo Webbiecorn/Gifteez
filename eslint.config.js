@@ -62,6 +62,8 @@ export default [
         navigator: 'readonly',
         location: 'readonly',
         history: 'readonly',
+        performance: 'readonly',
+        indexedDB: 'readonly',
         // Node globals
         process: 'readonly',
         global: 'readonly',
@@ -69,6 +71,8 @@ export default [
         __filename: 'readonly',
         module: 'readonly',
         require: 'readonly',
+        crypto: 'readonly',
+        NodeJS: 'readonly',
         // Vite globals
         import: 'readonly',
         // Test globals (Vitest)
@@ -99,6 +103,7 @@ export default [
       'prettier/prettier': 'error',
 
       // TypeScript rules
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_'
@@ -185,6 +190,50 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/ban-ts-comment': 'off'
+    }
+  },
+
+  // Node-centric scripts and helpers
+  {
+    files: [
+      'scripts/**/*.{js,ts}',
+      'functions/**/*.{js,ts}',
+      'test-awin.js',
+      'firebase.*.js'
+    ],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        exports: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly'
+      }
+    },
+    rules: {
+      'no-console': 'off'
+    }
+  },
+
+  // Examples are illustrative only
+  {
+    files: ['examples/**/*'],
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'react-hooks/exhaustive-deps': 'off'
+    }
+  },
+
+  // End-to-end Playwright specs rely on helper factories; ignore unused vars there
+  {
+    files: ['e2e/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
     }
   },
 

@@ -2,9 +2,6 @@ import { test, expect } from '@playwright/test'
 import {
   navigateTo,
   waitForPageLoad,
-  clickAndWaitForNavigation,
-  expectUrlToContain,
-  scrollIntoView
 } from './helpers'
 
 test.describe('Blog Flow', () => {

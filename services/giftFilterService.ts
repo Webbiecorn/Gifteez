@@ -240,10 +240,10 @@ const selectPartnerGifts = (
 }
 
 export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Promise<Gift[]> => {
-  console.log('🎁 GiftFinder zoekt cadeaus met dynamische partnerbalans', searchParams)
+  console.warn('🎁 GiftFinder zoekt cadeaus met dynamische partnerbalans', searchParams)
 
   try {
-    console.log('🤖 Haal Amazon AI suggesties op...')
+    console.warn('🤖 Haal Amazon AI suggesties op...')
     const amazonGifts = await originalFindGifts(
       searchParams.recipient,
       searchParams.budget,
@@ -265,9 +265,9 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       .filter((gift) => gift.retailers && gift.retailers.length > 0)
 
     const limitedAmazonGifts = pureAmazonGifts.slice(0, 3)
-    console.log(`✅ Amazon AI cadeaus: ${limitedAmazonGifts.length}`)
+    console.warn(`✅ Amazon AI cadeaus: ${limitedAmazonGifts.length}`)
 
-    console.log('🤝 Verzamel partnercadeaus (Coolblue, Shop Like You Give A Damn, ... )')
+    console.warn('🤝 Verzamel partnercadeaus (Coolblue, Shop Like You Give A Damn, ... )')
     const allProductBasedGifts = await ProductBasedGiftService.findGifts(searchParams)
 
     const usedProductNames = new Set(limitedAmazonGifts.map((gift) => gift.productName))
@@ -284,17 +284,6 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       preferredPartner,
       usedProductNames
     )
-
-    const coolblueSelectedCount = partnerSelections.filter((gift) =>
-      gift.retailers?.some((retailer) => normalizeRetailerName(retailer.name).includes('coolblue'))
-    ).length
-
-    const slygadSelectedCount = partnerSelections.filter((gift) =>
-      gift.retailers?.some((retailer) => {
-        const name = normalizeRetailerName(retailer.name)
-        return name.includes('shop like you give a damn') || name.includes('slygad')
-      })
-    ).length
 
     let combinedResults = [...limitedAmazonGifts, ...partnerSelections]
 
@@ -345,7 +334,7 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       })
     ).length
 
-    console.log(
+    console.warn(
       `🎯 Resultaat mix: ${combinedResults.length} totaal -> Amazon: ${finalAmazonCount}, Coolblue: ${finalCoolblueCount}, SLYGAD: ${finalSlygadCount}`
     )
 
@@ -361,7 +350,7 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
     return sanitizedResults
   } catch (error) {
     console.error('Error in hybrid partner selectie:', error)
-    console.log('⚠️  Vang terug naar pure Amazon AI cadeaus')
+    console.warn('⚠️  Vang terug naar pure Amazon AI cadeaus')
 
     const fallbackGifts = await originalFindGifts(
       searchParams.recipient,
@@ -488,7 +477,7 @@ const extractPriceFromRange = (priceRange: string): number => {
 }
 
 export const enhanceGiftsWithMetadata = (gifts: Gift[]): Gift[] => {
-  return gifts.map((gift, index) => ({
+  return gifts.map((gift) => ({
     ...gift,
     // Add some basic metadata if missing
     rating: gift.rating || 4.0 + Math.random() * 0.8, // 4.0 - 4.8 range

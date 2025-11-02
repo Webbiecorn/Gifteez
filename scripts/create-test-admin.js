@@ -3,53 +3,58 @@
 
 (async function createTestAdmin() {
   console.log('🔧 Creating test admin account...');
-  
+
   const testEmail = 'test@gifteez.nl';
   const testPassword = 'Admin123!';
-  
+
+  const firebaseModule = await import('./services/firebase.js');
+  const authProviders = await import('https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js');
+
+  const { auth } = firebaseModule;
+  const { createUserWithEmailAndPassword, signInWithEmailAndPassword } = authProviders;
+
+  if (!auth) {
+    console.error('❌ Firebase auth is not initialized. Run this script within the Gifteez app.');
+    return { success: false, error: 'AUTH_NOT_INITIALIZED' };
+  }
+
+  console.log('📧 Attempting to create account:', testEmail);
+
   try {
-    // Import Firebase auth (werkt alleen als je op de site bent)
-    const { auth } = await import('./services/firebase.js');
-    const { createUserWithEmailAndPassword, signInWithEmailAndPassword } = await import('https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js');
-    
-    console.log('📧 Attempting to create account:', testEmail);
-    
-    // Probeer account aan te maken
-    const userCredential = await createUserWithEmailAndPassword(auth, testEmail, testPassword);
-    
+    await createUserWithEmailAndPassword(auth, testEmail, testPassword);
+
     console.log('✅ Test admin account created successfully!');
     console.log('📧 Email:', testEmail);
     console.log('🔐 Password:', testPassword);
     console.log('🚀 You can now access /admin with these credentials');
-    
+
     return {
       email: testEmail,
       password: testPassword,
-      success: true
+      success: true,
     };
-    
   } catch (error) {
-    if (error.code === 'auth/email-already-in-use') {
+    if (error?.code === 'auth/email-already-in-use') {
       console.log('ℹ️ Account already exists, trying to sign in...');
-      
+
       try {
         await signInWithEmailAndPassword(auth, testEmail, testPassword);
         console.log('✅ Successfully signed in to existing account');
         console.log('📧 Email:', testEmail);
         console.log('🔐 Password:', testPassword);
-        
+
         return {
           email: testEmail,
           password: testPassword,
-          success: true
+          success: true,
         };
       } catch (signInError) {
-        console.error('❌ Failed to sign in:', signInError.message);
-        return { success: false, error: signInError.message };
+        console.error('❌ Failed to sign in:', signInError?.message || signInError);
+        return { success: false, error: signInError?.message || 'SIGN_IN_FAILED' };
       }
-    } else {
-      console.error('❌ Failed to create account:', error.message);
-      return { success: false, error: error.message };
     }
+
+    console.error('❌ Failed to create account:', error?.message || error);
+    return { success: false, error: error?.message || 'CREATE_FAILED' };
   }
 })();

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { storage } from '../services/firebase'
 
@@ -87,8 +87,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       const { url, filename } = await uploadFile(file)
       onImageUpload(url, filename)
-    } catch (err: any) {
-      setError(err.message || 'Er is een fout opgetreden bij het uploaden')
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'Er is een fout opgetreden bij het uploaden'
+      setError(message)
       console.error('Upload error:', err)
     } finally {
       setIsUploading(false)
@@ -102,7 +104,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   }
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setDragActive(false)
@@ -111,9 +113,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     if (file) {
       handleFileUpload(file)
     }
-  }, [])
+  }
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
+  const handleDrag = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -121,7 +123,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     } else if (e.type === 'dragleave') {
       setDragActive(false)
     }
-  }, [])
+  }
 
   const handleDeleteImage = async () => {
     if (!currentImage) return
@@ -146,7 +148,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       if (onImageDelete) {
         onImageDelete(currentImage)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Delete error:', err)
       setError('Er is een fout opgetreden bij het verwijderen')
     }
@@ -168,7 +170,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         }
       }
       onImageUpload(trimmed, trimmed.split('/').pop() || trimmed)
-    } catch (err) {
+    } catch (err: unknown) {
+      console.warn('Invalid image URL provided', err)
       setError('De URL lijkt ongeldig. Gebruik een volledige https:// link of data URI.')
     }
   }

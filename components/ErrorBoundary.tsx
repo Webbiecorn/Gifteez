@@ -140,37 +140,34 @@ export const useErrorHandler = () => {
 const ErrorBoundary: React.FC<{
   children: React.ReactNode
   fallback?: React.ComponentType<ErrorFallbackProps>
-}> = ({ children, fallback: FallbackComponent = ErrorFallback }) => {
+  onError?: (error: Error) => void
+}> = ({ children, fallback: FallbackComponent = ErrorFallback, onError }) => {
   const [hasError, setHasError] = React.useState(false)
   const [error, setError] = React.useState<Error | undefined>()
 
   React.useEffect(() => {
-    const handleError = (event: ErrorEvent) => {
-      console.error('Global error caught:', event.error)
+    const reportError = (value: unknown) => {
+      const errorInstance = value instanceof Error ? value : new Error(String(value))
+      console.error('Global error caught:', errorInstance)
       setHasError(true)
-      setError(event.error)
+      setError(errorInstance)
+      onError?.(errorInstance)
 
       // Log to analytics
       if (typeof window !== 'undefined' && (window as any).gtag) {
         ;(window as any).gtag('event', 'exception', {
-          description: event.error.toString(),
+          description: errorInstance.toString(),
           fatal: false,
         })
       }
     }
 
-    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error('Unhandled promise rejection:', event.reason)
-      setHasError(true)
-      setError(new Error(`Unhandled promise rejection: ${event.reason}`))
+    const handleError = (event: ErrorEvent) => {
+      reportError(event.error)
+    }
 
-      // Log to analytics
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        ;(window as any).gtag('event', 'exception', {
-          description: `Unhandled promise rejection: ${event.reason}`,
-          fatal: false,
-        })
-      }
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      reportError(new Error(`Unhandled promise rejection: ${event.reason}`))
     }
 
     window.addEventListener('error', handleError)
@@ -180,7 +177,7 @@ const ErrorBoundary: React.FC<{
       window.removeEventListener('error', handleError)
       window.removeEventListener('unhandledrejection', handleUnhandledRejection)
     }
-  }, [])
+  }, [onError])
 
   if (hasError) {
     return (

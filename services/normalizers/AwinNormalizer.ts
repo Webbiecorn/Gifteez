@@ -229,7 +229,7 @@ export class AwinNormalizer extends BaseNormalizer {
 
     // Extract from name/description
     const text = `${name} ${description}`.toLowerCase()
-    const words = text.match(/\b\w{4,}\b/g) || []
+  const words: string[] = text.match(/\b\w{4,}\b/g) ?? []
 
     const giftKeywords = ['cadeau', 'gift', 'present', 'kado', 'relatiegeschenk']
     words.forEach((word) => {

@@ -35,7 +35,6 @@ const GiftFinderHero: React.FC<GiftFinderHeroProps> = ({
     : heading === defaultHeading
       ? ['Vind het', 'perfecte cadeau']
       : [heading]
-  const accessibleHeading = headingLines.join(' ')
 
   return (
     <section

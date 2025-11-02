@@ -4,13 +4,7 @@ import type {
   ContentBlockDraft,
   ParagraphBlockDraft,
   ParagraphStyle,
-  GiftBlockDraft,
   GiftDraft,
-  RetailerDraft,
-  FAQBlockDraft,
-  FAQItemDraft,
-  VerdictBlockDraft,
-  UnsupportedBlockDraft,
 } from '../components/ContentBuilder'
 import type { ContentBlock, FAQBlock, Gift, ImageBlock, VerdictBlock } from '../types'
 

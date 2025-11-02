@@ -399,6 +399,35 @@ function generateExplanations(
     }
   }
 
+  const preferredTraits = Object.entries(userPreferences)
+    .filter((entry): entry is [keyof SemanticProfile, number] => typeof entry[1] === 'number')
+    .filter(([, value]) => value > 0.5)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 2)
+
+  if (preferredTraits.length > 0) {
+    const traitLabelNames: Record<keyof SemanticProfile, string> = {
+      romantic: 'romantische',
+      sustainable: 'duurzame',
+      tech: 'tech',
+      funny: 'grappige',
+      minimalist: 'minimalistische',
+      luxury: 'luxe',
+      practical: 'praktische',
+      creative: 'creatieve',
+      wellness: 'wellness',
+      experiential: 'beleving',
+    }
+
+    preferredTraits.forEach(([trait, score]) => {
+      const traitLabel = traitLabelNames[trait] || trait
+      explanations.push({
+        text: `Sluit aan bij jouw voorkeur voor ${traitLabel} cadeaus`,
+        score: scores.personaFit * (0.8 + score * 0.2),
+      })
+    })
+  }
+
   // Trend/quality explanations
   if (scores.trendScore > 0.7) {
     if (gift.rating && gift.rating >= 4.5 && gift.reviews && gift.reviews > 50) {

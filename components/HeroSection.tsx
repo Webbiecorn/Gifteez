@@ -127,7 +127,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
 
           {/* Description */}
           <p className="text-base md:text-xl text-gray-700 leading-relaxed max-w-xl">
-            Hoi, ik ben je cadeau-coach 🎁. Stel drie snelle vragen en ik zoek persoonlijk met je mee naar een match die past bij jullie moment.
+            Hoi, ik ben je cadeau-coach 🎁. Stel drie snelle vragen en ik zoek persoonlijk met je
+            mee naar een match die past bij jullie moment.
           </p>
 
           {/* Feature Pills */}
@@ -235,7 +236,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onCtaClick }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span>Vertrouwd door <strong>10.000+</strong> cadeaugevers</span>
+              <span>
+                Vertrouwd door <strong>10.000+</strong> cadeaugevers
+              </span>
             </p>
           </div>
         </div>

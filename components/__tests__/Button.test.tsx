@@ -236,9 +236,9 @@ describe('Button', () => {
       const user = userEvent.setup()
       const handleClick = vi.fn()
       
-      render(<Button onClick={handleClick}>Keyboard</Button>)
+  render(<Button onClick={handleClick}>Keyboard</Button>)
       
-      const button = screen.getByText('Keyboard')
+  const button = screen.getByRole('button', { name: 'Keyboard' })
       button.focus()
       
       expect(document.activeElement).toBe(button)
@@ -251,9 +251,9 @@ describe('Button', () => {
       const user = userEvent.setup()
       const handleClick = vi.fn()
       
-      render(<Button onClick={handleClick}>Space</Button>)
+  render(<Button onClick={handleClick}>Space</Button>)
       
-      const button = screen.getByText('Space')
+  const button = screen.getByRole('button', { name: 'Space' })
       button.focus()
       
       await user.keyboard(' ')
@@ -385,7 +385,7 @@ describe('Button', () => {
         </form>
       )
       
-      const button = screen.getByText('Reset Form')
+      const button = screen.getByRole('button', { name: 'Reset Form' })
       expect(button).toHaveAttribute('type', 'reset')
     })
 

@@ -41,6 +41,12 @@ vi.mock('../dealCategoryConfigService', () => ({
   },
 }))
 
+vi.mock('../../data/dealsData', () => ({
+  dealOfTheWeek: undefined,
+  top10Deals: [],
+  dealCategories: [],
+}))
+
 describe('dynamicProductService', () => {
   // Sample test data
   const mockCoolblueProducts = [

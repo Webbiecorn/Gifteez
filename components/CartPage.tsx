@@ -4,11 +4,11 @@ import Breadcrumbs from './Breadcrumbs'
 import Button from './Button'
 import { TrashIcon, ShoppingCartIcon } from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
-import type { NavigateTo, ShowToast, CartItem } from '../types'
+import type { NavigateTo, CartItem, ShowToast } from '../types'
 
 interface CartPageProps {
   navigateTo: NavigateTo
-  showToast: ShowToast
+  showToast?: ShowToast
 }
 
 const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
@@ -83,7 +83,10 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
                         €{(item.price * item.quantity).toFixed(2)}
                       </p>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => {
+                          removeFromCart(item.id)
+                          showToast?.(`${item.name} verwijderd uit je winkelwagen.`, 'info')
+                        }}
                         className="p-2 text-gray-500 hover:text-blue-600 hover:bg-red-50 rounded-full"
                         aria-label={`Verwijder ${item.name}`}
                       >
@@ -96,7 +99,10 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
 
               <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <button
-                  onClick={clearCart}
+                  onClick={() => {
+                    clearCart()
+                    showToast?.('Winkelwagen geleegd.', 'info')
+                  }}
                   className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
                 >
                   Winkelwagen legen
@@ -110,7 +116,14 @@ const CartPage: React.FC<CartPageProps> = ({ navigateTo, showToast }) => {
               </div>
 
               <div className="mt-8 text-center">
-                <Button variant="accent" onClick={handleCheckout} className="w-full md:w-auto">
+                <Button
+                  variant="accent"
+                  onClick={() => {
+                    showToast?.('We stappen zo over naar de check-out.', 'success')
+                    handleCheckout()
+                  }}
+                  className="w-full md:w-auto"
+                >
                   Afrekenen
                 </Button>
               </div>

@@ -91,9 +91,9 @@ export const EmailGiftResultsModal: React.FC<EmailGiftResultsModalProps> = ({
               tips: true,
             },
           })
-        } catch (err) {
-          // Silently fail if already subscribed
-          console.log('Newsletter signup skipped (may already exist)')
+        } catch (newsletterError) {
+          // Silently ignore duplicates but keep traceable for debugging
+          console.warn('Newsletter signup skipped (may already exist)', newsletterError)
         }
       }
 
@@ -104,7 +104,7 @@ export const EmailGiftResultsModal: React.FC<EmailGiftResultsModalProps> = ({
         setEmail('')
         setName('')
       }, 3000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error sending gift results:', err)
       setError('Er ging iets mis. Probeer het opnieuw.')
     } finally {

@@ -272,7 +272,9 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
 
     appendJsonLd(articleSchema)
 
-    const faqBlocks = post.content.filter((b): b is FAQBlock => b.type === 'faq')
+    const faqBlocks = Array.isArray(post.content)
+      ? post.content.filter((b): b is FAQBlock => b.type === 'faq')
+      : []
     if (faqBlocks.length) {
       const entities = faqBlocks.flatMap((block) =>
         block.items.map((item) => ({
@@ -410,6 +412,24 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
       </div>
     )
   }
+  const contentBlocks = useMemo<ContentBlock[]>(() => {
+    if (!post) {
+      return []
+    }
+    if (Array.isArray(post.content)) {
+      return post.content
+    }
+    if (typeof post.content === 'string' && post.content.trim()) {
+      return [
+        {
+          type: 'paragraph',
+          content: post.content,
+        } as ContentBlock,
+      ]
+    }
+    return []
+  }, [post])
+
   // Calculate reading time
   const calculateReadingTime = (content: ContentBlock[]): number => {
     const text = content
@@ -429,7 +449,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     return Math.ceil(words / wordsPerMinute)
   }
 
-  const readingTime = calculateReadingTime(post.content)
+  const readingTime = calculateReadingTime(contentBlocks)
 
   const heroImage = post.imageUrl
   const heroDisplaySrc = heroImage
@@ -497,7 +517,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
       url: `https://api.whatsapp.com/send?text=${shareText}%20${shareUrl}`,
     },
   ]
-  const headings = post.content.filter((block) => block.type === 'heading') as {
+  const headings = contentBlocks.filter((block) => block.type === 'heading') as {
     type: 'heading'
     content: string
   }[]
@@ -674,35 +694,35 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                           <CheckIcon className="w-5 h-5 text-green-600" />
                         </div>
                         <h5 className="font-bold text-green-700 text-lg">Pluspunten</h5>
-                    </div>
-                    <ul className="space-y-3">
-                      {item.pros.map((pro, j) => (
-                        <li key={j} className="flex items-start gap-3">
-                          <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-700 leading-relaxed">{pro}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                        <XCircleIcon className="w-5 h-5 text-red-500" />
                       </div>
-                      <h5 className="font-bold text-red-700 text-lg">Minpunten</h5>
+                      <ul className="space-y-3">
+                        {item.pros.map((pro, j) => (
+                          <li key={j} className="flex items-start gap-3">
+                            <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-700 leading-relaxed">{pro}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="space-y-3">
-                      {item.cons.map((con, j) => (
-                        <li key={j} className="flex items-start gap-3">
-                          <XCircleIcon className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-700 leading-relaxed">{con}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                          <XCircleIcon className="w-5 h-5 text-red-500" />
+                        </div>
+                        <h5 className="font-bold text-red-700 text-lg">Minpunten</h5>
+                      </div>
+                      <ul className="space-y-3">
+                        {item.cons.map((con, j) => (
+                          <li key={j} className="flex items-start gap-3">
+                            <XCircleIcon className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-700 leading-relaxed">{con}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
+              )
             })}
           </div>
         )
@@ -1079,7 +1099,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                   className="prose prose-lg lg:prose-xl max-w-none text-gray-700 prose-headings:font-display prose-headings:text-primary prose-headings:font-bold prose-headings:leading-tight prose-p:leading-relaxed prose-p:mb-6 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-primary prose-a:font-semibold hover:prose-a:text-accent prose-a:no-underline prose-a:underline-offset-4 prose-a:transition-colors prose-img:rounded-3xl prose-img:shadow-xl prose-img:border prose-img:border-gray-100 prose-img:bg-white prose-li:marker:text-accent"
                   onClick={handleContentClick}
                 >
-                  {post.content.map(renderContentBlock)}
+                  {contentBlocks.map(renderContentBlock)}
                 </article>
 
                 {/* Author Bio Section */}

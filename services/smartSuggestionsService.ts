@@ -36,7 +36,7 @@ export class SmartSuggestionsService {
 
     // Score each available product
     const scoredProducts = availableProducts.map((product) => {
-      const score = this.calculateMatchScore(product, keywords, categoryThemes, existingProducts)
+      const score = this.calculateMatchScore(product, keywords, categoryThemes)
       const reasons = this.generateReasons(product, keywords, categoryThemes, score)
 
       return {
@@ -129,8 +129,7 @@ export class SmartSuggestionsService {
   private static calculateMatchScore(
     product: DealItem,
     keywords: string[],
-    themes: ReturnType<typeof SmartSuggestionsService.analyzeProductThemes>,
-    existingProducts: DealItem[]
+    themes: ReturnType<typeof SmartSuggestionsService.analyzeProductThemes>
   ): number {
     let score = 0
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FilterIcon, ChevronDownIcon, ChevronUpIcon } from './IconComponents'
 import type { AdvancedFilters } from '../types'
 
@@ -44,6 +44,35 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
       ...filters,
       [key]: value,
     })
+  }
+
+  const giftTypeOptions: Array<{ value: AdvancedFilters['giftType']; label: string }> = [
+    { value: 'physical', label: 'Fysiek product' },
+    { value: 'experience', label: 'Ervaring' },
+    { value: 'digital', label: 'Digitaal' },
+    { value: 'subscription', label: 'Abonnement' },
+  ]
+
+  const deliverySpeedOptions: Array<{
+    value: AdvancedFilters['deliverySpeed']
+    label: string
+  }> = [
+    { value: 'standard', label: 'Standaard (3-5 dagen)' },
+    { value: 'fast', label: 'Snel (1-2 dagen)' },
+    { value: 'instant', label: 'Direct beschikbaar' },
+  ]
+
+  const genderOptions: Array<{ value: AdvancedFilters['gender']; label: string }> = [
+    { value: 'unisex', label: 'Unisex' },
+    { value: 'male', label: 'Mannelijk' },
+    { value: 'female', label: 'Vrouwelijk' },
+  ]
+
+  const handleDeliverySpeedChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selected = deliverySpeedOptions.find((option) => option.value === event.target.value)
+    if (selected) {
+      updateFilter('deliverySpeed', selected.value)
+    }
   }
 
   const toggleCategory = (category: string) => {
@@ -142,12 +171,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">Type Cadeau</label>
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { value: 'physical', label: 'Fysiek product' },
-                { value: 'experience', label: 'Ervaring' },
-                { value: 'digital', label: 'Digitaal' },
-                { value: 'subscription', label: 'Abonnement' },
-              ].map((option) => (
+              {giftTypeOptions.map((option) => (
                 <label
                   key={option.value}
                   className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-2"
@@ -157,7 +181,7 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
                     name="giftType"
                     value={option.value}
                     checked={filters.giftType === option.value}
-                    onChange={(e) => updateFilter('giftType', e.target.value as any)}
+                    onChange={() => updateFilter('giftType', option.value)}
                     className="text-primary focus:ring-primary/20"
                   />
                   <span className="text-sm text-gray-700">{option.label}</span>
@@ -173,12 +197,14 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
             </label>
             <select
               value={filters.deliverySpeed || 'standard'}
-              onChange={(e) => updateFilter('deliverySpeed', e.target.value as any)}
+              onChange={handleDeliverySpeedChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
-              <option value="standard">Standaard (3-5 dagen)</option>
-              <option value="fast">Snel (1-2 dagen)</option>
-              <option value="instant">Direct beschikbaar</option>
+              {deliverySpeedOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -203,18 +229,14 @@ const AdvancedFilterPanel: React.FC<AdvancedFilterPanelProps> = ({
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">Geslacht</label>
             <div className="flex gap-4">
-              {[
-                { value: 'unisex', label: 'Unisex' },
-                { value: 'male', label: 'Mannelijk' },
-                { value: 'female', label: 'Vrouwelijk' },
-              ].map((option) => (
+              {genderOptions.map((option) => (
                 <label key={option.value} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="radio"
                     name="gender"
                     value={option.value}
                     checked={filters.gender === option.value}
-                    onChange={(e) => updateFilter('gender', e.target.value as any)}
+                    onChange={() => updateFilter('gender', option.value)}
                     className="text-primary focus:ring-primary/20"
                   />
                   <span className="text-sm text-gray-700">{option.label}</span>

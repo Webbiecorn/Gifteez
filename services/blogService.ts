@@ -91,23 +91,32 @@ const convertBlockToText = (block: any): string => {
   }
 }
 
-const convertStaticPost = (post: BlogPost): LocalBlogPost => ({
-  id: post.slug,
-  slug: post.slug,
-  title: post.title,
-  excerpt: post.excerpt,
-  content: post.content?.map(convertBlockToText).filter(Boolean).join('\n\n') ?? '',
-  imageUrl: post.imageUrl,
-  category: post.category,
-  tags: post.tags,
-  author: post.author,
-  publishedDate: post.publishedDate,
-  isDraft: false,
-  createdAt: undefined,
-  updatedAt: undefined,
-  seo: undefined,
-  contentBlocks: post.content as ContentBlock[] | undefined,
-})
+const convertStaticPost = (post: BlogPost): LocalBlogPost => {
+  const contentBlocks = Array.isArray(post.content) ? post.content : undefined
+  const serializedContent = Array.isArray(post.content)
+    ? post.content.map(convertBlockToText).filter(Boolean).join('\n\n')
+    : typeof post.content === 'string'
+      ? post.content
+      : ''
+
+  return {
+    id: post.slug,
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt,
+    content: serializedContent,
+    imageUrl: post.imageUrl,
+    category: post.category,
+    tags: post.tags,
+    author: post.author,
+    publishedDate: post.publishedDate,
+    isDraft: false,
+    createdAt: undefined,
+    updatedAt: undefined,
+    seo: undefined,
+    contentBlocks,
+  }
+}
 
 const syncLocalPostsWithStatic = (
   posts: LocalBlogPost[]
@@ -209,17 +218,6 @@ const addDeletedPostSlug = (slug: string): void => {
     window.localStorage.setItem(DELETED_POSTS_KEY, JSON.stringify([...deleted]))
   } catch (error) {
     console.warn('Kon verwijderde post niet opslaan:', error)
-  }
-}
-
-const removeDeletedPostSlug = (slug: string): void => {
-  if (!hasWindow) return
-  try {
-    const deleted = getDeletedPostSlugs()
-    deleted.delete(slug)
-    window.localStorage.setItem(DELETED_POSTS_KEY, JSON.stringify([...deleted]))
-  } catch (error) {
-    console.warn('Kon verwijderde post niet verwijderen uit tracking:', error)
   }
 }
 

@@ -1,8 +1,33 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import Button from './Button'
 import { CheckCircleIcon, XCircleIcon, SpinnerIcon, SearchIcon } from './IconComponents'
+
+const hasWindow = typeof window !== 'undefined'
+
+const showAlert = (message: string): void => {
+  if (hasWindow) {
+    window.alert(message)
+    return
+  }
+  console.warn('Alert prompt skipped (no window available):', message)
+}
+
+const confirmAction = (message: string): boolean => {
+  if (hasWindow) {
+    return window.confirm(message)
+  }
+  console.warn('Confirm prompt skipped (no window available):', message)
+  return false
+}
+
+const getImageConstructor = (): typeof globalThis.Image | undefined => {
+  if (!hasWindow) {
+    return undefined
+  }
+  return window.Image
+}
 
 interface ProductWithImage {
   id: string
@@ -87,7 +112,7 @@ const ImageValidator: React.FC = () => {
         }
       })
 
-      console.log(`📸 Found ${foundProducts.length} products with images`)
+      console.warn(`📸 Found ${foundProducts.length} products with images`)
       setProducts(foundProducts)
 
       // Initialize validation results
@@ -98,7 +123,7 @@ const ImageValidator: React.FC = () => {
       setValidationResults(initialResults)
     } catch (error) {
       console.error('Error scanning products:', error)
-      alert(
+      showAlert(
         'Failed to scan products: ' + (error instanceof Error ? error.message : 'Unknown error')
       )
     } finally {
@@ -114,7 +139,7 @@ const ImageValidator: React.FC = () => {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
 
-      const response = await fetch(url, {
+      await fetch(url, {
         method: 'HEAD',
         signal: controller.signal,
         mode: 'no-cors', // This won't give us status codes but will catch CORS errors
@@ -124,17 +149,30 @@ const ImageValidator: React.FC = () => {
 
       // For no-cors, we can't read the status, but if it loads, it's likely valid
       // Let's use a more reliable method with an Image object
-      return new Promise((resolve) => {
-        const img = new Image()
-        img.onload = () => resolve({ valid: true, statusCode: 200 })
-        img.onerror = () => resolve({ valid: false, statusCode: 404 })
-        img.src = url
+      const ImageConstructor = getImageConstructor()
+      if (!ImageConstructor) {
+        console.warn(
+          'Image constructor not available; assuming URL is valid in non-browser environment'
+        )
+        return { valid: true, statusCode: 200 }
+      }
 
-        // Timeout after 10 seconds
-        setTimeout(() => {
+      return new Promise((resolve) => {
+        const img = new ImageConstructor()
+        const safetyTimer = window.setTimeout(() => {
           img.src = ''
-          resolve({ valid: false, statusCode: 408 }) // Timeout
+          resolve({ valid: false, statusCode: 408 })
         }, 10000)
+
+        img.onload = () => {
+          window.clearTimeout(safetyTimer)
+          resolve({ valid: true, statusCode: 200 })
+        }
+        img.onerror = () => {
+          window.clearTimeout(safetyTimer)
+          resolve({ valid: false, statusCode: 404 })
+        }
+        img.src = url
       })
     } catch (error) {
       console.error('Error validating image:', url, error)
@@ -145,7 +183,7 @@ const ImageValidator: React.FC = () => {
   // Validate all images
   const validateAllImages = async () => {
     if (products.length === 0) {
-      alert('Please scan products first')
+      showAlert('Please scan products first')
       return
     }
 
@@ -186,12 +224,12 @@ const ImageValidator: React.FC = () => {
     }
 
     setIsValidating(false)
-    console.log('✅ Validation complete:', results)
+    console.warn('✅ Validation complete:', results)
   }
 
   // Delete a product with broken image
   const deleteProduct = async (result: ValidationResult) => {
-    if (!confirm(`Are you sure you want to delete "${result.product.title}"?`)) {
+    if (!confirmAction(`Are you sure you want to delete "${result.product.title}"?`)) {
       return
     }
 
@@ -203,10 +241,10 @@ const ImageValidator: React.FC = () => {
       setValidationResults((prev) => prev.filter((r) => r.product.id !== result.product.id))
       setProducts((prev) => prev.filter((p) => p.id !== result.product.id))
 
-      alert('Product deleted successfully')
+      showAlert('Product deleted successfully')
     } catch (error) {
       console.error('Error deleting product:', error)
-      alert(
+      showAlert(
         'Failed to delete product: ' + (error instanceof Error ? error.message : 'Unknown error')
       )
     }
@@ -237,10 +275,10 @@ const ImageValidator: React.FC = () => {
         )
       )
 
-      alert('Image URL updated successfully')
+      showAlert('Image URL updated successfully')
     } catch (error) {
       console.error('Error updating image URL:', error)
-      alert(
+      showAlert(
         'Failed to update image URL: ' + (error instanceof Error ? error.message : 'Unknown error')
       )
     }
@@ -363,7 +401,7 @@ const ImageValidator: React.FC = () => {
         {/* Results List */}
         {filteredResults.length > 0 ? (
           <div className="space-y-4 max-h-[600px] overflow-y-auto">
-            {filteredResults.map((result, index) => (
+            {filteredResults.map((result) => (
               <ProductImageRow
                 key={result.product.id}
                 result={result}

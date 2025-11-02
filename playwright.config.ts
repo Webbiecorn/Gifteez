@@ -31,7 +31,9 @@ export default defineConfig({
   // Shared settings for all projects
   use: {
     // Base URL for tests
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'https://gifteez-7533b.web.app',
+    baseURL:
+      process.env.PLAYWRIGHT_BASE_URL ||
+      (process.env.CI ? 'https://gifteez-7533b.web.app' : 'http://localhost:5173'),
 
     // Collect trace on failure
     trace: 'on-first-retry',

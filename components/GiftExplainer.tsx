@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Lightbulb, ChevronDown, ChevronUp } from 'lucide-react'
 import { Badge } from './ui/Badge'
-import { Button } from './ui/Button'
 
 interface GiftExplainerProps {
   explanations: string[]

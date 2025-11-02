@@ -32,10 +32,16 @@ const NotFoundPage: React.FC<NotFoundPageProps> = ({ navigateTo }) => {
           variant="error"
           title="Oeps! Deze pagina bestaat niet"
           description="De pagina die je zoekt is verplaatst of bestaat niet (meer). Geen zorgen, we helpen je terug op weg!"
-          action={{
-            label: '🏠 Terug naar Home',
-            onClick: () => navigateTo('home'),
-          }}
+          action={
+            <Button
+              variant="primary"
+              onClick={() => navigateTo('home')}
+              fullWidth
+              className="justify-center"
+            >
+              🏠 Terug naar Home
+            </Button>
+          }
         >
           {/* Quick Navigation Grid */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">

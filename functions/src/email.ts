@@ -130,7 +130,7 @@ Privacybeleid: https://gifteez.nl/privacy
 export const onNewsletterSubscribe = functions
   .region('europe-west1')
   .firestore.document('newsletter_subscribers/{subscriberId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap, _context) => {
     const subscriber = snap.data()
     const email = subscriber.email
     const name = subscriber.name
@@ -395,7 +395,7 @@ function getContactConfirmationHtml(name: string, message: string): string {
 // Callable Function: Send GiftFinder Results
 export const sendGiftFinderResults = functions
   .region('europe-west1')
-  .https.onCall(async (data, context) => {
+  .https.onCall(async (data, _context) => {
     if (!resend) {
       throw new functions.https.HttpsError('failed-precondition', 'Email service not configured')
     }
@@ -433,7 +433,7 @@ export const sendGiftFinderResults = functions
 export const onContactFormSubmit = functions
   .region('europe-west1')
   .firestore.document('contact_messages/{messageId}')
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap, _context) => {
     if (!resend) {
       console.warn('Resend not configured, skipping contact emails')
       return

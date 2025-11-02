@@ -19,12 +19,37 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
   slug,
   onSEOChange,
 }) => {
+  const hasWindow = typeof window !== 'undefined'
+  const hasNavigator = typeof navigator !== 'undefined'
   const [seoData, setSeoData] = useState<SEOData | null>(null)
   const [analysis, setAnalysis] = useState<SEOAnalysis | null>(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const [customSEO, setCustomSEO] = useState(false)
 
   const seoManager = SEOManager.getInstance()
+
+  const showAlert = (message: string) => {
+    if (hasWindow) {
+      window.alert(message)
+      return
+    }
+    console.warn('Alert skipped (no window available):', message)
+  }
+
+  const copyMetaTags = () => {
+    if (!seoData) {
+      return
+    }
+    const metaTags = seoManager.generateMetaTags(seoData)
+    if (hasNavigator && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(metaTags).then(() => {
+        showAlert('Meta tags gekopieerd naar klembord!')
+      })
+      return
+    }
+    console.warn('Clipboard API not available to copy meta tags')
+    showAlert('Clipboard niet beschikbaar in deze omgeving')
+  }
 
   const regenerateSEO = useCallback(() => {
     if (!title && !content) {
@@ -274,11 +299,7 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
           {/* Meta Tags Preview */}
           <div>
             <button
-              onClick={() => {
-                const metaTags = seoManager.generateMetaTags(seoData)
-                navigator.clipboard.writeText(metaTags)
-                alert('Meta tags gekopieerd naar klembord!')
-              }}
+              onClick={copyMetaTags}
               className="text-sm text-rose-600 hover:text-rose-700 font-medium"
             >
               📋 Kopieer Meta Tags

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { CheckIcon, XIcon } from './IconComponents'
 
 interface CookieBannerProps {

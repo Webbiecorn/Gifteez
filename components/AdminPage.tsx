@@ -1,30 +1,12 @@
-// Opschonen-knop voor admin: wis alle categorieën en pinned deals
-import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
-const handleAdminOpschonen = async (
-  setStatus: (s: any) => void,
-  setPinnedDeals: (d: any) => void,
-  setCategories: (c: any) => void
-) => {
-  setStatus({ type: 'info', message: 'Bezig met opschonen…' })
-  try {
-    if (DealCategoryConfigService.clearAll) {
-      await DealCategoryConfigService.clearAll()
-    }
-    await clearAllPinnedDeals()
-    setPinnedDeals([])
-    setCategories([])
-    setStatus({ type: 'success', message: 'Admin en backend zijn opgeschoond.' })
-  } catch (error) {
-    setStatus({ type: 'error', message: 'Opschonen mislukt: ' + (error?.message || error) })
-  }
-}
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlogContext } from '../contexts/BlogContext'
 import { quizQuestions, quizResults } from '../data/quizData'
+import { logger } from '../lib/logger'
 import { withAffiliate } from '../services/affiliate'
 import BlogService from '../services/blogService'
 import CoolblueFeedService from '../services/coolblueFeedService'
+import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
 import { DynamicProductService } from '../services/dynamicProductService'
 import { firebaseEnabled } from '../services/firebase'
 import {
@@ -32,7 +14,6 @@ import {
   type PinnedDealEntry,
   clearAllPinnedDeals,
 } from '../services/pinnedDealsService'
-import { QuizQuestion } from '../types'
 import ActivityLog from './ActivityLog'
 import AdminContactMessages from './AdminContactMessages'
 import AdminDashboard from './AdminDashboard'
@@ -129,6 +110,106 @@ const defaultAdminPreferences: AdminPreferences = {
   defaultTab: 'overview',
 }
 
+const ADMIN_EMAILS = [
+  'admin@gifteez.nl',
+  'kevin@gifteez.nl',
+  'beheer@gifteez.nl',
+  'test@gifteez.nl',
+]
+
+const hasWindow = typeof window !== 'undefined'
+
+const getErrorMessage = (error: unknown, fallback: string): string => {
+  if (error instanceof Error && typeof error.message === 'string' && error.message.trim()) {
+    return error.message
+  }
+
+  if (typeof error === 'string' && error.trim()) {
+    return error
+  }
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as { message?: unknown }).message === 'string'
+  ) {
+    const message = (error as { message: string }).message.trim()
+    if (message) {
+      return message
+    }
+  }
+
+  return fallback
+}
+
+const logUnknownError = (
+  message: string,
+  error: unknown,
+  context?: Record<string, unknown>
+): void => {
+  if (error instanceof Error) {
+    logger.error(message, {
+      ...context,
+      errorName: error.name,
+      errorMessage: error.message,
+      errorStack: error.stack,
+    })
+    return
+  }
+
+  logger.error(message, { ...context, error })
+}
+
+const logUnknownWarning = (
+  message: string,
+  error: unknown,
+  context?: Record<string, unknown>
+): void => {
+  if (error instanceof Error) {
+    logger.warn(message, {
+      ...context,
+      errorName: error.name,
+      errorMessage: error.message,
+      errorStack: error.stack,
+    })
+    return
+  }
+
+  logger.warn(message, { ...context, error })
+}
+
+const confirmAction = (message: string): boolean => {
+  if (hasWindow && typeof window.confirm === 'function') {
+    return window.confirm(message)
+  }
+  logger.warn('Confirm skipped (no window available)', { message })
+  return true
+}
+
+type DealsStatus = { type: 'success' | 'error' | 'info'; message: string } | null
+
+const handleAdminOpschonen = async (
+  setStatus: React.Dispatch<React.SetStateAction<DealsStatus>>,
+  setPinnedDeals: React.Dispatch<React.SetStateAction<PinnedDealEntry[]>>,
+  setCategories: React.Dispatch<React.SetStateAction<DealCategory[]>>
+): Promise<void> => {
+  setStatus({ type: 'info', message: 'Bezig met opschonen…' })
+  try {
+    if (typeof DealCategoryConfigService.clearAll === 'function') {
+      await DealCategoryConfigService.clearAll()
+    }
+    await clearAllPinnedDeals()
+    setPinnedDeals([])
+    setCategories([])
+    setStatus({ type: 'success', message: 'Admin en backend zijn opgeschoond.' })
+  } catch (error: unknown) {
+    logUnknownError('Opschonen mislukt', error, { scope: 'admin.deals.cleanup' })
+    const message = getErrorMessage(error, 'Opschonen mislukt.')
+    setStatus({ type: 'error', message })
+  }
+}
+
 const getStoredAdminPreferences = (): AdminPreferences => {
   if (typeof window === 'undefined') {
     return defaultAdminPreferences
@@ -142,8 +223,10 @@ const getStoredAdminPreferences = (): AdminPreferences => {
         defaultTab: (parsed.defaultTab as AdminTab) ?? defaultAdminPreferences.defaultTab,
       }
     }
-  } catch (error) {
-    console.warn('Kon admin voorkeuren niet laden', error)
+  } catch (error: unknown) {
+    logUnknownWarning('Kon admin voorkeuren niet laden', error, {
+      scope: 'admin.preferences.load',
+    })
   }
 
   return defaultAdminPreferences
@@ -167,8 +250,10 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
       if (typeof window !== 'undefined') {
         try {
           window.localStorage.setItem(ADMIN_PREFERENCES_STORAGE_KEY, JSON.stringify(next))
-        } catch (error) {
-          console.warn('Kon admin voorkeuren niet opslaan', error)
+        } catch (error: unknown) {
+          logUnknownWarning('Kon admin voorkeuren niet opslaan', error, {
+            scope: 'admin.preferences.save',
+          })
         }
       }
       return next
@@ -179,18 +264,10 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
     }
   }, [])
 
-  // List of authorized admin emails (in production, store this in Firebase)
-  const adminEmails = [
-    'admin@gifteez.nl',
-    'kevin@gifteez.nl',
-    'beheer@gifteez.nl',
-    'test@gifteez.nl', // Test admin account
-    // Add your email here
-  ]
-
   useEffect(() => {
     if (auth && auth.currentUser && auth.currentUser.email) {
-      setIsAuthorized(adminEmails.includes(auth.currentUser.email))
+      const normalizedEmail = auth.currentUser.email.toLowerCase()
+      setIsAuthorized(ADMIN_EMAILS.includes(normalizedEmail))
     }
   }, [auth])
 
@@ -255,7 +332,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">
-                Welkom, {auth.currentUser.displayName || auth.currentUser.email}
+                Welkom, {auth.currentUser.name || auth.currentUser.email}
               </span>
               <button
                 onClick={() => auth.logout()}
@@ -318,7 +395,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
         {activeTab === 'performance' && <PerformanceInsights />}
         {activeTab === 'settings' && (
           <SettingsAdmin
-            adminEmails={adminEmails}
+            adminEmails={ADMIN_EMAILS.slice()}
             firebaseEnabled={firebaseEnabled}
             navigateTo={navigateTo}
             onSelectTab={(tab) => setActiveTab(tab)}
@@ -363,9 +440,12 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
       const fetchedPosts = await BlogService.getPosts(true)
       setAllPosts(fetchedPosts)
       await refresh()
-    } catch (error: any) {
-      console.error('Error loading posts:', error)
-      setStatus({ type: 'error', message: error?.message ?? 'Kon blogposts niet laden.' })
+    } catch (error: unknown) {
+      logUnknownError('Error loading posts', error, { scope: 'admin.blog.loadPosts' })
+      setStatus({
+        type: 'error',
+        message: getErrorMessage(error, 'Kon blogposts niet laden.'),
+      })
     } finally {
       setLoading(false)
     }
@@ -396,7 +476,7 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
 
   const handleDeletePost = async (id: string, title: string) => {
     if (!id) return
-    if (!confirm(`Weet je zeker dat je "${title}" wilt verwijderen?`)) {
+    if (!confirmAction(`Weet je zeker dat je "${title}" wilt verwijderen?`)) {
       return
     }
 
@@ -411,9 +491,12 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
       await refresh()
 
       setStatus({ type: 'success', message: `"${title}" verwijderd.` })
-    } catch (error: any) {
-      console.error('[AdminPage] Kon blogpost niet verwijderen:', error)
-      setStatus({ type: 'error', message: error?.message ?? 'Verwijderen mislukt.' })
+    } catch (error: unknown) {
+      logUnknownError('Kon blogpost niet verwijderen', error, {
+        scope: 'admin.blog.deletePost',
+        postId: id,
+      })
+      setStatus({ type: 'error', message: getErrorMessage(error, 'Verwijderen mislukt.') })
       // Reload posts to restore correct state if delete failed
       await loadPosts()
     } finally {
@@ -431,7 +514,7 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
       return
     }
 
-    if (!confirm(`"${title}" publiceren naar de live site?`)) {
+    if (!confirmAction(`"${title}" publiceren naar de live site?`)) {
       return
     }
 
@@ -440,9 +523,12 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
       await BlogService.publishPost(id)
       setStatus({ type: 'success', message: `"${title}" gepubliceerd!` })
       await loadPosts()
-    } catch (error: any) {
-      console.error('Kon blogpost niet publiceren:', error)
-      setStatus({ type: 'error', message: error?.message ?? 'Publiceren mislukt.' })
+    } catch (error: unknown) {
+      logUnknownError('Kon blogpost niet publiceren', error, {
+        scope: 'admin.blog.publishPost',
+        postId: id,
+      })
+      setStatus({ type: 'error', message: getErrorMessage(error, 'Publiceren mislukt.') })
     } finally {
       setWorkingPostId(null)
     }
@@ -711,7 +797,8 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
                     const publishedDate = post.publishedDate
                       ? new Date(post.publishedDate).toLocaleDateString('nl-NL')
                       : 'onbekend'
-                    const isBusy = workingPostId === post.id
+                    const postId = post.id
+                    const isBusy = postId ? workingPostId === postId : false
                     const hasHero = Boolean(post.imageUrl)
                     const hasSeo = Boolean(
                       post.seo?.metaTitle?.trim() || post.seo?.metaDescription?.trim()
@@ -773,18 +860,18 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
                             >
                               Bewerken
                             </button>
-                            {post.isDraft && post.id && (
+                            {post.isDraft && postId && (
                               <button
-                                onClick={() => handlePublishPost(post.id!, post.title)}
+                                onClick={() => handlePublishPost(postId, post.title)}
                                 disabled={isBusy}
                                 className={`font-medium ${isBusy ? 'text-gray-400' : 'text-green-600 hover:text-green-800'}`}
                               >
                                 {isBusy ? 'Bezig...' : 'Publiceren'}
                               </button>
                             )}
-                            {post.id && (
+                            {postId && (
                               <button
-                                onClick={() => handleDeletePost(post.id!, post.title)}
+                                onClick={() => handleDeletePost(postId, post.title)}
                                 disabled={isBusy}
                                 className={`font-medium ${isBusy ? 'text-gray-400' : 'text-red-500 hover:text-red-600'}`}
                               >
@@ -841,10 +928,7 @@ const DealsAdmin: React.FC = () => {
     averageGiftScore: number
     priceRanges: { budget: number; midRange: number; premium: number }
   } | null>(null)
-  const [status, setStatus] = useState<{
-    type: 'success' | 'error' | 'info'
-    message: string
-  } | null>(null)
+  const [status, setStatus] = useState<DealsStatus>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState<DealItem[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -873,12 +957,14 @@ const DealsAdmin: React.FC = () => {
       } else {
         setStatus(null)
       }
-    } catch (error: any) {
-      console.error('Kon deals niet laden:', error)
+    } catch (error: unknown) {
+      logUnknownError('Kon deals niet laden', error, { scope: 'admin.deals.loadDeals' })
       setStatus({
         type: 'error',
-        message:
-          error?.message ?? 'Kon deals niet laden. Controleer de productfeed of probeer opnieuw.',
+        message: getErrorMessage(
+          error,
+          'Kon deals niet laden. Controleer de productfeed of probeer opnieuw.'
+        ),
       })
     } finally {
       setLoading(false)
@@ -899,8 +985,10 @@ const DealsAdmin: React.FC = () => {
           return
         }
         setPinnedDeals(entries)
-      } catch (error) {
-        console.warn('Kon vastgezette deals niet laden:', error)
+      } catch (error: unknown) {
+        logUnknownWarning('Kon vastgezette deals niet laden', error, {
+          scope: 'admin.deals.pinned.load',
+        })
         if (active) {
           setStatus({
             type: 'error',
@@ -936,8 +1024,10 @@ const DealsAdmin: React.FC = () => {
     void (async () => {
       try {
         await PinnedDealsService.save(pinnedDeals)
-      } catch (error) {
-        console.error('Kon vastgezette deals niet opslaan:', error)
+      } catch (error: unknown) {
+        logUnknownError('Kon vastgezette deals niet opslaan', error, {
+          scope: 'admin.deals.pinned.save',
+        })
         setStatus({
           type: 'error',
           message: 'Synchroniseren van vastgezette deals is mislukt. Probeer het opnieuw.',
@@ -955,8 +1045,11 @@ const DealsAdmin: React.FC = () => {
         dateStyle: 'medium',
         timeStyle: 'short',
       })
-    } catch (error) {
-      console.warn('Kon datum niet formatteren:', error)
+    } catch (error: unknown) {
+      logUnknownWarning('Kon datum niet formatteren', error, {
+        scope: 'admin.deals.formatDate',
+        value,
+      })
       return 'Onbekend'
     }
   }, [])
@@ -978,8 +1071,10 @@ const DealsAdmin: React.FC = () => {
         document.body.removeChild(textarea)
       }
       setStatus({ type: 'success', message: successMessage })
-    } catch (error) {
-      console.error('Kopiëren naar klembord mislukt:', error)
+    } catch (error: unknown) {
+      logUnknownError('Kopiëren naar klembord mislukt', error, {
+        scope: 'admin.deals.copyToClipboard',
+      })
       setStatus({ type: 'error', message: 'Kopiëren naar klembord mislukt.' })
     }
   }, [])
@@ -1281,11 +1376,11 @@ const DealsAdmin: React.FC = () => {
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
       setStatus({ type: 'success', message: 'CSV-export aangemaakt en gedownload.' })
-    } catch (error: any) {
-      console.error('Kon export niet genereren:', error)
+    } catch (error: unknown) {
+      logUnknownError('Kon export niet genereren', error, { scope: 'admin.deals.export' })
       setStatus({
         type: 'error',
-        message: error?.message ?? 'Exporteren mislukt. Probeer het opnieuw.',
+        message: getErrorMessage(error, 'Exporteren mislukt. Probeer het opnieuw.'),
       })
     } finally {
       setIsExporting(false)
@@ -1314,11 +1409,11 @@ const DealsAdmin: React.FC = () => {
     try {
       const results = await DynamicProductService.searchProducts(term, 18)
       setSearchResults(results)
-    } catch (error: any) {
-      console.error('Zoekopdracht mislukt:', error)
+    } catch (error: unknown) {
+      logUnknownError('Zoekopdracht mislukt', error, { scope: 'admin.deals.search' })
       setStatus({
         type: 'error',
-        message: error?.message ?? 'Zoekopdracht mislukt. Probeer een andere term.',
+        message: getErrorMessage(error, 'Zoekopdracht mislukt. Probeer een andere term.'),
       })
     } finally {
       setIsSearching(false)
@@ -1352,9 +1447,15 @@ const DealsAdmin: React.FC = () => {
         const results = await DynamicProductService.getProductsByPriceRange(min, max, 18)
         setSearchResults(results)
         setStatus({ type: 'info', message: `Gefilterd op prijsrange ${range}.` })
-      } catch (error: any) {
-        console.error('Kon prijsfilter niet toepassen:', error)
-        setStatus({ type: 'error', message: error?.message ?? 'Kon prijsfilter niet toepassen.' })
+      } catch (error: unknown) {
+        logUnknownError('Kon prijsfilter niet toepassen', error, {
+          scope: 'admin.deals.priceFilter',
+          range,
+        })
+        setStatus({
+          type: 'error',
+          message: getErrorMessage(error, 'Kon prijsfilter niet toepassen.'),
+        })
       } finally {
         setIsSearching(false)
       }
@@ -2121,9 +2222,8 @@ const QuizAdmin: React.FC<QuizAdminProps> = ({ navigateTo }) => {
       })
       .filter((entry): entry is [string, QuizResult] => Boolean(entry))
 
-    const additional = Object.entries(quizResults).filter(
-      ([key]) => !(personaOrder as readonly string[]).includes(key as any)
-    )
+    const knownPersonaKeys = new Set<string>(personaOrder)
+    const additional = Object.entries(quizResults).filter(([key]) => !knownPersonaKeys.has(key))
 
     return [...ordered, ...additional]
   }, [])
@@ -2145,8 +2245,10 @@ const QuizAdmin: React.FC<QuizAdminProps> = ({ navigateTo }) => {
           email: parsed.email ?? '',
         }
       }
-    } catch (error) {
-      console.warn('Kon quiz herinneringsinstellingen niet laden', error)
+    } catch (error: unknown) {
+      logUnknownWarning('Kon quiz herinneringsinstellingen niet laden', error, {
+        scope: 'admin.quiz.reminders.load',
+      })
     }
     return { showAlerts: true, email: '' }
   })
@@ -2163,8 +2265,10 @@ const QuizAdmin: React.FC<QuizAdminProps> = ({ navigateTo }) => {
     }
     try {
       window.localStorage.setItem(QUIZ_REMINDER_STORAGE_KEY, JSON.stringify(reminderPrefs))
-    } catch (error) {
-      console.warn('Kon quiz herinneringsinstellingen niet opslaan', error)
+    } catch (error: unknown) {
+      logUnknownWarning('Kon quiz herinneringsinstellingen niet opslaan', error, {
+        scope: 'admin.quiz.reminders.save',
+      })
     }
   }, [reminderPrefs])
 
@@ -2428,8 +2532,10 @@ const QuizAdmin: React.FC<QuizAdminProps> = ({ navigateTo }) => {
       } else {
         throw new Error('Clipboard API niet beschikbaar')
       }
-    } catch (error) {
-      console.error('Clipboard copy failed', error)
+    } catch (error: unknown) {
+      logUnknownError('Clipboard copy failed', error, {
+        scope: 'admin.quiz.copyToClipboard',
+      })
       setStatus({ type: 'error', message: 'Kopiëren mislukt. Controleer de console voor details.' })
     }
   }, [])
@@ -3022,8 +3128,10 @@ const ShopAdmin: React.FC = () => {
       const products = await CoolblueFeedService.loadProducts()
       setPreview(products.slice(0, 9))
       setMeta(CoolblueFeedService.getMeta())
-    } catch (error) {
-      console.error('Kon Coolblue feed niet verversen:', error)
+    } catch (error: unknown) {
+      logUnknownError('Kon Coolblue feed niet verversen', error, {
+        scope: 'admin.shop.refreshFeed',
+      })
       setPreview([])
       setStatus({
         type: 'error',
@@ -3043,11 +3151,13 @@ const ShopAdmin: React.FC = () => {
       await operation()
       await refreshFeed()
       setStatus({ type: 'success', message: successMessage })
-    } catch (error: any) {
-      console.error('Fout bij verwerken van productfeed:', error)
+    } catch (error: unknown) {
+      logUnknownError('Fout bij verwerken van productfeed', error, {
+        scope: 'admin.shop.processing',
+      })
       setStatus({
         type: 'error',
-        message: error?.message ?? 'Er ging iets mis bij het verwerken van de feed.',
+        message: getErrorMessage(error, 'Er ging iets mis bij het verwerken van de feed.'),
       })
     } finally {
       setProcessing(false)
@@ -3060,10 +3170,10 @@ const ShopAdmin: React.FC = () => {
 
     await withProcessing(async () => {
       const text = await file.text()
-      let parsed: any
+      let parsed: unknown
       try {
         parsed = JSON.parse(text)
-      } catch (error) {
+      } catch {
         throw new Error(
           'Kon het JSON bestand niet parseren. Controleer of het een geldige Coolblue feed is.'
         )
@@ -3340,8 +3450,10 @@ const SettingsAdmin: React.FC<SettingsAdminProps> = ({
       } else {
         throw new Error('Clipboard API niet beschikbaar')
       }
-    } catch (error) {
-      console.error('Kopiëren mislukt', error)
+    } catch (error: unknown) {
+      logUnknownError('Kopiëren mislukt', error, {
+        scope: 'admin.settings.copyAdminEmails',
+      })
       setStatus({ type: 'error', message: 'Kopiëren mislukt. Controleer browser permissies.' })
     }
   }, [adminEmailList])

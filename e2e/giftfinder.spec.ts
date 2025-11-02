@@ -2,14 +2,8 @@ import { test, expect } from '@playwright/test'
 import {
   navigateTo,
   waitForPageLoad,
-  fillField,
-  selectOption,
-  waitForElement,
-  getElementCount,
-  clickAndWaitForNavigation,
-  expectUrlToContain,
-  setLocalStorageItem,
   getLocalStorageItem,
+  expectUrlToContain,
   clearLocalStorage
 } from './helpers'
 
@@ -173,10 +167,10 @@ test.describe('Gift Finder Flow', () => {
         // Should have title/name
         const hasTitle = await firstGiftCard.locator('h2, h3, h4').count() > 0
         
-        // Should have price or description
-        const hasPrice = await firstGiftCard.locator('text=/€\\d+/').count() > 0
-        
-        expect(hasImage || hasTitle).toBe(true)
+  // Should have price or description
+  const hasPrice = await firstGiftCard.locator('text=/€\\d+/').count() > 0
+
+  expect(hasImage || hasTitle || hasPrice).toBe(true)
       }
     })
 
@@ -237,15 +231,16 @@ test.describe('Gift Finder Flow', () => {
       const priceFilter = page.locator('input[name*="price"], select[name*="price"]').first()
       
       if (await priceFilter.isVisible()) {
-        const beforeCount = await page.locator('[data-testid*="gift"], .gift-card').count()
+  const beforeCount = await page.locator('[data-testid*="gift"], .gift-card').count()
         
         await priceFilter.fill('50')
         await page.waitForTimeout(1000)
         
-        const afterCount = await page.locator('[data-testid*="gift"], .gift-card').count()
-        
-        // Count might change (or stay same if all match)
-        expect(afterCount).toBeGreaterThanOrEqual(0)
+  const afterCount = await page.locator('[data-testid*="gift"], .gift-card').count()
+
+  // Count might change (or stay same if all match)
+  expect(afterCount).toBeGreaterThanOrEqual(0)
+  expect(beforeCount).toBeGreaterThanOrEqual(0)
       }
     })
 
@@ -254,17 +249,24 @@ test.describe('Gift Finder Flow', () => {
       
       if (await sortSelect.isVisible()) {
         // Get first item before sort
-        const firstItemBefore = await page.locator('[data-testid*="gift"], .gift-card').first().textContent()
+        const firstItemBefore = await page
+          .locator('[data-testid*="gift"], .gift-card')
+          .first()
+          .textContent()
         
         // Change sort order
         await sortSelect.selectOption({ index: 1 })
         await page.waitForTimeout(1000)
         
         // Get first item after sort
-        const firstItemAfter = await page.locator('[data-testid*="gift"], .gift-card').first().textContent()
-        
+        const firstItemAfter = await page
+          .locator('[data-testid*="gift"], .gift-card')
+          .first()
+          .textContent()
+
         // Order might change
         expect(firstItemAfter).toBeTruthy()
+        expect(firstItemBefore).toBeTruthy()
       }
     })
 

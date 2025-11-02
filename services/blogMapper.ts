@@ -101,7 +101,7 @@ const convertPlainTextToBlocks = (text: string): ContentBlock[] => {
 
     const headingMatch = segment.match(/^(#{1,6})\s+(.*)$/)
     if (headingMatch) {
-      const [, hashes, headingText] = headingMatch
+      const headingText = headingMatch[2]
       const textContent = headingText.trim()
       if (textContent) {
         blocks.push({ type: 'heading', content: textContent })

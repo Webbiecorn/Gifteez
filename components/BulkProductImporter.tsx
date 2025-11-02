@@ -38,7 +38,6 @@ export const BulkProductImporter: React.FC = () => {
         throw new Error('File must contain an array of products')
       }
 
-      console.log(`📦 Importing ${products.length} products...`)
       setStats({ total: products.length, success: 0, failed: 0, processing: products.length })
 
       // Import in batches (Firestore limit is 500 per batch)
@@ -50,8 +49,6 @@ export const BulkProductImporter: React.FC = () => {
       for (let i = 0; i < products.length; i += BATCH_SIZE) {
         const batch = writeBatch(db)
         const batchProducts = products.slice(i, i + BATCH_SIZE)
-
-        console.log(`Processing batch ${Math.floor(i / BATCH_SIZE) + 1}...`)
 
         for (const product of batchProducts) {
           try {
@@ -116,10 +113,6 @@ export const BulkProductImporter: React.FC = () => {
 
       setErrors(errorMessages)
       setComplete(true)
-
-      console.log('✅ Import complete!')
-      console.log(`   Success: ${successCount}`)
-      console.log(`   Failed: ${failedCount}`)
     } catch (error) {
       console.error('Import error:', error)
       setErrors([error instanceof Error ? error.message : 'Unknown error occurred'])

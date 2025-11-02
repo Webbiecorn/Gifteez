@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 interface SourceDef {
   src: string
@@ -27,7 +27,6 @@ const PictureImage: React.FC<PictureImageProps> = ({
   decoding = 'async',
   onLoad,
 }) => {
-  const [errored, setErrored] = useState(false)
   return (
     <picture>
       {sources.map((s) => (
@@ -41,7 +40,6 @@ const PictureImage: React.FC<PictureImageProps> = ({
         loading={loading}
         decoding={decoding}
         className={className}
-        onError={() => setErrored(true)}
         onLoad={onLoad}
       />
     </picture>

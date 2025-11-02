@@ -19,8 +19,6 @@ const DOCUMENT_ID = 'current'
 const LOCAL_STORAGE_KEY = 'gifteez_manual_deal_categories_v1'
 const CONFIG_VERSION = 1
 
-let cachedConfig: DealCategoryConfig | null | undefined
-
 const hasWindow = typeof window !== 'undefined'
 
 const generateRandomId = (): string => {
@@ -140,7 +138,6 @@ export const DealCategoryConfigService = {
           if (config) {
             // Update localStorage with fresh data
             writeLocalConfig(config)
-            cachedConfig = config
             return config
           }
         }
@@ -150,9 +147,7 @@ export const DealCategoryConfigService = {
     }
 
     // Only use localStorage as fallback if Firebase fails
-    const localConfig = readLocalConfig()
-    cachedConfig = localConfig
-    return localConfig
+    return readLocalConfig()
   },
 
   async save(config: DealCategoryConfig): Promise<DealCategoryConfig> {
@@ -182,8 +177,6 @@ export const DealCategoryConfigService = {
 
     // Also save to localStorage as backup
     writeLocalConfig(payload)
-    cachedConfig = payload
-
     return payload
   },
 
@@ -204,11 +197,9 @@ export const DealCategoryConfigService = {
       }
     }
     writeLocalConfig(payload)
-    cachedConfig = payload
   },
 
   clearCache(): void {
-    cachedConfig = undefined
     // Also clear localStorage to prevent stale data on hard refresh
     if (hasWindow) {
       try {

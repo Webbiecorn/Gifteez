@@ -16,6 +16,12 @@ export class ProductBasedGiftService {
 
   private static feedbackKeywordWeights: Record<string, number> = {}
 
+  private static debugLog(message: string, ...optionalParams: unknown[]): void {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(message, ...optionalParams)
+    }
+  }
+
   private static readonly FEEDBACK_KEYWORD_WHITELIST = [
     'duurzaam',
     'vegan',
@@ -37,18 +43,18 @@ export class ProductBasedGiftService {
    * Find gifts from real product feeds based on search criteria
    */
   static async findGifts(searchParams: GiftSearchParams): Promise<Gift[]> {
-    console.log('🎁 Finding gifts from product feeds...', searchParams)
+    this.debugLog('🎁 Finding gifts from product feeds...', searchParams)
 
     // Ensure products are loaded
     await DynamicProductService.loadProducts()
 
     // Get all products from both sources
     const allProducts = DynamicProductService.getProducts()
-    console.log(`📦 Searching through ${allProducts.length} total products`)
+    this.debugLog(`📦 Searching through ${allProducts.length} total products`)
 
     // Filter and score products based on search criteria
     const relevantProducts = this.filterProductsBySearch(allProducts, searchParams)
-    console.log(`✨ Found ${relevantProducts.length} relevant products`)
+    this.debugLog(`✨ Found ${relevantProducts.length} relevant products`)
 
     // Convert products to Gift format
     const gifts = this.convertProductsToGifts(relevantProducts, searchParams)
@@ -120,7 +126,7 @@ export class ProductBasedGiftService {
   private static filterProductsBySearch(products: any[], searchParams: GiftSearchParams): any[] {
     const { recipient, budget, occasion, interests, filters } = searchParams
 
-    console.log(`🔍 Filtering ${products.length} products for search:`, {
+    this.debugLog(`🔍 Filtering ${products.length} products for search:`, {
       recipient,
       budget,
       occasion,
@@ -218,7 +224,7 @@ export class ProductBasedGiftService {
       return true
     })
 
-    console.log(`✅ After filtering: ${filteredProducts.length} products matched`)
+    this.debugLog(`✅ After filtering: ${filteredProducts.length} products matched`)
 
     return filteredProducts.map((product) => ({
       ...product,

@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from '../services/firebase'
-import Breadcrumbs from './Breadcrumbs'
-import { MailIcon, CheckCircleIcon, UserIcon } from './IconComponents'
+import { MailIcon, CheckCircleIcon } from './IconComponents'
 import Meta from './Meta'
-import type { NavigateTo, ContactMessage } from '../types'
+import type { NavigateTo, ContactMessage, ShowToast } from '../types'
 
 interface ContactPageProps {
   navigateTo: NavigateTo
+  showToast?: ShowToast
 }
 
-export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
+export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo, showToast }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [subject, setSubject] = useState('')
@@ -45,12 +45,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
 
     try {
       // Save to Firestore (will trigger email via Cloud Function)
-      const messageData: Omit<ContactMessage, 'id'> = {
+      const messageData: Omit<ContactMessage, 'id' | 'createdAt'> & {
+        createdAt: ReturnType<typeof serverTimestamp>
+      } = {
         name: name.trim(),
         email: email.trim().toLowerCase(),
         subject: subject.trim() || undefined,
         message: message.trim(),
-        createdAt: serverTimestamp() as any,
+        createdAt: serverTimestamp(),
         read: false,
         replied: false,
       }
@@ -63,11 +65,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({ navigateTo }) => {
       setSubject('')
       setMessage('')
 
+      showToast?.('Bericht verzonden! 🎉 We nemen snel contact met je op.', 'success')
+
       // Reset success message after 5 seconds
-      setTimeout(() => setSuccess(false), 5000)
-    } catch (err: any) {
+      window.setTimeout(() => setSuccess(false), 5000)
+    } catch (err: unknown) {
       console.error('Contact form error:', err)
       setError('Er ging iets mis. Probeer het opnieuw of stuur een email naar info@gifteez.nl')
+      showToast?.('Versturen mislukt. Probeer het opnieuw.', 'error')
     } finally {
       setLoading(false)
     }

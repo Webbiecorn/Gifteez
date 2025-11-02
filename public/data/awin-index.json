@@ -1,0 +1,25 @@
+{
+  "total": 0,
+  "shards": [
+    {
+      "feedId": "20669",
+      "shard": "data/awin-shards/20669.json",
+      "count": 4438
+    },
+    {
+      "feedId": "50381",
+      "shard": "data/awin-shards/50381.json",
+      "count": 2617
+    },
+    {
+      "feedId": "F1655",
+      "shard": "data/awin-shards/F1655.json",
+      "count": 371
+    },
+    {
+      "feedId": "F951",
+      "shard": "data/awin-shards/F951.json",
+      "count": 144
+    }
+  ]
+}

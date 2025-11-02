@@ -1,4 +1,4 @@
-import { doc, updateDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore'
+import { doc, updateDoc, getDoc } from 'firebase/firestore'
 import { db } from './firebase'
 import type { User, UserPreferences, NotificationSettings, Gift } from '../types'
 
@@ -125,7 +125,7 @@ export class UserService {
         category: item.category,
         tags: item.tags || [],
       }))
-    } catch (error) {
+    } catch {
       throw new Error('Failed to parse favorites data')
     }
   }

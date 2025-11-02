@@ -58,7 +58,7 @@ const FloatingCadeauCoachButton: React.FC<FloatingCadeauCoachButtonProps> = ({ n
       <div className="relative">
         {/* Pulsing ring effect */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 animate-ping opacity-20" />
-        
+
         {/* Main button */}
         <button
           onClick={handleClick}
@@ -80,15 +80,16 @@ const FloatingCadeauCoachButton: React.FC<FloatingCadeauCoachButtonProps> = ({ n
             <div className="text-sm font-bold leading-tight">Cadeau-Coach</div>
             <div className="text-xs opacity-90 leading-tight">Hulp nodig?</div>
           </div>
+        </button>
 
-          {/* Dismiss button */}
-          <button
-            onClick={handleDismiss}
-            className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-slate-700 text-white shadow-lg transition-transform hover:scale-110 hover:bg-slate-800 focus:outline-none"
-            aria-label="Verberg Cadeau-Coach button"
-          >
-            <XIcon className="h-3 w-3" />
-          </button>
+        {/* Dismiss button (positioned relative to wrapper) */}
+        <button
+          type="button"
+          onClick={handleDismiss}
+          className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-slate-700 text-white shadow-lg transition-transform hover:scale-110 hover:bg-slate-800 focus:outline-none"
+          aria-label="Verberg Cadeau-Coach button"
+        >
+          <XIcon className="h-3 w-3" />
         </button>
 
         {/* Tooltip hint (shows on first appearance) */}

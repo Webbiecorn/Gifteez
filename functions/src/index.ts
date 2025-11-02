@@ -17,22 +17,22 @@ export {
 } from './email.js'
 
 // Basic in-memory cache (ephemeral). For production, consider Firestore/Redis.
-type CacheEntry = { value: any; expiresAt: number }
-const cache = new Map<string, CacheEntry>()
+type CacheEntry<T> = { value: T; expiresAt: number }
+const cache = new Map<string, CacheEntry<unknown>>()
 const TTL_MS = 1000 * 60 * 60 // 1 hour
 
 function getCache<T>(key: string): T | null {
   const now = Date.now()
-  const ent = cache.get(key)
-  if (!ent) return null
-  if (ent.expiresAt < now) {
+  const entry = cache.get(key)
+  if (!entry) return null
+  if (entry.expiresAt < now) {
     cache.delete(key)
     return null
   }
-  return ent.value as T
+  return entry.value as T
 }
 
-function setCache(key: string, value: any, ttlMs = TTL_MS) {
+function setCache<T>(key: string, value: T, ttlMs = TTL_MS) {
   cache.set(key, { value, expiresAt: Date.now() + ttlMs })
 }
 
@@ -97,8 +97,8 @@ app.post('/api/contact', async (req: Request, res: Response) => {
     }
     // Validate fields
     const errors: Record<string, string> = {}
-    function reqStr(v: any) {
-      return typeof v === 'string' ? v.trim() : ''
+    function reqStr(value: unknown) {
+      return typeof value === 'string' ? value.trim() : ''
     }
     const vName = reqStr(name)
     const vEmail = reqStr(email)
@@ -132,11 +132,15 @@ app.post('/api/contact', async (req: Request, res: Response) => {
     })
 
     res.json({ ok: true })
-  } catch (e: any) {
-    console.error('contact_error', e)
+  } catch (error: unknown) {
+    console.error('contact_error', error)
     res.status(500).json({ error: 'Server error' })
   }
 })
+
+type AmazonSearchResult = Awaited<ReturnType<typeof searchItems>>
+
+type AmazonItemResult = Awaited<ReturnType<typeof getItem>>
 
 app.get('/api/amazon-search', async (req: Request, res: Response) => {
   try {
@@ -147,7 +151,7 @@ app.get('/api/amazon-search', async (req: Request, res: Response) => {
     const keywords = String(q || '').trim()
     if (!keywords) return res.status(400).json({ error: 'Missing q (keywords)' })
     const key = `search:${keywords}:${page || 1}:${minPrice || ''}:${maxPrice || ''}:${sort || ''}:${prime || ''}`
-    const cached = getCache<any>(key)
+    const cached = getCache<AmazonSearchResult>(key)
     if (cached) {
       res.set('Cache-Control', 'public, max-age=300')
       return res.json({ ...cached, cached: true })
@@ -163,8 +167,9 @@ app.get('/api/amazon-search', async (req: Request, res: Response) => {
     setCache(key, data)
     res.set('Cache-Control', 'public, max-age=300')
     res.json(data)
-  } catch (e: any) {
-    res.status(500).json({ error: e?.message || 'Unknown error' })
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    res.status(500).json({ error: message })
   }
 })
 
@@ -176,7 +181,7 @@ app.get('/api/amazon-item/:asin', async (req: Request, res: Response) => {
     const asin = String(req.params.asin || '').trim()
     if (!asin) return res.status(400).json({ error: 'Missing asin' })
     const key = `item:${asin}`
-    const cached = getCache<any>(key)
+    const cached = getCache<AmazonItemResult>(key)
     if (cached) {
       res.set('Cache-Control', 'public, max-age=600')
       return res.json({ ...cached, cached: true })
@@ -185,8 +190,9 @@ app.get('/api/amazon-item/:asin', async (req: Request, res: Response) => {
     setCache(key, data)
     res.set('Cache-Control', 'public, max-age=600')
     res.json(data)
-  } catch (e: any) {
-    res.status(500).json({ error: e?.message || 'Unknown error' })
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    res.status(500).json({ error: message })
   }
 })
 

@@ -431,9 +431,10 @@ describe('Breadcrumbs', () => {
       let scripts = document.querySelectorAll('script[type="application/ld+json"]')
       const initialCount = scripts.length
 
-      rerender(<Breadcrumbs items={items2} />)
-      scripts = document.querySelectorAll('script[type="application/ld+json"]')
-      const afterRerender1 = scripts.length
+  rerender(<Breadcrumbs items={items2} />)
+  scripts = document.querySelectorAll('script[type="application/ld+json"]')
+  const afterRerender1 = scripts.length
+  expect(afterRerender1).toBeLessThanOrEqual(initialCount + 1)
 
       rerender(<Breadcrumbs items={items3} />)
       scripts = document.querySelectorAll('script[type="application/ld+json"]')

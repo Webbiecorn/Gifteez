@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from 'react'
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore'
+import React, { useState, useEffect, useCallback } from 'react'
+import { collection, getDocs } from 'firebase/firestore'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { db } from '../services/firebase'
 import { MailIcon, UserCircleIcon, ShareIcon, CheckCircleIcon } from './IconComponents'
-import type { NewsletterSubscriber, EmailCampaign } from '../types'
+import type { NewsletterSubscriber } from '../types'
+
+type AdminNewsletterSubscriber = NewsletterSubscriber & {
+  id: string
+  isActive: boolean
+}
+
+type FirestoreTimestamp = { toDate?: () => Date }
+
+const normalizeTimestamp = (value: Date | string | FirestoreTimestamp | undefined): Date => {
+  if (value instanceof Date) {
+    return value
+  }
+  if (typeof value === 'string') {
+    const parsed = new Date(value)
+    return Number.isNaN(parsed.getTime()) ? new Date() : parsed
+  }
+  const date = value?.toDate?.()
+  if (date instanceof Date) {
+    return date
+  }
+  return new Date()
+}
 
 export const AdminNewsletterPanel: React.FC = () => {
-  const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([])
+  const hasWindow = typeof window !== 'undefined'
+  const [subscribers, setSubscribers] = useState<AdminNewsletterSubscriber[]>([])
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [success, setSuccess] = useState('')
@@ -16,50 +39,62 @@ export const AdminNewsletterPanel: React.FC = () => {
   const [htmlContent, setHtmlContent] = useState('')
   const [testEmail, setTestEmail] = useState('')
 
-  useEffect(() => {
-    loadSubscribers()
-  }, [])
+  const showAlert = (message: string) => {
+    if (hasWindow) {
+      window.alert(message)
+      return
+    }
+    console.warn('Alert skipped (no window available):', message)
+  }
 
-  const loadSubscribers = async () => {
+  const loadSubscribers = useCallback(async () => {
     try {
       setLoading(true)
       // Don't use orderBy - subscribedAt might be a string
       const snapshot = await getDocs(collection(db, 'newsletter_subscribers'))
 
       const data = snapshot.docs.map((doc) => {
-        const docData = doc.data()
-        return {
-          ...docData,
-          id: doc.id,
-          // Parse subscribedAt if it's a string
-          subscribedAt:
-            typeof docData.subscribedAt === 'string'
-              ? new Date(docData.subscribedAt)
-              : docData.subscribedAt?.toDate?.() || new Date(),
+        const docData = doc.data() as Partial<AdminNewsletterSubscriber> & {
+          subscribedAt?: Date | string | FirestoreTimestamp
+          unsubscribedAt?: Date | string | FirestoreTimestamp
         }
-      }) as NewsletterSubscriber[]
 
-      // Sort in JavaScript instead
-      data.sort((a, b) => {
-        const dateA =
-          a.subscribedAt instanceof Date ? a.subscribedAt : new Date(a.subscribedAt as any)
-        const dateB =
-          b.subscribedAt instanceof Date ? b.subscribedAt : new Date(b.subscribedAt as any)
-        return dateB.getTime() - dateA.getTime()
+        const status: AdminNewsletterSubscriber['status'] =
+          docData.status ?? (docData.isActive === false ? 'unsubscribed' : 'active')
+        const subscribedAt = normalizeTimestamp(docData.subscribedAt)
+        const unsubscribedAtValue = docData.unsubscribedAt
+
+        return {
+          id: doc.id,
+          email: docData.email ?? '',
+          name: docData.name,
+          status,
+          source: docData.source ?? 'admin',
+          preferences: docData.preferences,
+          subscribedAt,
+          unsubscribedAt: unsubscribedAtValue ? normalizeTimestamp(unsubscribedAtValue) : undefined,
+          isActive: status === 'active',
+        }
       })
 
-      console.log('Loaded subscribers:', data)
+      // Sort in JavaScript instead
+      data.sort((a, b) => b.subscribedAt.getTime() - a.subscribedAt.getTime())
+
       setSubscribers(data)
     } catch (error) {
       console.error('Error loading subscribers:', error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadSubscribers()
+  }, [loadSubscribers])
 
   const handleSendTest = async () => {
     if (!testEmail || !subject || !htmlContent) {
-      alert('Vul alle velden in')
+      showAlert('Vul alle velden in')
       return
     }
 
@@ -77,9 +112,10 @@ export const AdminNewsletterPanel: React.FC = () => {
 
       setSuccess('Test email verzonden! ✅')
       setTimeout(() => setSuccess(''), 3000)
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error sending test:', error)
-      alert(`Fout: ${error.message}`)
+      const message = error instanceof Error ? error.message : 'Onbekende fout'
+      showAlert(`Fout: ${message}`)
     } finally {
       setSending(false)
     }

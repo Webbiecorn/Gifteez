@@ -22,7 +22,11 @@ const AmazonTeaser: React.FC<AmazonTeaserProps> = ({
       <h2 className="font-display text-3xl font-bold text-primary mb-6">Amazon cadeautips</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {items.map((it, idx) => {
-          const href = withAffiliate(it.affiliateUrl)
+          const href = withAffiliate(it.affiliateUrl, {
+            pageType: 'home',
+            placement: 'amazon-teaser-cta',
+            cardIndex: idx,
+          })
           return (
             <a
               key={idx}

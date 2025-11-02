@@ -76,7 +76,10 @@ const StickyAffiliateBar: React.FC<StickyAffiliateBarProps> = ({
 
             {/* CTA Button */}
             <a
-              href={withAffiliate(product.affiliateLink)}
+              href={withAffiliate(product.affiliateLink, {
+                pageType: 'product-landing',
+                placement: 'sticky-bar',
+              })}
               target="_blank"
               rel="sponsored nofollow noopener noreferrer"
               onClick={handleClick}

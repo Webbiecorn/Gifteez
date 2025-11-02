@@ -32,22 +32,34 @@ const FavoritesPage: React.FC<FavoritesPageProps> = ({ navigateTo, showToast }) 
   }
 
   const handleShare = () => {
-    if (navigator.clipboard && favorites.length > 0) {
-      const jsonString = JSON.stringify(favorites)
-      const encoded = btoa(encodeURIComponent(jsonString))
-      const url = `${window.location.origin}?favorites=${encoded}`
-      navigator.clipboard
-        .writeText(url)
-        .then(() => {
-          showToast('Deelbare link gekopieerd!')
-        })
-        .catch((err) => {
-          console.error('Could not copy text: ', err)
-          showToast('Kopiëren mislukt')
-        })
-    } else {
-      showToast('Browser wordt niet ondersteund of geen favorieten om te delen.')
+    if (favorites.length === 0) {
+      showToast('Geen favorieten om te delen.')
+      return
     }
+
+    if (typeof window === 'undefined' || typeof window.btoa !== 'function') {
+      showToast('Delen wordt niet ondersteund in deze omgeving.')
+      return
+    }
+
+    if (!navigator?.clipboard) {
+      showToast('Browser ondersteunt kopiëren naar klembord niet.')
+      return
+    }
+
+    const jsonString = JSON.stringify(favorites)
+    const encoded = window.btoa(encodeURIComponent(jsonString))
+    const url = `${window.location.origin}?favorites=${encoded}`
+
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        showToast('Deelbare link gekopieerd!')
+      })
+      .catch((err) => {
+        console.error('Could not copy text: ', err)
+        showToast('Kopiëren mislukt')
+      })
   }
 
   const NotLoggedInMessage = () => (

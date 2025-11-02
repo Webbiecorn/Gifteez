@@ -48,10 +48,11 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ navigateTo, error, resetError }) 
           variant="error"
           title="Er ging iets mis..."
           description="Onze foutdetectie heeft een probleem opgemerkt. We werken eraan! Probeer het later opnieuw of neem contact met ons op."
-          action={{
-            label: '🔄 Probeer opnieuw',
-            onClick: handleReload,
-          }}
+          action={
+            <Button variant="secondary" onClick={handleReload} fullWidth className="justify-center">
+              🔄 Probeer opnieuw
+            </Button>
+          }
         >
           {/* Recovery Options */}
           <div className="mt-8 flex flex-col gap-3">

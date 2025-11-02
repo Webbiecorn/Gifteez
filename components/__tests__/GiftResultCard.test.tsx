@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/AuthContext'
 import * as affiliateModule from '../../services/affiliate'
 import * as analyticsModule from '../../services/giftFinderAnalyticsService'
 import GiftResultCard from '../GiftResultCard'
-import type { Gift, AuthContextType } from '../../types'
+import type { Gift, AuthContextType, RetailerBadge } from '../../types'
 
 // Mock modules
 vi.mock('../../services/affiliate', () => ({
@@ -204,7 +204,12 @@ describe('GiftResultCard', () => {
 
       const amazonLink = screen.getByText('Bekijk bij Amazon').closest('a')
       expect(affiliateModule.withAffiliate).toHaveBeenCalledWith(
-        'https://amazon.com/product/123'
+        'https://amazon.com/product/123',
+        expect.objectContaining({
+          pageType: 'giftfinder',
+          placement: 'result-card-cta',
+          cardIndex: 0
+        })
       )
       expect(amazonLink).toHaveAttribute('href', 'https://amazon.com/product/123?affiliate=test')
     })
@@ -411,8 +416,6 @@ describe('GiftResultCard', () => {
     })
 
     it('should not toggle favorite in read-only mode', async () => {
-      const user = userEvent.setup()
-
       const { container } = render(
         <AuthContext.Provider value={mockAuthContext}>
           <GiftResultCard gift={mockGift} index={0} showToast={mockShowToast} isReadOnly={true} />
@@ -522,12 +525,13 @@ describe('GiftResultCard', () => {
     })
 
     it('should render retailer badges', () => {
-      const giftWithBadges = {
+      const badgeSet: RetailerBadge[] = [
+        { label: 'Eco-vriendelijk', tone: 'success', description: 'Milieuvriendelijk product' },
+        { label: 'Bestseller', tone: 'accent', description: 'Top verkocht product' }
+      ]
+      const giftWithBadges: Gift = {
         ...mockGift,
-        retailerBadges: [
-          { label: 'Eco-vriendelijk', tone: 'success', description: 'Milieuvriendelijk product' },
-          { label: 'Bestseller', tone: 'accent', description: 'Top verkocht product' }
-        ]
+        retailerBadges: badgeSet
       }
 
       render(
@@ -919,15 +923,16 @@ describe('GiftResultCard', () => {
     })
 
     it('should handle multiple retailer badges', () => {
-      const giftManyBadges = {
+      const manyBadges: RetailerBadge[] = [
+        { label: 'Badge 1', tone: 'primary', description: 'First badge' },
+        { label: 'Badge 2', tone: 'accent', description: 'Second badge' },
+        { label: 'Badge 3', tone: 'success', description: 'Third badge' },
+        { label: 'Badge 4', tone: 'warning', description: 'Fourth badge' },
+        { label: 'Badge 5', tone: 'neutral', description: 'Fifth badge' }
+      ]
+      const giftManyBadges: Gift = {
         ...mockGift,
-        retailerBadges: [
-          { label: 'Badge 1', tone: 'primary', description: 'First badge' },
-          { label: 'Badge 2', tone: 'accent', description: 'Second badge' },
-          { label: 'Badge 3', tone: 'success', description: 'Third badge' },
-          { label: 'Badge 4', tone: 'warning', description: 'Fourth badge' },
-          { label: 'Badge 5', tone: 'neutral', description: 'Fifth badge' }
-        ]
+        retailerBadges: manyBadges
       }
 
       render(

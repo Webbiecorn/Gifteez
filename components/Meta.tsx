@@ -154,7 +154,18 @@ export const Meta: React.FC<MetaProps> = ({
       return m
     })
     richPin.setAttribute('content', 'true')
-  }, [title, description, canonical, ogImage, pinterestImage, type, author, publishedDate, category, keywords])
+  }, [
+    title,
+    description,
+    canonical,
+    ogImage,
+    pinterestImage,
+    type,
+    author,
+    publishedDate,
+    category,
+    keywords,
+  ])
 
   return null // Head side-effects only
 }

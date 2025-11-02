@@ -2,10 +2,8 @@ import { test, expect } from '@playwright/test'
 import {
   navigateTo,
   waitForPageLoad,
-  clickAndWaitForNavigation,
   expectUrlToContain,
-  hasText,
-  isMobileViewport
+  hasText
 } from './helpers'
 
 test.describe('Navigation Flow', () => {
@@ -25,7 +23,7 @@ test.describe('Navigation Flow', () => {
     })
 
     test('should navigate to Gift Finder from header', async ({ page }) => {
-      await page.click('text=Gift Finder')
+  await page.locator('[data-testid="nav-giftFinder"]:visible').first().click()
       await waitForPageLoad(page)
 
       expectUrlToContain(page, '/gift-finder')
@@ -33,7 +31,7 @@ test.describe('Navigation Flow', () => {
     })
 
     test('should navigate to Deals page from header', async ({ page }) => {
-      await page.click('text=Deals')
+      await page.locator('[data-testid="nav-deals"]:visible').first().click()
       await waitForPageLoad(page)
 
       expectUrlToContain(page, '/deals')
@@ -41,7 +39,7 @@ test.describe('Navigation Flow', () => {
     })
 
     test('should navigate to Blog from header', async ({ page }) => {
-      await page.click('text=Blog')
+      await page.getByTestId('nav-blog').first().click()
       await waitForPageLoad(page)
 
       expectUrlToContain(page, '/blog')
@@ -50,7 +48,7 @@ test.describe('Navigation Flow', () => {
 
     test('should navigate back to homepage when clicking logo', async ({ page }) => {
       // Navigate away from home
-      await page.click('text=Blog')
+  await page.getByTestId('nav-blog').first().click()
       await waitForPageLoad(page)
 
       // Click logo to return home
@@ -86,7 +84,7 @@ test.describe('Navigation Flow', () => {
         await page.waitForTimeout(300)
 
         // Click a menu item
-        await page.click('text=Gift Finder')
+  await page.getByTestId('nav-giftFinder').first().click()
         await waitForPageLoad(page)
 
         expectUrlToContain(page, '/gift-finder')

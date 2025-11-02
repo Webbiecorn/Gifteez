@@ -1,5 +1,5 @@
 import React from 'react'
-import type { BlogPost } from '../types'
+import type { BlogPost, ContentBlock } from '../types'
 
 interface BlogPreviewProps {
   post: BlogPost
@@ -7,8 +7,42 @@ interface BlogPreviewProps {
   onClose: () => void
 }
 
+const contentToString = (content: BlogPost['content']): string => {
+  if (typeof content === 'string') {
+    return content
+  }
+
+  const blockToString = (block: ContentBlock): string => {
+    switch (block.type) {
+      case 'heading':
+      case 'paragraph':
+        return block.content
+      case 'gift':
+        return `${block.content.productName}: ${block.content.description ?? ''}`
+      case 'image':
+        return block.alt ?? ''
+      case 'comparisonTable':
+        return [block.headers.join(' | '), ...block.rows.map((row) => row.values.join(' | '))].join('\n')
+      case 'prosCons':
+        return block.items
+          .map((item) => `${item.title}\n+ ${item.pros.join(', ')}\n- ${item.cons.join(', ')}`)
+          .join('\n')
+      case 'verdict':
+        return `${block.title}: ${block.content}`
+      case 'faq':
+        return block.items.map((item) => `${item.question}: ${item.answer}`).join('\n')
+      default:
+        return ''
+    }
+  }
+
+  return content.map(blockToString).join('\n\n')
+}
+
 // Enhanced content renderer that handles both HTML and markdown
-const renderContent = (content: string): string => {
+const renderContent = (rawContent: BlogPost['content']): string => {
+  const content = contentToString(rawContent)
+
   // Check if content is already HTML (contains HTML tags)
   const isHTML = /<[a-z][\s\S]*>/i.test(content)
 
@@ -59,11 +93,13 @@ const renderContent = (content: string): string => {
 export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose }) => {
   if (!isOpen) return null
 
-  const formattedDate = new Date(post.publishedAt || post.createdAt).toLocaleDateString('nl-NL', {
+  const formattedDate = new Date(post.publishedAt ?? post.createdAt ?? post.publishedDate).toLocaleDateString('nl-NL', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   })
+
+  const contentString = contentToString(post.content)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -120,7 +156,7 @@ export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose 
               <div className="flex items-center text-sm text-gray-500 mt-4 pt-4 border-t">
                 <time dateTime={post.publishedAt || post.createdAt}>{formattedDate}</time>
                 <span className="mx-2">•</span>
-                <span>{Math.ceil(post.content.split(' ').length / 200)} min leestijd</span>
+                <span>{Math.ceil(contentString.split(' ').filter(Boolean).length / 200)} min leestijd</span>
               </div>
             </header>
 

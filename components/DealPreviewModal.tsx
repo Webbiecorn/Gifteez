@@ -15,7 +15,15 @@ const DealPreviewModal: React.FC<DealPreviewModalProps> = ({ deal, isOpen, onClo
 
   const testAffiliateLink = () => {
     if (deal.affiliateLink) {
-      window.open(withAffiliate(deal.affiliateLink), '_blank', 'noopener,noreferrer')
+      window.open(
+        withAffiliate(deal.affiliateLink, {
+          pageType: 'admin',
+          placement: 'preview-cta',
+          cardIndex: 0,
+        }),
+        '_blank',
+        'noopener,noreferrer'
+      )
     }
   }
 

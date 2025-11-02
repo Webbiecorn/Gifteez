@@ -1237,7 +1237,7 @@ const ContentBuilder: React.FC<ContentBuilderProps> = ({ value, onChange }) => {
         </div>
         <div className="space-y-3">
           <label className="block text-sm font-medium text-gray-700">Affiliate retailers</label>
-          {ensureRetailerCount(block.gift.retailers).map((retailer, index) => (
+          {ensureRetailerCount(block.gift.retailers).map((retailer) => (
             <div key={retailer.id} className="grid gap-3 md:grid-cols-2">
               <input
                 type="text"

@@ -5,114 +5,171 @@
  * to the GiftFinder page for funnel and event tracking.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useFunnelTracking } from '../hooks/useFunnelTracking'
-import type { Product } from '../services/analyticsEventService'
 import {
   trackStartGiftFinder,
   trackApplyFilter,
   trackViewProduct,
   trackProductImpressions,
+  trackClickAffiliate,
 } from '../services/analyticsEventService'
+import { trackOutboundClick } from '../services/dataLayerService'
+import type { Product } from '../services/analyticsEventService'
+
+type GiftFinderFilters = {
+  occasion: string
+  recipient: string
+  budgetMin: number
+  budgetMax: number
+}
+
+const SAMPLE_PRODUCTS: Product[] = [
+  {
+    id: 'prod_1',
+    name: 'Duurzame Mok',
+    category: 'Home',
+    price: 19.95,
+    retailer: 'Shop Like You Give A Damn',
+    affiliateUrl: 'https://example.com/prod-1',
+  },
+  {
+    id: 'prod_2',
+    name: 'Eco Cadeaubox',
+    category: 'Gifts',
+    price: 39.5,
+    retailer: 'Gifteez',
+    affiliateUrl: 'https://example.com/prod-2',
+  },
+  {
+    id: 'prod_3',
+    name: 'Ervaringsvoucher',
+    category: 'Experiences',
+    price: 89,
+    retailer: 'Coolblue',
+    affiliateUrl: 'https://example.com/prod-3',
+  },
+]
+
+const filterProducts = (products: Product[], filters: GiftFinderFilters): Product[] => {
+  const { budgetMin, budgetMax } = filters
+  return products.filter((product) => {
+    const price = product.price ?? 0
+    return price >= budgetMin && price <= budgetMax
+  })
+}
+
+type ProductCardProps = {
+  product: Product
+  position: number
+  onClick: () => void
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product, position, onClick }) => (
+  <button
+    type="button"
+    data-testid={`product-${position}`}
+    onClick={onClick}
+    className="product-card"
+  >
+    <span>{product.name}</span>
+    {typeof product.price === 'number' && <span>{`€${product.price.toFixed(2)}`}</span>}
+  </button>
+)
 
 // Example usage in GiftFinderPage component
 export function GiftFinderPageExample() {
-  // Setup funnel tracking
   const { trackStep } = useFunnelTracking('giftfinder_flow')
+  const [filters, setFilters] = useState<GiftFinderFilters>({
+    occasion: 'Verjaardag',
+    recipient: 'Partner',
+    budgetMin: 0,
+    budgetMax: 250,
+  })
 
-  // Track GiftFinder start on page load
+  const filteredProducts = useMemo(() => filterProducts(SAMPLE_PRODUCTS, filters), [filters])
+
   useEffect(() => {
-    // Track analytics event
     trackStartGiftFinder('page_visit')
-
-    // Track funnel step
     trackStep('start_giftfinder')
   }, [trackStep])
 
-  // Handle filter changes
-  const handleOccasionChange = (occasion: string) => {
-    // Update local state
-    setOccasion(occasion)
-
-    // Track analytics event
-    trackApplyFilter('occasion', occasion, 'giftfinder', filteredProducts.length)
-
-    // Track funnel step
-    trackStep('apply_filters')
+  const updateFiltersAndTrack = (
+    updater: (prev: GiftFinderFilters) => GiftFinderFilters,
+    tracking: { type: 'occasion' | 'recipient' | 'budget'; value: string }
+  ) => {
+    setFilters((prev) => {
+      const next = updater(prev)
+      const resultsCount = filterProducts(SAMPLE_PRODUCTS, next).length
+      trackApplyFilter(tracking.type, tracking.value, 'giftfinder', resultsCount)
+      trackStep('apply_filters')
+      return next
+    })
   }
 
-  const handleBudgetChange = (budgetMin: number, budgetMax: number) => {
-    setBudgetMin(budgetMin)
-    setBudgetMax(budgetMax)
-
-    // Track budget filter
-    trackApplyFilter('budget', `${budgetMin}-${budgetMax}`, 'giftfinder', filteredProducts.length)
-
-    trackStep('apply_filters')
+  const handleOccasionChange = (occasion: string) => {
+    updateFiltersAndTrack((prev) => ({ ...prev, occasion }), {
+      type: 'occasion',
+      value: occasion,
+    })
   }
 
   const handleRecipientChange = (recipient: string) => {
-    setRecipient(recipient)
-
-    trackApplyFilter('recipient', recipient, 'giftfinder', filteredProducts.length)
-
-    trackStep('apply_filters')
+    updateFiltersAndTrack((prev) => ({ ...prev, recipient }), {
+      type: 'recipient',
+      value: recipient,
+    })
   }
 
-  const handleInterestsChange = (interests: string[]) => {
-    setInterests(interests)
-
-    trackApplyFilter('interests', interests, 'giftfinder', filteredProducts.length)
-
-    trackStep('apply_filters')
+  const handleBudgetChange = (budgetMin: number, budgetMax: number) => {
+    updateFiltersAndTrack((prev) => ({ ...prev, budgetMin, budgetMax }), {
+      type: 'budget',
+      value: `${budgetMin}-${budgetMax}`,
+    })
   }
 
-  // Track product impressions when results are shown
   useEffect(() => {
     if (filteredProducts.length > 0) {
-      // Batch track all product impressions
       trackProductImpressions(filteredProducts, 'giftfinder_results')
-
-      // Track funnel step
       trackStep('view_results')
     }
   }, [filteredProducts, trackStep])
 
-  // Handle product click
   const handleProductClick = (product: Product, position: number) => {
-    // Track individual product view
     trackViewProduct(product, position, 'giftfinder_results')
-
-    // Track funnel step
     trackStep('view_product')
   }
 
   return (
     <div className="giftfinder-page">
-      {/* Filters */}
       <div className="filters">
-        <select onChange={(e) => handleOccasionChange(e.target.value)}>
-          <option>Verjaardag</option>
-          <option>Kerst</option>
-          <option>Sinterklaas</option>
+        <select
+          value={filters.occasion}
+          onChange={(event) => handleOccasionChange(event.target.value)}
+        >
+          <option value="Verjaardag">Verjaardag</option>
+          <option value="Kerst">Kerst</option>
+          <option value="Sinterklaas">Sinterklaas</option>
         </select>
 
-        <select onChange={(e) => handleRecipientChange(e.target.value)}>
-          <option>Partner</option>
-          <option>Vriend(in)</option>
-          <option>Familielid</option>
+        <select
+          value={filters.recipient}
+          onChange={(event) => handleRecipientChange(event.target.value)}
+        >
+          <option value="Partner">Partner</option>
+          <option value="Vriend(in)">Vriend(in)</option>
+          <option value="Familielid">Familielid</option>
         </select>
 
-        {/* Budget slider */}
         <input
           type="range"
           min="0"
           max="500"
-          onChange={(e) => handleBudgetChange(0, parseInt(e.target.value))}
+          value={filters.budgetMax}
+          onChange={(event) => handleBudgetChange(0, Number(event.target.value))}
         />
       </div>
 
-      {/* Results */}
       <div className="results">
         {filteredProducts.map((product, index) => (
           <ProductCard
@@ -130,27 +187,39 @@ export function GiftFinderPageExample() {
 /**
  * GIFTRESULTCARD INTEGRATION:
  *
- * Add this to your GiftResultCard component when user clicks affiliate link:
+ * Use this helper when a user clicks an affiliate link from the GiftResultCard.
  */
 
-import { trackClickAffiliate } from '../services/analyticsEventService'
+const openAffiliateInNewTab = (url: string) => {
+  if (typeof window !== 'undefined') {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+}
 
-export function handleAffiliateClick(product: Product) {
-  // Track affiliate click
-  trackClickAffiliate(product, 'giftfinder', 'result_card', position)
+type AffiliateClickDeps = {
+  trackStep: (step: string) => void
+  source?: string
+  funnelStep?: string
+}
 
-  // Track funnel step
-  trackStep('click_affiliate')
+export const createAffiliateClickHandler = ({
+  trackStep,
+  source = 'giftfinder',
+  funnelStep = 'result_card',
+}: AffiliateClickDeps) => {
+  return (product: Product, position: number) => {
+    trackClickAffiliate(product, source, funnelStep, position)
+    trackStep('click_affiliate')
 
-  // Track outbound (from existing dataLayerService)
-  trackOutboundClick({
-    url: product.affiliateUrl,
-    retailer: product.retailer,
-    productName: product.name,
-  })
-
-  // Open affiliate link
-  window.open(product.affiliateUrl, '_blank', 'noopener,noreferrer')
+    if (product.affiliateUrl) {
+      trackOutboundClick({
+        url: product.affiliateUrl,
+        retailer: product.retailer || 'Unknown',
+        productName: product.name,
+      })
+      openAffiliateInNewTab(product.affiliateUrl)
+    }
+  }
 }
 
 /**

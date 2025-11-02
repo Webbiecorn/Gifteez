@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
 import { DynamicProductService } from '../services/dynamicProductService'
+import { PartyProService } from '../services/partyProService'
+import { ShopLikeYouGiveADamnService } from '../services/shopLikeYouGiveADamnService'
+import { mergeThematicCategories } from '../services/thematicDealCategories'
 import Button from './Button'
 import DealsPreviewSections from './DealsPreviewSections'
 import { SparklesIcon, TagIcon, BookmarkFilledIcon, SpinnerIcon, LinkIcon } from './IconComponents'
@@ -39,16 +42,42 @@ const AdminDealsPreviewPage: React.FC<AdminDealsPreviewPageProps> = ({ navigateT
     setLoading(true)
     setError(null)
     try {
-      const [weekly, top, categoryData, manualConfig] = await Promise.all([
-        DynamicProductService.getDealOfTheWeek(),
-        DynamicProductService.getTop10Deals(),
-        DynamicProductService.getDealCategories(),
-        DealCategoryConfigService.load(),
-      ])
+      const [weekly, top, categoryData, manualConfig, sustainableProducts, partyProducts] =
+        await Promise.all([
+          DynamicProductService.getDealOfTheWeek(),
+          DynamicProductService.getTop10Deals(),
+          DynamicProductService.getDealCategories(),
+          DealCategoryConfigService.load(),
+          ShopLikeYouGiveADamnService.loadProducts(),
+          PartyProService.loadProducts(),
+        ])
+
+      const hasManualCategories = Boolean(manualConfig?.categories?.length)
+      const baseCategories = hasManualCategories
+        ? categoryData.filter((category) => category.items.length > 0)
+        : []
+
+      const { categories: categoriesWithThemes, added } = mergeThematicCategories(baseCategories, {
+        sustainableProducts,
+        partyProducts,
+      })
+
+      added.forEach((addition) => {
+        const lower = addition.title.toLowerCase()
+        if (lower.includes('duurza')) {
+          console.warn(
+            `[Admin] Duurzame toevoeging: ${addition.title} met ${addition.count} producten`
+          )
+        } else if (lower.includes('feest')) {
+          console.warn(
+            `[Admin] Feestelijke toevoeging: ${addition.title} met ${addition.count} producten`
+          )
+        }
+      })
 
       setDealOfWeek(weekly)
       setTopDeals(top)
-      setCategories(categoryData)
+      setCategories(categoriesWithThemes)
       setLastUpdated(DynamicProductService.getStats()?.lastUpdated ?? null)
       setManualConfigUpdatedAt(manualConfig?.updatedAt ?? null)
     } catch (previewError: any) {

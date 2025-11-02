@@ -1,15 +1,3 @@
-import {
-  collection,
-  getDocs,
-  getDoc,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  Timestamp,
-} from 'firebase/firestore'
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import BlogService, { type BlogPostData } from '../blogService'
 import * as firebaseModule from '../firebase'
@@ -67,13 +55,10 @@ vi.mock('../../data/blogData', () => ({
 }))
 
 describe('blogService', () => {
-  let mockLocalStorage: Record<string, string>
   let cryptoSpy: any
   let uuidCounter = 0
 
   beforeEach(() => {
-    // Reset localStorage mock
-    mockLocalStorage = {}
     localStorage.clear()
 
     // Reset Firebase mocks

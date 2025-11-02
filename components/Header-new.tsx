@@ -3,7 +3,6 @@ import { AuthContext } from '../contexts/AuthContext'
 import { CartContext } from '../contexts/CartContext'
 import Button from './Button'
 import {
-  GiftIcon,
   HeartIcon,
   HeartIconFilled,
   MenuIcon,
@@ -81,6 +80,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
               {navItems.map((item) => (
                 <button
                   key={item.page}
+                  data-testid={`nav-${item.page}`}
                   onClick={() => handleNavClick(item.page)}
                   className={`relative font-display font-semibold text-sm px-5 py-3 rounded-xl transition-all duration-300 flex items-center gap-2 group whitespace-nowrap ${
                     currentPage === item.page
@@ -251,6 +251,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                 {navItems.map((item) => (
                   <button
                     key={item.page}
+                    data-testid={`nav-${item.page}`}
                     onClick={() => handleNavClick(item.page)}
                     className={`w-full font-display font-semibold text-lg text-left py-4 px-4 rounded-xl flex items-center gap-3 transition-all duration-300 ${
                       currentPage === item.page
