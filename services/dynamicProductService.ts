@@ -105,7 +105,7 @@ export class DynamicProductService {
           this.amazonProducts = []
         }
 
-                // Load Shop Like You Give A Damn products (sustainable/vegan)
+        // Load Shop Like You Give A Damn products (sustainable/vegan)
         try {
           const slygadData = await ShopLikeYouGiveADamnService.loadProducts()
           this.slygadProducts = Array.isArray(slygadData) ? slygadData : []
@@ -141,14 +141,14 @@ export class DynamicProductService {
 
           // Try loading shards via index first
           const idxRes = await fetch('/data/awin-index.json', {
-          headers: { 'cache-control': 'no-cache' },
-        })
-        if (idxRes.ok) {
-          const idx = await idxRes.json()
-          const shards: string[] = Array.isArray(idx?.shards)
+            headers: { 'cache-control': 'no-cache' },
+          })
+          if (idxRes.ok) {
+            const idx = await idxRes.json()
+            const shards: string[] = Array.isArray(idx?.shards)
               ? idx.shards.map((s: any) => s?.shard).filter(Boolean)
               : []
-            
+
             if (shards.length > 0) {
               const awin: any[] = []
               for (const rel of shards) {
@@ -166,7 +166,9 @@ export class DynamicProductService {
                       }
                     }
                   }
-                } catch {}
+                } catch {
+                  // Shard loading failed, continue
+                }
               }
               this.awinProducts = awin
               this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (shards)`)
@@ -198,7 +200,10 @@ export class DynamicProductService {
         this.lastUpdated = new Date()
 
         const totalProducts =
-          this.coolblueProducts.length + this.amazonProducts.length + this.slygadProducts.length + this.awinProducts.length
+          this.coolblueProducts.length +
+          this.amazonProducts.length +
+          this.slygadProducts.length +
+          this.awinProducts.length
         this.debugLog(
           `📊 Total products loaded: ${totalProducts} (${this.coolblueProducts.length} Coolblue + ${this.amazonProducts.length} Amazon + ${this.slygadProducts.length} SLYGAD + ${this.awinProducts.length} AWIN)`
         )
@@ -269,7 +274,9 @@ export class DynamicProductService {
   /**
    * Get products by source
    */
-  static getProductsBySource(source: 'coolblue' | 'amazon' | 'slygad' | 'awin' | 'all' = 'all'): any[] {
+  static getProductsBySource(
+    source: 'coolblue' | 'amazon' | 'slygad' | 'awin' | 'all' = 'all'
+  ): any[] {
     switch (source) {
       case 'coolblue':
         return Array.isArray(this.coolblueProducts) ? this.coolblueProducts : []
@@ -338,6 +345,9 @@ export class DynamicProductService {
       isOnSale: !!product.isOnSale,
       tags: product.tags,
       giftScore: product.giftScore,
+      merchant: product.merchant ?? product.source ?? undefined,
+      brand: product.brand,
+      category: product.category,
     }
   }
 
@@ -763,7 +773,8 @@ export class DynamicProductService {
         return false
       }
 
-      const id = meta?.product?.id != null ? String(meta.product.id) : ''
+      const id =
+        meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : ''
       if (!id || usedIds.has(id)) {
         return false
       }
@@ -795,7 +806,10 @@ export class DynamicProductService {
       if (!removed) {
         return
       }
-      const id = removed?.product?.id !== null && removed?.product?.id !== undefined ? String(removed.product.id) : ''
+      const id =
+        removed?.product?.id !== null && removed?.product?.id !== undefined
+          ? String(removed.product.id)
+          : ''
       if (id) {
         usedIds.delete(id)
       }
@@ -828,7 +842,14 @@ export class DynamicProductService {
 
     if (selected.length < MAX_TOTAL) {
       const remainingMetas = productMetas
-        .filter((meta) => !usedIds.has(meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : ''))
+        .filter(
+          (meta) =>
+            !usedIds.has(
+              meta?.product?.id !== null && meta?.product?.id !== undefined
+                ? String(meta.product.id)
+                : ''
+            )
+        )
         .sort((a, b) => {
           const domainWeightA = a.domain === 'amazon' ? 1 : 0
           const domainWeightB = b.domain === 'amazon' ? 1 : 0
@@ -852,7 +873,14 @@ export class DynamicProductService {
 
     if (selected.length < MAX_TOTAL) {
       const fallbackMetas = productMetas
-        .filter((meta) => !usedIds.has(meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : ''))
+        .filter(
+          (meta) =>
+            !usedIds.has(
+              meta?.product?.id !== null && meta?.product?.id !== undefined
+                ? String(meta.product.id)
+                : ''
+            )
+        )
         .sort((a, b) => b.score - a.score)
       for (const meta of fallbackMetas) {
         if (addMeta(meta, { force: true })) {
@@ -872,7 +900,11 @@ export class DynamicProductService {
         .filter(
           (meta) =>
             meta.domain === 'amazon' &&
-            !usedIds.has(meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : '')
+            !usedIds.has(
+              meta?.product?.id !== null && meta?.product?.id !== undefined
+                ? String(meta.product.id)
+                : ''
+            )
         )
         .sort((a, b) => b.score - a.score)
 
@@ -1050,7 +1082,7 @@ export class DynamicProductService {
     const results: any[] = []
     let sourceIndex = 0
 
-    while (results.length < limit && sources.some(s => bySource[s].length > 0)) {
+    while (results.length < limit && sources.some((s) => bySource[s].length > 0)) {
       const source = sources[sourceIndex % sources.length]
       if (bySource[source] && bySource[source].length > 0) {
         const item = bySource[source].shift()
@@ -1102,7 +1134,7 @@ export class DynamicProductService {
     const results: any[] = []
     let sourceIndex = 0
 
-    while (results.length < limit && sources.some(s => bySource[s].length > 0)) {
+    while (results.length < limit && sources.some((s) => bySource[s].length > 0)) {
       const source = sources[sourceIndex % sources.length]
       if (bySource[source].length > 0) {
         results.push(bySource[source].shift())
