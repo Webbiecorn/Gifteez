@@ -23,6 +23,16 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
       const filters: NonNullable<ProgrammaticConfig['filters']> = {
         ...(config?.filters ?? {}),
       }
+
+      // Helpers: woordgrenzen en zinsdelen
+      const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const hasPhrase = (hay: string, phrase: string) => hay.includes(phrase)
+      const hasWord = (hay: string, word: string) => {
+        if (!word || word.length < 2) return false
+        // Lettergrenzen inclusief accenten
+        const regex = new RegExp(`(^|[^a-zà-ÿ])${escapeRegExp(word)}([^a-zà-ÿ]|$)`, 'i')
+        return regex.test(hay)
+      }
       const maxPrice = filters.maxPrice ?? config?.budgetMax
       const keywordList = (filters.keywords ?? [])
         .concat([config?.occasion ?? '', config?.recipient ?? '', config?.interest ?? ''])
@@ -61,74 +71,79 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
 
               const merchantName = (p.merchant || p.brand || '').toLowerCase()
 
+              // Merchant uitsluitingen
               if (excludeMerchants.length && merchantName) {
                 const isExcluded = excludeMerchants.some(
                   (term) => merchantName === term || merchantName.includes(term)
                 )
-                if (isExcluded) {
-                  return { p, score: -999 }
-                }
+                if (isExcluded) return { p, score: -999 }
               }
 
+              // Keyword uitsluitingen
               if (excludeKeywords.length) {
-                const hasExcludedKeyword = excludeKeywords.some((kw) => kw && hay.includes(kw))
-                if (hasExcludedKeyword) {
-                  return { p, score: -999 }
-                }
+                const hasExcludedKeyword = excludeKeywords.some((kw) =>
+                  kw ? (kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)) : false
+                )
+                if (hasExcludedKeyword) return { p, score: -999 }
               }
 
-              // Exclude obvious men's products when searching for "haar"
+              // Gender detectie
               const isMensProduct =
-                hay.includes('mannen') ||
-                hay.includes('heren') ||
-                hay.includes('voor hem') ||
+                hasWord(hay, 'mannen') ||
+                hasWord(hay, 'heren') ||
+                hasPhrase(hay, 'voor hem') ||
                 hay.includes("men's") ||
-                hay.includes('man ') ||
-                (hay.includes('riem') && hay.includes('jeans')) // Belt specific
+                hasWord(hay, 'man') ||
+                (hasWord(hay, 'riem') && hasWord(hay, 'jeans'))
+              const isWomensProduct =
+                hasWord(hay, 'vrouwen') ||
+                hasWord(hay, 'dames') ||
+                hasPhrase(hay, 'voor haar') ||
+                hasWord(hay, 'vrouw') ||
+                hasWord(hay, 'oorbel') ||
+                hasWord(hay, 'ketting') ||
+                hasWord(hay, 'sieraad')
 
+              // Scoring op basis van keywords en zinsdelen
               if (keywordList.length) {
                 for (const kw of keywordList) {
                   if (!kw) continue
 
-                  // Special handling voor 'haar' (her/woman, not hair)
-                  if (kw === 'haar') {
-                    // Skip men's products entirely
-                    if (isMensProduct) {
-                      return { p, score: -999 } // Exclude completely
-                    }
-
-                    // Boost women's products
+                  if (kw === 'haar' || kw === 'voor haar') {
+                    if (isMensProduct) return { p, score: -999 }
                     if (
-                      hay.includes('vrouw') ||
+                      hasWord(hay, 'vrouw') ||
                       hay.includes('woman') ||
-                      hay.includes('dames') ||
-                      hay.includes('ladies') ||
-                      hay.includes('voor haar') ||
-                      hay.includes('girl')
+                      hasWord(hay, 'dames') ||
+                      hasWord(hay, 'ladies') ||
+                      hasPhrase(hay, 'voor haar') ||
+                      hasWord(hay, 'girl')
                     ) {
                       bonus += 3
                     }
-
-                    // Penalty voor haarproducten als we zoeken naar "voor haar"
                     if (
-                      hay.includes('shampoo') ||
-                      hay.includes('conditioner') ||
-                      hay.includes('haarverzorging') ||
-                      hay.includes('hair care')
+                      hasWord(hay, 'shampoo') ||
+                      hasWord(hay, 'conditioner') ||
+                      hasWord(hay, 'haarverzorging') ||
+                      hasPhrase(hay, 'hair care')
                     ) {
                       bonus -= 2
                     }
-                  } else if (hay.includes(kw)) {
-                    bonus += 1
+                  } else if (kw === 'voor hem') {
+                    if (isWomensProduct) return { p, score: -999 }
+                    bonus += 2.5
+                  } else {
+                    const match = kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)
+                    if (match) bonus += 1
                   }
                 }
               }
 
               if (boostKeywords.length) {
                 for (const kw of boostKeywords) {
-                  if (kw && hay.includes(kw)) {
-                    bonus += 1.5
-                  }
+                  if (!kw) continue
+                  const match = kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)
+                  if (match) bonus += 1.5
                 }
               }
 
@@ -143,14 +158,14 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
               }
 
               // Specifieke boosts
-              if (hay.includes('kerst') || hay.includes('christmas')) bonus += 1
+              if (hasWord(hay, 'kerst') || hay.includes('christmas')) bonus += 1
               if (
-                hay.includes('man') ||
-                hay.includes('heren') ||
-                hay.includes('mannen') ||
-                hay.includes('men ') ||
-                hay.includes('voor hem') ||
-                hay.includes('his')
+                hasWord(hay, 'man') ||
+                hasWord(hay, 'heren') ||
+                hasWord(hay, 'mannen') ||
+                hasPhrase(hay, 'men ') ||
+                hasPhrase(hay, 'voor hem') ||
+                hasWord(hay, 'his')
               )
                 bonus += 1
               if (p.isOnSale) bonus += 0.5

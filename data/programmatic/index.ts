@@ -39,8 +39,23 @@ const VARIANTS: ProgrammaticConfig[] = [
     filters: {
       maxPrice: 50,
       fastDelivery: true,
-      keywords: ['kerst', 'heren', 'mannen'],
-      boostKeywords: ['gadget', 'smart', 'bier', 'whisky', 'gaming'],
+      // Inclusieve trefwoorden voor mannendoelgroep + zinsdelen
+      keywords: ['kerst', 'voor hem', 'mannen', 'heren', 'man', 'hij'],
+      // Extra boosts voor typische mannencadeaus
+      boostKeywords: ['gadget', 'smart', 'bier', 'whisky', 'gaming', 'barbecue', 'tools'],
+      // Sluit expliciet vrouwen/zachte hints uit wanneer duidelijk
+      excludeKeywords: [
+        'voor haar',
+        'vrouw',
+        'vrouwen',
+        'dames',
+        'lady',
+        'ladies',
+        'jurk',
+        'oorbel',
+        'ketting ',
+        'sieraad',
+      ],
       preferredMerchants: ['coolblue', 'bol', 'bol.com', 'amazon'],
     },
     faq: [
@@ -67,8 +82,19 @@ const VARIANTS: ProgrammaticConfig[] = [
     filters: {
       maxPrice: 50,
       fastDelivery: true,
-      keywords: ['kerst', 'dames', 'vrouwen'],
-      boostKeywords: ['beauty', 'wellness', 'gift set', 'sieraad', 'cosy', 'selfcare'],
+      // Inclusieve trefwoorden voor vrouwendoelgroep + zinsdelen
+      keywords: ['kerst', 'voor haar', 'haar', 'vrouw', 'vrouwen', 'dames', 'zij'],
+      boostKeywords: [
+        'beauty',
+        'wellness',
+        'gift set',
+        'sieraad',
+        'sieraden',
+        'cosy',
+        'selfcare',
+        'spa',
+      ],
+      // Sluit man-gerichte items uit en enkele typische man-sleutelwoorden
       excludeKeywords: ['mannen', 'heren', 'voor hem', 'men ', 'riem', 'belt', 'man '],
       excludeMerchants: ['shop like you give a damn - nl & be', "will's vegan store"],
       preferredMerchants: ['rituals', 'coolblue', 'bol', 'bol.com', 'amazon'],
