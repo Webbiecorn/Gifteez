@@ -1084,6 +1084,82 @@ const gift_partypro_reuze_ballonnen_blauw: Gift = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'cadeaugidsen-snel-starten',
+    title: 'Cadeaugidsen: snel starten per budget en thema',
+    excerpt:
+      'Zo vind je in 2 minuten het juiste cadeau. Kies je budget of thema en klik door naar de beste gidsen: onder €25, onder €50 voor haar/hem, duurzaam en gamer.',
+    imageUrl: '/images/Blog-afb-opening.png',
+    category: 'Cadeaugids',
+    author: { name: 'Gifteez Redactie', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-guides' },
+    publishedDate: '2025-11-02',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Snel iets passends vinden? Deze startgids bundelt onze populairste cadeaugidsen per budget en thema. Klik door en je ziet direct shoppable cadeaus van betrouwbare winkels, handig voor Sinterklaas, Kerst of verjaardagen.',
+      },
+      { type: 'heading', content: 'Snel starten: kies je gids' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><a class="text-rose-600 underline" href="/cadeaus/sinterklaas/voor-kinderen-onder-25">Budget onder €25</a> – perfect voor surprises en kleine attenties.</li><li><a class="text-rose-600 underline" href="/cadeaus/kerst/voor-haar/onder-50">Onder €50 voor haar</a> – beauty, cozy en slimme gadgets.</li><li><a class="text-rose-600 underline" href="/cadeaus/kerst/voor-hem/onder-50">Onder €50 voor hem</a> – praktisch + fun, veilig gekozen.</li><li><a class="text-rose-600 underline" href="/cadeaus/duurzamere-cadeaus-onder-50">Duurzame cadeaus (≤ €50)</a> – eco-vriendelijke keuzes met impact.</li><li><a class="text-rose-600 underline" href="/cadeaus/gamer-cadeaus-onder-100">Gamer cadeaus (≤ €100)</a> – headsets, controllers en must-haves.</li></ul>',
+      },
+      { type: 'heading', content: 'Wanneer kies je welke gids?' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Budget</strong> – je hebt een vast bedrag per persoon (surprise, teamcadeau).</li><li><strong>Haar/Hem</strong> – je wilt snel safe keuzes zonder lang te zoeken.</li><li><strong>Duurzaam</strong> – ontvanger geeft om eco/vegan en eerlijke productie.</li><li><strong>Gamer</strong> – leuke upgrades die meteen gebruikt worden.</li></ul>',
+      },
+      { type: 'heading', content: 'Pro-tips om snel te slagen' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li>Check levertijd – filter op “snelle levering” als je haast hebt.</li><li>Combineer klein + persoonlijk – voeg een kaartje toe met een inside joke.</li><li>Gebruik de <a class="text-rose-600 underline" href="/giftfinder">AI GiftFinder</a> voor 3 extra ideeën op maat (1 minuut).</li></ul>',
+      },
+      { type: 'heading', content: 'Alle cadeaugidsen' },
+      {
+        type: 'paragraph',
+        content:
+          'Wil je breder kijken? Bekijk <a class="text-rose-600 underline" href="/cadeaus">alle cadeaugidsen</a> of start in het <a class="text-rose-600 underline" href="/cadeaus">cadeau-overzicht</a>.',
+      },
+    ],
+    seo: {
+      metaTitle: 'Cadeaugidsen: snel starten per budget en thema | Gifteez',
+      metaDescription:
+        'Start hier met cadeautips: onder €25, onder €50 voor haar en hem, duurzame cadeaus en gamer gifts. Snel naar de juiste gids met directe links.',
+      keywords: [
+        'cadeaugidsen',
+        'cadeautips budget',
+        'cadeaus onder 25',
+        'cadeaus onder 50',
+        'cadeau voor haar',
+        'cadeau voor hem',
+        'duurzame cadeaus',
+        'gamer cadeaus',
+      ],
+      ogTitle: 'Cadeaugidsen: snel starten per budget en thema',
+      ogDescription:
+        'Klik door naar onze populairste cadeaugidsen: onder €25, onder €50 voor haar/hem, duurzaam en gamer.',
+      ogImage: 'https://gifteez.nl/images/Blog-afb-opening.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Snel starten met cadeaugidsen',
+      twitterDescription: 'Vind in 2 minuten het juiste cadeau met onze budget- en themagidsen.',
+      twitterImage: 'https://gifteez.nl/images/Blog-afb-opening.png',
+      canonicalUrl: 'https://gifteez.nl/blog/cadeaugidsen-snel-starten',
+    },
+    tags: [
+      'cadeaugids',
+      'budget',
+      'voor haar',
+      'voor hem',
+      'duurzaam',
+      'gamer',
+      'kerst',
+      'sinterklaas',
+    ],
+  },
+  {
     slug: 'partypro-feestdecoratie-partner',
     title: 'PartyPro.nl Partner Spotlight: Instant Feestdecor Voor Elke Viering',
     excerpt:

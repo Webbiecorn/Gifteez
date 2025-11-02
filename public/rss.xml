@@ -7,13 +7,24 @@
     <link>https://gifteez.nl</link>
     <description>Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.</description>
     <language>nl-NL</language>
-    <lastBuildDate>Sun, 26 Oct 2025 10:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 02 Nov 2025 10:00:00 GMT</lastBuildDate>
     <atom:link href="https://gifteez.nl/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://gifteez.nl/logo.png</url>
       <title>Gifteez</title>
       <link>https://gifteez.nl</link>
     </image>
+    <item>
+      <title>Cadeaugidsen: snel starten per budget en thema</title>
+      <link>https://gifteez.nl/blog/cadeaugidsen-snel-starten</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/cadeaugidsen-snel-starten</guid>
+      <description>Zo vind je in 2 minuten het juiste cadeau. Kies je budget of thema en klik door naar de beste gidsen: onder €25, onder €50 voor haar/hem, duurzaam en gamer.</description>
+      <pubDate>Sun, 02 Nov 2025 10:00:00 GMT</pubDate>
+      <category>Cadeaugids</category>
+      <enclosure url="https://gifteez.nl/images/Blog-afb-opening.png" type="image/jpeg" />
+      <media:content url="https://gifteez.nl/images/Blog-afb-opening.png" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez.nl/images/Blog-afb-opening.png" />
+    </item>
     <item>
       <title>PartyPro.nl Partner Spotlight: Instant Feestdecor Voor Elke Viering</title>
       <link>https://gifteez.nl/blog/partypro-feestdecoratie-partner</link>

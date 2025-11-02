@@ -109,22 +109,22 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
         },
       ],
     },
-    { 
-      page: 'blog', 
-      label: 'Blog', 
+    {
+      page: 'blog',
+      label: 'Blog',
       icon: BookOpenIcon,
       submenu: [
         {
           page: 'blog',
           label: '📰 Alle Artikelen',
-          description: 'Inspiratie, tips en cadeaugidsen',
-        },
-        {
-          page: 'cadeausHub',
-          label: '🎯 Cadeaugidsen per Moment',
-          description: 'Kerst, verjaardag, valentijn en meer',
+          description: "Inspiratie, tips en how-to's",
         },
       ],
+    },
+    {
+      page: 'cadeausHub',
+      label: 'Cadeaugidsen',
+      icon: BookOpenIcon,
     },
     { page: 'about', label: 'Over Ons', icon: BookOpenIcon },
     { page: 'contact', label: 'Contact', icon: BookOpenIcon },
@@ -265,7 +265,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
 
                   // TypeScript now knows this is SubMenuLink
                   const linkItem = subItem as SubMenuLink
-                  
+
                   // Render regular link
                   return (
                     <button
