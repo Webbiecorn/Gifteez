@@ -119,28 +119,33 @@ export class DynamicProductService {
 
         // Load AWIN products — prefer shards via index, fallback to combined
         try {
-          const mapProduct = (p: any) => ({
-            id: String(p.id),
-            name: String(p.name),
-            price: Number(p.price) || 0,
-            image: p.image || p.imageUrl,
-            imageUrl: p.imageUrl || p.image,
-            affiliateLink: p.affiliateLink || p.url,
-            description: p.description || '',
-            brand: p.brand,
-            category: p.category,
-            source: 'awin',
-            isOnSale: false,
-            giftScore: 6,
-          })
+          const mapProduct = (p: any) => {
+            const priceNum = Number(p.price) || 0
+            const priceStr = priceNum > 0 ? `€${priceNum.toFixed(2)}` : 'Prijs onbekend'
+            return {
+              id: String(p.id),
+              name: String(p.name),
+              price: priceStr,
+              image: p.image || p.imageUrl || '',
+              imageUrl: p.imageUrl || p.image || '',
+              affiliateLink: p.affiliateLink || p.url || '',
+              description: p.description || '',
+              brand: p.brand || '',
+              category: p.category || '',
+              merchant: p.merchant || '',
+              source: 'awin',
+              isOnSale: false,
+              giftScore: 6,
+            }
+          }
 
           // Try loading shards via index first
           const idxRes = await fetch('/data/awin-index.json', {
-            headers: { 'cache-control': 'no-cache' },
-          })
-          if (idxRes.ok) {
-            const idx = await idxRes.json()
-            const shards: string[] = Array.isArray(idx?.shards)
+          headers: { 'cache-control': 'no-cache' },
+        })
+        if (idxRes.ok) {
+          const idx = await idxRes.json()
+          const shards: string[] = Array.isArray(idx?.shards)
               ? idx.shards.map((s: any) => s?.shard).filter(Boolean)
               : []
             
@@ -790,7 +795,7 @@ export class DynamicProductService {
       if (!removed) {
         return
       }
-      const id = removed?.product?.id != null ? String(removed.product.id) : ''
+      const id = removed?.product?.id !== null && removed?.product?.id !== undefined ? String(removed.product.id) : ''
       if (id) {
         usedIds.delete(id)
       }
@@ -823,7 +828,7 @@ export class DynamicProductService {
 
     if (selected.length < MAX_TOTAL) {
       const remainingMetas = productMetas
-        .filter((meta) => !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : ''))
+        .filter((meta) => !usedIds.has(meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : ''))
         .sort((a, b) => {
           const domainWeightA = a.domain === 'amazon' ? 1 : 0
           const domainWeightB = b.domain === 'amazon' ? 1 : 0
@@ -847,7 +852,7 @@ export class DynamicProductService {
 
     if (selected.length < MAX_TOTAL) {
       const fallbackMetas = productMetas
-        .filter((meta) => !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : ''))
+        .filter((meta) => !usedIds.has(meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : ''))
         .sort((a, b) => b.score - a.score)
       for (const meta of fallbackMetas) {
         if (addMeta(meta, { force: true })) {
@@ -867,7 +872,7 @@ export class DynamicProductService {
         .filter(
           (meta) =>
             meta.domain === 'amazon' &&
-            !usedIds.has(meta?.product?.id != null ? String(meta.product.id) : '')
+            !usedIds.has(meta?.product?.id !== null && meta?.product?.id !== undefined ? String(meta.product.id) : '')
         )
         .sort((a, b) => b.score - a.score)
 

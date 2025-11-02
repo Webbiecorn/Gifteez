@@ -328,18 +328,18 @@ interface HeroCarouselProps {
   partnerBadges: string[]
 }
 
-const HeroCarousel: React.FC<HeroCarouselProps> = ({
+const _HeroCarousel: React.FC<HeroCarouselProps> = ({
   topDeals,
   dealOfWeek,
   navigateTo,
   handleFeaturedClick,
   handleRefresh,
-  lastUpdated,
-  formatDate,
+  _lastUpdated,
+  _formatDate,
   partnerBadges,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [_isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [isHovering, setIsHovering] = useState(false)
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null)
 

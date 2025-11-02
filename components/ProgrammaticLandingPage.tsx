@@ -62,16 +62,14 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
 
           results = scored
         } else if (keywordList.length) {
-          const joined = keywordList.join(' ')
-          results = await DynamicProductService.searchProducts(joined, 48)
-        } else {
-          results = await DynamicProductService.getTopDeals(20)
-        }
-      } catch (e) {
-        results = []
+        const joined = keywordList.join(' ')
+        results = await DynamicProductService.searchProducts(joined, 48)
+      } else {
+        results = await DynamicProductService.getTopDeals(20)
       }
-
-      setItems(results)
+    } catch {
+      results = []
+    }      setItems(results)
     }
     run()
   }, [variantSlug, config?.filters?.maxPrice, config?.budgetMax, config?.filters?.keywords, config?.occasion, config?.recipient, config?.interest])
