@@ -1,0 +1,580 @@
+# Product Classification Keywords
+# Used for rule-based classification of products into audiences, categories, occasions
+
+# ==================== AUDIENCE ====================
+# Keywords that identify target audience (title/description scanning)
+
+audience:
+  men:
+    - heren
+    - man
+    - mannen
+    - men
+    - male
+    - mannelijk
+    - vader
+    - vaders
+    - opa
+    - broer
+    - zoon
+    - boyfriend
+    - husband
+    - gentleman
+    - him
+    - menswear
+    - men's
+  
+  women:
+    - dames
+    - vrouw
+    - vrouwen
+    - women
+    - female
+    - vrouwelijk
+    - moeder
+    - moeders
+    - mama
+    - oma
+    - zus
+    - dochter
+    - girlfriend
+    - wife
+    - lady
+    - ladies
+    - her
+    - womenswear
+    - women's
+  
+  unisex:
+    - unisex
+    - uni sex
+    - voor iedereen
+    - gender neutraal
+    - gender neutral
+    - universeel
+    - iedereen
+  
+  kids:
+    - kind
+    - kinderen
+    - kids
+    - jongen
+    - jongens
+    - meisje
+    - meisjes
+    - peuter
+    - kleuter
+    - schoolkind
+  
+  baby:
+    - baby
+    - babies
+    - newborn
+    - pasgeboren
+    - kraamcadeau
+    - baby shower
+  
+  teen:
+    - tiener
+    - teenager
+    - teen
+    - adolescent
+    - puber
+    - jongere
+
+# ==================== CATEGORIES ====================
+# Main product categories
+
+categories:
+  riemen:
+    - riem
+    - riemen
+    - belt
+    - ceintuur
+    - gordel
+    - broekriem
+  
+  horloges:
+    - horloge
+    - horloges
+    - watch
+    - watches
+    - polshorloge
+    - smartwatch
+    - chronograaf
+  
+  portemonnees:
+    - portemonnee
+    - portemonnees
+    - portemonee
+    - wallet
+    - portefeuille
+    - geldbuidel
+    - cardholder
+    - kaarthouder
+    - pasjeshouder
+  
+  sieraden:
+    - sieraad
+    - sieraden
+    - jewelry
+    - jewellery
+    - ketting
+    - kettingen
+    - armband
+    - armbanden
+    - bracelet
+    - ring
+    - ringen
+    - oorbel
+    - oorbellen
+    - earring
+    - hanger
+    - bedel
+    - charm
+  
+  geuren:
+    - parfum
+    - parfums
+    - perfume
+    - eau de toilette
+    - eau de parfum
+    - edt
+    - edp
+    - geur
+    - geuren
+    - fragrance
+    - cologne
+    - aftershave
+  
+  gadgets:
+    - gadget
+    - gadgets
+    - tech
+    - technologie
+    - elektronisch
+    - electronic
+    - smart
+    - bluetooth
+    - usb
+    - koptelefoon
+    - headphone
+    - earbuds
+    - speaker
+    - powerbank
+    - oplader
+    - charger
+  
+  beauty:
+    - beauty
+    - make-up
+    - makeup
+    - cosmetics
+    - cosmetica
+    - huidverzorging
+    - skincare
+    - lippenstift
+    - mascara
+    - foundation
+    - nagellak
+    - nail polish
+    - verzorging
+  
+  wonen:
+    - wonen
+    - interieur
+    - decoratie
+    - deco
+    - home
+    - kussen
+    - plaid
+    - vaas
+    - kandelaar
+    - fotolijst
+    - spiegel
+    - klok
+    - wanddecoratie
+    - lamp
+    - verlichting
+  
+  koken:
+    - koken
+    - keuken
+    - kitchen
+    - cooking
+    - keukengerei
+    - pan
+    - pannen
+    - mes
+    - messen
+    - snijplank
+    - schort
+    - apron
+    - kookboek
+    - recepten
+  
+  sport:
+    - sport
+    - fitness
+    - gym
+    - training
+    - workout
+    - hardlopen
+    - running
+    - yoga
+    - wielrennen
+    - zwemmen
+    - voetbal
+    - tennis
+    - sportkleding
+  
+  mode:
+    - mode
+    - fashion
+    - kleding
+    - clothing
+    - shirt
+    - trui
+    - sweater
+    - jas
+    - jacket
+    - blazer
+    - coat
+    - schoenen
+    - shoes
+    - sneakers
+    - flats
+    - loafers
+    - ballerina
+    - sjaal
+    - handschoenen
+    - pet
+    - cap
+    - muts
+    - jurk
+    - dress
+    - rok
+    - skirt
+    - broek
+    - pants
+    - jeans
+  
+  elektronica:
+    - elektronica
+    - electronics
+    - tablet
+    - laptop
+    - computer
+    - gaming
+    - console
+    - camera
+    - tv
+    - televisie
+    - smartphone
+  
+  boeken:
+    - boek
+    - boeken
+    - book
+    - books
+    - roman
+    - thriller
+    - kookboek
+    - handboek
+    - gids
+    - encyclopedie
+  
+  speelgoed:
+    - speelgoed
+    - toy
+    - toys
+    - spel
+    - spellen
+    - game
+    - games
+    - puzzel
+    - lego
+    - knuffel
+    - pop
+    - auto
+    - bouwpakket
+  
+  wellness:
+    - wellness
+    - spa
+    - massage
+    - ontspanning
+    - relax
+    - aromatherapie
+    - badolie
+    - bath
+    - scrub
+    - gezichtsmasker
+    - face mask
+  
+  outdoor:
+    - outdoor
+    - buiten
+    - camping
+    - wandelen
+    - hiking
+    - natuur
+    - tuin
+    - tuinieren
+    - bbq
+    - barbecue
+    - picknicken
+  
+  kunst:
+    - kunst
+    - art
+    - schilderij
+    - print
+    - poster
+    - fotografie
+    - sculptuur
+    - keramiek
+    - handgemaakt
+    - artisanaal
+
+  duurzaam:
+    - duurzaam
+    - sustainable
+    - eco
+    - biologisch
+    - organic
+    - gerecycled
+    - recycled
+    - milieuvriendelijk
+    - fair trade
+    - herbruikbaar
+    - zero waste
+
+# ==================== OCCASIONS ====================
+# When to gift these products
+
+occasions:
+  verjaardag:
+    - verjaardag
+    - birthday
+    - jarig
+    - verjaardagscadeau
+  
+  kerst:
+    - kerst
+    - christmas
+    - xmas
+    - kerstcadeau
+    - kerstmis
+  
+  sinterklaas:
+    - sinterklaas
+    - sint
+    - pakjesavond
+    - 5 december
+  
+  vaderdag:
+    - vaderdag
+    - father's day
+    - fathers day
+    - papa cadeau
+    - voor vader
+  
+  moederdag:
+    - moederdag
+    - mother's day
+    - mothers day
+    - mama cadeau
+    - voor moeder
+  
+  valentijn:
+    - valentijn
+    - valentine
+    - valentines
+    - valentijnsdag
+    - liefde
+    - romantisch
+  
+  housewarming:
+    - housewarming
+    - verhuisd
+    - nieuw huis
+    - intrek
+    - eerste woning
+  
+  babyshower:
+    - baby shower
+    - babyshower
+    - kraamcadeau
+    - kraam
+    - geboorte
+    - geboren
+  
+  afstuderen:
+    - afstuderen
+    - afgestudeerd
+    - geslaagd
+    - diploma
+    - graduation
+  
+  pensioen:
+    - pensioen
+    - pensionering
+    - met pensioen
+    - retirement
+    - afscheid
+
+# ==================== INTERESTS ====================
+# Lifestyle/hobby tags
+
+interests:
+  gamer:
+    - gamer
+    - gaming
+    - games
+    - console
+    - playstation
+    - xbox
+    - nintendo
+    - pc gaming
+    - streamer
+  
+  duurzaam:
+    - duurzaam
+    - sustainable
+    - eco
+    - groen
+    - green
+    - milieubewust
+  
+  tech:
+    - tech
+    - technologie
+    - gadget
+    - smart
+    - digital
+    - digitaal
+    - high-tech
+  
+  fitness:
+    - fitness
+    - gym
+    - workout
+    - training
+    - sporten
+    - gezondheid
+    - health
+  
+  reizen:
+    - reis
+    - reizen
+    - travel
+    - traveling
+    - vakantie
+    - holiday
+    - backpack
+    - wereldreiziger
+  
+  koken:
+    - koken
+    - cooking
+    - culinair
+    - chef
+    - kok
+    - recepten
+    - foodie
+  
+  tuinieren:
+    - tuin
+    - tuinieren
+    - garden
+    - gardening
+    - planten
+    - plants
+    - kweken
+  
+  lezen:
+    - lezen
+    - reading
+    - boeken
+    - books
+    - lezer
+    - bookworm
+  
+  muziek:
+    - muziek
+    - music
+    - muzikant
+    - instrument
+    - concert
+    - festival
+    - dj
+  
+  kunst:
+    - kunst
+    - art
+    - kunstenaar
+    - artist
+    - creatief
+    - creative
+    - schilderen
+  
+  mode:
+    - mode
+    - fashion
+    - style
+    - trendy
+    - fashionista
+  
+  beauty:
+    - beauty
+    - make-up
+    - makeup
+    - skincare
+    - verzorging
+
+# ==================== EXCLUSION KEYWORDS ====================
+# Products containing these should be excluded
+
+exclude:
+  - refill pack only
+  - refill only
+  - navulling
+  - spare parts
+  - onderdelen
+  - replacement
+  - vervanging
+  - gift card
+  - giftcard
+  - cadeaubon
+  - voucher
+  - gutschein
+  - sample
+  - monster
+  - testers
+  - used
+  - gebruikt
+  - defect
+  - broken
+  - kapot
+
+# ==================== GIFTABILITY KEYWORDS ====================
+
+forceGiftable:
+  - cadeau
+  - gift
+  - geschenk
+  - present
+  - cadeauset
+  - giftset
+  - gift box
+  - cadeauverpakking
+
+notGiftable:
+  - verbruiksartikel
+  - consumable
+  - batterij
+  - onderdeel
+  - spare part
+  - navulling
+  - refill

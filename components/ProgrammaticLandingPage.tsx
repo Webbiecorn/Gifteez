@@ -1,747 +1,292 @@
-import React, { useEffect, useMemo, useState } from 'react'
+/**
+ * ProgrammaticLandingPage - Updated for Classifier System
+ * Loads product data from pre-generated JSON files
+ */
+
+import React, { useEffect, useState } from 'react'
 import { PROGRAMMATIC_INDEX, type ProgrammaticConfig } from '../data/programmatic'
-import { withAffiliate } from '../services/affiliate'
-import { DynamicProductService } from '../services/dynamicProductService'
+import type { ProgrammaticIndex, ClassifiedProduct } from '../utils/product-classifier'
 import JsonLd from './JsonLd'
 import Container from './layout/Container'
-import type { DealItem, NavigateTo } from '../types'
+import type { NavigateTo } from '../types'
 
 interface Props {
   variantSlug: string
   navigateTo: NavigateTo
 }
 
-const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug }) => {
+const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) => {
   const config: ProgrammaticConfig | undefined = PROGRAMMATIC_INDEX[variantSlug]
-  const [items, setItems] = useState<DealItem[]>([])
-
-  const pageTitle = config?.title ?? 'Cadeau ideeën — Programmatic'
-  const pageIntro = config?.intro ?? ''
+  const [index, setIndex] = useState<ProgrammaticIndex | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const run = async () => {
-      const filters: NonNullable<ProgrammaticConfig['filters']> = {
-        ...(config?.filters ?? {}),
-      }
+    setLoading(true)
+    setError(null)
 
-      // Helpers: woordgrenzen en zinsdelen
-      const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      const hasPhrase = (hay: string, phrase: string) => hay.includes(phrase)
-      const hasWord = (hay: string, word: string) => {
-        if (!word || word.length < 2) return false
-        // Lettergrenzen inclusief accenten
-        const regex = new RegExp(`(^|[^a-zà-ÿ])${escapeRegExp(word)}([^a-zà-ÿ]|$)`, 'i')
-        return regex.test(hay)
-      }
-      const matchesKeyword = (hay: string, kw: string) =>
-        kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)
-      const maxPrice = filters.maxPrice ?? config?.budgetMax
-      const keywordList = (filters.keywords ?? [])
-        .concat([config?.occasion ?? '', config?.recipient ?? '', config?.interest ?? ''])
-        .filter(Boolean)
-        .map((k) => k.toLowerCase())
-      const boostKeywords = (filters.boostKeywords ?? []).map((k) => k.toLowerCase())
-      const excludeKeywords = (filters.excludeKeywords ?? []).map((k) => k.toLowerCase())
-      const excludeMerchants = (filters.excludeMerchants ?? [])
-        .map((m) => m.trim().toLowerCase())
-        .filter(Boolean)
-      const preferredMerchants = (filters.preferredMerchants ?? [])
-        .map((m) => m.trim().toLowerCase())
-        .filter(Boolean)
-      const targetCount = Math.max(8, Math.min(filters.maxResults ?? 24, 60))
-
-      type Audience = ProgrammaticConfig['audience'] extends (infer U)[] ? U : never
-
-      const audienceProfiles: Record<Audience, { include: string[]; exclude?: string[] }> = {
-        men: {
-          include: [
-            'voor hem',
-            'mannen',
-            'man',
-            "men's",
-            'heren',
-            'his',
-            'hij',
-            'grooming',
-            'scheerset',
-            'barbecue',
-            'whisky',
-            'whiskey',
-            'bier',
-            'baard',
-            'aftershave',
-            'gadgets voor hem',
-          ],
-          exclude: ['voor haar', 'vrouw', 'vrouwen', 'dames', 'ladies', "women's"],
-        },
-        women: {
-          include: [
-            'voor haar',
-            'vrouw',
-            'vrouwen',
-            'dames',
-            'lady',
-            'ladies',
-            'selfcare',
-            'beauty',
-            'wellness',
-            'spa',
-            'giftset',
-            'gift set',
-            'cadeauset',
-            'cadeau set',
-            'cadeaubox',
-            'geschenkset',
-            'verwenpakket',
-            'sieraad',
-            'ketting',
-            'oorbel',
-            'armband',
-            'ring',
-            'cosy',
-            'verzorgingsset',
-            'beauty box',
-          ],
-          exclude: ['voor hem', 'mannen', 'man', 'heren', "men's"],
-        },
-        gamers: {
-          include: [
-            'gaming',
-            'gamer',
-            'console',
-            'playstation',
-            'ps5',
-            'xbox',
-            'nintendo',
-            'switch',
-            'pc gaming',
-            'rgb',
-            'headset',
-            'controller',
-            'gaming muis',
-            'gaming toetsenbord',
-            'steam deck',
-          ],
-        },
-        parents: {
-          include: [
-            'ouders',
-            'ouder',
-            'voor ouders',
-            'voor mama',
-            'voor papa',
-            'mom',
-            'dad',
-            'ouders cadeau',
-            'family',
-          ],
-        },
-        kids: {
-          include: [
-            'kind',
-            'kinderen',
-            'kids',
-            'kinder',
-            'jongen',
-            'meisje',
-            'speelgoed',
-            'lego',
-            'playmobil',
-            'knutsel',
-            'puzzel',
-            'kleurboek',
-            'pop ',
-            'racebaan',
-            'kinderkamer',
-          ],
-          exclude: ['whisky', 'bier', 'wijn', 'gin', 'rum'],
-        },
-        sustainable: {
-          include: [
-            'duurzaam',
-            'eco',
-            'ecologisch',
-            'vegan',
-            'organic',
-            'biologisch',
-            'fair',
-            'recycled',
-            'recycle',
-            'bamboe',
-            'herbruikbaar',
-            'plasticvrij',
-            'zero waste',
-            'milieuvriendelijk',
-            'klimaatneutraal',
-            'sustainable',
-            'refill',
-            'circular',
-            'planet proof',
-          ],
-          exclude: ['leder', 'leer', 'leather'],
-        },
-      }
-
-      const detectAudiences = (hay: string): Audience[] => {
-        const matches: Audience[] = []
-        ;(
-          Object.entries(audienceProfiles) as [
-            Audience,
-            { include: string[]; exclude?: string[] },
-          ][]
-        ).forEach(([audienceId, profile]) => {
-          const hasInclude = profile.include.some((kw) => matchesKeyword(hay, kw))
-          if (!hasInclude) return
-          const hasExclude = (profile.exclude ?? []).some((kw) => matchesKeyword(hay, kw))
-          if (hasExclude) return
-          matches.push(audienceId)
-        })
-        return matches
-      }
-
-      const sustainableForbidden = ['leder', 'leer', 'leather', 'suede']
-
-      // Heuristics: type-detectie voor diversiteit (één per type)
-      const getTypeKey = (item: DealItem) => {
-        const name = (item.name || '').toLowerCase()
-        const tags = (item.tags || []).map((t) => t.toLowerCase())
-        const cat = (item.category || '').toLowerCase()
-
-        const has = (w: string) => name.includes(w) || tags.some((t) => t.includes(w))
-
-        // Directe categorie
-        if (cat) {
-          if (/(belt|riem)/.test(cat)) return 'riem'
-          if (/lamp/.test(cat)) return 'lamp'
-          if (/(mug|mok|beker)/.test(cat)) return 'mok'
-          if (/(sok|sokken)/.test(cat)) return 'sokken'
-          if (/(kaars|candle)/.test(cat)) return 'kaars'
-          if (/(jewel|sieraad|ketting|oorbel|armband|ring)/.test(cat)) return 'sieraad'
-          if (/(parfum|eau de)/.test(cat)) return 'parfum'
-          if (/(headset|koptelefoon)/.test(cat)) return 'headset'
-          if (/(controller)/.test(cat)) return 'controller'
-          if (/(puzzel)/.test(cat)) return 'puzzel'
-          if (/(boek|book)/.test(cat)) return 'boek'
-          if (/(cadeaubon|gift ?card|cadeaukaart)/.test(cat)) return 'cadeaubon'
-          if (/(experience|ervaring|workshop|tickets)/.test(cat)) return 'ervaring'
-          if (/powerbank/.test(cat)) return 'powerbank'
-          if (/(scheerapparaat|trimmer|shaver|baardtrimmer)/.test(cat)) return 'scheerapparaat'
+    // Try to load pre-generated JSON
+    fetch(`/programmatic/${variantSlug}.json`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Guide not available yet`)
         }
-
-        // Tags/naam heuristieken
-        if (
-          has('gift set') ||
-          has('giftset') ||
-          has('cadeauset') ||
-          has('cadeau set') ||
-          has('cadeaubox') ||
-          has('geschenkset') ||
-          has('verwenpakket')
-        )
-          return 'giftset'
-        if (has('riem') || has('belt')) return 'riem'
-        if (
-          has('lamp') ||
-          has('tafellamp') ||
-          has('vloerlamp') ||
-          has('wandlamp') ||
-          has('zaklamp')
-        )
-          return 'lamp'
-        if (has('mug') || has('mok') || has('beker')) return 'mok'
-        if (has('sok')) return 'sokken'
-        if (has('kaars') || has('candle') || has('geurkaars')) return 'kaars'
-        if (has('parfum') || has('eau de')) return 'parfum'
-        if (has('ketting') || has('oorbel') || has('armband') || has('ring') || has('sieraad'))
-          return 'sieraad'
-        if (has('headset') || has('koptelefoon')) return 'headset'
-        if (has('controller')) return 'controller'
-        if (has('puzzel')) return 'puzzel'
-        if (has('boek') || has('book')) return 'boek'
-        if (has('cadeaubon') || has('giftcard') || has('cadeaukaart')) return 'cadeaubon'
-        if (has('ervaring') || has('experience') || has('workshop') || has('tickets'))
-          return 'ervaring'
-        if (has('powerbank')) return 'powerbank'
-        if (
-          has('scheerapparaat') ||
-          has('trimmer') ||
-          has('shaver') ||
-          has('baardtrimmer') ||
-          has('grooming kit')
-        )
-          return 'scheerapparaat'
-        return null
-      }
-
-      const typeLimits: Record<string, number> = {
-        giftset: 4,
-      }
-
-      const selectAdaptive = (arr: DealItem[], target: number, perType = 1) => {
-        if (!arr.length || target <= 0) return []
-
-        const selected: DealItem[] = []
-        const usedKeys = new Set<string>()
-        const typeCounts = new Map<string, number>()
-        let fallbackCounter = 0
-        const keyOf = (item: DealItem) => {
-          const idKey = (item.id ? String(item.id) : '').toLowerCase().trim()
-          if (idKey) return idKey
-          const nameKey = (item.name ?? '').toLowerCase().trim()
-          if (nameKey) return nameKey
-          const fallback = `${item.merchant ?? ''}-${item.brand ?? ''}-${item.price ?? ''}`
-            .toLowerCase()
-            .trim()
-          if (fallback) return fallback
-          fallbackCounter += 1
-          return `fallback-${fallbackCounter}`
-        }
-
-        const tryAdd = (item: DealItem, extra: number) => {
-          if (selected.length >= target) return
-          const uniqueKey = keyOf(item)
-          if (usedKeys.has(uniqueKey)) return
-          const typeKey = getTypeKey(item)
-          if (typeKey) {
-            const baseLimit = typeLimits[typeKey] ?? perType
-            const limit = baseLimit + extra
-            const current = typeCounts.get(typeKey) ?? 0
-            if (current >= limit) return
-            typeCounts.set(typeKey, current + 1)
-          }
-          selected.push(item)
-          usedKeys.add(uniqueKey)
-        }
-
-        const attempt = (extraAllowance: number) => {
-          for (const item of arr) {
-            if (selected.length >= target) break
-            tryAdd(item, extraAllowance)
-          }
-        }
-
-        attempt(0)
-        if (selected.length < target) attempt(1)
-        if (selected.length < target) attempt(2)
-
-        if (selected.length < target) {
-          for (const item of arr) {
-            if (selected.length >= target) break
-            const uniqueKey = keyOf(item)
-            if (usedKeys.has(uniqueKey)) continue
-            usedKeys.add(uniqueKey)
-            selected.push(item)
-          }
-        }
-
-        return selected.slice(0, target)
-      }
-
-      let results: DealItem[] = []
-      try {
-        if (typeof maxPrice === 'number' && !isNaN(maxPrice)) {
-          // Haal een ruimer aanbod op en scoor daarna op relevantie i.p.v. hard filteren
-          const priced = await DynamicProductService.getProductsByPriceRange(0, maxPrice, 240)
-
-          // Filter duplicaten op basis van product-id of productnaam (case-insensitive)
-          const seenKeys = new Set<string>()
-          const unique = priced.filter((p) => {
-            const normalized = p.name.toLowerCase().trim()
-            const idKey = (p.id || '').toLowerCase().trim()
-            const key = idKey || normalized
-            if (seenKeys.has(key)) return false
-            seenKeys.add(key)
-            return true
-          })
-
-          const scored = unique
-            .map((p) => {
-              const base = p.giftScore ?? 7
-              const hay =
-                `${p.name} ${p.description} ${(p.tags || []).join(' ')} ${p.merchant ?? ''} ${p.brand ?? ''}`.toLowerCase()
-              let bonus = 0
-
-              const merchantName = (p.merchant || p.brand || '').toLowerCase()
-
-              // Merchant uitsluitingen
-              if (excludeMerchants.length && merchantName) {
-                const isExcluded = excludeMerchants.some(
-                  (term) => merchantName === term || merchantName.includes(term)
-                )
-                if (isExcluded) return { p, score: -999 }
-              }
-
-              // Keyword uitsluitingen
-              if (excludeKeywords.length) {
-                const hasExcludedKeyword = excludeKeywords.some((kw) =>
-                  kw ? (kw.includes(' ') ? hasPhrase(hay, kw) : hasWord(hay, kw)) : false
-                )
-                if (hasExcludedKeyword) return { p, score: -999 }
-              }
-
-              const productAudiences = detectAudiences(hay)
-
-              if (config?.audience?.length) {
-                const matchesTarget = config.audience.some((aud) => productAudiences.includes(aud))
-                if (!matchesTarget) return { p, score: -999 }
-                const targetHits = productAudiences.filter((aud) =>
-                  config.audience?.includes(aud)
-                ).length
-                if (targetHits) bonus += 2.5 * targetHits
-                if (
-                  config.audience.includes('sustainable') &&
-                  sustainableForbidden.some((kw) => matchesKeyword(hay, kw))
-                ) {
-                  return { p, score: -999 }
-                }
-              }
-
-              // Gender detectie
-              const isMensProduct =
-                hasWord(hay, 'mannen') ||
-                hasWord(hay, 'heren') ||
-                hasPhrase(hay, 'voor hem') ||
-                hay.includes("men's") ||
-                hasWord(hay, 'man') ||
-                (hasWord(hay, 'riem') && hasWord(hay, 'jeans'))
-              const isWomensProduct =
-                hasWord(hay, 'vrouwen') ||
-                hasWord(hay, 'dames') ||
-                hasPhrase(hay, 'voor haar') ||
-                hasWord(hay, 'vrouw') ||
-                hasWord(hay, 'oorbel') ||
-                hasWord(hay, 'ketting') ||
-                hasWord(hay, 'sieraad')
-
-              // Scoring op basis van keywords en zinsdelen
-              if (keywordList.length) {
-                for (const kw of keywordList) {
-                  if (!kw) continue
-
-                  if (kw === 'haar' || kw === 'voor haar') {
-                    if (isMensProduct) return { p, score: -999 }
-                    if (
-                      hasWord(hay, 'vrouw') ||
-                      hay.includes('woman') ||
-                      hasWord(hay, 'dames') ||
-                      hasWord(hay, 'ladies') ||
-                      hasPhrase(hay, 'voor haar') ||
-                      hasWord(hay, 'girl')
-                    ) {
-                      bonus += 3
-                    }
-                    if (
-                      hasWord(hay, 'shampoo') ||
-                      hasWord(hay, 'conditioner') ||
-                      hasWord(hay, 'haarverzorging') ||
-                      hasPhrase(hay, 'hair care')
-                    ) {
-                      bonus -= 2
-                    }
-                  } else if (kw === 'voor hem') {
-                    if (isWomensProduct) return { p, score: -999 }
-                    bonus += 2.5
-                  } else {
-                    const match = matchesKeyword(hay, kw)
-                    if (match) bonus += 1
-                  }
-                }
-              }
-
-              if (boostKeywords.length) {
-                for (const kw of boostKeywords) {
-                  if (!kw) continue
-                  const match = matchesKeyword(hay, kw)
-                  if (match) bonus += 1.5
-                }
-              }
-
-              if (preferredMerchants.length && merchantName) {
-                if (
-                  preferredMerchants.some(
-                    (term) => merchantName === term || merchantName.includes(term)
-                  )
-                ) {
-                  bonus += 2
-                }
-              }
-
-              // Specifieke boosts
-              if (hasWord(hay, 'kerst') || hay.includes('christmas')) bonus += 1
-              if (
-                hasWord(hay, 'man') ||
-                hasWord(hay, 'heren') ||
-                hasWord(hay, 'mannen') ||
-                hasPhrase(hay, 'men ') ||
-                hasPhrase(hay, 'voor hem') ||
-                hasWord(hay, 'his')
-              )
-                bonus += 1
-              if (p.isOnSale) bonus += 0.5
-
-              return { p, score: base + bonus }
-            })
-            .filter(({ score }) => score > 0) // Remove excluded products
-            .sort((a, b) => b.score - a.score)
-
-          const ordered = scored.slice(0, 120).map(({ p }) => p)
-
-          results = ordered
-        } else if (keywordList.length) {
-          const joined = keywordList.join(' ')
-          results = await DynamicProductService.searchProducts(joined, 48)
-        } else {
-          results = await DynamicProductService.getTopDeals(20)
-        }
-      } catch {
-        results = []
-      }
-
-      if (excludeMerchants.length) {
-        results = results.filter((item) => {
-          const merchantName = (item.merchant || item.brand || '').toLowerCase()
-          if (!merchantName) return true
-          return !excludeMerchants.some(
-            (term) => merchantName === term || merchantName.includes(term)
-          )
-        })
-      }
-
-      if (excludeKeywords.length) {
-        results = results.filter((item) => {
-          const hay =
-            `${item.name} ${item.description} ${(item.tags || []).join(' ')} ${item.merchant ?? ''} ${item.brand ?? ''}`.toLowerCase()
-          return !excludeKeywords.some((kw) => kw && matchesKeyword(hay, kw))
-        })
-      }
-
-      if (config?.audience?.length) {
-        results = results.filter((item) => {
-          const hay =
-            `${item.name} ${item.description} ${(item.tags || []).join(' ')} ${item.merchant ?? ''} ${item.brand ?? ''}`.toLowerCase()
-          const productAudiences = detectAudiences(hay)
-          if (
-            config.audience?.includes('sustainable') &&
-            sustainableForbidden.some((kw) => matchesKeyword(hay, kw))
-          ) {
-            return false
-          }
-          return config.audience.some((aud) => productAudiences.includes(aud))
-        })
-      }
-
-      if (preferredMerchants.length) {
-        const preferred: DealItem[] = []
-        const others: DealItem[] = []
-        results.forEach((item) => {
-          const merchantName = (item.merchant || item.brand || '').toLowerCase()
-          if (
-            merchantName &&
-            preferredMerchants.some((term) => merchantName === term || merchantName.includes(term))
-          ) {
-            preferred.push(item)
-          } else {
-            others.push(item)
-          }
-        })
-        results = [...preferred, ...others]
-      }
-
-      // Diversiteit + vulling: voorkom duplicaten en vul tot targetCount
-      results = selectAdaptive(results, targetCount, 1)
-
-      setItems(results)
-    }
-    run()
-  }, [
-    variantSlug,
-    config?.filters,
-    config?.budgetMax,
-    config?.occasion,
-    config?.recipient,
-    config?.interest,
-  ])
-
-  // JSON-LD: ItemList + FAQ + Breadcrumbs
-  const itemListSchema = useMemo(() => {
-    if (!items?.length) return null
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://gifteez.nl'
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'ItemList',
-      name: pageTitle,
-      itemListOrder: 'https://schema.org/ItemListOrderAscending',
-      itemListElement: items.slice(0, 24).map((p, idx) => ({
-        '@type': 'ListItem',
-        position: idx + 1,
-        url: `${baseUrl}/product/${p.id ?? idx}`,
-        item: {
-          '@type': 'Product',
-          name: p.name,
-          image: p.image,
-          description: p.description,
-          brand: p.brand ?? p.merchant ?? 'Partner',
-          offers: {
-            '@type': 'Offer',
-            priceCurrency: 'EUR',
-            price: (() => {
-              const num = parseFloat(
-                String(p.price)
-                  .replace(/[^0-9,.]/g, '')
-                  .replace(',', '.')
-              )
-              return isNaN(num) ? undefined : num
-            })(),
-            url: withAffiliate(p.affiliateLink ?? '#', {
-              pageType: 'programmatic',
-              placement: 'schema',
-              abVariant: variantSlug,
-            }),
-            availability:
-              p.inStock === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
-          },
-        },
-      })),
-    }
-  }, [items, pageTitle, variantSlug])
-
-  const faqSchema = useMemo(() => {
-    if (!config?.faq?.length) return null
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: config.faq.map((f) => ({
-        '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
-      })),
-    }
-  }, [config?.faq])
-
-  const breadcrumbSchema = useMemo(() => {
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://gifteez.nl'
-    const items: { '@type': 'ListItem'; position: number; name: string; item: string }[] = [
-      { '@type': 'ListItem', position: 1, name: 'Cadeaus', item: `${baseUrl}/cadeaus` },
-    ]
-    if (config?.occasion) {
-      items.push({
-        '@type': 'ListItem',
-        position: 2,
-        name: config.occasion,
-        item: `${baseUrl}/cadeaus/${config.occasion}`,
+        return response.json()
       })
-    }
-    items.push({
-      '@type': 'ListItem',
-      position: items.length + 1,
-      name: pageTitle,
-      item: `${baseUrl}${window.location.pathname}`,
-    })
-    return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items }
-  }, [config?.occasion, pageTitle])
+      .then((data: ProgrammaticIndex) => {
+        setIndex(data)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.warn('Pre-generated guide not found, using config:', err)
+        setError(err.message)
+        setLoading(false)
+      })
+  }, [variantSlug])
+
+  const pageTitle = config?.title ?? index?.metadata.title ?? 'Cadeau ideeën'
+  const pageIntro = config?.intro ?? index?.metadata.description ?? ''
+
+  // Schema for SEO
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${window.location.origin}/` },
+      { '@type': 'ListItem', position: 2, name: 'Cadeaus', item: `${window.location.origin}/cadeaus` },
+      { '@type': 'ListItem', position: 3, name: pageTitle, item: window.location.href },
+    ],
+  }
+
+  if (loading) {
+    return (
+      <Container>
+        <div className="py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4" />
+            <p className="text-gray-600">Cadeaus laden...</p>
+          </div>
+        </div>
+      </Container>
+    )
+  }
+
+  if (error && !index) {
+    return (
+      <Container>
+        <div className="py-12">
+          <div className="max-w-2xl mx-auto bg-amber-50 border border-amber-200 rounded-lg p-6">
+            <h2 className="text-xl font-bold text-amber-900 mb-2">Gids nog niet beschikbaar</h2>
+            <p className="text-amber-700 mb-4">
+              Deze cadeaugids wordt momenteel gevuld met producten. Kom later terug!
+            </p>
+            <button
+              onClick={() => navigateTo('categories')}
+              className="text-primary hover:underline font-semibold"
+            >
+              ← Bekijk andere gidsen
+            </button>
+          </div>
+        </div>
+      </Container>
+    )
+  }
+
+  if (!index || !index.products || index.products.length === 0) {
+    return (
+      <Container>
+        <div className="py-12">
+          <div className="max-w-2xl mx-auto text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{pageTitle}</h1>
+            <p className="text-gray-600 mb-6">{pageIntro}</p>
+            <p className="text-amber-600">Geen producten beschikbaar voor deze gids.</p>
+          </div>
+        </div>
+      </Container>
+    )
+  }
 
   return (
     <Container>
+      <JsonLd data={breadcrumbSchema} />
+      
       <div className="py-8 md:py-12">
-        <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-          {pageTitle}
-        </h1>
-        {pageIntro && (
-          <p className="mt-3 md:mt-4 text-base md:text-lg text-gray-600 max-w-3xl">{pageIntro}</p>
-        )}
-
-        {config?.highlights?.length ? (
-          <ul className="mt-4 grid gap-2 text-sm text-gray-600 sm:grid-cols-2">
-            {config.highlights.map((highlight, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <span
-                  aria-hidden
-                  className="mt-1 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700"
-                >
-                  +
-                </span>
-                <span>{highlight}</span>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-
-        {/* Editor's Picks (optional) */}
-        {config?.editorPicks && config.editorPicks.length > 0 && (
-          <div className="mt-8">
-            <h2 className="text-lg font-bold mb-3">Red Hot Picks</h2>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {config.editorPicks.map((p, i) => (
-                <li
-                  key={p.sku + i}
-                  className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 text-sm text-gray-700"
-                >
-                  <div className="font-semibold">{p.sku}</div>
-                  {p.reason && <div className="text-gray-500">{p.reason}</div>}
-                </li>
-              ))}
-            </ul>
+        {/* Hero Section */}
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            {pageTitle}
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl">
+            {pageIntro}
+          </p>
+          
+          {/* Stats Badges */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <span className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold">
+              {index.metadata.totalProducts} producten
+            </span>
+            <span className="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-800 text-sm font-semibold">
+              {index.stats.uniqueBrands} merken
+            </span>
+            <span className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-semibold">
+              €{Math.round(index.stats.priceRange[0])} - €{Math.round(index.stats.priceRange[1])}
+            </span>
           </div>
-        )}
 
-        {/* Results */}
-        <div className="mt-10">
-          <h2 className="sr-only">Resultaten</h2>
-          {items.length === 0 ? (
-            <div className="text-gray-600">We verzamelen geschikte cadeaus…</div>
-          ) : (
-            <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-              {items.map((deal, index) => (
-                <li key={deal.id ?? index} className="h-full">
-                  <a
-                    href={withAffiliate(deal.affiliateLink ?? '#', {
-                      pageType: 'programmatic',
-                      placement: 'card-cta',
-                      abVariant: variantSlug,
-                      cardIndex: index,
-                    })}
-                    rel="noopener noreferrer sponsored nofollow"
-                    target="_blank"
-                    className="block bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden h-full"
-                  >
-                    <div className="aspect-square bg-gray-50 overflow-hidden">
-                      <img
-                        src={deal.imageUrl || deal.image || '/images/placeholder.png'}
-                        alt={deal.name}
-                        loading="lazy"
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        style={{ maxWidth: '100%', height: 'auto' }}
-                      />
-                    </div>
-                    <div className="p-3">
-                      <div className="text-sm text-gray-500">
-                        {deal.merchant ?? deal.brand ?? 'Partner'}
-                      </div>
-                      <div className="font-semibold text-gray-900 line-clamp-2 min-h-[3.4rem]">
-                        {deal.name}
-                      </div>
-                      <div className="mt-1 text-accent font-bold">
-                        {deal.price ?? 'Bekijk prijs'}
-                      </div>
-                      <div className="mt-2 text-primary text-sm font-semibold">
-                        Bekijk bij partner →
-                      </div>
-                    </div>
-                  </a>
+          {/* Highlights */}
+          {config?.highlights && config.highlights.length > 0 && (
+            <ul className="mt-6 space-y-2">
+              {config.highlights.map((highlight, i) => (
+                <li key={i} className="flex items-center text-gray-700">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  {highlight}
                 </li>
               ))}
             </ul>
           )}
         </div>
+
+        {/* Products Grid */}
+        <section>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {index.products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+
+        {/* FAQs */}
+        {config?.faq && config.faq.length > 0 && (
+          <section className="mt-16 max-w-3xl">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Veelgestelde vragen</h2>
+            <div className="space-y-4">
+              {config.faq.map((item, i) => (
+                <details key={i} className="bg-gray-50 rounded-lg p-4">
+                  <summary className="font-semibold text-gray-900 cursor-pointer">{item.q}</summary>
+                  <p className="mt-2 text-gray-600">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+    </Container>
+  )
+}
+
+// ==================== Product Card ====================
+
+interface ProductCardProps {
+  product: ClassifiedProduct
+}
+
+/**
+ * Format merchant name for display
+ * "Coolblue NL" → "Coolblue"
+ * "Shop Like You Give A Damn - NL & BE" → "Shop Like You Give A Damn"
+ */
+function formatMerchantName(merchant?: string): string {
+  if (!merchant) return 'onze partner'
+  
+  // Remove country suffixes and regional indicators
+  return merchant
+    .replace(/\s*-\s*(NL|BE|NL\s*&\s*BE)$/i, '')
+    .replace(/\s+NL$/i, '')
+    .replace(/\s+BE$/i, '')
+    .trim()
+}
+
+function ProductCard({ product }: ProductCardProps) {
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price
+  const discountPercentage = hasDiscount
+    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+    : 0
+
+  return (
+    <a
+      href={product.url}
+      target="_blank"
+      rel="noopener noreferrer sponsored"
+      className="group block bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden"
+    >
+      {/* Image */}
+      <div className="relative aspect-square bg-gray-50">
+        {product.images[0] ? (
+          <img
+            src={product.images[0]}
+            alt={product.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-300">
+            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        )}
+        
+        {/* Discount Badge */}
+        {hasDiscount && (
+          <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+            -{discountPercentage}%
+          </div>
+        )}
       </div>
 
-      {/* JSON-LD */}
-      {itemListSchema && <JsonLd id={`jsonld-itemlist-${variantSlug}`} data={itemListSchema} />}
-      {faqSchema && <JsonLd id={`jsonld-faq-${variantSlug}`} data={faqSchema} />}
-      {breadcrumbSchema && (
-        <JsonLd id={`jsonld-breadcrumbs-${variantSlug}`} data={breadcrumbSchema} />
-      )}
-    </Container>
+      {/* Content */}
+      <div className="p-4">
+        {/* Brand */}
+        {product.brand && (
+          <p className="text-xs uppercase tracking-wide text-gray-500 mb-1 font-semibold">
+            {product.brand}
+          </p>
+        )}
+
+        {/* Title */}
+        <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors min-h-[3rem]">
+          {product.title}
+        </h3>
+
+        {/* Price */}
+        <div className="flex items-baseline gap-2 mb-3">
+          <span className="text-2xl font-bold text-gray-900">
+            €{product.price.toFixed(2)}
+          </span>
+          {hasDiscount && (
+            <span className="text-sm text-gray-400 line-through">
+              €{product.originalPrice!.toFixed(2)}
+            </span>
+          )}
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          {product.facets.category && (
+            <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded capitalize">
+              {product.facets.category}
+            </span>
+          )}
+          {product.deliveryDays && product.deliveryDays <= 2 && (
+            <span className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded font-medium">
+              ⚡ Snel
+            </span>
+          )}
+          {product.facets.interests?.includes('duurzaam') && (
+            <span className="inline-block px-2 py-1 bg-emerald-100 text-emerald-700 text-xs rounded font-medium">
+              🌱 Duurzaam
+            </span>
+          )}
+        </div>
+
+        {/* Source */}
+        <div className="pt-3 border-t border-gray-100 text-xs text-gray-500">
+          Via {formatMerchantName(product.merchant)}
+        </div>
+      </div>
+    </a>
   )
 }
 

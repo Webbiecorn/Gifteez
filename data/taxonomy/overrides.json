@@ -1,0 +1,54 @@
+{
+  "brands": {
+    "_examples": {
+      "_comment": "Brand-specific overrides when keywords fail",
+      "Tommy Hilfiger": {
+        "audience": ["men", "women"],
+        "category": "mode",
+        "reason": "Fashion brand with clear gender lines in product naming"
+      },
+      "Rituals": {
+        "category": "wellness",
+        "isGiftable": true,
+        "reason": "Premium gift-focused wellness brand"
+      }
+    }
+  },
+  
+  "skus": {
+    "_examples": {
+      "_comment": "SKU-specific overrides for problematic products",
+      "awin:12345:ABC123": {
+        "audience": ["women"],
+        "category": "sieraden",
+        "reason": "Misclassified by feed data"
+      }
+    }
+  },
+  
+  "exclude": {
+    "sku": [
+      "_examples"
+    ],
+    "contains": [
+      "refill pack only",
+      "only refill",
+      "spare parts only",
+      "replacement filter",
+      "navulverpakking",
+      "losse onderdelen",
+      "sample size",
+      "tester",
+      "defect",
+      "B-stock",
+      "open box"
+    ],
+    "brands": [
+      "_examples"
+    ]
+  },
+  
+  "forceInclude": [
+    "_comment: SKU IDs that should always be included regardless of other rules"
+  ]
+}

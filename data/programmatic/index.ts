@@ -28,6 +28,126 @@ export type ProgrammaticConfig = {
 }
 
 const VARIANTS: ProgrammaticConfig[] = [
+  // FASHION & LIFESTYLE PAGES (matchen met je AWIN feed)
+  
+  // Dames pages
+  {
+    slug: 'dames-mode-duurzaam',
+    title: 'Duurzame Dames Mode Cadeaus - Eco Fashion',
+    intro: 'Stijlvolle en duurzame mode cadeaus voor vrouwen. Eco-friendly merken met impact.',
+    highlights: [
+      'Gecertificeerde duurzame materialen',
+      'Vegan & fair trade merken',
+      'Unieke designer items',
+    ],
+    audience: ['women'],
+    filters: {
+      maxPrice: 300,
+      maxResults: 24,
+      keywords: ['dames', 'women', 'duurzaam', 'sustainable', 'eco', 'vegan'],
+    },
+  },
+  {
+    slug: 'dames-sieraden-onder-100',
+    title: 'Dames Sieraden Cadeaus onder €100',
+    intro: 'Prachtige sieraden voor vrouwen - kettingen, armbanden, oorbellen en ringen.',
+    highlights: [
+      'Unieke designer sieraden',
+      'Hypoallergeen en vegan',
+      'Inclusief cadeauverpakking',
+    ],
+    audience: ['women'],
+    filters: {
+      maxPrice: 100,
+      maxResults: 24,
+      keywords: ['dames', 'women', 'sieraden', 'jewelry', 'ketting', 'armband', 'ring', 'oorbel'],
+    },
+  },
+  {
+    slug: 'dames-mode-onder-150',
+    title: 'Dames Mode Cadeaus onder €150',
+    intro: 'Fashion cadeaus voor vrouwen - kleding, accessoires en schoenen.',
+    highlights: [
+      'Trendy fashion items',
+      'Diverse stijlen en maten',
+      'Snelle levering',
+    ],
+    audience: ['women'],
+    filters: {
+      maxPrice: 150,
+      maxResults: 24,
+      keywords: ['dames', 'women', 'mode', 'fashion', 'kleding', 'jas', 'schoenen'],
+    },
+  },
+  
+  // Heren pages
+  {
+    slug: 'heren-mode-accessoires',
+    title: 'Heren Mode & Accessoires Cadeaus',
+    intro: 'Stijlvolle cadeaus voor mannen - van riemen tot horloges.',
+    highlights: [
+      'Premium merken',
+      'Tijdloze designs',
+      'Perfecte geschenken',
+    ],
+    audience: ['men'],
+    filters: {
+      maxPrice: 200,
+      maxResults: 24,
+      keywords: ['heren', 'men', 'male', 'mode', 'accessoires', 'riem', 'horloge', 'portemonnee'],
+    },
+  },
+  
+  // Unisex/Lifestyle pages
+  {
+    slug: 'duurzame-lifestyle-cadeaus',
+    title: 'Duurzame Lifestyle Cadeaus - Eco & Fair Trade',
+    intro: 'Bewuste cadeaus die goed zijn voor mens en planeet.',
+    highlights: [
+      'Duurzame materialen',
+      'Fair trade & vegan',
+      'Unique designer items',
+    ],
+    audience: ['women', 'men', 'sustainable'],
+    filters: {
+      maxPrice: 250,
+      maxResults: 24,
+      keywords: ['duurzaam', 'sustainable', 'eco', 'vegan', 'fair trade', 'organic'],
+    },
+  },
+  {
+    slug: 'wonen-decoratie-cadeaus',
+    title: 'Wonen & Decoratie Cadeaus',
+    intro: 'Stijlvolle woonaccessoires en decoratie voor elk interieur.',
+    highlights: [
+      'Unique home decor',
+      'Handgemaakt & artisanaal',
+      'Direct leverbaar',
+    ],
+    filters: {
+      maxPrice: 200,
+      maxResults: 24,
+      keywords: ['wonen', 'home', 'decoratie', 'interieur', 'kussen', 'beddengoed', 'vaas'],
+    },
+  },
+  
+  // TEST PAGE - Fashion items from feed
+  {
+    slug: 'test-dames-mode',
+    title: 'Test: Dames Mode Cadeaus',
+    intro: 'Test pagina voor classificatie - dames fashion items uit feed.',
+    highlights: [
+      'Duurzame merken',
+      'Direct leverbaar',
+      'Eco-vriendelijke materialen',
+    ],
+    audience: ['women'],
+    filters: {
+      maxPrice: 500,
+      maxResults: 24,
+      keywords: ['dames', 'women', 'female', 'fashion', 'mode'],
+    },
+  },
   {
     slug: 'kerst-voor-hem-onder-50',
     occasion: 'kerst',
