@@ -467,17 +467,17 @@ const VARIANTS: ProgrammaticConfig[] = [
   {
     slug: 'duurzamere-cadeaus-onder-50',
     interest: 'duurzaam',
-    budgetMax: 50,
-    title: 'Duurzame cadeaus onder €75: groen en gewild',
+    budgetMax: 100,
+    title: 'Duurzame cadeaus onder €100: groen en gewild',
     intro: 'Impactvolle keuzes: vegan, eco en fair trade producten voor bewuste kopers.',
     highlights: [
       'Vegan & eco vriendelijke producten',
       'Ethische merken met impact',
-      'Betaalbaar tot €75',
+      'Betaalbaar tot €100',
     ],
     audience: ['women', 'men'], // Breed audience voor meer matches
     filters: {
-      maxPrice: 75, // Verhoogd naar €75 voor meer duurzame opties
+      maxPrice: 100, // Verhoogd naar €100 voor meer duurzame opties
       maxResults: 24,
       // Match breed op duurzame producten - SLYAGD heeft alles vegan
       // Laat keywords leeg om alle SLYAGD producten toe te staan
