@@ -57,11 +57,11 @@ function extractImages(value: any): string[] {
  * Coolblue Bynder URLs need width/height for transform to work
  */
 function fixImageUrl(url: string): string {
-  // Coolblue Bynder CDN fix
+  // Coolblue Bynder CDN fix - optimized for product cards
   if (url.includes('coolblue.bynder.com/transform') && url.includes('io=transform:fit')) {
-    // Add width parameter if missing
+    // Add width parameter if missing (400x400 is optimal for product cards)
     if (!url.includes('w=') && !url.includes('width=')) {
-      return url.replace('io=transform:fit', 'io=transform:fit,width:800,height:800')
+      return url.replace('io=transform:fit', 'io=transform:fit,width:400,height:400')
     }
   }
 
