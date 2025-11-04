@@ -29,7 +29,7 @@ export type ProgrammaticConfig = {
 
 const VARIANTS: ProgrammaticConfig[] = [
   // FASHION & LIFESTYLE PAGES (matchen met je AWIN feed)
-  
+
   // Dames pages
   {
     slug: 'dames-mode-duurzaam',
@@ -67,11 +67,7 @@ const VARIANTS: ProgrammaticConfig[] = [
     slug: 'dames-mode-onder-150',
     title: 'Dames Mode Cadeaus onder €150',
     intro: 'Fashion cadeaus voor vrouwen - kleding, accessoires en schoenen.',
-    highlights: [
-      'Trendy fashion items',
-      'Diverse stijlen en maten',
-      'Snelle levering',
-    ],
+    highlights: ['Trendy fashion items', 'Diverse stijlen en maten', 'Snelle levering'],
     audience: ['women'],
     filters: {
       maxPrice: 150,
@@ -79,17 +75,13 @@ const VARIANTS: ProgrammaticConfig[] = [
       keywords: ['dames', 'women', 'mode', 'fashion', 'kleding', 'jas', 'schoenen'],
     },
   },
-  
+
   // Heren pages
   {
     slug: 'heren-mode-accessoires',
     title: 'Heren Mode & Accessoires Cadeaus',
     intro: 'Stijlvolle cadeaus voor mannen - van riemen tot horloges.',
-    highlights: [
-      'Premium merken',
-      'Tijdloze designs',
-      'Perfecte geschenken',
-    ],
+    highlights: ['Premium merken', 'Tijdloze designs', 'Perfecte geschenken'],
     audience: ['men'],
     filters: {
       maxPrice: 200,
@@ -97,17 +89,13 @@ const VARIANTS: ProgrammaticConfig[] = [
       keywords: ['heren', 'men', 'male', 'mode', 'accessoires', 'riem', 'horloge', 'portemonnee'],
     },
   },
-  
+
   // Unisex/Lifestyle pages
   {
     slug: 'duurzame-lifestyle-cadeaus',
     title: 'Duurzame Lifestyle Cadeaus - Eco & Fair Trade',
     intro: 'Bewuste cadeaus die goed zijn voor mens en planeet.',
-    highlights: [
-      'Duurzame materialen',
-      'Fair trade & vegan',
-      'Unique designer items',
-    ],
+    highlights: ['Duurzame materialen', 'Fair trade & vegan', 'Unique designer items'],
     audience: ['women', 'men', 'sustainable'],
     filters: {
       maxPrice: 250,
@@ -119,28 +107,20 @@ const VARIANTS: ProgrammaticConfig[] = [
     slug: 'wonen-decoratie-cadeaus',
     title: 'Wonen & Decoratie Cadeaus',
     intro: 'Stijlvolle woonaccessoires en decoratie voor elk interieur.',
-    highlights: [
-      'Unique home decor',
-      'Handgemaakt & artisanaal',
-      'Direct leverbaar',
-    ],
+    highlights: ['Unique home decor', 'Handgemaakt & artisanaal', 'Direct leverbaar'],
     filters: {
       maxPrice: 200,
       maxResults: 24,
       keywords: ['wonen', 'home', 'decoratie', 'interieur', 'kussen', 'beddengoed', 'vaas'],
     },
   },
-  
+
   // TEST PAGE - Fashion items from feed
   {
     slug: 'test-dames-mode',
     title: 'Test: Dames Mode Cadeaus',
     intro: 'Test pagina voor classificatie - dames fashion items uit feed.',
-    highlights: [
-      'Duurzame merken',
-      'Direct leverbaar',
-      'Eco-vriendelijke materialen',
-    ],
+    highlights: ['Duurzame merken', 'Direct leverbaar', 'Eco-vriendelijke materialen'],
     audience: ['women'],
     filters: {
       maxPrice: 500,
@@ -152,35 +132,42 @@ const VARIANTS: ProgrammaticConfig[] = [
     slug: 'kerst-voor-hem-onder-50',
     occasion: 'kerst',
     recipient: 'hem',
-    budgetMax: 50,
-    title: 'Beste kerstcadeaus voor hem onder €50 (2025)',
-    intro: 'Slimme, leuke en nuttige cadeaus voor hem, binnen budget en snel te bestellen.',
+    budgetMax: 50, // Note: maxPrice is 100 to find actual products, we filter on display
+    title: 'Beste kerstcadeaus voor hem onder €100 (2025)',
+    intro: 'Van budget gadgets tot betaalbare tech: cadeaus die hij écht gebruikt.',
     highlights: [
-      'Vandaag besteld, vaak morgen al in huis',
-      'Mix van tech, games en gadgets',
-      'Partners: Coolblue, Amazon & Bol via AWIN',
+      'Tech en gadgets waar hij blij van wordt',
+      'Snel geleverd via Coolblue',
+      'Budget-vriendelijke cadeaus die scoren',
     ],
-    audience: ['men'],
+    audience: [], // Geen audience filter - laat unisex producten door
     filters: {
-      maxPrice: 50,
+      maxPrice: 100, // Verhoogd naar €100 voor échte Coolblue tech
       fastDelivery: true,
       maxResults: 24,
-      // Inclusieve trefwoorden voor mannendoelgroep + zinsdelen
-      keywords: ['kerst', 'voor hem', 'mannen', 'heren', 'man', 'hij'],
-      // Extra boosts voor typische mannencadeaus
-      boostKeywords: ['gadget', 'smart', 'bier', 'whisky', 'gaming', 'barbecue', 'tools'],
-      // Sluit expliciet vrouwen/zachte hints uit wanneer duidelijk
+      // Geen keywords - accepteer alle producten behalve excludes
+      keywords: [],
+      boostKeywords: [],
+      // Alleen vrouwenproducten uitsluiten
       excludeKeywords: [
-        'voor haar',
         'vrouw',
         'vrouwen',
         'dames',
         'lady',
         'ladies',
         'jurk',
+        'rok',
+        'blouse',
+        'top',
         'oorbel',
-        'ketting ',
+        'ketting',
+        'armband',
         'sieraad',
+        'make-up',
+        'mascara',
+        'lipstick',
+        'nagellak',
+        'foundation',
       ],
       preferredMerchants: ['coolblue', 'bol', 'bol.com', 'amazon'],
     },
@@ -304,13 +291,70 @@ const VARIANTS: ProgrammaticConfig[] = [
       'Budget onder €100, toch premium gear',
       'Met reviews vanuit de community',
     ],
-    audience: ['gamers'],
+    audience: ['men', 'women'],
     filters: {
       maxPrice: 100,
       maxResults: 24,
-      keywords: ['gaming', 'gamer', 'console', 'pc'],
-      boostKeywords: ['rgb', 'headset', 'controller', 'pc gaming'],
-      excludeKeywords: ['shirt', 'sokken', 'mug'],
+      // Bredere gaming keywords - moet in title/description voorkomen
+      keywords: [
+        'gaming',
+        'gamer',
+        'game',
+        'playstation',
+        'ps5',
+        'ps4',
+        'ps3',
+        'xbox',
+        'nintendo',
+        'switch',
+        'controller',
+        'joystick',
+        'headset',
+        'gaming headset',
+        'gaming muis',
+        'gaming toetsenbord',
+        'gaming monitor',
+        'gaming stoel',
+        'gaming bureau',
+        'rgb',
+        'streaming',
+        'webcam gaming',
+        'microfoon gaming',
+      ],
+      boostKeywords: [],
+      excludeKeywords: [
+        // Fashion items
+        'jas',
+        'shirt',
+        'sokken',
+        'broek',
+        'jeans',
+        'trui',
+        'vest',
+        'jurk',
+        'rok',
+        'bikini',
+        'beha',
+        'bh',
+        'voedingsbeha',
+        'lingerie',
+        'ondergoed',
+        'klompen',
+        'schoenen',
+        'laarzen',
+        'dames',
+        'heren',
+        // Non-gaming items
+        'koksmes',
+        'mes',
+        'pizzasteen',
+        'koekenpan',
+        'mug',
+        'poster',
+        'sleutelhanger',
+        'knuffel',
+        'speelgoed',
+      ],
       preferredMerchants: ['coolblue', 'bol', 'bol.com', 'amazon'],
     },
     internalLinks: [

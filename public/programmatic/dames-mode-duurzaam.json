@@ -5,7 +5,7 @@
     "description": "Stijlvolle en duurzame mode cadeaus voor vrouwen. Eco-friendly merken met impact.",
     "audience": "women",
     "totalProducts": 24,
-    "generatedAt": "2025-11-03T12:26:00.274Z"
+    "generatedAt": "2025-11-04T06:37:34.407Z"
   },
   "featured": [],
   "products": [
@@ -19,9 +19,7 @@
       "price": 229,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_68771_cropped.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_68771_cropped.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=35108924007&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -127,23 +125,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "mode",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam",
-          "mode"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam", "mode"],
         "confidence": 0.95,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 4 keyword(s) for mode"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for mode"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -160,9 +148,7 @@
       "price": 261,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_69841_cropped.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_69841_cropped.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=41813692939&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -268,23 +254,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "duurzaam",
         "priceBucket": "over-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam",
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam", "kunst"],
         "confidence": 0.95,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 4 keyword(s) for duurzaam"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for duurzaam"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -301,9 +277,7 @@
       "price": 69,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/T42-B42-Green.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/T42-B42-Green.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=35825435204&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -409,23 +383,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "sport",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam",
-          "fitness"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam", "fitness"],
         "confidence": 0.95,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 4 keyword(s) for sport"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for sport"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -549,24 +513,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "gadgets",
         "priceBucket": "25-50",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam",
-          "tech",
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam", "tech", "kunst"],
         "confidence": 0.9,
-        "reasons": [
-          "Title contains women keyword",
-          "Matched 3 keyword(s) for gadgets"
-        ],
+        "reasons": ["Title contains women keyword", "Matched 3 keyword(s) for gadgets"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -583,9 +536,7 @@
       "price": 210,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_107273_cropped.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_107273_cropped.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=42805639381&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -691,22 +642,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "koken",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam"],
         "confidence": 0.925,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 3 keyword(s) for koken"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for koken"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -831,20 +773,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.925,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 3 keyword(s) for sieraden"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -861,9 +796,7 @@
       "price": 139.95,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_81043_cropped.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_81043_cropped.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=42521836315&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -969,20 +902,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "wellness",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.925,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 3 keyword(s) for wellness"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for wellness"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1107,22 +1033,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "kunst",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["kunst"],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for kunst"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for kunst"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1139,9 +1056,7 @@
       "price": 219.5,
       "currency": "EUR",
       "originalPrice": 439,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_78334.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_78334.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=36488668193&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1247,20 +1162,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "outdoor",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for outdoor"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for outdoor"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1385,23 +1293,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "wonen",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam",
-          "muziek"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam", "muziek"],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for wonen"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wonen"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1418,9 +1316,7 @@
       "price": 169,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_105406.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_105406.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=42247664162&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1526,22 +1422,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "riemen",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam"],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for riemen"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for riemen"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1558,9 +1445,7 @@
       "price": 223.5,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_103642.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_103642.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=41895748386&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1666,22 +1551,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "geuren",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["kunst"],
         "confidence": 0.825,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 1 keyword(s) for geuren"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 1 keyword(s) for geuren"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1698,9 +1574,7 @@
       "price": 64.95,
       "currency": "EUR",
       "originalPrice": 89.95,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_100332.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_100332.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=41853204052&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1806,24 +1680,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "beauty",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "muziek",
-          "kunst",
-          "beauty"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["muziek", "kunst", "beauty"],
         "confidence": 0.825,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 1 keyword(s) for beauty"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 1 keyword(s) for beauty"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1840,9 +1703,7 @@
       "price": 54.5,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_105058_cropped.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_105058_cropped.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=42236243513&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1948,18 +1809,11 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "portemonnees",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam",
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam", "kunst"],
         "confidence": 0.825,
         "reasons": [
           "Fashion:suitable_for indicates women",
@@ -2089,22 +1943,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "duurzaam",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam"],
         "confidence": 0.95,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 4 keyword(s) for duurzaam"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for duurzaam"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2229,22 +2074,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "mode",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "muziek"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["muziek"],
         "confidence": 0.95,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 6 keyword(s) for mode"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 6 keyword(s) for mode"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2261,9 +2097,7 @@
       "price": 250,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_105788.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_105788.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=42335091105&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -2369,20 +2203,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "koken",
         "priceBucket": "over-250",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.925,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 3 keyword(s) for koken"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for koken"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2399,9 +2226,7 @@
       "price": 65.89,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_106595.jpg"
-      ],
+      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_106595.jpg"],
       "url": "https://www.awin1.com/pclick.php?p=42672272796&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -2507,23 +2332,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "sport",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "fitness",
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["fitness", "kunst"],
         "confidence": 0.925,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 3 keyword(s) for sport"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sport"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2648,20 +2463,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.925,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 3 keyword(s) for sieraden"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2786,22 +2594,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "kunst",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["kunst"],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for kunst"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for kunst"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2926,20 +2725,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "wellness",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for wellness"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wellness"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -3064,22 +2856,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "wonen",
         "priceBucket": "100-250",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "duurzaam"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["duurzaam"],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for wonen"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wonen"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -3204,22 +2987,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "outdoor",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
-        "interests": [
-          "kunst"
-        ],
+        "occasions": ["algemeen"],
+        "interests": ["kunst"],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for outdoor"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for outdoor"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -3344,20 +3118,13 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": [
-          "women"
-        ],
+        "audience": ["women"],
         "category": "riemen",
         "priceBucket": "50-100",
-        "occasions": [
-          "algemeen"
-        ],
+        "occasions": ["algemeen"],
         "interests": [],
         "confidence": 0.875,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 2 keyword(s) for riemen"
-        ],
+        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for riemen"],
         "needsReview": false,
         "isGiftable": true
       },
@@ -3369,10 +3136,7 @@
     "uniqueBrands": 24,
     "uniqueCategories": 14,
     "averagePrice": 136.15041666666667,
-    "priceRange": [
-      49.99,
-      261
-    ],
+    "priceRange": [49.99, 261],
     "confidenceDistribution": {
       "high (>0.8)": 24,
       "medium (0.5-0.8)": 0,
