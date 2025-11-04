@@ -5,7 +5,7 @@
     "description": "Fashion cadeaus voor vrouwen - kleding, accessoires en schoenen.",
     "audience": "women",
     "totalProducts": 24,
-    "generatedAt": "2025-11-04T07:07:19.922Z"
+    "generatedAt": "2025-11-04T07:17:07.921Z"
   },
   "featured": [],
   "products": [
@@ -278,7 +278,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/f4506014-dc95-4655-b540-e2810cfced98/658891?io=transform:fit"
+        "https://coolblue.bynder.com/transform/f4506014-dc95-4655-b540-e2810cfced98/658891?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38840445250&a=2566111&m=85161",
       "categoryPath": "schoonmaakmiddelen voor tapijt en textiel",
@@ -1969,7 +1969,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/c32fc180-af2f-450c-840d-0f9ebccd6ed4/840477?io=transform:fit"
+        "https://coolblue.bynder.com/transform/c32fc180-af2f-450c-840d-0f9ebccd6ed4/840477?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=41039631083&a=2566111&m=85161",
       "categoryPath": "barbecuegereedschapsets",

@@ -5,7 +5,7 @@
     "description": "Stijlvolle cadeaus voor mannen - van riemen tot horloges.",
     "audience": "men",
     "totalProducts": 24,
-    "generatedAt": "2025-11-04T07:07:20.009Z"
+    "generatedAt": "2025-11-04T07:17:08.004Z"
   },
   "featured": [],
   "products": [
@@ -278,7 +278,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/460d0264-de29-4fae-8434-9780bc804133/894699?io=transform:fit"
+        "https://coolblue.bynder.com/transform/460d0264-de29-4fae-8434-9780bc804133/894699?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38840444514&a=2566111&m=85161",
       "categoryPath": "menghaken voor keukenmixers",
@@ -408,7 +408,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/01c368e9-bc4b-4878-b2b5-721ce3c3e931/837978?io=transform:fit"
+        "https://coolblue.bynder.com/transform/01c368e9-bc4b-4878-b2b5-721ce3c3e931/837978?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38840433631&a=2566111&m=85161",
       "categoryPath": "cartridges",
@@ -669,7 +669,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/1c9dae85-5032-4aba-85c1-635434c7b017/894207?io=transform:fit"
+        "https://coolblue.bynder.com/transform/1c9dae85-5032-4aba-85c1-635434c7b017/894207?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38840437712&a=2566111&m=85161",
       "categoryPath": "smart lampen",
@@ -1317,7 +1317,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/8dd852bf-70a7-4a9f-bd8d-d5905d9380f9/894573?io=transform:fit"
+        "https://coolblue.bynder.com/transform/8dd852bf-70a7-4a9f-bd8d-d5905d9380f9/894573?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38840429057&a=2566111&m=85161",
       "categoryPath": "games",
@@ -1967,7 +1967,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/f7ab5185-2cb5-4798-b08e-bb833e26ae9a/816891?io=transform:fit"
+        "https://coolblue.bynder.com/transform/f7ab5185-2cb5-4798-b08e-bb833e26ae9a/816891?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38840442763&a=2566111&m=85161",
       "categoryPath": "studio microfoons",

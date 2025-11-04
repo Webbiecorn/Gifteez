@@ -5,7 +5,7 @@
     "description": "Test pagina voor classificatie - dames fashion items uit feed.",
     "audience": "women",
     "totalProducts": 24,
-    "generatedAt": "2025-11-04T07:07:20.535Z"
+    "generatedAt": "2025-11-04T07:17:08.523Z"
   },
   "featured": [],
   "products": [
@@ -407,7 +407,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/7126f087-6114-4787-b1f4-8dee7deb99a0/124791?io=transform:fit"
+        "https://coolblue.bynder.com/transform/7126f087-6114-4787-b1f4-8dee7deb99a0/124791?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=38876967940&a=2566111&m=85161",
       "categoryPath": "labels",
@@ -2483,7 +2483,7 @@
       "currency": "EUR",
       "originalPrice": 0,
       "images": [
-        "https://coolblue.bynder.com/transform/b92ea2d7-2f43-4f33-85ba-d4405cade45d/956360?io=transform:fit"
+        "https://coolblue.bynder.com/transform/b92ea2d7-2f43-4f33-85ba-d4405cade45d/956360?io=transform:fit,width:800,height:800"
       ],
       "url": "https://www.awin1.com/pclick.php?p=39252757124&a=2566111&m=85161",
       "categoryPath": "handmassage apparaten",
