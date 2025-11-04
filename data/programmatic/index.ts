@@ -129,12 +129,12 @@ const VARIANTS: ProgrammaticConfig[] = [
     },
   },
   {
-    slug: 'kerst-voor-hem-onder-50',
+    slug: 'kerst-voor-hem-onder-150',
     occasion: 'kerst',
     recipient: 'hem',
-    budgetMax: 50, // Note: maxPrice is 100 to find actual products, we filter on display
-    title: 'Beste kerstcadeaus voor hem onder €100 (2025)',
-    intro: 'Van budget gadgets tot betaalbare tech: cadeaus die hij écht gebruikt.',
+    budgetMax: 150,
+    title: 'Beste kerstcadeaus voor hem onder €150 (2025)',
+    intro: 'Van slimme gadgets tot betaalbare tech: cadeaus die hij écht gebruikt.',
     highlights: [
       'Tech en gadgets waar hij blij van wordt',
       'Snel geleverd via Coolblue',
@@ -142,13 +142,13 @@ const VARIANTS: ProgrammaticConfig[] = [
     ],
     audience: [], // Geen audience filter - laat unisex producten door
     filters: {
-      maxPrice: 100, // Verhoogd naar €100 voor échte Coolblue tech
+      maxPrice: 150, // Verhoogd naar €150 voor échte tech producten
       fastDelivery: true,
       maxResults: 24,
       // Geen keywords - accepteer alle producten behalve excludes
       keywords: [],
       boostKeywords: [],
-      // Alleen vrouwenproducten uitsluiten
+      // Alleen vrouwenproducten uitsluiten + fashion items
       excludeKeywords: [
         'vrouw',
         'vrouwen',
@@ -168,6 +168,15 @@ const VARIANTS: ProgrammaticConfig[] = [
         'lipstick',
         'nagellak',
         'foundation',
+        // Fashion voor mannen ook uitsluiten
+        'overhemd',
+        'shirt',
+        'shorts',
+        'broek',
+        'jas',
+        'vest',
+        'trui',
+        'schoenen',
       ],
       preferredMerchants: ['coolblue', 'bol', 'bol.com', 'amazon'],
     },
