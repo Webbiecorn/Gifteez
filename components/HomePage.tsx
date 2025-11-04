@@ -254,8 +254,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Van Sinterklaas tot Kerst, van tech gadgets tot wellness — onze expert gift guides
-                helpen je het perfecte cadeau te vinden met directe kooplinks.
+                Van Sinterklaas tot Kerst, van tech gadgets tot wellness — onze expert gift guides helpen je het perfecte cadeau te vinden met directe kooplinks.
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2 text-left">

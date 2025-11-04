@@ -9,6 +9,7 @@ import type { ProgrammaticIndex, ClassifiedProduct } from '../utils/product-clas
 import JsonLd from './JsonLd'
 import Container from './layout/Container'
 import type { NavigateTo } from '../types'
+import { withAffiliate } from '../services/affiliate'
 
 interface Props {
   variantSlug: string
@@ -204,9 +205,16 @@ function ProductCard({ product }: ProductCardProps) {
     ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
     : 0
 
+  // Add affiliate tracking to product URL
+  const affiliateUrl = withAffiliate(product.url, {
+    retailer: product.merchant?.toLowerCase() || product.source,
+    pageType: 'programmatic-guide',
+    placement: 'product-card'
+  })
+
   return (
     <a
-      href={product.url}
+      href={affiliateUrl}
       target="_blank"
       rel="noopener noreferrer sponsored"
       className="group block bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden"
