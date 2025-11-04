@@ -284,23 +284,22 @@ const VARIANTS: ProgrammaticConfig[] = [
   },
   {
     slug: 'kerst-voor-haar-onder-50',
-    occasion: 'kerst',
+    // occasion: 'kerst', // Verwijderd: te restrictief, weinig producten hebben kerst-tag
     recipient: 'haar',
-    budgetMax: 50,
-    title: 'Beste kerstcadeaus voor haar onder €50 (2025)',
-    intro: 'Verwen haar met cadeaus die scoren: beauty, wellness, cosy & slimme gadgets.',
+    budgetMax: 100,
+    title: 'Beste kerstcadeaus voor haar onder €100 (2025)',
+    intro: 'Verwen haar met cadeaus die scoren: beauty, wellness, mode & slimme gadgets.',
     highlights: [
-      'Beauty & wellness gecombineerd met cosy home gifts',
-      'Altijd onder €50 en snel online te bestellen',
-      'Focus op partners met hoge review scores',
+      'Beauty, sieraden & mode gecombineerd met cosy home gifts',
+      'Altijd onder €100 en snel online te bestellen',
+      'Duurzame en stijlvolle opties voor elke smaak',
     ],
-    audience: ['women'],
+    audience: ['women', 'men'], // Breed voor meer matches, boost keywords zorgen voor vrouwenfocus
     filters: {
-      maxPrice: 50,
-      fastDelivery: true,
+      maxPrice: 100,
       maxResults: 24,
-      // Inclusieve trefwoorden voor vrouwendoelgroep + zinsdelen
-      keywords: ['kerst', 'voor haar', 'haar', 'vrouw', 'vrouwen', 'dames', 'zij'],
+      // Brede aanpak: geen verplichte keywords, laat classificatie het werk doen
+      keywords: [],
       boostKeywords: [
         'beauty',
         'wellness',
@@ -317,11 +316,19 @@ const VARIANTS: ProgrammaticConfig[] = [
         'rituals',
         'sieraad',
         'sieraden',
+        'oorbel',
+        'ketting',
+        'armband',
+        'ring',
         'cosy',
         'selfcare',
         'spa',
+        'sjaal',
+        'tas',
+        'accessoire',
+        'parfum',
       ],
-      // Sluit man-gerichte items uit en enkele typische man-sleutelwoorden
+      // Sluit man-gerichte items uit
       excludeKeywords: [
         'mannen',
         'heren',
@@ -330,6 +337,8 @@ const VARIANTS: ProgrammaticConfig[] = [
         'riem',
         'belt',
         'man ',
+        'baard',
+        'scheerapparaat',
         // Te “huis & tuin” voor deze gids
         'lamp',
         'lampen',
@@ -338,12 +347,12 @@ const VARIANTS: ProgrammaticConfig[] = [
         'wandlamp',
         'zaklamp',
       ],
-      excludeMerchants: ['shop like you give a damn - nl & be', "will's vegan store"],
-      preferredMerchants: ['rituals', 'coolblue', 'bol', 'bol.com', 'amazon'],
+      excludeMerchants: [],
+      preferredMerchants: ['rituals', 'coolblue', 'shop like you give a damn'],
     },
     internalLinks: [
-      { href: '/cadeaus/kerst/voor-hem/onder-50', label: 'Kerstcadeaus voor hem onder €50' },
-      { href: '/cadeaus/kerst/onder-25', label: 'Kerst onder €25' },
+      { href: '/cadeaus/kerst/voor-hem/onder-150', label: 'Kerstcadeaus voor hem onder €150' },
+      { href: '/cadeaus/duurzame-cadeaus/onder-50', label: 'Duurzame cadeaus onder €50' },
     ],
   },
   {
