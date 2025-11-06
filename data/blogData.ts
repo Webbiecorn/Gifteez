@@ -1229,31 +1229,37 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          'Snel iets passends vinden? Deze startgids bundelt onze populairste cadeaugidsen per budget en thema. Klik door en je ziet direct shoppable cadeaus van betrouwbare winkels, handig voor Sinterklaas, Kerst of verjaardagen.',
+          'Snel het perfecte cadeau vinden? Deze startgids bundelt onze populairste cadeaugidsen per budget en thema. Klik door naar shoppable producten van betrouwbare winkels zoals Coolblue en Shop Like You Give A Damn. Handig voor Kerst, Sinterklaas of verjaardagen.',
       },
       { type: 'heading', content: 'Snel starten: kies je gids' },
       {
         type: 'paragraph',
         content:
-          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><a class="text-rose-600 underline" href="/cadeaus/sinterklaas/voor-kinderen-onder-25">Budget onder €25</a> – perfect voor surprises en kleine attenties.</li><li><a class="text-rose-600 underline" href="/cadeaus/kerst/voor-haar/onder-50">Onder €50 voor haar</a> – beauty, cozy en slimme gadgets.</li><li><a class="text-rose-600 underline" href="/cadeaus/kerst/voor-hem/onder-50">Onder €50 voor hem</a> – praktisch + fun, veilig gekozen.</li><li><a class="text-rose-600 underline" href="/cadeaus/duurzamere-cadeaus-onder-50">Duurzame cadeaus (≤ €50)</a> – eco-vriendelijke keuzes met impact.</li><li><a class="text-rose-600 underline" href="/cadeaus/gamer-cadeaus-onder-100">Gamer cadeaus (≤ €100)</a> – headsets, controllers en must-haves.</li></ul>',
+          '<strong>🎄 Kerstcadeaus per budget:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/kerst-voor-haar-onder-50">Kerstcadeaus voor haar onder €100</a> – 24 duurzame mode, sieraden & slimme gadgets</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/kerst-voor-hem-onder-150">Kerstcadeaus voor hem onder €150</a> – 20 BBQ, audio & tech die hij écht gebruikt</li></ul><br><strong>🌱 Duurzame & Bewuste Cadeaus:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/duurzamere-cadeaus-onder-50">Duurzame cadeaus onder €100</a> – 24 vegan, eco & fair trade producten (Shop Like You Give A Damn)</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/duurzame-lifestyle-cadeaus">Duurzame lifestyle cadeaus</a> – 24 ethical & sustainable items voor bewuste kopers</li></ul><br><strong>👗 Mode & Accessoires:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/dames-mode-onder-150">Dames mode onder €150</a> – 24 vegan fashion items van duurzame merken</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/dames-sieraden-onder-100">Dames sieraden onder €100</a> – 9 stijlvolle sieraden (ringen, kettingen, oorbellen)</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/heren-mode-accessoires">Heren mode & accessoires</a> – 24 fashion items voor mannen</li></ul><br><strong>🎮 Gaming & Wonen:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/gamer-cadeaus-onder-100">Gamer cadeaus onder €100</a> – 17 controllers, headsets & gaming gear</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/wonen-decoratie-cadeaus">Wonen & decoratie cadeaus</a> – 24 items voor een stijlvol interieur</li></ul>',
       },
       { type: 'heading', content: 'Wanneer kies je welke gids?' },
       {
         type: 'paragraph',
         content:
-          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Budget</strong> – je hebt een vast bedrag per persoon (surprise, teamcadeau).</li><li><strong>Haar/Hem</strong> – je wilt snel safe keuzes zonder lang te zoeken.</li><li><strong>Duurzaam</strong> – ontvanger geeft om eco/vegan en eerlijke productie.</li><li><strong>Gamer</strong> – leuke upgrades die meteen gebruikt worden.</li></ul>',
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Kerst voor Haar/Hem</strong> – Je zoekt specifiek kerstcadeaus en wilt snel safe keuzes. Perfect voor partners, familie of vrienden.</li><li><strong>Duurzaam</strong> – Ontvanger hecht waarde aan eco/vegan en eerlijke productie. Alle items van Shop Like You Give A Damn zijn 100% vegan en fair trade.</li><li><strong>Mode & Sieraden</strong> – Fashion lover die kwaliteit en stijl waardeert. Mix van SLYAGD sustainable fashion en Coolblue accessoires.</li><li><strong>Gamer</strong> – Game-upgrades die meteen gebruikt worden: controllers, headsets, gaming muizen en meer.</li><li><strong>Wonen</strong> – Cadeau voor nieuwe woning, interieur lovers of mensen die net verhuisd zijn.</li></ul>',
       },
       { type: 'heading', content: 'Pro-tips om snel te slagen' },
       {
         type: 'paragraph',
         content:
-          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li>Check levertijd – filter op “snelle levering” als je haast hebt.</li><li>Combineer klein + persoonlijk – voeg een kaartje toe met een inside joke.</li><li>Gebruik de <a class="text-rose-600 underline" href="/giftfinder">AI GiftFinder</a> voor 3 extra ideeën op maat (1 minuut).</li></ul>',
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Budget eerst</strong> – Start met budget-categorie (€50, €100, €150) en filter dan op thema.</li><li><strong>Mix duurzaam + praktisch</strong> – Combineer SLYAGD sustainable fashion met Coolblue gadgets voor complete ervaring.</li><li><strong>Check levermerchant</strong> – Coolblue = vaak next-day, SLYAGD = 3-5 dagen. Plan je timing.</li><li><strong>Gebruik filters</strong> – Elke gids heeft 24 producten, filter op merk, prijs of categorie.</li><li><strong>AI GiftFinder backup</strong> – Niks gevonden? Gebruik onze <a class="text-rose-600 underline hover:text-rose-700" href="/giftfinder">AI GiftFinder</a> voor gepersonaliseerde suggesties in 1 minuut.</li></ul>',
       },
-      { type: 'heading', content: 'Alle cadeaugidsen' },
+      { type: 'heading', content: 'Nieuwe guides: perfect getimed voor 2025' },
       {
         type: 'paragraph',
         content:
-          'Wil je breder kijken? Bekijk <a class="text-rose-600 underline" href="/cadeaus">alle cadeaugidsen</a> of start in het <a class="text-rose-600 underline" href="/cadeaus">cadeau-overzicht</a>.',
+          'Al onze guides zijn in november 2025 vernieuwd met:<br><br><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>24 producten per gids</strong> – Diversiteit per merk (max 2 per brand)</li><li><strong>Echte affiliate tracking</strong> – Direct naar Coolblue & Shop Like You Give A Damn</li><li><strong>Smart filters</strong> – Zoek op prijs, categorie, merk of interesse</li><li><strong>Mobile-first design</strong> – Shopbaar op elk device</li><li><strong>Snelle updates</strong> – Producten worden wekelijks gecheckt op voorraad en prijs</li></ul><br>Bekijk ook onze blog <a class="text-rose-600 underline hover:text-rose-700" href="/blog/kerstcadeaus-voor-haar-2025">Kerstcadeaus voor Haar 2025</a> voor uitgebreide product reviews en styling tips.',
+      },
+      { type: 'heading', content: 'Alle cadeaugidsen overzicht' },
+      {
+        type: 'paragraph',
+        content:
+          'Wil je alle guides zien? Ga naar ons <a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus">cadeau-overzicht</a> voor het complete aanbod. Of gebruik de <a class="text-rose-600 underline hover:text-rose-700" href="/giftfinder">AI GiftFinder</a> voor gepersonaliseerde suggesties op basis van interesses, leeftijd en budget.',
       },
     ],
     seo: {
