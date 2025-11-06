@@ -1,5 +1,137 @@
 import type { BlogPost, Gift } from '../types'
 
+// ==================== KERST VOOR HAAR 2025 ====================
+const gift_kerst_haar_creolen: Gift = {
+  productName: 'Amadeus Creolen Venus Goud',
+  description:
+    'Stijlvolle vegan gouden creolen van Amadeus. Ethisch geproduceerd, perfect als elegant cadeau. Tijdloos design dat bij elke outfit past.',
+  priceRange: '€80,50',
+  retailers: [
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=41853208214&a=2566111&m=24072',
+    },
+  ],
+  imageUrl:
+    'https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_258639408(1).jpg',
+}
+
+const gift_kerst_haar_jeans: Gift = {
+  productName: 'ARMEDANGELS Jeans Lejaani',
+  description:
+    'Vegan jeans in Zoethout Grijs van ARMEDANGELS. Duurzaam geproduceerd, comfortabel en stijlvol. Perfect voor de bewuste fashion lover.',
+  priceRange: '€100',
+  retailers: [
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=37072423762&a=2566111&m=24072',
+    },
+  ],
+  imageUrl: 'https://assets.shoplikeyougiveadamn.com/uploads/Product_80648.jpg',
+}
+
+const gift_kerst_haar_jurk: Gift = {
+  productName: 'Givn Jurk Philine Blauw/Oranje',
+  description:
+    'Vegan jurk met vrolijk druppelsdesign van Givn. Fair trade geproduceerd in Portugal. Perfect voor feestelijke gelegenheden.',
+  priceRange: '€79,95',
+  retailers: [
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=41853208773&a=2566111&m=24072',
+    },
+  ],
+  imageUrl:
+    'https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_259052978_cropped.jpg',
+}
+
+const gift_kerst_haar_top: Gift = {
+  productName: 'DEDICATED Top Furusund Schiffli',
+  description:
+    'Zwarte vegan top met elegante Schiffli details van DEDICATED. Veelzijdig, comfortabel en duurzaam geproduceerd.',
+  priceRange: '€64,95',
+  retailers: [
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=41853204052&a=2566111&m=24072',
+    },
+  ],
+  imageUrl: 'https://assets.shoplikeyougiveadamn.com/uploads/Product_100332.jpg',
+}
+
+const gift_kerst_haar_klompen: Gift = {
+  productName: 'thies Vegan Klompen Yosemite',
+  description:
+    'Comfortabele vegan klompen van gerecycled textiel en biologisch katoen. Ergonomisch kurken voetbed, perfect voor thuis en yoga.',
+  priceRange: '€79,95',
+  retailers: [
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=41853205386&a=2566111&m=24072',
+    },
+  ],
+  imageUrl: 'https://assets.shoplikeyougiveadamn.com/uploads/ecobioyosemiteclogbluecut_cropped.jpg',
+}
+
+const gift_kerst_haar_bikinitop: Gift = {
+  productName: 'nice to meet me Bikinitop Wave Reversible',
+  description:
+    'Omkeerbare vegan bikinitop in Mint & Green Tea. Duurzaam geproduceerd, perfect voor actieve vrouwen.',
+  priceRange: '€69',
+  retailers: [
+    {
+      name: 'Shop Like You Give A Damn',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=35825435204&a=2566111&m=24072',
+    },
+  ],
+  imageUrl: 'https://assets.shoplikeyougiveadamn.com/uploads/T42-B42-Green.jpg',
+}
+
+const gift_kerst_haar_koksmes: Gift = {
+  productName: 'Diamant Sabatier Riyouri Koksmes 20cm',
+  description:
+    'Professioneel Japans koksmes met scherp lemmet. Perfect voor de hobby-kok die kwaliteit waardeert.',
+  priceRange: '€35,99',
+  retailers: [
+    {
+      name: 'Coolblue',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=40459794493&a=2566111&m=85161',
+    },
+  ],
+  imageUrl:
+    'https://coolblue.bynder.com/transform/42b383c1-adaa-4e1a-8620-e4c31856af11/292732?io=transform:fit,width:400,height:400',
+}
+
+const gift_kerst_haar_oplader: Gift = {
+  productName: 'Sitecom 65W GaN Wandoplader',
+  description:
+    'Compacte snellader met LED-scherm. Laadt laptop, tablet en telefoon supersnel. Perfect voor thuiswerken en reizen.',
+  priceRange: '€49,99',
+  retailers: [
+    {
+      name: 'Coolblue',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=38840443826&a=2566111&m=85161',
+    },
+  ],
+  imageUrl:
+    'https://coolblue.bynder.com/transform/1b556e2f-d36d-4eea-931d-0c7c3a1201a8/942614?io=transform:fit,width:400,height:400',
+}
+
+const gift_kerst_haar_watch_bandje: Gift = {
+  productName: 'Nomad Apple Watch Leren Bandje',
+  description:
+    'Premium leren bandje voor Apple Watch. Verfijnd design, comfortabel en duurzaam. Upgrade voor elke Apple Watch.',
+  priceRange: '€80',
+  retailers: [
+    {
+      name: 'Coolblue',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=38840439821&a=2566111&m=85161',
+    },
+  ],
+  imageUrl:
+    'https://coolblue.bynder.com/transform/8bfdc7f7-293c-4ae9-8c1b-b1e12db45e8d/935545?io=transform:fit,width:400,height:400',
+}
+
 // Minimal gift data retained (only those still referenced in active posts)
 const gift_ai_voice: Gift = {
   productName: 'Google Nest Mini (2e Generatie)',
@@ -3157,5 +3289,196 @@ export const blogPosts: BlogPost[] = [
       canonicalUrl: 'https://gifteez.nl/blog/sinterklaas-cadeaus-2025-originele-ideeen',
     },
     tags: ['sinterklaas', 'cadeaus', 'tech', 'wellness', 'culinair', 'creatief', 'gadgets', '2025'],
+  },
+  {
+    slug: 'kerstcadeaus-voor-haar-2025',
+    title: 'Kerstcadeaus voor Haar 2025: 24 Ideeën die Écht Scoren',
+    excerpt:
+      'Van duurzame mode tot slimme gadgets: 24 kerstcadeaus voor vrouwen die ze écht gaan gebruiken. Mix van SLYAGD sustainable fashion en Coolblue tech, van €36 tot €100.',
+    imageUrl: '/images/blog-kerst-haar-header.png',
+    category: 'Cadeaugids',
+    author: {
+      name: 'Gifteez Redactie',
+      avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-kerst',
+    },
+    publishedDate: '2025-11-06',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Kerstcadeaus voor vrouwen zijn notorisch moeilijk. Te veel generieke beauty sets, te weinig persoonlijkheid. Deze gids lost dat op met 24 zorgvuldig geselecteerde cadeaus die ze écht gaat waarderen: van duurzame mode tot slimme tech, van sieraden tot keuken-upgrades. Alles tussen €36 en €100, verdeeld in categorieën zodat je snel vindt wat bij haar past.',
+      },
+      { type: 'heading', content: 'Waarom Deze Gids Anders Is' },
+      {
+        type: 'paragraph',
+        content:
+          'In plaats van willekeurige producten hebben we gefocust op twee sterke categorieën:<br><br><strong>🌱 Duurzame Mode & Sieraden (Shop Like You Give A Damn):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>100% vegan en ethisch geproduceerd</li><li>Fair trade merken met impact</li><li>Unieke items die je niet overal vindt</li><li>Perfecte mix van stijl en waarden</li></ul><br><strong>💡 Slimme Tech & Lifestyle (Coolblue):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Praktische gadgets die ze dagelijks gebruikt</li><li>Keuken-upgrades voor foodies</li><li>Tech accessories die écht nuttig zijn</li><li>Snelle levering (vaak next-day)</li></ul><br><br>Deze combinatie werkt omdat je kunt kiezen tussen betekenisvol & duurzaam (SLYAGD) of praktisch & slim (Coolblue) — of een mix van beiden geeft.',
+      },
+      { type: 'heading', content: '🌿 Duurzame Mode: Voor de Bewuste Fashion Lover' },
+      {
+        type: 'paragraph',
+        content:
+          'Shop Like You Give A Damn cureert alleen merken die 100% vegan, fair trade of circulair zijn. Perfect voor vrouwen die waarde hechten aan impact.',
+      },
+      { type: 'heading', content: '1. ARMEDANGELS Jeans Lejaani — De Premium Denim' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_jeans,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €100 | <strong>Perfect voor:</strong> Fashion-conscious vrouwen 25-45 jaar<br><br>ARMEDANGELS is dé naam in duurzame denim. Deze Lejaani jeans in Zoethout Grijs combineert stijl met impact: biologisch katoen, fair trade productie en een pasvorm die flatteert. Het grijze tint is veelzijdig en past bij elke garderobe.<br><br><strong>Waarom deze jeans werkt:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>ARMEDANGELS = toonaangevend duurzaam modemerk</li><li>Biologisch katoen zonder pesticides</li><li>Fair trade geproduceerd in Portugal</li><li>Tijdloze kleur en snit die jaren meegaat</li><li>GOTS-gecertificeerd (hoogste eco-standaard)</li></ul><br><strong>Best voor:</strong> Partners, zussen, vriendinnen die mode en milieu serieus nemen. Perfect als "main gift" of voor iemand die je goed kent. Combineer met een top of accessoire voor complete outfit.<br><br><strong>Impact:</strong> ARMEDANGELS compenseert CO2, gebruikt 90% minder water dan conventionele jeans en betaalt eerlijke lonen.',
+      },
+      { type: 'heading', content: '2. Givn Jurk Philine — De Feestelijke Eyecatcher' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_jurk,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €79,95 | <strong>Perfect voor:</strong> Vrouwen die van kleur en prints houden<br><br>Deze jurk met druppelsdesign in blauw en oranje is een statement piece van Nederlands merk Givn. 100% vegan viscose, geproduceerd in Portugal onder eerlijke arbeidsomstandigheden. Perfect voor feestjes, diners of gewoon omdat het een goed humeur geeft.<br><br><strong>Waarom deze jurk bijzonder is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Givn = Nederlands sustainable fashion merk</li><li>Vrolijk druppelsdesign dat opvalt</li><li>Veelzijdig: casual of dressed-up</li><li>Fair trade geproduceerd in Europa</li><li>Uniek patroon, niet mainstream</li></ul><br><strong>Best voor:</strong> Vrouwen met een positieve, creatieve stijl. Perfect voor de feestdagen, verjaardagen of als "treat yourself" cadeau. Combineer met simpele accessoires om de print te laten shinen.<br><br><strong>Styling tip:</strong> Draag met witte sneakers voor casual look, of met hakken en gouden sieraden voor avond.',
+      },
+      { type: 'heading', content: '3. Amadeus Creolen Venus Goud — Tijdloze Elegantie' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_creolen,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €80,50 | <strong>Perfect voor:</strong> Vrouwen die van klassieke sieraden houden<br><br>Gouden creolen zijn een garderobe essential, en deze van Amadeus zijn 100% vegan en ethisch geproduceerd. Het Venus design is tijdloos maar net iets bijzonders — niet te opzichtig, niet te saai. Perfect voor dagelijks dragen of speciale gelegenheden.<br><br><strong>Waarom deze creolen altijd werken:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Creolen passen bij elke outfit en leeftijd</li><li>Goud is universeel en nooit "fout"</li><li>100% vegan (geen dierlijke lijm of materialen)</li><li>Veelzijdig: van kantoor tot avondje uit</li><li>Amadeus staat voor kwaliteit en duurzaamheid</li></ul><br><strong>Best voor:</strong> Moeder, partner, zus, vriendin — elk type vrouw waardeert mooie oorbellen. Perfect als "safe choice" die altijd goed valt, of als aanvulling op een bestaande sieradencollectie.<br><br><strong>Combineer met:</strong> Matchende ketting of armband voor complete set, of geef solo als elegant cadeau.',
+      },
+      { type: 'heading', content: '4. DEDICATED Top Furusund — Veelzijdige Basis' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_top,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €64,95 | <strong>Perfect voor:</strong> Minimalistische fashion lovers<br><br>Zwarte top met subtiele Schiffli borduurdetails van Zweeds merk DEDICATED. 100% biologisch katoen, GOTS-gecertificeerd en fair trade geproduceerd. Een garderobe staple die je eindeloos kunt combineren.<br><br><strong>Waarom deze top essentieel is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Zwarte basics zijn altijd goed investering</li><li>Schiffli details maken het bijzonder</li><li>Biologisch katoen ademt en draagt comfortabel</li><li>DEDICATED = betrouwbaar sustainable merk</li><li>Combineert met jeans, rok of pantalon</li></ul><br><strong>Best voor:</strong> Vrouwen met een minimalistische, veelzijdige stijl. Perfect als onderdeel van een groter cadeau (combineer met jeans of accessoires) of solo voor iemand die kwaliteit basics waardeert.<br><br><strong>Styling tips:</strong> Met jeans voor casual, met pantalon voor werk, met rok voor avond. Laag het onder een blazer of cardigan.',
+      },
+      { type: 'heading', content: '5. thies Vegan Klompen Yosemite — Comfort Thuis' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_klompen,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €79,95 | <strong>Perfect voor:</strong> Yoga lovers, work-from-home professionals<br><br>Deze vegan klompen van thies zijn gemaakt van gerecycled textiel en biologisch katoen, met een kurken voetbed dat zich aanpast aan je voet. PETA-approved en fair trade geproduceerd in Spanje. Perfect voor thuis, kantoor, yoga of fitness.<br><br><strong>Waarom deze klompen uniek zijn:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Ergonomisch kurken voetbed = ultiem comfort</li><li>100% gerecyclede en biologische materialen</li><li>Geen strepen, geen geuren, geen zweten</li><li>Perfect voor blote voeten (alle seizoenen)</li><li>Ultralicht ontwerp, geen hinderlijke naden</li></ul><br><strong>Best voor:</strong> Vrouwen die veel thuis zijn, yoga doen of waarde hechten aan voetcomfort. Perfect voor moeder, partner of jezelf. Ook geweldig voor mensen met voetproblemen of gevoelige huid.<br><br><strong>Pro tip:</strong> Deze klompen zijn perfect voor winter (warm) én zomer (ademend). Een cadeau dat het hele jaar door wordt gebruikt.',
+      },
+      { type: 'heading', content: '6. nice to meet me Bikinitop Wave — Voor Actieve Vrouwen' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_bikinitop,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €69 | <strong>Perfect voor:</strong> Sporters, surfers, beach lovers<br><br>Omkeerbare vegan bikinitop in Mint en Green Tea van Nederlands merk nice to meet me. Gemaakt van gerecycled nylon (ECONYL®) van visnetten. Twee looks in één, perfect voor actieve watersport.<br><br><strong>Waarom deze bikinitop bijzonder is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Omkeerbaar: twee kleuren/looks in één</li><li>ECONYL® = gerecycled van oceaanafval</li><li>Sportieve pasvorm, blijft op z\'n plek</li><li>UPF 50+ zonbescherming</li><li>Perfect voor surfen, zwemmen, beach volleyball</li></ul><br><strong>Best voor:</strong> Actieve vrouwen die van water, strand of sport houden. Perfect voor iemand die graag reist, surft of yoga op het strand doet. Ook geweldig voor vrouwen die impact willen maken (oceaan cleanup!).<br><br><strong>Combineer met:</strong> Matchende bikinibroek voor complete set, of geef solo als vervanging voor oude bikinitop.',
+      },
+      { type: 'heading', content: '💡 Slimme Tech & Lifestyle: Voor de Praktische Vrouw' },
+      {
+        type: 'paragraph',
+        content:
+          'Coolblue heeft tech en lifestyle producten die écht nuttig zijn — geen gadget-rommel maar slimme upgrades voor dagelijks leven.',
+      },
+      { type: 'heading', content: '7. Diamant Sabatier Riyouri Koksmes — Voor de Foodie' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_koksmes,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €35,99 | <strong>Perfect voor:</strong> Hobby-koks, food lovers<br><br>Professioneel Japans koksmes van 20cm met ultrascherp lemmet. Diamant Sabatier combineert Franse kwaliteit met Japanse scherpte. Perfect voor vrouwen die graag koken en kwaliteit gereedschap waarderen.<br><br><strong>Waarom dit mes een upgrade is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Japanse snijkwaliteit = cleaner, sneller, makkelijker</li><li>20cm is perfecte all-round maat</li><li>Ergonomisch handvat, geen handvermoeidheid</li><li>Professionele kwaliteit voor thuisgebruik</li><li>Beste prijs-kwaliteit (€36 voor Japans mes!)</li></ul><br><strong>Best voor:</strong> Vrouwen die veel koken, foodbloggers, of iemand die keuken-upgrades waardeert. Perfect als onderdeel van een "foodie pack" (combineer met kruiden, kookboek of snijplank) of solo als praktisch cadeau.<br><br><strong>Pro tip:</strong> Dit mes maakt koken echt leuker. Waar je eerst worstelde met tomaten en uien, glijd je nu moeiteloos doorheen.',
+      },
+      { type: 'heading', content: '8. Sitecom 65W GaN Wandoplader — Power On The Go' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_oplader,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €49,99 | <strong>Perfect voor:</strong> Digital nomads, thuiswerkers, reizigers<br><br>Compacte 65W snellader met LED-scherm dat real-time wattage toont. GaN-technologie = kleiner, koeler, efficiënter. Laadt laptop, tablet en telefoon tegelijk op — perfect voor modern werk en reizen.<br><br><strong>Waarom deze oplader essentieel is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>65W laadt zelfs MacBook Pro snel op</li><li>LED-scherm toont exact wattage (nerdy cool!)</li><li>GaN = 50% kleiner dan traditionele opladers</li><li>3 apparaten tegelijk (laptop + tablet + phone)</li><li>Perfect voor thuiswerk én reizen</li></ul><br><strong>Best voor:</strong> Vrouwen die veel thuiswerken, reizen of altijd onderweg zijn. Perfect voor digitale nomads, studenten of professionals die overal productief willen zijn. Ook geweldig voor techliefhebbers.<br><br><strong>Waarom het werkt:</strong> Niemand denkt aan een nieuwe oplader, maar iedereen is blij met een snellere, compactere versie. Praktisch cadeau dat dagelijks wordt gewaardeerd.',
+      },
+      { type: 'heading', content: '9. Nomad Apple Watch Leren Bandje — Verfijnde Upgrade' },
+      {
+        type: 'gift',
+        content: gift_kerst_haar_watch_bandje,
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>Prijs:</strong> €80 | <strong>Perfect voor:</strong> Apple Watch bezitters<br><br>Premium leren bandje van Nomad voor Apple Watch (44/45/46/49mm). Horween leer uit Chicago, Amerikaans vakmanschap. Transformeert je sportieve Apple Watch in een stijlvolle accessoire.<br><br><strong>Waarom dit bandje de moeite waard is:</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Horween leer = beste kwaliteit wereldwijd</li><li>Wordt mooier met gebruik (patina ontwikkelt)</li><li>Verfijnd design, past bij elke outfit</li><li>Van sportief naar elegant in 10 seconden</li><li>Nomad = premium merk, geen cheap aliexpress</li></ul><br><strong>Best voor:</strong> Vrouwen met Apple Watch die stijl en kwaliteit waarderen. Perfect voor professionals die hun watch willen upgraden van sportief naar business. Ook geweldig voor moeders, partners of vriendinnen die van mooi design houden.<br><br><strong>Insider tip:</strong> Veel Apple Watch bezitters gebruiken alleen het standaard bandje. Dit leren bandje voelt als een complete upgrade van hun watch — veel meer dan alleen een accessoire.',
+      },
+      { type: 'heading', content: 'Budget Indeling: Van €35 tot €100' },
+      {
+        type: 'paragraph',
+        content:
+          'Afhankelijk van je budget en relatie, hier zijn aanbevelingen:<br><br><strong>€35-50 (Kleine attentie, Secret Santa, collega):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Diamant Sabatier Koksmes (€35,99) — praktisch en kwaliteit</li><li>Sitecom 65W Oplader (€49,99) — dagelijks nut</li></ul><br><strong>€65-80 (Goede vriendin, zus, tante):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>DEDICATED Top Furusund (€64,95) — veelzijdige mode</li><li>nice to meet me Bikinitop (€69) — voor actieve vrouwen</li><li>thies Vegan Klompen (€79,95) — ultiem comfort</li><li>Givn Jurk Philine (€79,95) — feestelijke eyecatcher</li><li>Nomad Watch Bandje (€80) — Apple Watch upgrade</li><li>Amadeus Creolen (€80,50) — tijdloze sieraden</li></ul><br><strong>€100 (Partner, moeder, beste vriendin):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>ARMEDANGELS Jeans (€100) — premium duurzame denim</li></ul><br><strong>Combinatie Tips (€100-150 totaal):</strong><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Jeans + Top = complete outfit (€165)</li><li>Creolen + Koksmes = stijl + praktisch (€116)</li><li>Jurk + Klompen = feestelijk + comfort (€160)</li><li>Watch Bandje + Oplader = tech lovers (€130)</li></ul>',
+      },
+      { type: 'heading', content: 'Meer Inspiratie? Bekijk Onze Volledige Gids' },
+      {
+        type: 'paragraph',
+        content:
+          'Deze 9 producten zijn slechts een selectie. Wil je alle 24 zorgvuldig geselecteerde kerstcadeaus zien? Van mode en sieraden tot tech en lifestyle — met filters op prijs, categorie en merk?<br><br>👉 <strong><a href="/cadeaus/kerst-voor-haar-onder-50" class="text-rose-600 hover:text-rose-700 underline">Bekijk alle 24 kerstcadeaus voor haar</a></strong><br><br>Je vindt er een perfecte mix van:<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>15 duurzame mode & sieraden items (SLYAGD)</li><li>9 slimme tech & lifestyle producten (Coolblue)</li><li>Prijzen van €18 tot €100</li><li>Alle producten direct online te bestellen</li><li>Snelle levering (vaak 1-2 dagen)</li></ul>',
+      },
+      { type: 'heading', content: 'Tips Voor Het Perfecte Kerstcadeau' },
+      {
+        type: 'paragraph',
+        content:
+          '<strong>1. Ken haar waarden:</strong><br>Eco-conscious? → SLYAGD sustainable mode<br>Praktisch ingesteld? → Coolblue tech & lifestyle<br>Fashion lover? → Givn jurk of ARMEDANGELS jeans<br><br><strong>2. Combineer slim:</strong><br>Mix duurzaam + praktisch = complete ervaring<br>Bijvoorbeeld: Creolen + Koksmes = stijl én keuken upgrade<br><br><strong>3. Verpakking telt:</strong><br>SLYAGD komt in mooie eco-verpakking<br>Coolblue levert snel en discreet<br>Voeg persoonlijke kaart toe met uitleg waarom je dit koos<br><br><strong>4. Timing:</strong><br>Begin november bestellen = ruim op tijd<br>Coolblue: vaak next-day delivery<br>SLYAGD: reken op 3-5 werkdagen<br><br><strong>5. Returns mogelijk:</strong><br>Beide partners hebben goede retourbeleid<br>Bewaar bon/email voor maat ruilen indien nodig',
+      },
+      { type: 'heading', content: 'Waarom Deze Gids Werkt' },
+      {
+        type: 'paragraph',
+        content:
+          'We hebben niet willekeurig producten gekozen, maar gefocust op twee sterke categorieën die samen elk type vrouw aanspreken:<br><br><strong>SLYAGD (Shop Like You Give A Damn):</strong> Voor vrouwen die waarde hechten aan impact, duurzaamheid en unieke finds. Elk item heeft een verhaal en betekenis.<br><br><strong>Coolblue:</strong> Voor praktische vrouwen die kwaliteit tech en lifestyle producten waarderen. Items die dagelijks nut hebben en het leven makkelijker maken.<br><br>Deze mix betekent dat je altijd iets vindt dat past — of het nu gaat om een bewuste fashion lover, een foodie, een tech enthusiast of iemand die van comfort houdt. En met prijzen van €36 tot €100 is er voor elk budget iets moois.<br><br>💝 <strong>Veel succes met cadeau kiezen — en fijne feestdagen!</strong>',
+      },
+    ],
+    seo: {
+      metaTitle: 'Kerstcadeaus voor Haar 2025: 24 Ideeën die Écht Scoren | Gifteez',
+      metaDescription:
+        'Van duurzame mode tot slimme tech: 24 kerstcadeaus voor vrouwen van €36-€100. SLYAGD sustainable fashion + Coolblue gadgets. Alle tips + directe links.',
+      keywords: [
+        'kerstcadeaus voor haar',
+        'kerstcadeau vrouw',
+        'duurzame cadeaus',
+        'vegan mode',
+        'tech cadeaus vrouwen',
+        'Shop Like You Give A Damn',
+        'ARMEDANGELS',
+        'sustainable fashion',
+        '2025',
+      ],
+      ogTitle: 'Kerstcadeaus voor Haar 2025: 24 Ideeën die Écht Scoren',
+      ogDescription:
+        'Duurzame mode, slimme tech en stijlvolle sieraden — 24 kerstcadeaus van €36-€100 die ze écht gaat gebruiken. Met budget tips en combinatie-ideeën.',
+      ogImage: 'https://gifteez.nl/images/blog-kerst-haar-header.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Kerstcadeaus voor Haar 2025: 24 Ideeën',
+      twitterDescription:
+        'Van duurzame SLYAGD mode tot Coolblue tech — 24 kerstcadeaus voor vrouwen (€36-€100) die ze écht waardeert.',
+      twitterImage: 'https://gifteez.nl/images/blog-kerst-haar-header.png',
+      canonicalUrl: 'https://gifteez.nl/blog/kerstcadeaus-voor-haar-2025',
+    },
+    tags: [
+      'kerst',
+      'kerstcadeaus',
+      'voor haar',
+      'duurzaam',
+      'mode',
+      'tech',
+      'sieraden',
+      '2025',
+      'SLYAGD',
+      'vegan',
+    ],
   },
 ]
