@@ -1,5 +1,51 @@
 import type { BlogPost, Gift } from '../types'
 
+// ==================== AMAZON TOP 3 CAMPAGNE ====================
+const gift_amazon_chipolo: Gift = {
+  productName: 'Chipolo ONE Spot Tracker',
+  description:
+    "Compacte Bluetooth tracker die werkt met Apple's Vind Mijn netwerk. Nooit meer je sleutels kwijt! Waterbestendig (IPX5), luid alarm (120dB) en 1 jaar batterijduur.",
+  priceRange: '€18',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Chipolo-ONE-Spot-Sleutelvinder-Bluetooth/dp/B09C89S7WG?linkCode=ll1&tag=gifteez77-21&linkId=aa1e7d28ec47784726d50a1720cd19a3&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: '/images/products/chipolo-one-spot.jpg',
+}
+
+const gift_amazon_ledlamp: Gift = {
+  productName: 'LED Leeslamp Dimbaar',
+  description:
+    'Flexibele LED leeslamp met 3 kleurtemperaturen en dimfunctie. Perfect voor avondlezen zonder je partner te storen. USB oplaadbaar met touch bediening.',
+  priceRange: '€11,95',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Gritin-Eye-Protecting-Flexibele-Oplaadbaar-Batterijlevensduur/dp/B08GG42WXY?linkCode=ll1&tag=gifteez77-21&linkId=cd6e9041ceb3565c18acf17617214f90&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: '/images/products/led-leeslamp.jpg',
+}
+
+const gift_amazon_diffuser: Gift = {
+  productName: 'Aromadiffuser met LED',
+  description:
+    'Aromadiffuser met 300ml capaciteit en 7 LED kleuren. Creëert rust en ontspanning in huis. Fluisterstil met auto-uit functie. Perfect voor voor het slapengaan.',
+  priceRange: '€20,96',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Aromadiffuser-etherische-aromatherapie-diffuser-automatische-uitschakelfunctie/dp/B0DFGY2535?linkCode=ll1&tag=gifteez77-21&linkId=4fbcce986136a038a767f2cbd50e81ae&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: '/images/products/aromadiffuser.jpg',
+}
+
 // ==================== KERST VOOR HAAR 2025 ====================
 const gift_kerst_haar_creolen: Gift = {
   productName: 'Amadeus Creolen Venus Goud',
@@ -3485,6 +3531,168 @@ export const blogPosts: BlogPost[] = [
       '2025',
       'SLYAGD',
       'vegan',
+    ],
+  },
+  {
+    id: 'amazon-top-3-producten-onder-25-euro',
+    slug: 'amazon-top-3-producten-onder-25-euro',
+    title: '3 Amazon Producten Onder €25 Die Je Dagelijks Leven Verbeteren',
+    subtitle:
+      'Van sleutelvinder tot aromadiffuser: deze budget-vriendelijke producten lossen echte problemen op',
+    excerpt:
+      'Sleutels kwijt? Partner wakker maken tijdens het lezen? Deze 3 Amazon producten onder €25 lossen échte dagelijkse frustraties op. Van Chipolo tracker tot LED leeslamp - praktisch, betaalbaar en met topreviews.',
+    imageUrl: '/images/social/og/blog/medium-top3-amazon-deals-header.png',
+    heroImage: '/images/social/og/blog/medium-top3-amazon-deals-header.png',
+    category: 'Amazon Deals',
+    author: { name: 'Gifteez Team', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-team' },
+    publishedDate: '2025-11-14',
+    readTime: '5 min',
+    featured: true,
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          "We hebben het allemaal wel eens meegemaakt: Je staat bij de deur, klaar om te vertrekken, en dan... waar zijn je sleutels? Of je wilt 's avonds nog even lezen, maar je partner wil slapen. Kleine frustraties die je dag kunnen verpesten.<br><br>De goede nieuws? Voor minder dan het prijskaartje van een restaurantbezoek kun je deze dagelijkse ergernissen oplossen. Ik heb drie Amazon-producten geselecteerd die niet alleen betaalbaar zijn, maar ook daadwerkelijk je leven gemakkelijker maken.<br><br>Geen dure gadgets of onnodige luxe - gewoon slimme oplossingen voor herkenbare problemen.",
+      },
+      { type: 'heading', content: '1. Chipolo ONE Spot Tracker - €18' },
+      {
+        type: 'gift',
+        content: gift_amazon_chipolo,
+      },
+      { type: 'subheading', content: 'Het probleem' },
+      {
+        type: 'paragraph',
+        content:
+          'Gemiddeld besteden we 2,5 dagen per jaar aan zoeken naar verloren spullen. Sleutels, portemonnee, rugzak - het verdwijnt allemaal op de meest onmogelijke momenten.',
+      },
+      { type: 'subheading', content: 'De oplossing' },
+      {
+        type: 'paragraph',
+        content:
+          "De Chipolo ONE Spot is een compacte Bluetooth tracker die werkt met Apple's 'Vind Mijn' netwerk. Bevestig hem aan je sleutels, en je kunt ze terugvinden via je iPhone - zelfs wanneer je niet in de buurt bent.",
+      },
+      { type: 'subheading', content: 'Waarom dit product werkt' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Werkt met Apple Find My</strong> - Gebruikt het wereldwijde netwerk van Apple-apparaten</li><li><strong>Waterbestendig (IPX5)</strong> - Overleeft regen en spatwater zonder problemen</li><li><strong>Luid alarm (120dB)</strong> - Je hoort hem zelfs als hij onder de bank ligt</li><li><strong>1 jaar batterijduur</strong> - Vervangbare batterij, geen opladen nodig</li></ul>',
+      },
+      { type: 'subheading', content: 'Voor wie is dit?' },
+      {
+        type: 'paragraph',
+        content:
+          'Perfect voor mensen die regelmatig hun spullen kwijtraken (zoals ik!), of als cadeau voor je vergeetachtige vriend. Ook ideaal voor ouderen die hun portemonnee vaak zoek zijn.<br><br><strong>Prijs:</strong> €18',
+      },
+      { type: 'heading', content: '2. LED Leeslamp Dimbaar - €11,95' },
+      {
+        type: 'gift',
+        content: gift_amazon_ledlamp,
+      },
+      { type: 'subheading', content: 'Het probleem' },
+      {
+        type: 'paragraph',
+        content:
+          'Je partner wil slapen, maar jij wilt nog even lezen. Het grote licht aanzetten is geen optie, je telefoon als zaklamp gebruiken is oncomfortabel, en een boeklampje geeft te weinig licht.',
+      },
+      { type: 'subheading', content: 'De oplossing' },
+      {
+        type: 'paragraph',
+        content:
+          'Deze flexibele LED leeslamp klem je aan je nachtkastje of boek. Met drie kleurtemperaturen en dimfunctie vind je altijd het perfecte leeslicht - zonder je partner wakker te maken.',
+      },
+      { type: 'subheading', content: 'Waarom dit product werkt' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>3 kleurtemperaturen</strong> - Warm wit voor \'s avonds, daglicht voor overdag</li><li><strong>Flexibele 360° arm</strong> - Richt het licht precies waar je het nodig hebt</li><li><strong>Touch bediening</strong> - Geen knoppen, gewoon aanraken om aan/uit/dimmen</li><li><strong>USB oplaadbaar</strong> - Geen batterijen, oplaadbaar via elke USB-poort</li></ul>',
+      },
+      { type: 'subheading', content: 'Voor wie is dit?' },
+      {
+        type: 'paragraph',
+        content:
+          "Ideaal voor avondlezers, studenten die 's nachts studeren, of mensen met een slaapkamer die ze delen. Ook handig als werkverlichting voor je bureau of hobbyhoek.<br><br><strong>Prijs:</strong> €11,95",
+      },
+      { type: 'heading', content: '3. Aromadiffuser met LED Verlichting - €20,96' },
+      {
+        type: 'gift',
+        content: gift_amazon_diffuser,
+      },
+      { type: 'subheading', content: 'Het probleem' },
+      {
+        type: 'paragraph',
+        content:
+          'Na een lange werkdag is het lastig om echt te ontspannen. Je hoofd blijft vol met zorgen, en slapen lukt maar moeilijk.',
+      },
+      { type: 'subheading', content: 'De oplossing' },
+      {
+        type: 'paragraph',
+        content:
+          'Deze aromadiffuser verspreidt essentiële oliën door je kamer en creëert een rust-gevende sfeer met 7 verschillende LED-kleuren. Het perfecte ritueel voor voor het slapengaan of tijdens yoga/meditatie.',
+      },
+      { type: 'subheading', content: 'Waarom dit product werkt' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>300ml capaciteit</strong> - Loopt 8-10 uur op één vulling</li><li><strong>7 LED kleuren</strong> - Kies je favoriete sfeerverlichting of laat automatisch wisselen</li><li><strong>Fluisterstil</strong> - Je hoort hem nauwelijks, perfect voor slaapkamer</li><li><strong>Auto-uit functie</strong> - Schakelt automatisch uit wanneer het water op is</li></ul>',
+      },
+      { type: 'subheading', content: 'Voor wie is dit?' },
+      {
+        type: 'paragraph',
+        content:
+          'Perfect voor mensen die worstelen met slapeloosheid, stress, of gewoon hun huis een spa-gevoel willen geven. Ook ideaal voor yoga-beoefenaars en meditatie-liefhebbers.<br><br><strong>Prijs:</strong> €20,96',
+      },
+      { type: 'heading', content: 'Waarom Deze Producten?' },
+      {
+        type: 'paragraph',
+        content:
+          'Ik heb bewust gekozen voor producten die:<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Echte problemen oplossen</strong> (niet alleen leuk om te hebben)</li><li><strong>Budget-vriendelijk zijn</strong> (alles onder €25)</li><li><strong>Hoge beoordelingen hebben</strong> op Amazon</li><li><strong>Direct leverbaar zijn</strong> met snelle verzending</li></ul><br>Samen kosten deze drie producten €50,91 - minder dan een avondje uit eten, maar met veel meer impact op je dagelijkse leven.',
+      },
+      { type: 'heading', content: 'Welke Kies Jij?' },
+      {
+        type: 'paragraph',
+        content:
+          'Heb je één van deze producten al geprobeerd? Of heb je andere budget-vriendelijke Amazon-vondsten die je aan deze lijst zou toevoegen? Laat het me weten in de reacties!<br><br>🎁 <strong><a href="/top3?utm_source=blog&utm_medium=post&utm_campaign=7day-nov2025" class="text-rose-600 hover:text-rose-700 underline">Bekijk alle drie producten op één pagina →</a></strong><br><br><em class="text-sm text-gray-600">Dit artikel bevat affiliate links. Als je via deze links iets koopt, ontvang ik een kleine commissie zonder extra kosten voor jou. Dit helpt me om Gifteez.nl draaiende te houden en meer handige content te maken!</em>',
+      },
+    ],
+    seo: {
+      metaTitle: '3 Amazon Producten Onder €25 Die Je Leven Verbeteren | Gifteez',
+      metaDescription:
+        'Van Chipolo sleutelvinder (€18) tot aromadiffuser (€21): 3 budget-vriendelijke Amazon producten die échte problemen oplossen. Met topreviews en snelle levering.',
+      keywords: [
+        'amazon producten',
+        'budget gadgets',
+        'onder 25 euro',
+        'chipolo tracker',
+        'led leeslamp',
+        'aromadiffuser',
+        'amazon deals',
+        'sleutelvinder',
+        'praktische cadeaus',
+        '2025',
+      ],
+      ogTitle: '3 Amazon Producten Onder €25 Die Je Dagelijks Leven Verbeteren',
+      ogDescription:
+        'Chipolo tracker, LED leeslamp en aromadiffuser - 3 Amazon producten onder €25 die échte problemen oplossen. Budget-vriendelijk en direct leverbaar.',
+      ogImage: 'https://gifteez.nl/images/social/og/blog/medium-top3-amazon-deals-header.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: '3 Amazon Producten Onder €25 Die Je Leven Verbeteren',
+      twitterDescription:
+        'Van sleutelvinder tot aromadiffuser - 3 budget Amazon deals die échte problemen oplossen. Allemaal onder €25!',
+      twitterImage: 'https://gifteez.nl/images/social/og/blog/medium-top3-amazon-deals-header.png',
+      canonicalUrl: 'https://gifteez.nl/blog/amazon-top-3-producten-onder-25-euro',
+    },
+    tags: [
+      'amazon',
+      'deals',
+      'budget',
+      'gadgets',
+      'tracker',
+      'led lamp',
+      'aromadiffuser',
+      'onder 25',
+      'lifestyle',
+      'praktisch',
     ],
   },
 ]

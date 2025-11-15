@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import type React from 'react'
 export type Page =
   | 'home'
@@ -9,6 +8,7 @@ export type Page =
   | 'blogDetail'
   | 'contact'
   | 'about'
+  | 'top3'
   | 'login'
   | 'signup'
   | 'account'

@@ -109,6 +109,8 @@ const App: React.FC = () => {
         return '/contact'
       case 'about':
         return '/about'
+      case 'top3':
+        return '/top3'
       case 'login':
         return '/login'
       case 'signup':
@@ -205,6 +207,9 @@ const App: React.FC = () => {
         break
       case 'about':
         setCurrentPage('about')
+        break
+      case 'top3':
+        setCurrentPage('top3')
         break
       case 'admin':
         if (second === 'deals-preview') {
@@ -370,7 +375,7 @@ const App: React.FC = () => {
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Handgepickte Collecties',
-  cadeausHub: 'Cadeaus voor elk Moment',
+        cadeausHub: 'Cadeaus voor elk Moment',
         categoryDetail: data?.categoryTitle
           ? `${data.categoryTitle} — Collectie`
           : 'Categorie — Collectie',
@@ -416,19 +421,16 @@ const App: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const showToast = useCallback(
-    (message: string, variant: ToastVariant = 'default') => {
-      setToastState({ message, variant })
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current)
-      }
-      toastTimeoutRef.current = setTimeout(() => {
-        setToastState(null)
-        toastTimeoutRef.current = null
-      }, 3000)
-    },
-    []
-  )
+  const showToast = useCallback((message: string, variant: ToastVariant = 'default') => {
+    setToastState({ message, variant })
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current)
+    }
+    toastTimeoutRef.current = setTimeout(() => {
+      setToastState(null)
+      toastTimeoutRef.current = null
+    }, 3000)
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -473,6 +475,21 @@ const App: React.FC = () => {
         return <ContactPage navigateTo={navigateTo} showToast={showToast} />
       case 'about':
         return <AboutPage navigateTo={navigateTo} />
+      case 'top3':
+        return (
+          <React.Suspense
+            fallback={
+              <div className="py-24">
+                <LoadingSpinner size="lg" message="Pagina laden…" />
+              </div>
+            }
+          >
+            {React.createElement(
+              ReactLazy(() => import('./src/pages/Top3CampaignPage')),
+              {} as any
+            )}
+          </React.Suspense>
+        )
       case 'login':
         return <LoginPage navigateTo={navigateTo} showToast={showToast} />
       case 'signup':
@@ -497,10 +514,19 @@ const App: React.FC = () => {
         return <DealsPage navigateTo={navigateTo} />
       case 'cadeausHub':
         return (
-          <React.Suspense fallback={<div className="py-24"><LoadingSpinner size="lg" message="Pagina laden…" /></div>}>
-            {React.createElement(ReactLazy(() => import('./components/CadeausHubPage')), {
-              navigateTo,
-            } as any)}
+          <React.Suspense
+            fallback={
+              <div className="py-24">
+                <LoadingSpinner size="lg" message="Pagina laden…" />
+              </div>
+            }
+          >
+            {React.createElement(
+              ReactLazy(() => import('./components/CadeausHubPage')),
+              {
+                navigateTo,
+              } as any
+            )}
           </React.Suspense>
         )
       case 'programmatic':
@@ -508,11 +534,20 @@ const App: React.FC = () => {
           return <NotFoundPage navigateTo={navigateTo} />
         }
         return (
-          <React.Suspense fallback={<div className="py-24"><LoadingSpinner size="lg" message="Pagina laden…" /></div>}>
-            {React.createElement(ReactLazy(() => import('./components/ProgrammaticLandingPage')), {
-              variantSlug: programmaticSlug,
-              navigateTo,
-            } as any)}
+          <React.Suspense
+            fallback={
+              <div className="py-24">
+                <LoadingSpinner size="lg" message="Pagina laden…" />
+              </div>
+            }
+          >
+            {React.createElement(
+              ReactLazy(() => import('./components/ProgrammaticLandingPage')),
+              {
+                variantSlug: programmaticSlug,
+                navigateTo,
+              } as any
+            )}
           </React.Suspense>
         )
       case 'categoryDetail':
