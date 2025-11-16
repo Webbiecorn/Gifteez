@@ -19,7 +19,9 @@ beneden zodat de Programmatic/QuickScan updates production-ready blijven en anal
    - Zodra die libs aanwezig zijn, draaien de 400+ navigatie/giftfinder/deals/blog scenario’s headless en dekken ze
      QuickScan CTA’s impliciet doordat programmatic pagina’s geladen worden.
 5. **SEO/analytics assets** – `npm run prebuild` regenereert sitemap, favicons, pinned-tab assets, RSS-feed en
-   voert een dry-run responsive images check uit. Resultaat check je met `head public/sitemap.xml` of een diff.
+   voert een dry-run responsive images check uit. Zet vooraf `FIREBASE_SERVICE_ACCOUNT_JSON` (of wijs
+   `FIREBASE_SERVICE_ACCOUNT` naar `gifteez-7533b-firebase-adminsdk.json`) zodat sitemap én RSS je Firestore blogs
+   meenemen. Resultaat check je met `head public/sitemap.xml` of een diff.
 6. **Vite build** – `npm run build` bevestigt dat de productie bundel nog steeds compileert nadat stap 1-5 klaar zijn.
 
 ## 2. Deploy uitvoeren (Firebase Hosting)

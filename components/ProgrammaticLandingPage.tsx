@@ -42,6 +42,33 @@ type SortOption = 'featured' | 'price-asc' | 'price-desc'
 type QuickScanFiltersAction = Extract<QuickScanPersonaAction, { type: 'filters' }>
 type QuickScanLinkAction = Extract<QuickScanPersonaAction, { type: 'link' }>
 
+const SORT_OPTION_LABELS: Record<SortOption, string> = {
+  featured: '✨ Uitgelicht',
+  'price-asc': '⬇️ Laagste prijs',
+  'price-desc': '⬆️ Hoogste prijs',
+}
+
+const getQuickScanActionBadges = (action?: QuickScanPersonaAction): string[] => {
+  if (!action) return []
+
+  if (action.type === 'filters') {
+    const filtersAction = action as QuickScanFiltersAction
+    const badges: string[] = ['Preset filters']
+
+    if (filtersAction.fastDeliveryOnly) {
+      badges.push('⚡ Snelle levering')
+    }
+
+    if (filtersAction.sortOption) {
+      badges.push(SORT_OPTION_LABELS[filtersAction.sortOption])
+    }
+
+    return badges
+  }
+
+  return ['Spring naar gids']
+}
+
 const cloneQuickScanPersona = (persona: QuickScanPersona): QuickScanPersona => ({
   ...persona,
   badges: persona.badges ? [...persona.badges] : undefined,
@@ -835,79 +862,133 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) =
 
         {personaQuickScan.length > 0 && (
           <section className="mb-12 rounded-3xl border border-gray-100 bg-white/80 p-6 shadow-sm">
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                  Quick scan
+                <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-primary">
+                    🤖 Cadeaucoach
+                  </span>
+                  Quick scan presets
+                </div>
+                <h2 className="mt-2 text-2xl font-bold text-gray-900">{quickScanTitle}</h2>
+                <p className="text-sm text-gray-600 max-w-2xl">
+                  {quickScanSubtitle ||
+                    'Kies een scenario en laat Cadeaucoach (AI) snel filters toepassen of spring naar de juiste gids.'}
                 </p>
-                <h2 className="text-2xl font-bold text-gray-900">{quickScanTitle}</h2>
-                <p className="text-sm text-gray-600 max-w-2xl">{quickScanSubtitle}</p>
+              </div>
+              <div className="rounded-2xl border border-primary/20 bg-white/70 p-4 shadow-sm">
+                <p className="text-sm text-gray-700">
+                  Wil je liever persoonlijk advies? Cadeaucoach (AI) vraagt 3 dingen en geeft direct
+                  5 suggesties.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => navigateTo('giftFinder')}
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5"
+                >
+                  Open Cadeaucoach
+                </button>
               </div>
             </div>
             <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {personaQuickScan.map((persona) => (
-                <article
-                  key={persona.id}
-                  className="flex h-full flex-col gap-3 rounded-2xl border border-gray-100 bg-white/60 p-5 shadow-[0_20px_50px_-40px_rgba(15,23,42,0.55)]"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Persona
-                    </span>
-                    {persona.budgetLabel && (
-                      <span className="text-xs font-semibold text-primary">
-                        {persona.budgetLabel}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900">{persona.label}</h3>
-                  <p className="text-sm text-gray-600">{persona.summary}</p>
-                  {persona.badges && persona.badges.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {persona.badges.map((badge) => (
-                        <span
-                          key={`${persona.id}-${badge}`}
-                          className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
-                        >
-                          {badge}
-                        </span>
-                      ))}
+              {personaQuickScan.map((persona) => {
+                const actionBadges = getQuickScanActionBadges(persona.action)
+                return (
+                  <article
+                    key={persona.id}
+                    className="flex h-full flex-col gap-4 rounded-2xl border border-gray-100 bg-white/70 p-5 shadow-[0_20px_50px_-40px_rgba(15,23,42,0.55)]"
+                  >
+                    <div className="space-y-2">
+                      <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Persona
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900">{persona.label}</h3>
+                      <p className="text-sm text-gray-600">{persona.summary}</p>
                     </div>
-                  )}
-                  {persona.topSuggestions && persona.topSuggestions.length > 0 && (
-                    <ul className="list-disc space-y-1 pl-5 text-sm text-gray-600">
-                      {persona.topSuggestions.map((tip, index) => (
-                        <li key={`${persona.id}-tip-${index}`}>{tip}</li>
-                      ))}
-                    </ul>
-                  )}
-                  {persona.action?.type === 'filters' && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleQuickScanFilters(persona, persona.action as QuickScanFiltersAction)
-                      }
-                      className="inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
-                    >
-                      {persona.action.label}
-                    </button>
-                  )}
-                  {persona.action?.type === 'link' && (
-                    <a
-                      href={(persona.action as QuickScanLinkAction).href}
-                      onClick={() =>
-                        handleQuickScanLink(persona, persona.action as QuickScanLinkAction)
-                      }
-                      className="inline-flex items-center justify-between rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 transition hover:border-primary hover:text-primary"
-                    >
-                      {persona.action.label}
-                      <span aria-hidden className="ml-2">
-                        →
-                      </span>
-                    </a>
-                  )}
-                </article>
-              ))}
+
+                    {persona.badges && persona.badges.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {persona.badges.map((badge) => (
+                          <span
+                            key={`${persona.id}-${badge}`}
+                            className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
+                          >
+                            {badge}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {persona.topSuggestions && persona.topSuggestions.length > 0 && (
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Focus van Cadeaucoach
+                        </p>
+                        <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-gray-600">
+                          {persona.topSuggestions.map((tip, index) => (
+                            <li key={`${persona.id}-tip-${index}`}>{tip}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    <div className="mt-auto rounded-2xl border border-gray-100 bg-white p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
+                          🤖 Cadeaucoach tip
+                        </span>
+                        {persona.budgetLabel && (
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                            {persona.budgetLabel}
+                          </span>
+                        )}
+                      </div>
+                      {actionBadges.length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {actionBadges.map((badge) => (
+                            <span
+                              key={`${persona.id}-${badge}`}
+                              className="inline-flex items-center rounded-full bg-primary/5 px-3 py-1 text-xs font-semibold text-primary"
+                            >
+                              {badge}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="mt-4">
+                        {persona.action?.type === 'filters' && (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleQuickScanFilters(
+                                persona,
+                                persona.action as QuickScanFiltersAction
+                              )
+                            }
+                            className="inline-flex w-full items-center justify-center rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary/20"
+                          >
+                            {persona.action.label || 'Pas filters toe'}
+                          </button>
+                        )}
+                        {persona.action?.type === 'link' && (
+                          <a
+                            href={(persona.action as QuickScanLinkAction).href}
+                            onClick={() =>
+                              handleQuickScanLink(persona, persona.action as QuickScanLinkAction)
+                            }
+                            className="inline-flex w-full items-center justify-between rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 transition hover:border-primary hover:text-primary"
+                          >
+                            {persona.action.label}
+                            <span aria-hidden className="ml-2">
+                              →
+                            </span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           </section>
         )}
@@ -1020,15 +1101,50 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) =
 
         {/* FAQs */}
         {config?.faq && config.faq.length > 0 && (
-          <section className="mt-16 max-w-3xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Veelgestelde vragen</h2>
-            <div className="space-y-4">
-              {config.faq.map((item, i) => (
-                <details key={i} className="bg-gray-50 rounded-lg p-4">
-                  <summary className="font-semibold text-gray-900 cursor-pointer">{item.q}</summary>
-                  <p className="mt-2 text-gray-600">{item.a}</p>
-                </details>
-              ))}
+          <section className="mt-16 rounded-3xl border border-gray-100 bg-white/80 p-6 shadow-sm">
+            <div className="grid gap-8 lg:grid-cols-[320px,1fr]">
+              <div className="space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  Nog vragen?
+                </p>
+                <h2 className="text-2xl font-bold text-gray-900">Veelgestelde vragen</h2>
+                <p className="text-sm text-gray-600">
+                  Snel antwoord op twijfels over levering, budget of retourbeleid. Cadeaucoach (AI)
+                  gebruikt dezelfde informatie om je suggesties slimmer te maken.
+                </p>
+                <div className="rounded-2xl border border-primary/10 bg-primary/5 p-4">
+                  <p className="text-sm font-semibold text-primary">Extra hulp nodig?</p>
+                  <p className="text-sm text-primary/80">
+                    Start Cadeaucoach en krijg binnen 30 seconden een shortlist met cadeaus.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigateTo('giftFinder')}
+                    className="mt-3 inline-flex w-full items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:-translate-y-0.5 transition"
+                  >
+                    Cadeaucoach starten
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {config.faq.map((item, i) => (
+                  <details
+                    key={i}
+                    className="group rounded-2xl border border-gray-100 bg-white p-4 shadow-sm"
+                  >
+                    <summary className="flex cursor-pointer items-center justify-between text-left font-semibold text-gray-900">
+                      <span>{item.q}</span>
+                      <span
+                        aria-hidden
+                        className="ml-4 text-primary transition duration-200 group-open:rotate-180"
+                      >
+                        ⌃
+                      </span>
+                    </summary>
+                    <p className="mt-3 text-sm text-gray-600">{item.a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
           </section>
         )}

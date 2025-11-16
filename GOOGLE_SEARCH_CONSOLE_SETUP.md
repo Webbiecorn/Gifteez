@@ -32,27 +32,23 @@ Je hebt meerdere opties. **Aanbevolen: HTML-tag**
    <meta name="google-site-verification" content="abc123xyz456..." />
    ```
 
-3. Open `index.html` in je project
-4. Zoek naar deze regel:
+3. Open `.env.local` (of het CI-secret) en voeg toe:
 
-   ```html
-   <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" /> -->
+   ```bash
+   VITE_GOOGLE_SITE_VERIFICATION=abc123xyz456...
    ```
 
-5. Vervang deze door de gekopieerde meta tag (verwijder de `<!--` en `-->`):
+   > Vite injecteert deze waarde automatisch in `index.html` via
+   > `<meta name="google-site-verification" content="%VITE_GOOGLE_SITE_VERIFICATION%">`.
 
-   ```html
-   <meta name="google-site-verification" content="abc123xyz456..." />
-   ```
-
-6. Deploy naar Firebase:
+4. Deploy naar Firebase:
 
    ```bash
    npm run build
    firebase deploy --only hosting
    ```
 
-7. Ga terug naar Search Console en klik op **"Verifiëren"**
+5. Ga terug naar Search Console en klik op **"Verifiëren"**
 
 #### Optie B: Google Analytics (Als je al Analytics hebt)
 

@@ -44,6 +44,7 @@ interface NavItem {
   label: string
   icon?: React.ElementType
   submenu?: SubMenuItem[]
+  tone?: 'primary' | 'helper'
 }
 
 const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
@@ -80,13 +81,14 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
 
   const navItems: NavItem[] = [
     {
-      page: 'giftFinder',
-      label: 'Gift Finder',
-      icon: GiftIcon,
+      page: 'cadeausHub',
+      label: 'Cadeaugidsen',
+      icon: BookOpenIcon,
+      tone: 'primary',
     },
     {
       page: 'deals',
-      label: 'Cadeaus',
+      label: 'Cadeau deals',
       icon: TagIcon,
       submenu: [
         {
@@ -116,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
     },
     {
       page: 'blog',
-      label: 'Blog',
+      label: 'Inspiratie',
       icon: BookOpenIcon,
       submenu: [
         {
@@ -127,9 +129,10 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
       ],
     },
     {
-      page: 'cadeausHub',
-      label: 'Cadeaugidsen',
-      icon: BookOpenIcon,
+      page: 'giftFinder',
+      label: 'Cadeaucoach (AI)',
+      icon: GiftIcon,
+      tone: 'helper',
     },
     { page: 'about', label: 'Over Ons', icon: BookOpenIcon },
     { page: 'contact', label: 'Contact', icon: BookOpenIcon },
@@ -181,6 +184,15 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
         const isActive = currentPage === item.page
         const hasSubmenu = item.submenu && item.submenu.length > 0
         const isDropdownOpen = openDropdown === item.label
+        const toneIdleClasses = (() => {
+          if (item.tone === 'primary') {
+            return 'text-primary border-primary/30 bg-white/90 shadow-sm hover:bg-primary/5 hover:text-primary'
+          }
+          if (item.tone === 'helper') {
+            return 'text-gray-500 hover:text-primary/80 hover:bg-gray-50 border-gray-100'
+          }
+          return 'text-gray-700 hover:text-primary hover:bg-gray-50 border-transparent'
+        })()
 
         const handleMouseEnter = () => {
           if (hasSubmenu) {
@@ -213,10 +225,10 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
               aria-label={`Ga naar ${item.label}`}
               aria-current={isActive ? 'page' : undefined}
               aria-expanded={hasSubmenu ? isDropdownOpen : undefined}
-              className={`relative flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
+              className={`relative flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold transition-all duration-200 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 ${
                 isActive
-                  ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-lg shadow-primary/20'
-                  : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                  ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-lg shadow-primary/20 border-transparent'
+                  : toneIdleClasses
               }`}
             >
               {item.icon && (
@@ -334,7 +346,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
             <div className="flex items-center">
               <div className="relative cursor-pointer group" onClick={() => handleNavClick('home')}>
                 <Logo
-                  alt="Gifteez.nl - AI Gift Finder voor het perfecte cadeau"
+                  alt="Gifteez.nl - Cadeaugidsen & Cadeaucoach"
                   className="h-11 w-auto transition-transform duration-200 group-hover:scale-105"
                   priority
                 />
@@ -445,7 +457,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
               {/* Mobile Menu Header */}
               <div className="flex items-center justify-between p-5 border-b border-gray-100">
                 <Logo
-                  alt="Gifteez.nl - AI Gift Finder voor het perfecte cadeau"
+                  alt="Gifteez.nl - Cadeaugidsen & Cadeaucoach"
                   className="h-10 w-auto"
                   priority
                 />
@@ -465,6 +477,15 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                     const isActive = currentPage === item.page
                     const hasSubmenu = item.submenu && item.submenu.length > 0
                     const isExpanded = mobileExpandedMenu === item.label
+                    const mobileToneClasses = (() => {
+                      if (item.tone === 'primary') {
+                        return 'text-primary border border-primary/30 bg-primary/5'
+                      }
+                      if (item.tone === 'helper') {
+                        return 'text-gray-500 border border-gray-100'
+                      }
+                      return 'text-gray-700 border border-transparent'
+                    })()
 
                     return (
                       <div key={item.page}>
@@ -482,8 +503,8 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
                           aria-expanded={hasSubmenu ? isExpanded : undefined}
                           className={`w-full text-left py-3 px-4 rounded-lg flex items-center gap-3 font-semibold transition-all duration-200 ${
                             isActive
-                              ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-md'
-                              : 'text-gray-700 hover:bg-gray-50'
+                              ? 'text-white bg-gradient-to-r from-primary to-rose-600 shadow-md border border-transparent'
+                              : `${mobileToneClasses} hover:bg-gray-50`
                           }`}
                         >
                           {item.icon && <item.icon className="w-5 h-5" aria-hidden="true" />}

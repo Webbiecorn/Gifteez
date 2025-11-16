@@ -357,7 +357,7 @@ const App: React.FC = () => {
       const baseTitle = 'Gifteez.nl'
       const pageTitles: Record<string, string> = {
         home: 'Trending Gifts & Expert Gift Guides voor Elk Moment',
-        giftFinder: 'AI GiftFinder — Persoonlijke cadeau-ideeën',
+        giftFinder: 'AI Cadeaucoach — Persoonlijke cadeau-ideeën',
         categories: "Cadeaucategorieën — Ontdek ideeënpagina's",
         favorites: 'Favoriete cadeaus — Deel & bewaar',
         contact: 'Contact — Neem contact op met Gifteez',
@@ -390,7 +390,7 @@ const App: React.FC = () => {
       document.title = title
       const descriptions: Record<string, string> = {
         giftFinder:
-          'Gebruik de AI GiftFinder en ontvang direct een gepersonaliseerde lijst cadeautips.',
+          'Gebruik de AI Cadeaucoach en ontvang direct een gepersonaliseerde lijst cadeautips.',
         categories:
           'Blader door tientallen cadeaucategorieën voor inspiratie voor elke gelegenheid.',
         favorites: 'Bekijk en deel je bewaarde favoriete cadeau-ideeën.',
@@ -412,7 +412,7 @@ const App: React.FC = () => {
       metaDesc.setAttribute(
         'content',
         descriptions[page] ||
-          'Vind snel het perfecte cadeau met de AI GiftFinder, inspiratie, gidsen en handgepickte collecties.'
+          'Vind snel het perfecte cadeau met onze cadeaugidsen en AI Cadeaucoach — inspiratie, gidsen en handgepickte collecties.'
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -86,8 +86,8 @@
     ],
     "redirects": [
       { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 },
-      { "source": "/cadeaugidsen", "destination": "/cadeaus", "type": 301 },
-      { "source": "/cadeaugidsen/**", "destination": "/cadeaus/:splat", "type": 301 },
+      { "source": "/cadeaus", "destination": "/cadeaugidsen", "type": 301 },
+      { "source": "/cadeaus/**", "destination": "/cadeaugidsen/:splat", "type": 301 },
       { "source": "/shop", "destination": "/deals", "type": 301 },
       { "source": "/shop/**", "destination": "/deals", "type": 301 },
       { "source": "/api/visit", "destination": "/deals", "type": 301 },

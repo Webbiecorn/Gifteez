@@ -1,13 +1,200 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { PROGRAMMATIC_INDEX } from '../data/programmatic'
-import { buildGuidePath, GUIDE_BASE_PATH, replaceLegacyGuidePathSegment } from '../guidePaths'
+import { buildGuidePath, GUIDE_BASE_PATH } from '../guidePaths'
 import JsonLd from './JsonLd'
 import Container from './layout/Container'
+import type { ProgrammaticConfig } from '../data/programmatic'
 import type { NavigateTo } from '../types'
+
+type PersonaFilter = {
+  id: string
+  label: string
+  description: string
+  emoji: string
+  predicate: (config: ProgrammaticConfig) => boolean
+}
+
+type BudgetSegment = {
+  id: string
+  label: string
+  description: string
+  min: number
+  max: number | null
+}
+
+const PERSONA_FILTERS: PersonaFilter[] = [
+  {
+    id: 'haar',
+    label: 'Voor haar',
+    description: 'Beauty, wellness & cosy home',
+    emoji: '🌸',
+    predicate: (config) => config.recipient === 'haar',
+  },
+  {
+    id: 'hem',
+    label: 'Voor hem',
+    description: 'Tech, gadgets & borrel',
+    emoji: '🕺',
+    predicate: (config) => config.recipient === 'hem',
+  },
+  {
+    id: 'collegas',
+    label: 'Collega’s',
+    description: 'Secret Santa & kantoor',
+    emoji: '💼',
+    predicate: (config) => config.recipient === 'collegas',
+  },
+  {
+    id: 'kids',
+    label: 'Kids',
+    description: 'Pakjesavond & educatief',
+    emoji: '🧸',
+    predicate: (config) => config.recipient === 'kids',
+  },
+  {
+    id: 'duurzaam',
+    label: 'Duurzaam',
+    description: 'Eco & vegan selectie',
+    emoji: '🌱',
+    predicate: (config) => config.interest === 'duurzaam',
+  },
+  {
+    id: 'tech',
+    label: 'Tech & gamers',
+    description: 'Smart home & gear',
+    emoji: '🎧',
+    predicate: (config) => config.interest === 'tech' || config.interest === 'gamer',
+  },
+]
+
+const BUDGET_SEGMENTS: BudgetSegment[] = [
+  { id: '0-25', label: '€0 - €25', description: 'Lootjes & collega’s', min: 0, max: 25 },
+  { id: '25-50', label: '€25 - €50', description: 'Populaire cadeaus', min: 25, max: 50 },
+  { id: '50-100', label: '€50 - €100', description: 'Premium picks', min: 50, max: 100 },
+  { id: '100-150', label: '€100 - €150', description: 'Partner & ouders', min: 100, max: 150 },
+  { id: '150+', label: '€150+', description: 'Statement gifts', min: 150, max: null },
+]
+
+const RECIPIENT_LABELS: Record<string, string> = {
+  hem: 'Voor hem',
+  haar: 'Voor haar',
+  collegas: 'Collega’s',
+  kids: 'Voor kids',
+}
+
+const INTEREST_LABELS: Record<string, string> = {
+  duurzaam: 'Duurzaam',
+  tech: 'Tech',
+  gamer: 'Gamer',
+}
+
+const formatRecipientLabel = (recipient?: string | null) => {
+  if (!recipient) return null
+  return RECIPIENT_LABELS[recipient] ?? recipient.charAt(0).toUpperCase() + recipient.slice(1)
+}
+
+const formatInterestLabel = (interest?: string | null) => {
+  if (!interest) return null
+  return INTEREST_LABELS[interest] ?? interest.charAt(0).toUpperCase() + interest.slice(1)
+}
+
+const getBudgetValue = (config: ProgrammaticConfig) =>
+  config.budgetMax ?? config.filters?.maxPrice ?? null
 
 const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
   const variants = useMemo(() => Object.values(PROGRAMMATIC_INDEX), [])
-  const featuredCollections = useMemo(() => variants.slice(0, 4), [variants])
+  const [activePersona, setActivePersona] = useState<string | null>(null)
+  const [activeBudget, setActiveBudget] = useState<string | null>(null)
+
+  const personaDefinition = activePersona
+    ? (PERSONA_FILTERS.find((filter) => filter.id === activePersona) ?? null)
+    : null
+  const budgetDefinition = activeBudget
+    ? (BUDGET_SEGMENTS.find((segment) => segment.id === activeBudget) ?? null)
+    : null
+
+  const filteredCollections = useMemo(() => {
+    if (!personaDefinition && !budgetDefinition) {
+      return variants
+    }
+    return variants.filter((variant) => {
+      if (personaDefinition && !personaDefinition.predicate(variant)) {
+        return false
+      }
+      if (budgetDefinition) {
+        const budgetValue = getBudgetValue(variant)
+        if (!budgetValue) return false
+        const max = budgetDefinition.max ?? Number.POSITIVE_INFINITY
+        return budgetValue > budgetDefinition.min && budgetValue <= max
+      }
+      return true
+    })
+  }, [variants, personaDefinition, budgetDefinition])
+
+  const hasActiveFilters = Boolean(personaDefinition || budgetDefinition)
+  const noFilterHits = hasActiveFilters && filteredCollections.length === 0
+
+  const prioritizedVariants = useMemo(
+    () => (noFilterHits ? variants : filteredCollections),
+    [filteredCollections, noFilterHits, variants]
+  )
+
+  const featuredCollections = useMemo(() => prioritizedVariants.slice(0, 4), [prioritizedVariants])
+
+  const personaOptions = useMemo(
+    () =>
+      PERSONA_FILTERS.map((filter) => ({
+        ...filter,
+        count: variants.filter((variant) => filter.predicate(variant)).length,
+      })),
+    [variants]
+  )
+
+  const budgetOptions = useMemo(
+    () =>
+      BUDGET_SEGMENTS.map((segment) => ({
+        ...segment,
+        count: variants.filter((variant) => {
+          const budgetValue = getBudgetValue(variant)
+          if (!budgetValue) return false
+          const max = segment.max ?? Number.POSITIVE_INFINITY
+          return budgetValue > segment.min && budgetValue <= max
+        }).length,
+      })),
+    [variants]
+  )
+
+  const filterSummary = useMemo(() => {
+    if (!hasActiveFilters) return 'Top selectie op basis van performance en vraag.'
+    const parts = []
+    if (personaDefinition) parts.push(personaDefinition.label)
+    if (budgetDefinition) parts.push(budgetDefinition.label)
+    return `Gefilterd op ${parts.join(' + ')}`
+  }, [hasActiveFilters, personaDefinition, budgetDefinition])
+
+  const quickLinks = useMemo(
+    () =>
+      [
+        { label: 'Budget onder €25', slug: 'sinterklaas-voor-kinderen-onder-25' },
+        { label: 'Onder €50 voor haar', slug: 'kerst-voor-haar-onder-50' },
+        { label: 'Onder €50 voor hem', slug: 'kerst-voor-hem-onder-50' },
+        { label: 'Duurzame cadeaus', slug: 'duurzamere-cadeaus-onder-50' },
+        { label: 'Duurzaam kerstcadeau', slug: 'kerst-duurzaam-onder-50' },
+        { label: 'Gamer cadeaus', slug: 'gamer-cadeaus-onder-100' },
+      ].map((link) => ({
+        label: link.label,
+        href: buildGuidePath(link.slug),
+      })),
+    []
+  )
+
+  const totalVisible = prioritizedVariants.length
+  const featuredCount = featuredCollections.length
+
+  const handleResetFilters = () => {
+    setActivePersona(null)
+    setActiveBudget(null)
+  }
 
   const holidayCollections = useMemo(
     () => variants.filter((v) => v.occasion === 'kerst' || v.slug.includes('sinter')),
@@ -22,22 +209,6 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
   const sustainableCollections = useMemo(
     () => variants.filter((v) => v.interest === 'duurzaam'),
     [variants]
-  )
-
-  const quickLinks = useMemo(
-    () =>
-      [
-        { label: 'Budget onder €25', href: '/cadeaus/sinterklaas/voor-kinderen-onder-25' },
-        { label: 'Onder €50 voor haar', href: '/cadeaus/kerst/voor-haar/onder-50' },
-        { label: 'Onder €50 voor hem', href: '/cadeaus/kerst/voor-hem/onder-50' },
-        { label: 'Duurzame cadeaus', href: '/cadeaus/duurzamere-cadeaus-onder-50' },
-        { label: 'Duurzaam kerstcadeau', href: '/cadeaus/kerst-duurzaam-onder-50' },
-        { label: 'Gamer cadeaus', href: '/cadeaus/gamer-cadeaus-onder-100' },
-      ].map((link) => ({
-        ...link,
-        href: replaceLegacyGuidePathSegment(link.href),
-      })),
-    []
   )
 
   const breadcrumbSchema = useMemo(() => {
@@ -112,6 +283,106 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
           </div>
         </div>
 
+        <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Filter je cadeaugidsen
+              </p>
+              <h2 className="text-2xl font-bold text-gray-900">
+                Voor wie shop je en wat is je budget?
+              </h2>
+              <p className="text-sm text-gray-600">{filterSummary}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-700">
+                {totalVisible} gidsen zichtbaar
+              </span>
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                disabled={!hasActiveFilters}
+                className="inline-flex items-center rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Reset filters
+              </button>
+            </div>
+          </div>
+
+          {noFilterHits && (
+            <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+              Geen gids gevonden voor deze combinatie. We tonen tijdelijk alle cadeaugidsen.
+            </div>
+          )}
+
+          <div className="mt-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Voor wie shop je?
+            </p>
+            <div className="mt-3 grid gap-3 md:grid-cols-3">
+              {personaOptions.map((option) => {
+                const isActive = activePersona === option.id
+                const isDisabled = option.count === 0
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setActivePersona(isActive ? null : option.id)}
+                    aria-pressed={isActive}
+                    disabled={isDisabled}
+                    className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${
+                      isActive
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-gray-200 bg-gray-50 text-gray-800'
+                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <span className="text-2xl" aria-hidden>
+                      {option.emoji}
+                    </span>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">{option.label}</p>
+                      <p className="text-xs text-gray-500">{option.description}</p>
+                    </div>
+                    <span className="text-xs font-semibold text-gray-500">{option.count}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Budget check
+            </p>
+            <div className="mt-3 grid gap-3 md:grid-cols-5">
+              {budgetOptions.map((segment) => {
+                const isActive = activeBudget === segment.id
+                const isDisabled = segment.count === 0
+                return (
+                  <button
+                    key={segment.id}
+                    type="button"
+                    onClick={() => setActiveBudget(isActive ? null : segment.id)}
+                    aria-pressed={isActive}
+                    disabled={isDisabled}
+                    className={`rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${
+                      isActive
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-gray-200 bg-gray-50 text-gray-800'
+                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <p className="text-sm font-semibold">{segment.label}</p>
+                    <p className="text-xs text-gray-500">{segment.description}</p>
+                    <span className="mt-2 inline-flex items-center text-xs font-semibold text-gray-500">
+                      {segment.count} gidsen
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
         <section className="mt-12">
           <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
@@ -119,8 +390,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
                 Meest gekozen cadeaugidsen
               </h2>
               <p className="mt-1 text-sm md:text-base text-gray-600 max-w-2xl">
-                Curated hubs met de beste producten. De juiste mix van merken zoals Coolblue,
-                Amazon, Bol en duurzame partners.
+                {filterSummary} ({featuredCount} van {totalVisible} getoond)
               </p>
             </div>
           </header>
@@ -139,18 +409,45 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
                 <h3 className="mt-3 text-lg font-semibold text-gray-900 group-hover:text-primary transition line-clamp-2 min-h-[3.4rem]">
                   {v.title}
                 </h3>
+                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold text-gray-600">
+                  {formatRecipientLabel(v.recipient) && (
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
+                      {formatRecipientLabel(v.recipient)}
+                    </span>
+                  )}
+                  {formatInterestLabel(v.interest) && (
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
+                      #{formatInterestLabel(v.interest)}
+                    </span>
+                  )}
+                  {getBudgetValue(v) && (
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
+                      Tot €{getBudgetValue(v)}
+                    </span>
+                  )}
+                  {v.filters?.fastDelivery && (
+                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
+                      ⚡ Snelle levering
+                    </span>
+                  )}
+                </div>
                 {v.intro && <p className="mt-3 text-sm text-gray-600 line-clamp-3">{v.intro}</p>}
                 {v.highlights && v.highlights.length > 0 && (
-                  <ul className="mt-4 space-y-1.5 text-xs text-gray-600">
-                    {v.highlights.slice(0, 3).map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-bold text-emerald-700">
-                          +
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-4 rounded-2xl bg-gray-50 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Mini-preview
+                    </p>
+                    <ul className="mt-2 space-y-1.5 text-xs text-gray-700">
+                      {v.highlights.slice(0, 3).map((item, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="mt-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-primary">
+                            {idx + 1}
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
                 <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-primary">
                   Bekijk pagina

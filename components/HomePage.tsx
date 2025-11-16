@@ -2,6 +2,7 @@ import type { FormEvent } from 'react'
 import React, { useState, useEffect, useMemo } from 'react'
 import { animated, useSpring, to as springTo } from '@react-spring/web'
 import { useBlogContext } from '../contexts/BlogContext'
+import { buildGuidePath } from '../guidePaths'
 import Button from './Button'
 import { BlogPostSkeleton } from './HomePageSkeletons'
 import { QuestionMarkCircleIcon, BookOpenIcon, TagIcon, CalendarIcon } from './IconComponents'
@@ -17,11 +18,11 @@ interface HomePageProps {
 
 const testimonials: Testimonial[] = [
   {
-    quote: 'Super handige tool, vond in 1 minuut iets voor mijn zus. Een echte aanrader!',
+    quote: 'Super handige gidsen, vond binnen 1 minuut iets voor mijn zus. Een echte aanrader!',
     author: 'Linda de Vries',
   },
   {
-    quote: 'De AI GiftFinder is geniaal. Nooit meer keuzestress voor verjaardagen.',
+    quote: 'De AI Cadeaucoach is geniaal. Nooit meer keuzestress voor verjaardagen.',
     author: 'Mark Jansen',
   },
   {
@@ -35,7 +36,7 @@ const testimonials: Testimonial[] = [
     author: 'Thomas Bakker',
   },
   {
-    quote: 'Ik gebruik Gifteez nu voor alle cadeaus. De quiz is super leuk en accuraat!',
+    quote: 'Ik gebruik Gifteez nu voor alle cadeaus. De Cadeaucoach is super leuk en accuraat!',
     author: 'Emma Peters',
   },
   {
@@ -45,6 +46,64 @@ const testimonials: Testimonial[] = [
 ]
 
 const recipients = ['Partner', 'Man', 'Vrouw', 'Vriend(in)', 'Familielid', 'Collega', 'Kind']
+
+const guideShowcase = [
+  {
+    slug: 'kerst-voor-haar-onder-50',
+    badge: 'Budget < €50',
+    title: 'Warm & persoonlijk voor haar',
+    summary: 'Beauty, wellness en designcadeaus die klaarstaan voor Kerst.',
+    chips: ['Beauty', 'Wellness', 'Design'],
+  },
+  {
+    slug: 'kerst-voor-hem-onder-150',
+    badge: 'Premium',
+    title: 'Voor hem die alles al heeft',
+    summary: 'Mix van tech, whisky en ervaringstips tot €150.',
+    chips: ['Tech', 'Whisky', 'Ervaring'],
+  },
+  {
+    slug: 'duurzamere-cadeaus-onder-50',
+    badge: 'Groene keuze',
+    title: 'Duurzame cadeaus onder €50',
+    summary: 'Keurmerken, lokale makers en herbruikbare materialen.',
+    chips: ['Eco', 'Bewust', 'Lokaal'],
+  },
+  {
+    slug: 'last-minute-kerstcadeaus-vandaag-bezorgd',
+    badge: '⚡ Spoed',
+    title: 'Last-minute vandaag bezorgd',
+    summary: 'Snelle cadeaus bij Coolblue, Bol en Amazon vóór de feestdagen.',
+    chips: ['Same-day', 'Gadgets', 'Gezellig'],
+  },
+]
+
+const budgetShortcuts = [
+  {
+    slug: 'kerst-voor-collegas-onder-25',
+    label: '€0 - €25',
+    description: 'Collega & surprise cadeaus',
+    emoji: '🎁',
+  },
+  {
+    slug: 'kerst-voor-haar-onder-50',
+    label: '€25 - €50',
+    description: 'Vriendinnen & schoonfamilie',
+    emoji: '🌸',
+  },
+  {
+    slug: 'kerst-voor-hem-onder-150',
+    label: '€50 - €150',
+    description: 'Partners & ouders',
+    emoji: '🕺',
+  },
+  {
+    slug: 'wonen-decoratie-cadeaus',
+    label: 'Home & design',
+    description: 'Sfeer, interieur & lifestyle',
+    emoji: '🏡',
+  },
+]
 
 const getReadingTimeMinutes = (text: string): number => {
   const words = text ? text.trim().split(/\s+/).length : 0
@@ -242,20 +301,20 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400/80"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
                 </span>
-                🎁 Trending Gifts & Seasonal Guides
+                📚 Cadeaugidsen + AI Cadeaucoach
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight">
-                <span className="text-slate-900 block">Ontdek de</span>
+                <span className="text-slate-900 block">Jouw #1 hub voor</span>
                 <span className="bg-gradient-to-r from-rose-600 via-purple-500 to-pink-500 bg-clip-text text-transparent block">
-                  beste cadeaus
+                  slim geselecteerde cadeaugidsen
                 </span>
-                <span className="text-slate-900 block">voor elk moment</span>
+                <span className="text-slate-900 block">met een AI Cadeaucoach als backup</span>
               </h1>
 
               <p className="text-lg sm:text-xl text-slate-700 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Van Sinterklaas tot Kerst, van tech gadgets tot wellness — onze expert gift guides
-                helpen je het perfecte cadeau te vinden met directe kooplinks.
+                Wij combineren redactionele cadeaugidsen met realtime prijsdata en voorraadinfo.
+                Kies je gids per budget of persoon en schakel de Cadeaucoach in als je vastloopt.
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2 text-left">
@@ -265,9 +324,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <BookOpenIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Expert gift guides</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Expert cadeaugidsen</h3>
                       <p className="text-xs text-slate-600">
-                        Uitgebreide blogs met persoonlijk geteste producten.
+                        Tests + affiliate data in één overzicht.
                       </p>
                     </div>
                   </div>
@@ -278,9 +337,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <TagIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Directe kooplinks</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Direct shoppable</h3>
                       <p className="text-xs text-slate-600">
-                        Klik door naar je favoriete webshop en bestel direct.
+                        Betrouwbare shops + levertijden per kaart.
                       </p>
                     </div>
                   </div>
@@ -291,9 +350,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <CalendarIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">Seizoenscontent</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">Altijd actueel</h3>
                       <p className="text-xs text-slate-600">
-                        Van Sinterklaas tot Kerst — altijd actueel.
+                        Sinterklaas, Kerst en snelle last-minute lijsten.
                       </p>
                     </div>
                   </div>
@@ -304,9 +363,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                       <QuestionMarkCircleIcon className="h-5 w-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-semibold text-slate-900">AI-tool beschikbaar</h3>
+                      <h3 className="text-sm font-semibold text-slate-900">AI Cadeaucoach</h3>
                       <p className="text-xs text-slate-600">
-                        Nog geen idee? Gebruik onze slimme GiftFinder.
+                        Toch vast? Laat de coach je shortlist maken.
                       </p>
                     </div>
                   </div>
@@ -326,21 +385,21 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
               >
                 <Button
                   variant="accent"
-                  onClick={() => navigateTo('blog')}
+                  onClick={() => navigateTo('cadeausHub')}
                   className="text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all duration-300 hover:-translate-y-1"
                   style={{
                     background: 'linear-gradient(135deg, #f43f5e, #9333ea)',
                     boxShadow: '0 25px 55px -18px rgba(147, 51, 234, 0.45)',
                   }}
                 >
-                  📖 Bekijk Gift Guides
+                  � Bekijk cadeaugidsen
                 </Button>
                 <button
                   type="button"
                   onClick={() => navigateTo('giftFinder')}
                   className="flex items-center gap-2 rounded-2xl border border-purple-200 bg-white/80 px-6 py-3.5 text-base font-semibold text-purple-700 shadow-lg transition hover:border-purple-300 hover:shadow-xl backdrop-blur-lg"
                 >
-                  💡 Of gebruik AI tool
+                  🤖 Gebruik Cadeaucoach (AI)
                 </button>
               </animated.div>
 
@@ -417,6 +476,96 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
           </div>
         </Container>
       </section>
+
+      {/* Guide showcase */}
+      <section className="py-16 bg-white">
+        <Container size="xl" className="space-y-10">
+          <div className="text-center max-w-3xl mx-auto">
+            <p className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+              🎯 Kies je startpunt
+            </p>
+            <h2 className="typo-h2 mt-4">Begin met onze populairste cadeaugidsen</h2>
+            <p className="typo-body text-slate-600">
+              Selecties per budget, persoon en leveringssnelheid. Klik door, bestel direct en keer
+              terug naar de hub voor nieuwe inspiratie.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {guideShowcase.map((guide) => (
+              <a
+                key={guide.slug}
+                href={buildGuidePath(guide.slug)}
+                className="group relative flex h-full flex-col rounded-3xl border border-gray-100 bg-white/80 p-6 shadow-[0_25px_55px_-35px_rgba(15,23,42,0.35)] transition hover:-translate-y-1 hover:border-primary/40"
+              >
+                <span className="inline-flex w-fit items-center rounded-full bg-rose-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-rose-600">
+                  {guide.badge}
+                </span>
+                <h3 className="mt-4 text-xl font-bold text-gray-900">{guide.title}</h3>
+                <p className="mt-2 text-sm text-gray-600 flex-1">{guide.summary}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {guide.chips.map((chip) => (
+                    <span
+                      key={`${guide.slug}-${chip}`}
+                      className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700"
+                    >
+                      {chip}
+                    </span>
+                  ))}
+                </div>
+                <span className="mt-6 inline-flex items-center text-sm font-semibold text-primary">
+                  Bekijk gids
+                  <span aria-hidden="true" className="ml-2 transition group-hover:translate-x-1">
+                    →
+                  </span>
+                </span>
+              </a>
+            ))}
+          </div>
+
+          <div className="rounded-3xl border border-gray-100 bg-gradient-to-br from-slate-50 via-white to-slate-50 p-6 shadow-inner">
+            <div className="flex flex-col gap-4 text-center lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  Budget & deliverability
+                </p>
+                <h3 className="text-2xl font-bold text-gray-900">Of check snel je budget range</h3>
+                <p className="text-sm text-gray-600">
+                  Kies een budgettile en je landt direct in de juiste gids. Filters staan al klaar.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigateTo('cadeausHub')}
+                className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-gray-800 shadow-sm hover:border-primary/40 hover:text-primary"
+              >
+                Bekijk alle cadeaugidsen
+              </button>
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {budgetShortcuts.map((shortcut) => (
+                <a
+                  key={shortcut.slug}
+                  href={buildGuidePath(shortcut.slug)}
+                  className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 shadow hover:-translate-y-0.5 hover:border-primary/30 transition"
+                >
+                  <span className="text-2xl" aria-hidden="true">
+                    {shortcut.emoji}
+                  </span>
+                  <p className="mt-3 text-sm font-semibold text-primary/80">{shortcut.label}</p>
+                  <h4 className="text-lg font-bold text-gray-900">{shortcut.description}</h4>
+                  <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary/80">
+                    Open gids
+                    <span aria-hidden="true" className="ml-1 transition group-hover:translate-x-1">
+                      →
+                    </span>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </section>
       {/* Trending Guides */}
       <Container
         size="xl"
@@ -424,9 +573,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
         style={{ animationDelay: '200ms' }}
       >
         <div className="text-center mb-12">
-          <h2 className="typo-h2 mb-4">Trending Cadeaugidsen</h2>
+          <h2 className="typo-h2 mb-4">Trending cadeaugidsen & verhalen</h2>
           <p className="typo-body text-slate-600 max-w-2xl mx-auto">
-            Ontdek onze populairste gidsen voor cadeau-inspiratie
+            Onze redactie vult deze gidsen dagelijks aan met nieuwe data en partnerdeals.
           </p>
         </div>
         {partyProPost && (
@@ -567,7 +716,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
         </div>
       </Container>
 
-      {/* GiftFinder Preview */}
+      {/* Cadeaucoach Preview */}
       <section className="bg-gradient-to-br from-rose-50 via-white to-orange-50/40 py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
@@ -577,11 +726,11 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                 <span className="text-3xl">🎯</span>
               </div>
               <h2 className="font-display text-4xl md:text-5xl font-bold text-primary mb-4 leading-tight">
-                Probeer de <span className="text-accent">GiftFinder</span>
+                Ontmoet de <span className="text-accent">Cadeaucoach</span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Kies voor wie je een cadeau zoekt en onze AI doet de rest. Ontvang direct
-                gepersonaliseerde cadeau-ideeën!
+                Kies voor wie je een cadeau zoekt en onze AI vult jouw shortlist aan. Perfect als je
+                na het lezen van een gids nóg meer opties wil.
               </p>
             </div>
 
@@ -636,7 +785,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                     >
                       <span className="flex items-center justify-center gap-3">
                         <span>🔍</span>
-                        Vind Nu Cadeau Ideeën
+                        Start Cadeaucoach
                         <span>✨</span>
                       </span>
                     </Button>
@@ -650,7 +799,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                           <span className="text-white text-lg">🤖</span>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900 mb-1">AI-Gedreven</h3>
+                          <h3 className="font-semibold text-gray-900 mb-1">AI-gedreven</h3>
                           <p className="text-sm text-gray-600">
                             Slimme algoritmes voor perfecte matches
                           </p>
@@ -662,7 +811,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                           <span className="text-white text-lg">⚡</span>
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-900 mb-1">Direct Resultaten</h3>
+                          <h3 className="font-semibold text-gray-900 mb-1">Direct resultaten</h3>
                           <p className="text-sm text-gray-600">
                             Binnen 30 seconden persoonlijke suggesties
                           </p>
@@ -675,7 +824,7 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
                         </div>
                         <div>
                           <h3 className="font-semibold text-gray-900 mb-1">
-                            100% Gepersonaliseerd
+                            100% gepersonaliseerd
                           </h3>
                           <p className="text-sm text-gray-600">
                             Op basis van interesses en relatie

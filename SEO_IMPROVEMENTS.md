@@ -27,11 +27,12 @@
    - Of DNS TXT record
 4. Dien sitemap in: `https://gifteez.nl/sitemap.xml`
 
-**Code om toe te voegen aan index.html (na verificatie):**
+**Zo doe je dat nu:**
 
-```html
-<meta name="google-site-verification" content="JOUW_VERIFICATIE_CODE" />
-```
+1. Vraag je HTML-tag in Search Console op (`google-site-verification=...`).
+2. Zet de waarde in `.env.local` (of CI) als `VITE_GOOGLE_SITE_VERIFICATION="je-code"`.
+3. Vite injecteert automatisch `<meta name="google-site-verification" content="...">` in `index.html`.
+4. Deploy en klik in Search Console op **Verify**.
 
 ---
 
@@ -95,21 +96,32 @@ const productSchema = {
 
 ---
 
-### 4. 🟡 Sitemap Verbetering: Dynamische Blog Posts uit Firestore
+### 4. � Sitemap Verbetering: Dynamische Blog Posts uit Firestore
 
-Nu haalt sitemap alleen uit `blogData.ts`, maar blogs staan in Firestore.
+`scripts/generate-sitemap.mjs` en `scripts/generate-rss-feed.mjs` lezen nu:
 
-**Oplossing:** Sitemap generatie script updaten om ook Firestore te checken:
+1. Handmatige routes (home, cadeaugidsen, deals, etc.)
+2. Programmatic gidsen uit `data/programmatic`
+3. Blogposts uit `data/blogData.ts`
+4. **Optioneel:** live blogposts uit Firestore, mits een service-account beschikbaar is
 
-```javascript
-// In generate-sitemap.mjs
-async function getFirestorePosts() {
-  // Fetch posts from Firestore tijdens build
-  // Of: genereer sitemap server-side/scheduled
-}
+**Gebruik:**
+
+```bash
+# Optie 1: Plaats service account in de root
+gifteez-7533b-firebase-adminsdk.json
+
+# Optie 2: Zet env vars (handig voor CI)
+export FIREBASE_SERVICE_ACCOUNT=/pad/naar/service-account.json
+# of inline JSON
+export FIREBASE_SERVICE_ACCOUNT_JSON='{"type":"service_account", ...}'
+
+# Scripts (ook onderdeel van npm run prebuild)
+node scripts/generate-sitemap.mjs
+node scripts/generate-rss-feed.mjs
 ```
 
-**Alternatief:** `/api/sitemap` endpoint maken voor dynamische sitemap
+Wanneer de credentials ontbreken, slaan beide scripts de Firestore-stap automatisch over en gebruiken ze alleen de statische data.
 
 ---
 

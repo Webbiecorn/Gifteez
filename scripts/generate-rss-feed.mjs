@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-import { writeFile, mkdir } from 'fs/promises';
-import { join, dirname } from 'path';
+import { writeFile, mkdir, readFile } from 'fs/promises';
+import { existsSync } from 'fs';
+import { join, dirname, resolve, isAbsolute } from 'path';
 import { fileURLToPath } from 'url';
-import { readFile } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, '..');
+const SERVICE_ACCOUNT_ENV = process.env.FIREBASE_SERVICE_ACCOUNT;
+const SERVICE_ACCOUNT_JSON_ENV = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+const DEFAULT_SERVICE_ACCOUNT_FILE = join(projectRoot, 'gifteez-7533b-firebase-adminsdk.json');
 
 /**
  * Generate RSS 2.0 feed for Pinterest auto-publishing
@@ -21,7 +24,7 @@ const SITE_LANGUAGE = 'nl-NL';
 /**
  * Load blog posts from blogData.ts by parsing the TypeScript file
  */
-async function loadBlogPosts() {
+async function loadStaticBlogPosts() {
   try {
     // Read blogData.ts as text
     const blogDataPath = join(projectRoot, 'data', 'blogData.ts');
@@ -84,6 +87,127 @@ async function loadBlogPosts() {
     console.warn('Stack:', error.stack);
     return [];
   }
+}
+
+async function loadServiceAccountCredentials() {
+  if (SERVICE_ACCOUNT_JSON_ENV) {
+    try {
+      return JSON.parse(SERVICE_ACCOUNT_JSON_ENV);
+    } catch (error) {
+      console.warn('⚠️  FIREBASE_SERVICE_ACCOUNT_JSON kon niet geparsed worden:', error.message);
+      return null;
+    }
+  }
+
+  const rawPath = SERVICE_ACCOUNT_ENV ?? DEFAULT_SERVICE_ACCOUNT_FILE;
+  const candidatePath = isAbsolute(rawPath) ? rawPath : resolve(projectRoot, rawPath);
+
+  if (!existsSync(candidatePath)) {
+    return null;
+  }
+
+  try {
+    const fileContents = await readFile(candidatePath, 'utf-8');
+    return JSON.parse(fileContents);
+  } catch (error) {
+    console.warn('⚠️  Service-accountbestand kon niet worden gelezen:', error.message);
+    return null;
+  }
+}
+
+const normalizeDate = (value) => {
+  if (!value) return undefined;
+  if (typeof value === 'string') {
+    const match = value.match(/\d{4}-\d{2}-\d{2}/);
+    return match ? match[0] : undefined;
+  }
+  if (value instanceof Date) {
+    return value.toISOString().split('T')[0];
+  }
+  if (typeof value.toDate === 'function') {
+    return value.toDate().toISOString().split('T')[0];
+  }
+  if (typeof value === 'object' && value !== null && 'seconds' in value && 'nanoseconds' in value) {
+    const millis = value.seconds * 1000 + Math.floor(value.nanoseconds / 1_000_000);
+    return new Date(millis).toISOString().split('T')[0];
+  }
+  return undefined;
+};
+
+async function loadFirestorePosts() {
+  const credentials = await loadServiceAccountCredentials();
+  if (!credentials) {
+    console.warn('⚠️  Geen service account gevonden; RSS gebruikt alleen statische blogData.ts entries.');
+    return [];
+  }
+
+  try {
+    const { initializeApp, cert, getApps } = await import('firebase-admin/app');
+    const { getFirestore } = await import('firebase-admin/firestore');
+
+    const app = getApps().length ? getApps()[0] : initializeApp({ credential: cert(credentials) });
+    const db = getFirestore(app);
+    const snapshot = await db
+      .collection('blogPosts')
+      .where('isDraft', '==', false)
+      .orderBy('publishedDate', 'desc')
+      .get();
+
+    if (snapshot.empty) {
+      console.warn('⚠️  Firestore bevat geen gepubliceerde blogposts.');
+      return [];
+    }
+
+    return snapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        if (!data?.slug || !data?.title) {
+          return null;
+        }
+        const date = normalizeDate(data.publishedDate) ?? normalizeDate(data.createdAt) ?? '2025-01-01';
+        const updated = normalizeDate(data.updatedAt);
+        const imageUrl =
+          (data.seo && data.seo.pinterestImage) ||
+          data.pinterestImage ||
+          data.imageUrl ||
+          '/og-image.png';
+
+        return {
+          slug: data.slug,
+          title: data.title,
+          excerpt: data.excerpt || data.subtitle || 'Ontdek de nieuwste tips van de Gifteez redactie.',
+          imageUrl,
+          category: data.category || 'Gids',
+          publishedAt: `${date}T10:00:00Z`,
+          updatedAt: updated ? `${updated}T10:00:00Z` : `${date}T10:00:00Z`,
+        };
+      })
+      .filter(Boolean);
+  } catch (error) {
+    console.warn('⚠️  Kon blogposts niet uit Firestore laden:', error.message);
+    return [];
+  }
+}
+
+const mergePosts = (...lists) => {
+  const map = new Map();
+  lists.forEach((list = []) => {
+    list.forEach((post) => {
+      if (!post?.slug) return;
+      map.set(post.slug, post);
+    });
+  });
+  return Array.from(map.values());
+};
+
+async function loadBlogPosts() {
+  const [staticPosts, firestorePosts] = await Promise.all([
+    loadStaticBlogPosts(),
+    loadFirestorePosts(),
+  ]);
+  const posts = mergePosts(staticPosts, firestorePosts);
+  console.log(`📚 RSS databronnen — static: ${staticPosts.length}, firestore: ${firestorePosts.length}, totaal: ${posts.length}`);
+  return posts;
 }
 
 function escapeXml(str) {

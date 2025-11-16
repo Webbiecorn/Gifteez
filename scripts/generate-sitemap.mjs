@@ -1,5 +1,6 @@
 // scripts/generate-sitemap.mjs
 import { promises as fs } from "fs";
+import { existsSync } from "fs";
 import path from "path";
 
 // Import TS blog data via dynamic transpile (simple, using ts-node-esque loader is overkill). We read and regex slugs.
@@ -7,6 +8,9 @@ const BLOG_DATA_FILE = path.resolve("data/blogData.ts");
 const PROGRAMMATIC_DATA_FILE = path.resolve("data/programmatic/index.ts");
 
 const SITE = "https://gifteez.nl";
+const SERVICE_ACCOUNT_ENV = process.env.FIREBASE_SERVICE_ACCOUNT;
+const SERVICE_ACCOUNT_JSON_ENV = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+const DEFAULT_SERVICE_ACCOUNT_FILE = "gifteez-7533b-firebase-adminsdk.json";
 const guidePathConfig = JSON.parse(
   await fs.readFile(new URL("../guide-paths.json", import.meta.url), "utf8")
 );
@@ -82,6 +86,102 @@ async function getPostUrls() {
   return urls;
 }
 
+async function loadServiceAccountCredentials() {
+  if (SERVICE_ACCOUNT_JSON_ENV) {
+    try {
+      return JSON.parse(SERVICE_ACCOUNT_JSON_ENV);
+    } catch (error) {
+      console.warn("[sitemap] Kon FIREBASE_SERVICE_ACCOUNT_JSON niet parsen:", error.message);
+      return null;
+    }
+  }
+
+  const candidatePath = SERVICE_ACCOUNT_ENV
+    ? path.resolve(SERVICE_ACCOUNT_ENV)
+    : path.resolve(DEFAULT_SERVICE_ACCOUNT_FILE);
+
+  if (!existsSync(candidatePath)) {
+    return null;
+  }
+
+  try {
+    const raw = await fs.readFile(candidatePath, "utf8");
+    return JSON.parse(raw);
+  } catch (error) {
+    console.warn("[sitemap] Kon service account niet lezen:", error.message);
+    return null;
+  }
+}
+
+const normalizeDate = (value) => {
+  if (!value) return undefined;
+  if (typeof value === "string") {
+    const match = value.match(/\d{4}-\d{2}-\d{2}/);
+    return match ? match[0] : undefined;
+  }
+  if (value instanceof Date) {
+    return value.toISOString().split("T")[0];
+  }
+  if (value && typeof value.toDate === "function") {
+    return value.toDate().toISOString().split("T")[0];
+  }
+  if (typeof value === "object" && value !== null && "seconds" in value && "nanoseconds" in value) {
+    const millis = value.seconds * 1000 + Math.floor(value.nanoseconds / 1_000_000);
+    return new Date(millis).toISOString().split("T")[0];
+  }
+  return undefined;
+};
+
+async function getFirestorePostUrls() {
+  const serviceAccount = await loadServiceAccountCredentials();
+  if (!serviceAccount) {
+    console.warn("[sitemap] Geen service account gevonden, sla Firestore posts over.");
+    return [];
+  }
+
+  try {
+    const { initializeApp, cert, getApps } = await import("firebase-admin/app");
+    const { getFirestore } = await import("firebase-admin/firestore");
+
+    const app = getApps().length
+      ? getApps()[0]
+      : initializeApp({ credential: cert(serviceAccount) });
+    const db = getFirestore(app);
+    const snapshot = await db
+      .collection("blogPosts")
+      .where("isDraft", "==", false)
+      .orderBy("publishedDate", "desc")
+      .get();
+
+    if (snapshot.empty) {
+      console.warn("[sitemap] Geen Firestore blogposts gevonden.");
+      return [];
+    }
+
+    const urls = snapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        if (!data?.slug) {
+          return null;
+        }
+        const lastmod = normalizeDate(data.updatedAt ?? data.publishedDate);
+        return {
+          loc: `${SITE}/blog/${encodeURIComponent(data.slug)}`,
+          lastmod,
+          changefreq: "weekly",
+          priority: "0.75",
+        };
+      })
+      .filter(Boolean);
+
+    console.log(`[sitemap] Firestore blogposts toegevoegd: ${urls.length}`);
+    return urls;
+  } catch (error) {
+    console.warn("[sitemap] Ophalen van Firestore posts mislukt:", error.message);
+    return [];
+  }
+}
+
 async function getProgrammaticUrls() {
   try {
     const src = await fs.readFile(PROGRAMMATIC_DATA_FILE, "utf8");
@@ -106,6 +206,17 @@ async function getProgrammaticUrls() {
   }
 }
 
+const mergeUrls = (...lists) => {
+  const map = new Map();
+  lists.forEach((list = []) => {
+    list.forEach((entry) => {
+      if (!entry?.loc) return;
+      map.set(entry.loc, entry);
+    });
+  });
+  return Array.from(map.values());
+};
+
 function buildXml(urls) {
   const items = urls
     .map((u) => {
@@ -128,8 +239,12 @@ ${items}
 }
 
 async function main() {
-  const posts = await getPostUrls();
-  const programmatic = await getProgrammaticUrls();
+  const [staticPosts, firestorePosts, programmatic] = await Promise.all([
+    getPostUrls(),
+    getFirestorePostUrls(),
+    getProgrammaticUrls(),
+  ]);
+  const posts = mergeUrls(staticPosts, firestorePosts);
   const urls = [...staticRoutes, ...programmatic, ...posts];
   const xml = buildXml(urls);
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });

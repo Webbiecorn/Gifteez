@@ -29,7 +29,7 @@ test.describe('Navigation Flow', () => {
       await expect(logo).toBeVisible()
     })
 
-    test('should navigate to Gift Finder from header', async ({ page }) => {
+  test('should navigate to de Cadeaucoach (AI) vanuit de header', async ({ page }) => {
       await clickHeaderNav(page, 'nav-giftFinder')
       await waitForPageLoad(page)
 
@@ -105,7 +105,7 @@ test.describe('Navigation Flow', () => {
         await mobileMenuButton.click()
         await page.waitForTimeout(300)
 
-        // Click a menu item
+    // Click the Cadeaucoach helper entry
   await page.locator('nav[aria-label="Mobiele navigatie"]').getByTestId('nav-giftFinder').first().click()
         await waitForPageLoad(page)
 
