@@ -13,10 +13,50 @@ function log(level, message, meta = {}) {
 }
 
 const SUPPORTED_INPUTS = ['.png', '.jpg', '.jpeg'];
+const MAGIC_NUMBERS = {
+  '.png': [0x89, 0x50, 0x4e, 0x47],
+  '.jpg': [0xff, 0xd8],
+  '.jpeg': [0xff, 0xd8]
+};
 const TARGETS = [
   { ext: '.webp', options: { quality: 82 } },
   { ext: '.avif', options: { quality: 50 } }
 ];
+
+function matchesSignature(buffer, signature) {
+  return signature.every((byte, idx) => buffer[idx] === byte);
+}
+
+function isLikelyImage(full, ext) {
+  const signature = MAGIC_NUMBERS[ext];
+  let fd;
+  try {
+    fd = fs.openSync(full, 'r');
+    const maxLen = Math.max(...Object.values(MAGIC_NUMBERS).map(sig => sig.length));
+    const buffer = Buffer.alloc(maxLen);
+    const bytesRead = fs.readSync(fd, buffer, 0, maxLen, 0);
+    if (bytesRead === 0) return false;
+    const matchesAny = Object.values(MAGIC_NUMBERS).some(sig => bytesRead >= sig.length && matchesSignature(buffer, sig));
+    if (!matchesAny) return false;
+    if (signature && bytesRead >= signature.length && !matchesSignature(buffer, signature)) {
+      log('warn', 'Extension does not match actual image signature; consider renaming', {
+        file: path.basename(full),
+        ext,
+        suggestion: buffer[0] === 0x89 ? '.png' : '.jpg'
+      });
+    }
+    return true;
+  } catch (error) {
+    log('warn', 'Cannot probe file signature', { file: path.basename(full), error: error.message });
+    return false;
+  } finally {
+    if (fd) {
+      try {
+        fs.closeSync(fd);
+      } catch {}
+    }
+  }
+}
 
 async function ensureFormats(file) {
   const full = path.join(imagesDir, file);
@@ -28,6 +68,10 @@ async function ensureFormats(file) {
   if (!SUPPORTED_INPUTS.includes(ext)) {
     log('warn', 'Unsupported source format skipped', { file, ext });
     return { generated: 0, skipped: 1 };
+  }
+  if (!isLikelyImage(full, ext)) {
+    log('warn', 'Skipped placeholder asset without valid image data', { file });
+    return { generated: 0, skipped: TARGETS.length };
   }
   const base = full.slice(0, -ext.length);
 

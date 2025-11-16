@@ -16,6 +16,22 @@
   - `curl -I https://gifteez.nl/cadeaugidsen/gamer/onder-100` → `301 → https://gifteez.nl/cadeaus/gamer/onder-100`
 - Notitie toegevoegd aan Firebase rewrite-rules: `/cadeaugidsen/**` blijft naar `/cadeaus/:splat` verwijzen; geen extra acties nodig.
 
+### ✏️ Update 16 november 2025
+
+- **10:35 CET** – Search Console Coverage export (Diagram/Kritieke problemen CSV) toegevoegd aan `/home/kevin/Downloads/https___gifteez.nl_-Coverage-2025-11-16/`.
+- Indexeringscurve: **34–36 geïndexeerd** tegenover **~35 uitgesloten** URLs sinds 23 september; vertoningen variëren tussen 3 en 15 per dag met stijgende trend na 12 oktober.
+- Kritieke issues volgens export:
+
+| Reden                                          | Aantal | Aanpak                                                                                               |
+| ---------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| Alternatieve pagina met correcte canonieke tag | 10     | Controleer canonical + sitemap en verwijder dubbele varianten uit `guide-paths.json`/`metadata.json` |
+| Uitgesloten door tag `noindex`                 | 5      | Bevestig of `noindex` gewenst is; anders meta verwijderen                                            |
+| Niet gevonden (404)                            | 5      | Zet 301 in `firebase.json` of breng de pagina terug                                                  |
+| Gecrawld – momenteel niet geïndexeerd          | 10     | Versterk interne links, vraag new crawl aan                                                          |
+| Overige 4xx / redirects                        | 3      | Inspecteer via URL-inspectie en los loops op                                                         |
+
+- Actieplan: focus eerst op de 5× 404 + 1× redirect error, daarna canonical duplicaten. Na fixes: via Search Console → URL-inspectie → “Indexering aanvragen”.
+
 ### ✅ EXCELLENT (Goed Geconfigureerd)
 
 #### 1. **Sitemap** ⭐⭐⭐⭐⭐

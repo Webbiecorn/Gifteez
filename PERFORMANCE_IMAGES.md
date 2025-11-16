@@ -70,3 +70,17 @@ Add in `index.html` `<head>` if LCP becomes an issue:
 - If WebP missing: the browser simply uses PNG fallback.
 - If hero appears stretched: verify aspect ratio utility `aspect-[16/9]` and that provided image roughly matches (crop if needed).
 - If text is unreadable: increase overlay gradient opacity `from-black/60` or add text shadow class `drop-shadow-2xl`.
+
+## Missing source assets (november 2025)
+
+Het responsive-image script gaf tot 16 november 2025 waarschuwingen omdat meerdere bestanden nog tekst-placeholders waren. Inmiddels zijn de meeste vervangen en zijn WebP/AVIF-varianten gegenereerd. Overblijvende punten:
+
+- **Bronbestand ontbreekt**: `public/images/collection-foodie.jpg` (nog oude placeholder, niet verwerkt)
+- **Bronbestand bevat PNG-data maar heeft `.jpg`-extensie**: `about-story.jpg`, `collection-mailbox.jpg`, `collection-travel.jpg`, `planner.jpg`, `trending-experience.jpg`
+- **Nog steeds placeholder**: `public/images/trending-tech.jpg`
+
+Actie-opties:
+
+1. Lever echte assets voor de ontbrekende bestanden. Zodra ze op schijf staan kun je `npm run predeploy` draaien om automatisch WebP/AVIF te genereren.
+2. Hernoem PNG-bestanden met `.jpg`-extensie naar `.png` (of encodeer ze als JPG). Het script ondersteunt gemixte signatures, maar logt nu een waarschuwing als extensie ≠ inhoud.
+3. Als bepaalde beelden niet meer nodig zijn, verwijder ze uit `public/images` en haal het corresponderende prefix uit `scripts/generate-responsive-images.mjs`.
