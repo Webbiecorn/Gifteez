@@ -1,18 +1,57 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
+import { PROGRAMMATIC_INDEX } from '../data/programmatic'
 import { DynamicProductService } from '../services/dynamicProductService'
 import { PerformanceInsightsService } from '../services/performanceInsightsService'
 import { TrendingUpIcon } from './IconComponents'
 import LoadingSpinner from './LoadingSpinner'
-import type { ProductMetrics, TrendingProduct } from '../services/performanceInsightsService'
+import type {
+  ProductMetrics,
+  TrendingProduct,
+  SourcePerformance,
+} from '../services/performanceInsightsService'
 import type { DealItem } from '../types'
+
+type ProgrammaticFeedRow = {
+  guideSlug: string
+  feed: string
+  impressions: number
+  clicks: number
+  ctr: number
+  contexts: string[]
+  lastEvent?: Date
+}
+
+const FEED_LABELS: Record<string, string> = {
+  coolblue: 'Coolblue',
+  slygad: 'Shop Like You Give A Damn',
+  partypro: 'PartyPro',
+  amazon: 'Amazon',
+}
+
+const getFeedLabel = (feed: string) => FEED_LABELS[feed] || feed
+
+const getGuideTitle = (slug: string) => PROGRAMMATIC_INDEX[slug]?.title || slug
+
+const formatDateTime = (date?: Date) =>
+  date
+    ? date.toLocaleString('nl-NL', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : '—'
 
 const PerformanceInsights: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [trending7d, setTrending7d] = useState<TrendingProduct[]>([])
   const [trending30d, setTrending30d] = useState<TrendingProduct[]>([])
+  const [sourcePerf7d, setSourcePerf7d] = useState<SourcePerformance[]>([])
+  const [sourcePerf30d, setSourcePerf30d] = useState<SourcePerformance[]>([])
   const [allMetrics, setAllMetrics] = useState<ProductMetrics[]>([])
   const [products, setProducts] = useState<Map<string, DealItem>>(new Map())
   const [period, setPeriod] = useState<7 | 30>(7)
+  const [sourcePeriod, setSourcePeriod] = useState<7 | 30>(7)
   const [sortBy, setSortBy] = useState<'score' | 'impressions' | 'clicks' | 'ctr'>('score')
 
   useEffect(() => {
@@ -40,15 +79,19 @@ const PerformanceInsights: React.FC = () => {
       setProducts(productMap)
 
       // Load performance data
-      const [trending7, trending30, metrics] = await Promise.all([
+      const [trending7, trending30, metrics, source7, source30] = await Promise.all([
         PerformanceInsightsService.getTrendingProducts(7, 20),
         PerformanceInsightsService.getTrendingProducts(30, 20),
         PerformanceInsightsService.getAllMetrics(),
+        PerformanceInsightsService.getSourcePerformance(7),
+        PerformanceInsightsService.getSourcePerformance(30),
       ])
 
       setTrending7d(trending7)
       setTrending30d(trending30)
       setAllMetrics(metrics)
+      setSourcePerf7d(source7)
+      setSourcePerf30d(source30)
     } catch (error) {
       console.error('Error loading performance data:', error)
     } finally {
@@ -57,6 +100,63 @@ const PerformanceInsights: React.FC = () => {
   }
 
   const currentTrending = period === 7 ? trending7d : trending30d
+  const currentSourcePerf = sourcePeriod === 7 ? sourcePerf7d : sourcePerf30d
+
+  const programmaticFeedStats = useMemo<ProgrammaticFeedRow[]>(() => {
+    const grouped = new Map<
+      string,
+      {
+        guideSlug: string
+        feed: string
+        impressions: number
+        clicks: number
+        contexts: Set<string>
+        lastEvent?: Date
+      }
+    >()
+
+    currentSourcePerf
+      .filter((entry) => entry.channel === 'programmatic')
+      .forEach((entry) => {
+        const guideSlug = entry.guideSlug || 'onbekende-gids'
+        const feed = (entry.feed || 'unknown').toLowerCase()
+        const key = `${guideSlug}|${feed}`
+        const bucket = grouped.get(key) || {
+          guideSlug,
+          feed,
+          impressions: 0,
+          clicks: 0,
+          contexts: new Set<string>(),
+          lastEvent: entry.lastEvent,
+        }
+        bucket.impressions += entry.impressions
+        bucket.clicks += entry.clicks
+        if (entry.context) {
+          bucket.contexts.add(entry.context)
+        }
+        if (!bucket.lastEvent || (entry.lastEvent && entry.lastEvent > bucket.lastEvent)) {
+          bucket.lastEvent = entry.lastEvent
+        }
+        grouped.set(key, bucket)
+      })
+
+    return Array.from(grouped.values())
+      .map((bucket) => ({
+        guideSlug: bucket.guideSlug,
+        feed: bucket.feed,
+        impressions: bucket.impressions,
+        clicks: bucket.clicks,
+        ctr: bucket.impressions > 0 ? (bucket.clicks / bucket.impressions) * 100 : 0,
+        contexts: Array.from(bucket.contexts),
+        lastEvent: bucket.lastEvent,
+      }))
+      .sort((a, b) => {
+        if (b.clicks !== a.clicks) {
+          return b.clicks - a.clicks
+        }
+        return b.impressions - a.impressions
+      })
+  }, [currentSourcePerf])
 
   // Sort trending products
   const sortedTrending = [...currentTrending].sort((a, b) => {
@@ -326,6 +426,83 @@ const PerformanceInsights: React.FC = () => {
             })
           )}
         </div>
+      </div>
+
+      {/* Programmatic Feed Performance */}
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-emerald-50 to-teal-50 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h3 className="text-xl font-bold text-gray-900">Programmatic Feed Performance</h3>
+            <p className="text-sm text-gray-600">
+              Feed events voor programmatic gidsen (laatste {sourcePeriod === 7 ? '7' : '30'} dagen)
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {[7, 30].map((value) => (
+              <button
+                key={value}
+                onClick={() => setSourcePeriod(value as 7 | 30)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  sourcePeriod === value
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                {value} dagen
+              </button>
+            ))}
+          </div>
+        </div>
+        {programmaticFeedStats.length === 0 ? (
+          <div className="p-10 text-center text-gray-600">
+            Nog geen feed events geregistreerd. Kom later terug nadat gidsen verkeer hebben
+            ontvangen.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <tr>
+                  <th className="px-4 py-3">Gids</th>
+                  <th className="px-4 py-3">Feed</th>
+                  <th className="px-4 py-3 text-right">Impressies</th>
+                  <th className="px-4 py-3 text-right">Clicks</th>
+                  <th className="px-4 py-3 text-right">CTR</th>
+                  <th className="px-4 py-3">Contexten</th>
+                  <th className="px-4 py-3">Laatste event</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
+                {programmaticFeedStats.map((row) => (
+                  <tr key={`${row.guideSlug}-${row.feed}`} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <div className="font-semibold text-gray-900">
+                        {getGuideTitle(row.guideSlug)}
+                      </div>
+                      <div className="text-xs text-gray-500">{row.guideSlug}</div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold">
+                        {getFeedLabel(row.feed)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right font-medium">
+                      {row.impressions.toLocaleString('nl-NL')}
+                    </td>
+                    <td className="px-4 py-3 text-right font-semibold text-emerald-600">
+                      {row.clicks.toLocaleString('nl-NL')}
+                    </td>
+                    <td className="px-4 py-3 text-right">{row.ctr.toFixed(2)}%</td>
+                    <td className="px-4 py-3 text-gray-600">
+                      {row.contexts.length > 0 ? row.contexts.join(', ') : '—'}
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">{formatDateTime(row.lastEvent)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Info */}

@@ -3,11 +3,13 @@
 ## 🔍 HUIDIGE STATUS:
 
 ### Wat werkt:
+
 - ✅ **gifteez.nl** → Wijst naar production channel (mooie versie)
 - ✅ **DNS correct** geconfigureerd
 - ✅ **Tracking werkt** (GA4, Clarity, Pinterest)
 
 ### Wat NIET werkt:
+
 - ❌ **gifteez-7533b.web.app** → Toont oude versie (beige design)
 - ❌ **Lokale code deployment** → Nieuwe styling komt niet door
 
@@ -18,6 +20,7 @@
 **URL:** https://gifteez-7533b--production-e0e9zdzk.web.app
 
 Deze versie heeft:
+
 - ✅ Gradient achtergrond (roze/paars/blauw)
 - ✅ "Vind het **perfecte** cadeau in **30 seconden**"
 - ✅ Moderne header met "Slimme cadeau-inspiratie"
@@ -31,6 +34,7 @@ Deze versie heeft:
 ## 🤔 WAAROM NIEUWE DEPLOYMENT NIET WERKT:
 
 Mogelijke oorzaken:
+
 1. **Tailwind classes** worden niet gegenereerd
 2. **CSS wordt geoptimaliseerd weg** tijdens build
 3. **React code heeft syntax error** (onzichtbaar)
@@ -41,18 +45,21 @@ Mogelijke oorzaken:
 ## ✅ OPLOSSINGEN:
 
 ### Optie A: Production channel permanent maken
+
 ```bash
 # Maak een nieuwe deployment gebaseerd op production
 firebase hosting:channel:deploy permanent --expires 365d
 ```
 
 ### Optie B: Download production HTML en analyseer
+
 ```bash
 # Download de werkende HTML
 curl https://gifteez-7533b--production-e0e9zdzk.web.app > working-version.html
 ```
 
 ### Optie C: Gebruik gifteez.nl als standaard
+
 - Laat gifteez.nl naar production wijzen (werkt nu al!)
 - Fix de live channel deployment later
 
@@ -70,15 +77,18 @@ curl https://gifteez-7533b--production-e0e9zdzk.web.app > working-version.html
 ## 💾 BACKUP INFO:
 
 ### Firebase Channels:
+
 - **live**: https://gifteez-7533b.web.app (oude versie, laatste deploy: 01:23)
 - **production**: https://gifteez-7533b--production-e0e9zdzk.web.app (mooie versie, verloopt: 14 okt)
 
 ### Git Status:
+
 - **Branch:** main (was: production-clean)
 - **Laatste commit:** "feat: Add gradient hero with colored text (WIP)"
 - **Code:** Lokale wijzigingen gecommit en gepusht ✅
 
 ### DNS:
+
 - **gifteez.nl** → Google Cloud IPs (Firebase)
 - **www.gifteez.nl** → gifteez-7533b.web.app
 - **Propagatie:** Compleet ✅

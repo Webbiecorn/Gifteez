@@ -11,7 +11,6 @@ import ImageWithFallback from './ImageWithFallback'
 import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
-/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 import { TrustBadges } from './UrgencyBadges'
 import type { NavigateTo } from '../types'
 

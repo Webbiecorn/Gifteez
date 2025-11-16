@@ -1,10 +1,12 @@
 import { findGifts as originalFindGifts } from './geminiService'
+import { buildFallbackGifts } from './giftFinderFallbacks'
 import { ProductBasedGiftService } from './productBasedGiftService'
 import type { Gift, GiftSearchParams, AdvancedFilters } from '../types'
 
 const MAX_RESULT_COUNT = 6
 const MIN_PARTNER_RESULTS = 3
 const MIN_SLYGAD_RESULTS = 3
+const PARTNER_RESULTS_TIMEOUT_MS = 5000
 
 const normalizeRetailerName = (name?: string): string => (name ? name.toLowerCase() : '')
 
@@ -242,6 +244,13 @@ const selectPartnerGifts = (
 export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Promise<Gift[]> => {
   console.warn('🎁 GiftFinder zoekt cadeaus met dynamische partnerbalans', searchParams)
 
+  const applyFiltersIfNeeded = (gifts: Gift[]): Gift[] =>
+    searchParams.filters ? applyAdvancedFilters(gifts, searchParams.filters) : gifts
+
+  const usedProductNames = new Set<string>()
+  let limitedAmazonGifts: Gift[] = []
+  let pureAmazonGifts: Gift[] = []
+
   try {
     console.warn('🤖 Haal Amazon AI suggesties op...')
     const amazonGifts = await originalFindGifts(
@@ -252,7 +261,7 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       searchParams.gender
     )
 
-    const pureAmazonGifts = amazonGifts
+    pureAmazonGifts = amazonGifts
       .map((gift) => ({
         ...gift,
         retailers: gift.retailers
@@ -264,112 +273,112 @@ export const findGiftsWithFilters = async (searchParams: GiftSearchParams): Prom
       }))
       .filter((gift) => gift.retailers && gift.retailers.length > 0)
 
-    const limitedAmazonGifts = pureAmazonGifts.slice(0, 3)
+    limitedAmazonGifts = pureAmazonGifts.slice(0, 3)
+    limitedAmazonGifts.forEach((gift) => usedProductNames.add(gift.productName))
     console.warn(`✅ Amazon AI cadeaus: ${limitedAmazonGifts.length}`)
+  } catch (error) {
+    console.warn('⚠️  Gemini suggesties niet beschikbaar, ga door met partnerresultaten.', error)
+  }
 
+  let allProductBasedGifts: Gift[] = []
+  try {
     console.warn('🤝 Verzamel partnercadeaus (Coolblue, Shop Like You Give A Damn, ... )')
-    const allProductBasedGifts = await ProductBasedGiftService.findGifts(searchParams)
+    allProductBasedGifts = await Promise.race<Gift[]>([
+      ProductBasedGiftService.findGifts(searchParams),
+      new Promise<Gift[]>((resolve) => {
+        setTimeout(() => {
+          console.warn(
+            `⏱️  Partnercadeaus laden langer dan ${PARTNER_RESULTS_TIMEOUT_MS}ms, gebruik snelle fallback`
+          )
+          resolve([])
+        }, PARTNER_RESULTS_TIMEOUT_MS)
+      }),
+    ])
+  } catch (error) {
+    console.error('⚠️  Kon partnercadeaus niet laden:', error)
+  }
 
-    const usedProductNames = new Set(limitedAmazonGifts.map((gift) => gift.productName))
-    const partnerGroups = buildPartnerGroups(allProductBasedGifts, usedProductNames)
+  if (!limitedAmazonGifts.length && !allProductBasedGifts.length) {
+    console.warn('⚠️  Geen dynamische resultaten, gebruik statische fallback cadeaus')
+    return applyFiltersIfNeeded(buildFallbackGifts(searchParams))
+  }
 
-    const preferredPartner = searchParams.filters?.preferredPartner
-    const partnerTarget = Math.max(
-      MAX_RESULT_COUNT - limitedAmazonGifts.length,
-      MIN_PARTNER_RESULTS
-    )
-    const partnerSelections = selectPartnerGifts(
-      partnerGroups,
-      partnerTarget,
-      preferredPartner,
-      usedProductNames
-    )
+  const partnerGroups = buildPartnerGroups(allProductBasedGifts, usedProductNames)
 
-    let combinedResults = [...limitedAmazonGifts, ...partnerSelections]
+  const preferredPartner = searchParams.filters?.preferredPartner
+  const partnerTarget = Math.max(MAX_RESULT_COUNT - limitedAmazonGifts.length, MIN_PARTNER_RESULTS)
+  const partnerSelections = selectPartnerGifts(
+    partnerGroups,
+    partnerTarget,
+    preferredPartner,
+    usedProductNames
+  )
+
+  let combinedResults = [...limitedAmazonGifts, ...partnerSelections]
+
+  if (combinedResults.length < MAX_RESULT_COUNT) {
+    const usedNamesForFill = new Set(combinedResults.map((gift) => gift.productName))
+
+    const additionalAmazon = pureAmazonGifts
+      .filter((gift) => !usedNamesForFill.has(gift.productName))
+      .slice(0, MAX_RESULT_COUNT - combinedResults.length)
+
+    additionalAmazon.forEach((gift) => {
+      combinedResults.push(gift)
+      usedNamesForFill.add(gift.productName)
+    })
 
     if (combinedResults.length < MAX_RESULT_COUNT) {
-      const usedNamesForFill = new Set(combinedResults.map((gift) => gift.productName))
-
-      const additionalAmazon = pureAmazonGifts
-        .filter((gift) => !usedNamesForFill.has(gift.productName))
+      const partnerFallbackPool = allProductBasedGifts
+        .filter(
+          (gift) =>
+            gift.retailers && gift.retailers.length > 0 && !usedNamesForFill.has(gift.productName)
+        )
+        .map((gift) => ({ gift, score: computePartnerScore(gift) }))
+        .sort((a, b) => b.score - a.score)
         .slice(0, MAX_RESULT_COUNT - combinedResults.length)
 
-      additionalAmazon.forEach((gift) => {
-        combinedResults.push(gift)
-        usedNamesForFill.add(gift.productName)
+      partnerFallbackPool.forEach((entry) => {
+        combinedResults.push(entry.gift)
+        usedNamesForFill.add(entry.gift.productName)
       })
-
-      if (combinedResults.length < MAX_RESULT_COUNT) {
-        const partnerFallbackPool = allProductBasedGifts
-          .filter(
-            (gift) =>
-              gift.retailers && gift.retailers.length > 0 && !usedNamesForFill.has(gift.productName)
-          )
-          .map((gift) => ({ gift, score: computePartnerScore(gift) }))
-          .sort((a, b) => b.score - a.score)
-
-        partnerFallbackPool.slice(0, MAX_RESULT_COUNT - combinedResults.length).forEach((entry) => {
-          combinedResults.push(entry.gift)
-          usedNamesForFill.add(entry.gift.productName)
-        })
-      }
     }
-
-    if (combinedResults.length > MAX_RESULT_COUNT) {
-      combinedResults = combinedResults.slice(0, MAX_RESULT_COUNT)
-    }
-
-    const finalAmazonCount = combinedResults.filter((gift) =>
-      gift.retailers?.some((retailer) => normalizeRetailerName(retailer.name).includes('amazon'))
-    ).length
-
-    const finalCoolblueCount = combinedResults.filter((gift) =>
-      gift.retailers?.some((retailer) => normalizeRetailerName(retailer.name).includes('coolblue'))
-    ).length
-
-    const finalSlygadCount = combinedResults.filter((gift) =>
-      gift.retailers?.some((retailer) => {
-        const name = normalizeRetailerName(retailer.name)
-        return name.includes('shop like you give a damn') || name.includes('slygad')
-      })
-    ).length
-
-    console.warn(
-      `🎯 Resultaat mix: ${combinedResults.length} totaal -> Amazon: ${finalAmazonCount}, Coolblue: ${finalCoolblueCount}, SLYGAD: ${finalSlygadCount}`
-    )
-
-    const sanitizedResults = combinedResults.map((gift) => ({
-      ...gift,
-      imageUrl: '',
-    }))
-
-    if (searchParams.filters) {
-      return applyAdvancedFilters(sanitizedResults, searchParams.filters)
-    }
-
-    return sanitizedResults
-  } catch (error) {
-    console.error('Error in hybrid partner selectie:', error)
-    console.warn('⚠️  Vang terug naar pure Amazon AI cadeaus')
-
-    const fallbackGifts = await originalFindGifts(
-      searchParams.recipient,
-      searchParams.budget,
-      searchParams.occasion,
-      searchParams.interests
-    )
-
-    const cleanedFallbackGifts = fallbackGifts.slice(0, MAX_RESULT_COUNT).map((gift) => ({
-      ...gift,
-      imageUrl: '',
-    }))
-
-    if (searchParams.filters) {
-      return applyAdvancedFilters(cleanedFallbackGifts, searchParams.filters)
-    }
-
-    return cleanedFallbackGifts
   }
+
+  if (combinedResults.length === 0) {
+    console.warn('⚠️  Zelfs fallback mix leeg, gebruik statische cadeaus')
+    return applyFiltersIfNeeded(buildFallbackGifts(searchParams))
+  }
+
+  if (combinedResults.length > MAX_RESULT_COUNT) {
+    combinedResults = combinedResults.slice(0, MAX_RESULT_COUNT)
+  }
+
+  const finalAmazonCount = combinedResults.filter((gift) =>
+    gift.retailers?.some((retailer) => normalizeRetailerName(retailer.name).includes('amazon'))
+  ).length
+
+  const finalCoolblueCount = combinedResults.filter((gift) =>
+    gift.retailers?.some((retailer) => normalizeRetailerName(retailer.name).includes('coolblue'))
+  ).length
+
+  const finalSlygadCount = combinedResults.filter((gift) =>
+    gift.retailers?.some((retailer) => {
+      const name = normalizeRetailerName(retailer.name)
+      return name.includes('shop like you give a damn') || name.includes('slygad')
+    })
+  ).length
+
+  console.warn(
+    `🎯 Resultaat mix: ${combinedResults.length} totaal -> Amazon: ${finalAmazonCount}, Coolblue: ${finalCoolblueCount}, SLYGAD: ${finalSlygadCount}`
+  )
+
+  const sanitizedResults = combinedResults.map((gift) => ({
+    ...gift,
+    imageUrl: '',
+  }))
+
+  return applyFiltersIfNeeded(sanitizedResults)
 }
 
 export const applyAdvancedFilters = (gifts: Gift[], filters: Partial<AdvancedFilters>): Gift[] => {

@@ -6,11 +6,13 @@
 **Status:** ✅ Live on production
 
 ## 🎯 Objective
+
 Transform the Deals page from a static grid layout to an interactive carousel-based design, with dedicated category detail pages for enhanced user experience.
 
 ## ✨ Features Implemented
 
 ### 1. ProductCarousel Component (`components/ProductCarousel.tsx`)
+
 **New reusable horizontal scrolling carousel component**
 
 - **Smooth Navigation:** Left/right scroll buttons with smooth scrolling
@@ -22,6 +24,7 @@ Transform the Deals page from a static grid layout to an interactive carousel-ba
 - **Hover Effects:** Buttons fade in on container hover
 
 **Key Implementation Details:**
+
 - Uses refs for DOM manipulation (`scrollContainerRef`)
 - State management for button visibility (`canScrollLeft`, `canScrollRight`)
 - Event listeners for scroll detection with 10px threshold
@@ -29,6 +32,7 @@ Transform the Deals page from a static grid layout to an interactive carousel-ba
 - Group hover pattern for button transitions
 
 ### 2. CategoryDetailPage Component (`components/CategoryDetailPage.tsx`)
+
 **Full-page view for individual product categories**
 
 - **Breadcrumb Navigation:** Home → Deals → Category
@@ -42,6 +46,7 @@ Transform the Deals page from a static grid layout to an interactive carousel-ba
 - **SEO Meta Tags:** Dynamic title/description per category
 
 **Props Interface:**
+
 ```typescript
 {
   navigateTo: NavigateTo;
@@ -56,6 +61,7 @@ Transform the Deals page from a static grid layout to an interactive carousel-ba
 ### 3. Updated DealsPage (`components/DealsPage.tsx`)
 
 **CategorySection Component Changes:**
+
 - ✅ Replaced grid layout with `<ProductCarousel>`
 - ✅ Added "Bekijk alles" button in header
 - ✅ Button positioned beside category title
@@ -63,11 +69,13 @@ Transform the Deals page from a static grid layout to an interactive carousel-ba
 - ✅ Navigation includes category metadata (id, title, description, products)
 
 **Visual Changes:**
+
 - Header layout: Flexbox with title on left, button on right
 - Carousel: Horizontal scroll instead of vertical grid
 - Metadata badges: Product count, price range, retailer labels remain visible
 
 ### 4. Icon Updates (`components/IconComponents.tsx`)
+
 **Added ChevronLeftIcon for carousel navigation**
 
 ```tsx
@@ -75,16 +83,18 @@ export const ChevronLeftIcon: React.FC<{ className?: string }> = ({ className = 
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
     <polyline points="15 18 9 12 15 6" />
   </svg>
-);
+)
 ```
 
 ### 5. Routing & Navigation (`App.tsx`, `types.ts`)
 
 **New Route Added:**
+
 - Path: `/deals/category/:categoryId`
 - Page Type: `'categoryDetail'` added to Page union type
 
 **Navigation Flow:**
+
 1. User browses Deals page
 2. Sees carousel for each category
 3. Clicks "Bekijk alles" button
@@ -93,13 +103,15 @@ export const ChevronLeftIcon: React.FC<{ className?: string }> = ({ className = 
 6. User can return via back button or breadcrumbs
 
 **State Management:**
+
 - `categoryDetailData` state stores navigation payload
 - Includes: `categoryId`, `categoryTitle`, `categoryDescription`, `products`
 - Data passed through `navigateTo('categoryDetail', { ... })`
 
 **URL Pattern Matching:**
+
 ```typescript
-case 'deals': 
+case 'deals':
   if (second === 'category' && third) {
     setCurrentPage('categoryDetail');
   } else {
@@ -120,7 +132,6 @@ case 'deals':
      - Updated CategorySection component
      - Added "Bekijk alles" button
      - Passes navigateTo prop to CategorySection
-   
    - `components/IconComponents.tsx`
      - Added ChevronLeftIcon (line ~138)
 
@@ -133,13 +144,13 @@ case 'deals':
      - Updated navigateTo() to store category data
      - Added categoryDetail case in renderPage()
      - Added page titles and descriptions
-   
    - `types.ts`
      - Added `'categoryDetail'` to Page union type
 
 ## 🎨 User Experience Flow
 
 ### Before (Grid Layout)
+
 ```
 Deals Page
 └─ Category 1
@@ -150,6 +161,7 @@ Deals Page
 ```
 
 ### After (Carousel Layout)
+
 ```
 Deals Page
 └─ Category 1 [Bekijk alles →]
@@ -170,38 +182,42 @@ Category Detail Page (when "Bekijk alles" clicked)
 ## 🔧 Technical Implementation
 
 ### Carousel Scroll Logic
+
 ```typescript
 const scroll = (direction: 'left' | 'right') => {
-  if (!scrollContainerRef.current) return;
-  
-  const scrollAmount = 640; // 2 cards width
-  const newPosition = direction === 'left'
-    ? scrollContainerRef.current.scrollLeft - scrollAmount
-    : scrollContainerRef.current.scrollLeft + scrollAmount;
-    
+  if (!scrollContainerRef.current) return
+
+  const scrollAmount = 640 // 2 cards width
+  const newPosition =
+    direction === 'left'
+      ? scrollContainerRef.current.scrollLeft - scrollAmount
+      : scrollContainerRef.current.scrollLeft + scrollAmount
+
   scrollContainerRef.current.scrollTo({
     left: newPosition,
-    behavior: 'smooth'
-  });
-};
+    behavior: 'smooth',
+  })
+}
 ```
 
 ### Button Visibility Detection
+
 ```typescript
 const updateScrollButtons = () => {
-  if (!scrollContainerRef.current) return;
-  
-  const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-  setCanScrollLeft(scrollLeft > 10);
-  setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-};
+  if (!scrollContainerRef.current) return
+
+  const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current
+  setCanScrollLeft(scrollLeft > 10)
+  setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10)
+}
 ```
 
 ### Navigation Data Passing
+
 ```typescript
 // From DealsPage CategorySection
 <Button
-  onClick={() => navigateTo('categoryDetail', { 
+  onClick={() => navigateTo('categoryDetail', {
     categoryId: category.id,
     categoryTitle: displayTitle,
     categoryDescription: description,
@@ -256,15 +272,18 @@ const navigateTo = useCallback((page: Page, data?: any) => {
 ## 📱 Responsive Design
 
 ### Mobile (< 640px)
+
 - Carousel: Touch scroll, single card visible
 - Category detail: 2-column grid
 - Buttons: Touch-optimized tap targets
 
 ### Tablet (640px - 1024px)
+
 - Carousel: 2-3 cards visible, scroll buttons
 - Category detail: 3-column grid
 
 ### Desktop (> 1024px)
+
 - Carousel: 3-4 cards visible, hover-activated buttons
 - Category detail: 4-column grid
 
@@ -281,6 +300,7 @@ const navigateTo = useCallback((page: Page, data?: any) => {
 ## 🔮 Future Enhancements
 
 ### Potential Improvements:
+
 - [ ] Auto-scroll carousel on arrow key press
 - [ ] Lazy load images in carousel
 - [ ] Infinite scroll on category detail page
@@ -293,6 +313,7 @@ const navigateTo = useCallback((page: Page, data?: any) => {
 - [ ] Compare products side-by-side in category view
 
 ### Performance Optimizations:
+
 - [ ] Virtual scrolling for large category lists
 - [ ] Image preloading for adjacent carousel items
 - [ ] Debounce scroll event listeners

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useBlogContext } from '../contexts/BlogContext'
+import { isAutomationEnvironment } from '../lib/automationEnvironment'
 import { blogPostDataToBlogPost } from '../services/blogMapper'
 import BlogService from '../services/blogService'
 import { gaDownloadResource, gaPageView } from '../services/googleAnalytics'
@@ -148,6 +149,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
   const [scrollProgress, setScrollProgress] = useState(0)
   const [showJumpToTop, setShowJumpToTop] = useState(false)
   const [imageErrors, setImageErrors] = useState<Set<string>>(() => new Set())
+  const automationMode = isAutomationEnvironment()
 
   const authorArticleCount = useMemo(() => {
     if (!post) {
@@ -241,16 +243,28 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
       return
     }
 
+    let rafId: number | null = null
     const updateScrollProgress = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      setScrollProgress(Math.min(scrollPercent, 100))
-      setShowJumpToTop(scrollTop > 300)
+      if (rafId !== null) {
+        return
+      }
+      rafId = window.requestAnimationFrame(() => {
+        const scrollTop = window.scrollY
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight
+        const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+        setScrollProgress(Math.min(scrollPercent, 100))
+        setShowJumpToTop(scrollTop > 300)
+        rafId = null
+      })
     }
 
-    window.addEventListener('scroll', updateScrollProgress)
-    updateScrollProgress()
+    if (!automationMode) {
+      window.addEventListener('scroll', updateScrollProgress, { passive: true })
+      updateScrollProgress()
+    } else {
+      setScrollProgress(0)
+      setShowJumpToTop(false)
+    }
 
     const appendedScripts: HTMLElement[] = []
     const appendJsonLd = (schema: Record<string, unknown>) => {
@@ -342,14 +356,19 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
     }
 
     return () => {
-      window.removeEventListener('scroll', updateScrollProgress)
+      if (!automationMode) {
+        window.removeEventListener('scroll', updateScrollProgress)
+        if (rafId !== null) {
+          window.cancelAnimationFrame(rafId)
+        }
+      }
       appendedScripts.forEach((el) => {
         if (el.parentNode) {
           el.parentNode.removeChild(el)
         }
       })
     }
-  }, [post])
+  }, [post, automationMode])
 
   const _relatedPosts = useMemo(
     () =>

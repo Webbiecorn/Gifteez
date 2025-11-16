@@ -184,7 +184,6 @@ export interface AmazonProduct extends AmazonProductInput {
   updatedAt?: string
 }
 
-// eslint-disable-next-line no-unused-vars
 type Listener = (items: AmazonProduct[]) => void
 
 const COLLECTION = 'amazonProducts'

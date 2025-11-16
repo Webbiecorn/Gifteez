@@ -88,15 +88,12 @@ const generateProductId = (rawId?: unknown): string => {
   if (rawId) {
     return String(rawId)
   }
-  // eslint-disable-next-line no-undef
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    // eslint-disable-next-line no-undef
     return `coolblue-${crypto.randomUUID()}`
   }
   return `coolblue-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const normaliseProduct = (raw: any): CoolblueProduct => {
   const parsedPrice =
     typeof raw?.price === 'number'
@@ -309,7 +306,6 @@ export class CoolblueFeedService {
       .slice(0, 100)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static saveProducts(rawProducts: any[], meta: Partial<CoolblueFeedMeta> = {}) {
     const normalised = rawProducts.map(normaliseProduct)
     this.applyCache(normalised, {

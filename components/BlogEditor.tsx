@@ -75,7 +75,7 @@ const hasToDate = (value: unknown): value is { toDate: () => Date } =>
 const toIsoString = (value?: string | Timestamp | Date | null): string | undefined => {
   if (!value) {
     return undefined
-    }
+  }
 
   if (typeof value === 'string') {
     return value
@@ -456,8 +456,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
     )
     setContentDrafts(drafts)
     setImageUrl(existingPost.imageUrl || '')
-  setIsDraft(existingPost.isDraft ?? true)
-  setSeoData(toSeoData(existingPost.seo))
+    setIsDraft(existingPost.isDraft ?? true)
+    setSeoData(toSeoData(existingPost.seo))
     setSlugValue(existingPost.slug || '')
     setHasCustomSlug(Boolean(existingPost.slug))
     setTagsValue(existingPost.tags?.join(', ') || existingPost.seo?.keywords?.join(', ') || '')
@@ -796,7 +796,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onClose, postId, postSlug, init
     avatarUrl: post?.author?.avatarUrl ?? 'https://i.pravatar.cc/150?u=blog-preview',
   }
   const previewImageUrl = imageUrl || post?.imageUrl || ''
-  const previewTags = parsedTags.length ? parsedTags : post?.tags ?? []
+  const previewTags = parsedTags.length ? parsedTags : (post?.tags ?? [])
 
   if (isLoading) {
     return (

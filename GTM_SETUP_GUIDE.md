@@ -9,6 +9,7 @@
 ## 📋 QUICK START
 
 ### Stap 1: Open GTM Dashboard
+
 👉 **https://tagmanager.google.com/**
 
 1. Login met je Google account
@@ -24,11 +25,13 @@
 **Doel:** Basis GA4 tracking op alle pagina's
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Configuration
 - **Measurement ID:** `G-Y697MJEN2H` (je huidige GA4 ID)
 - **Trigger:** All Pages (Page View - All Pages)
 
 **Extra configuratie:**
+
 - Send Page View: ✅ Enabled
 - Configuration Settings:
   - `send_page_view`: true
@@ -41,6 +44,7 @@
 **Doel:** Verzend page views naar GA4
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration Tag (selecteer tag #1)
 - **Event Name:** `page_view`
@@ -50,6 +54,7 @@
   - `page_location`: `{{Page URL}}`
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `page_view`
 - **Fire on:** All Custom Events
@@ -61,6 +66,7 @@
 **Doel:** Track GiftFinder & blog searches
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration Tag
 - **Event Name:** `search`
@@ -69,10 +75,12 @@
   - `results_count`: `{{dlv - results_count}}`
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `search`
 
 **DataLayer Variables nodig:**
+
 1. Variable Name: `dlv - search_term`
    - Type: Data Layer Variable
    - Data Layer Variable Name: `search_term`
@@ -88,6 +96,7 @@
 **Doel:** Track wanneer gebruiker op product klikt
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration Tag
 - **Event Name:** `select_item`
@@ -98,6 +107,7 @@
   - `currency`: `EUR`
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `product_click`
 
@@ -108,6 +118,7 @@
 **Doel:** Track GiftFinder usage
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration Tag
 - **Event Name:** `giftfinder_search`
@@ -119,6 +130,7 @@
   - `results_count`: `{{dlv - results_count}}`
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `giftfinder_search`
 
@@ -129,6 +141,7 @@
 **Doel:** Track contact form submits, quiz completions
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration Tag
 - **Event Name:** `generate_lead`
@@ -137,6 +150,7 @@
   - `value`: `{{dlv - value}}`
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `generate_lead`
 
@@ -147,22 +161,26 @@
 **Doel:** Track page views voor Pinterest
 
 **Settings:**
+
 - **Tag Type:** Custom HTML
 - **HTML:**
+
 ```html
 <script>
-pintrk('track', 'pagevisit', {
-  event_id: '{{dlv - event_id}}',
-  page_type: '{{dlv - page_type}}'
-});
+  pintrk('track', 'pagevisit', {
+    event_id: '{{dlv - event_id}}',
+    page_type: '{{dlv - page_type}}',
+  })
 </script>
 ```
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `pinterest_pagevisit`
 
 **DataLayer Variables nodig:**
+
 1. `dlv - event_id`
 2. `dlv - page_type`
 
@@ -173,18 +191,21 @@ pintrk('track', 'pagevisit', {
 **Doel:** Track searches voor Pinterest
 
 **Settings:**
+
 - **Tag Type:** Custom HTML
 - **HTML:**
+
 ```html
 <script>
-pintrk('track', 'search', {
-  event_id: '{{dlv - event_id}}',
-  search_query: '{{dlv - search_query}}'
-});
+  pintrk('track', 'search', {
+    event_id: '{{dlv - event_id}}',
+    search_query: '{{dlv - search_query}}',
+  })
 </script>
 ```
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `pinterest_search`
 
@@ -195,18 +216,21 @@ pintrk('track', 'search', {
 **Doel:** Track conversies voor Pinterest
 
 **Settings:**
+
 - **Tag Type:** Custom HTML
 - **HTML:**
+
 ```html
 <script>
-pintrk('track', 'lead', {
-  event_id: '{{dlv - event_id}}',
-  lead_type: '{{dlv - lead_type}}'
-});
+  pintrk('track', 'lead', {
+    event_id: '{{dlv - event_id}}',
+    lead_type: '{{dlv - lead_type}}',
+  })
 </script>
 ```
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `pinterest_lead`
 
@@ -217,6 +241,7 @@ pintrk('track', 'lead', {
 **Doel:** Track affiliate link clicks
 
 **Settings:**
+
 - **Tag Type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration Tag
 - **Event Name:** `outbound_click`
@@ -226,6 +251,7 @@ pintrk('track', 'lead', {
   - `product_name`: `{{dlv - product_name}}`
 
 **Trigger:**
+
 - **Type:** Custom Event
 - **Event name:** `outbound_click`
 
@@ -236,6 +262,7 @@ pintrk('track', 'lead', {
 Je moet deze variables aanmaken om de tags te laten werken:
 
 ### Common Variables:
+
 1. **dlv - search_term** → Data Layer Variable → `search_term`
 2. **dlv - results_count** → Data Layer Variable → `results_count`
 3. **dlv - product_name** → Data Layer Variable → `product_name`
@@ -300,41 +327,50 @@ Je moet deze variables aanmaken om de tags te laten werken:
 ## 🧪 TESTING & DEBUGGING
 
 ### Stap 1: Preview Mode
+
 1. Klik op **Preview** rechtsboven in GTM
 2. Voer in: `https://gifteez.nl`
 3. GTM opent debug venster
 
 ### Stap 2: Test Events
+
 Open je site en voer deze acties uit:
 
 ✅ **Page View Test:**
+
 - Navigate naar homepage
 - Check of `page_view` event vuurt in debug console
 
 ✅ **GiftFinder Test:**
+
 - Gebruik GiftFinder
 - Check of `giftfinder_search` event vuurt
 - Verifieer parameters (occasion, budget, etc.)
 
 ✅ **Product Click Test:**
+
 - Klik op een product
 - Check of `product_click` event vuurt
 - Verifieer product_name, price
 
 ✅ **Search Test:**
+
 - Zoek in blog of GiftFinder
 - Check of `search` event vuurt
 
 ✅ **Lead Test:**
+
 - Verstuur contact form
 - Check of `generate_lead` event vuurt
 
 ### Stap 3: Verifieer in Google Analytics
+
 1. Ga naar GA4 → Realtime
 2. Test events moeten verschijnen binnen 30 seconden
 3. Check event parameters
 
 ### Stap 4: Verifieer in Pinterest
+
 1. Ga naar Pinterest Analytics → Conversions
 2. Check Tag Health (moet groen zijn)
 3. Test events moeten verschijnen binnen 1-2 minuten
@@ -364,40 +400,43 @@ Open je site en voer deze acties uit:
 
 ### Events die gefired worden:
 
-| Event Name | Waar | Wanneer |
-|------------|------|---------|
-| `page_view` | Alle pages | Bij elke page load |
-| `search` | GiftFinder, Blog | Bij zoeken |
-| `product_click` | Deal/Product cards | Bij klik op product |
-| `product_impression` | Deal/Product cards | Bij zichtbaar worden |
-| `giftfinder_search` | GiftFinder | Bij genereren resultaten |
-| `generate_lead` | Contact, Quiz | Bij form submit |
-| `add_to_favorites` | Product cards | Bij favorieten toevoegen |
-| `outbound_click` | Affiliate links | Bij klik naar retailer |
-| `pinterest_pagevisit` | Alle pages | PageVisit tracking |
-| `pinterest_search` | GiftFinder | Search tracking |
-| `pinterest_lead` | Contact/Quiz | Lead tracking |
-| `quiz_start` | Quiz page | Start quiz |
-| `quiz_complete` | Quiz page | Complete quiz |
-| `login` | Login page | Succesvolle login |
-| `sign_up` | Signup page | Account aanmaken |
-| `blog_read` | Blog posts | 50%+ scroll depth |
+| Event Name            | Waar               | Wanneer                  |
+| --------------------- | ------------------ | ------------------------ |
+| `page_view`           | Alle pages         | Bij elke page load       |
+| `search`              | GiftFinder, Blog   | Bij zoeken               |
+| `product_click`       | Deal/Product cards | Bij klik op product      |
+| `product_impression`  | Deal/Product cards | Bij zichtbaar worden     |
+| `giftfinder_search`   | GiftFinder         | Bij genereren resultaten |
+| `generate_lead`       | Contact, Quiz      | Bij form submit          |
+| `add_to_favorites`    | Product cards      | Bij favorieten toevoegen |
+| `outbound_click`      | Affiliate links    | Bij klik naar retailer   |
+| `pinterest_pagevisit` | Alle pages         | PageVisit tracking       |
+| `pinterest_search`    | GiftFinder         | Search tracking          |
+| `pinterest_lead`      | Contact/Quiz       | Lead tracking            |
+| `quiz_start`          | Quiz page          | Start quiz               |
+| `quiz_complete`       | Quiz page          | Complete quiz            |
+| `login`               | Login page         | Succesvolle login        |
+| `sign_up`             | Signup page        | Account aanmaken         |
+| `blog_read`           | Blog posts         | 50%+ scroll depth        |
 
 ---
 
 ## 🔍 TROUBLESHOOTING
 
 ### Event vuurt niet?
+
 1. Check of dataLayer variable bestaat in debug console
 2. Verifieer trigger configuratie
 3. Check of event naam exact matcht (case-sensitive!)
 
 ### GA4 data komt niet binnen?
+
 1. Verifieer Measurement ID: `G-Y697MJEN2H`
 2. Check GA4 Configuration Tag is correct
 3. Wacht 24-48 uur voor historical data
 
 ### Pinterest pixel werkt niet?
+
 1. Verifieer Pinterest Tag ID in custom HTML
 2. Check Tag Health in Pinterest dashboard
 3. Test in incognito mode (ad blockers kunnen blokkeren)
@@ -407,6 +446,7 @@ Open je site en voer deze acties uit:
 ## 📈 NEXT STEPS (OPTIONEEL)
 
 ### Week 2-3:
+
 1. **Conversion Tracking:**
    - Affiliate link clicks als conversie
    - Quiz completions als conversie
@@ -423,6 +463,7 @@ Open je site en voer deze acties uit:
    - Deal hunters (clicks > 5 deals)
 
 ### Week 4+:
+
 1. **A/B Testing Integration:**
    - Google Optimize tag
    - Test hero CTAs
@@ -445,12 +486,14 @@ Open je site en voer deze acties uit:
 Vink af wanneer voltooid:
 
 **Setup:**
+
 - [ ] GTM container code in index.html (✅ DONE)
 - [ ] DataLayer service aangemaakt (✅ DONE)
 - [ ] GA4 tracking gemigreerd (✅ DONE)
 - [ ] Pinterest tracking gemigreerd (✅ DONE)
 
 **GTM Dashboard:**
+
 - [ ] GA4 Configuration Tag aangemaakt
 - [ ] Page View Tag aangemaakt
 - [ ] Search Event Tag aangemaakt
@@ -465,6 +508,7 @@ Vink af wanneer voltooid:
 - [ ] Alle Triggers aangemaakt
 
 **Testing:**
+
 - [ ] Preview Mode getest
 - [ ] Page views werken
 - [ ] GiftFinder tracking werkt
@@ -475,6 +519,7 @@ Vink af wanneer voltooid:
 - [ ] Pinterest Tag Health groen
 
 **Publishing:**
+
 - [ ] GTM container gepubliceerd
 - [ ] Versie beschrijving toegevoegd
 - [ ] Production site getest
@@ -485,6 +530,7 @@ Vink af wanneer voltooid:
 ## 🆘 SUPPORT
 
 **Vragen?** Check:
+
 1. GTM Help Center: https://support.google.com/tagmanager
 2. GA4 Documentation: https://developers.google.com/analytics/devguides/collection/ga4
 3. Pinterest Tag: https://help.pinterest.com/en/business/article/track-conversions-with-pinterest-tag

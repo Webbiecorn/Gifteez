@@ -1,9 +1,8 @@
 import { type ReactElement, type ReactNode } from 'react'
+import { render, type RenderOptions } from '@testing-library/react'
+import { vi } from 'vitest'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
-import { render } from '@testing-library/react'
-import type { RenderOptions } from '@testing-library/react'
-import { vi } from 'vitest'
 
 /**
  * Custom render function with all providers

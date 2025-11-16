@@ -15,10 +15,15 @@ function cfg() {
         throw new Error('PAAPI env not configured');
     return { accessKey, secretKey, partnerTag, host, region };
 }
+const normalizeHeaders = (headers) => {
+    if (!headers)
+        return {};
+    return Object.fromEntries(Object.entries(headers).map(([key, value]) => [key, String(value)]));
+};
 async function signedFetch(path, body) {
     const { accessKey, secretKey, host, region } = cfg();
-    const bodyStr = JSON.stringify(body);
-    const opts = {
+    const serializedBody = JSON.stringify(body);
+    const request = {
         host,
         path,
         method: 'POST',
@@ -26,35 +31,76 @@ async function signedFetch(path, body) {
         region,
         headers: {
             'content-type': 'application/json; charset=UTF-8',
-            host: host,
+            host,
         },
-        body: bodyStr,
+        body: serializedBody,
     };
-    aws4.sign(opts, { accessKeyId: accessKey, secretAccessKey: secretKey });
+    const credentials = {
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
+    };
+    aws4.sign(request, credentials);
     const url = `https://${host}${path}`;
-    const res = await fetch(url, { method: 'POST', headers: opts.headers, body: bodyStr });
-    if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`PAAPI ${res.status}: ${txt}`);
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: normalizeHeaders(request.headers),
+        body: serializedBody,
+    });
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`PAAPI ${response.status}: ${errorText}`);
     }
-    return res.json();
+    return (await response.json());
 }
-function mapOffer(offer) {
+const toCurrencyDisplay = (amount, currency) => {
+    try {
+        return new Intl.NumberFormat('nl-NL', { style: 'currency', currency }).format(amount);
+    }
+    catch {
+        return `${amount.toFixed(2)} ${currency}`;
+    }
+};
+const mapOffer = (offer) => {
     const amount = offer?.Price?.Amount;
     const currency = offer?.Price?.Currency;
-    const display = amount && currency
-        ? new Intl.NumberFormat('nl-NL', { style: 'currency', currency }).format(amount)
-        : undefined;
     const savingsAmount = offer?.Savings?.Amount;
     const savingsPercent = offer?.Savings?.Percentage;
+    const price = typeof amount === 'number' && typeof currency === 'string'
+        ? { value: amount, currency, display: toCurrencyDisplay(amount, currency) }
+        : undefined;
+    const savings = typeof savingsAmount === 'number' || typeof savingsPercent === 'number'
+        ? {
+            amount: typeof savingsAmount === 'number' ? savingsAmount : undefined,
+            percent: typeof savingsPercent === 'number' ? savingsPercent : undefined,
+        }
+        : undefined;
     return {
-        price: amount && currency ? { value: amount, currency, display: display } : undefined,
-        savings: savingsAmount || savingsPercent
-            ? { amount: savingsAmount, percent: savingsPercent }
-            : undefined,
+        price,
+        savings,
         prime: offer?.ProgramEligibility?.IsPrimeEligible === true,
     };
-}
+};
+const extractStringArray = (value) => {
+    if (!Array.isArray(value))
+        return undefined;
+    const strings = value.filter((entry) => typeof entry === 'string');
+    return strings.length > 0 ? strings : undefined;
+};
+const findEditorialContent = (entries) => {
+    if (!entries)
+        return undefined;
+    const match = entries.find((entry) => typeof entry.Content === 'string');
+    return typeof match?.Content === 'string' ? match.Content : undefined;
+};
+const resolveStarRating = (value) => {
+    if (typeof value === 'number') {
+        return value;
+    }
+    if (value && typeof value === 'object' && typeof value.Value === 'number') {
+        return value.Value;
+    }
+    return undefined;
+};
 export async function searchItems(params) {
     const { partnerTag } = cfg();
     const body = {
@@ -79,37 +125,34 @@ export async function searchItems(params) {
         ],
         // Note: price filters differ per locale; in PA-API use MinPrice/MaxPrice in cents for some markets.
     };
-    if (typeof params.minPrice === 'number')
+    if (typeof params.minPrice === 'number') {
         body.MinPrice = Math.round(params.minPrice * 100);
-    if (typeof params.maxPrice === 'number')
+    }
+    if (typeof params.maxPrice === 'number') {
         body.MaxPrice = Math.round(params.maxPrice * 100);
+    }
     const data = await signedFetch('/paapi5/searchitems', body);
-    const items = (data.ItemsResult?.Items || []).map((it) => {
-        const listing = it?.Offers?.Listings?.[0];
+    const items = (data.ItemsResult?.Items ?? []).map((it) => {
+        const listing = it.Offers?.Listings?.[0];
         const priceInfo = mapOffer(listing);
-        const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
-            ? it.ItemInfo.Features.DisplayValues.filter((value) => typeof value === 'string')
-            : undefined;
-        const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
-        const editorialContent = Array.isArray(editorialEntries)
-            ? editorialEntries.find((entry) => entry?.Content)?.Content
-            : undefined;
-        const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
-        const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
+        const features = extractStringArray(it.ItemInfo?.Features?.DisplayValues);
+        const editorialContent = findEditorialContent(it.EditorialReviews?.Items ?? it.EditorialReviews?.Entries);
+        const starRating = resolveStarRating(it.CustomerReviews?.StarRating);
+        const reviewCount = typeof it.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
         return {
-            asin: it?.ASIN,
-            title: it?.ItemInfo?.Title?.DisplayValue,
-            url: it?.DetailPageURL,
+            asin: it.ASIN ?? '',
+            title: it.ItemInfo?.Title?.DisplayValue ?? '',
+            url: it.DetailPageURL ?? '',
             images: {
-                small: it?.Images?.Primary?.Small?.URL,
-                medium: it?.Images?.Primary?.Medium?.URL,
-                large: it?.Images?.Primary?.Large?.URL,
+                small: it.Images?.Primary?.Small?.URL,
+                medium: it.Images?.Primary?.Medium?.URL,
+                large: it.Images?.Primary?.Large?.URL,
             },
             ...priceInfo,
-            rating: typeof starRating === 'number' ? starRating : undefined,
+            rating: starRating,
             reviewCount,
             features,
-            description: typeof editorialContent === 'string' ? editorialContent : undefined,
+            description: editorialContent,
         };
     });
     return { items, fetchedAtISO: new Date().toISOString() };
@@ -138,31 +181,26 @@ export async function getItem(asin) {
     const it = data.ItemsResult?.Items?.[0];
     if (!it)
         return { item: null, fetchedAtISO: new Date().toISOString() };
-    const listing = it?.Offers?.Listings?.[0];
+    const listing = it.Offers?.Listings?.[0];
     const priceInfo = mapOffer(listing);
-    const features = Array.isArray(it?.ItemInfo?.Features?.DisplayValues)
-        ? it.ItemInfo.Features.DisplayValues.filter((value) => typeof value === 'string')
-        : undefined;
-    const editorialEntries = it?.EditorialReviews?.Items || it?.EditorialReviews?.Entries;
-    const editorialContent = Array.isArray(editorialEntries)
-        ? editorialEntries.find((entry) => entry?.Content)?.Content
-        : undefined;
-    const starRating = it?.CustomerReviews?.StarRating?.Value ?? it?.CustomerReviews?.StarRating;
-    const reviewCount = typeof it?.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
+    const features = extractStringArray(it.ItemInfo?.Features?.DisplayValues);
+    const editorialContent = findEditorialContent(it.EditorialReviews?.Items ?? it.EditorialReviews?.Entries);
+    const starRating = resolveStarRating(it.CustomerReviews?.StarRating);
+    const reviewCount = typeof it.CustomerReviews?.Count === 'number' ? it.CustomerReviews.Count : undefined;
     const item = {
-        asin: it?.ASIN,
-        title: it?.ItemInfo?.Title?.DisplayValue,
-        url: it?.DetailPageURL,
+        asin: it.ASIN ?? '',
+        title: it.ItemInfo?.Title?.DisplayValue ?? '',
+        url: it.DetailPageURL ?? '',
         images: {
-            small: it?.Images?.Primary?.Small?.URL,
-            medium: it?.Images?.Primary?.Medium?.URL,
-            large: it?.Images?.Primary?.Large?.URL,
+            small: it.Images?.Primary?.Small?.URL,
+            medium: it.Images?.Primary?.Medium?.URL,
+            large: it.Images?.Primary?.Large?.URL,
         },
         ...priceInfo,
-        rating: typeof starRating === 'number' ? starRating : undefined,
+        rating: starRating,
         reviewCount,
         features,
-        description: typeof editorialContent === 'string' ? editorialContent : undefined,
+        description: editorialContent,
     };
     return { item, fetchedAtISO: new Date().toISOString() };
 }

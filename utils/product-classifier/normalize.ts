@@ -261,6 +261,115 @@ export function normalizeAmazon(row: RawFeedRow): Product {
   }
 }
 
+// ==================== Shop Like You Give A Damn Adapter ====================
+
+/**
+ * Shop Like You Give A Damn (AWIN JSON export)
+ * Fields: id, name, price, brand, category, tags[], image/imageUrl, affiliateLink
+ */
+export function normalizeSlygad(row: RawFeedRow): Product {
+  const productId = row.id || row.product_id || row.sku || row.ean || 'unknown'
+  const rawMerchant = cleanText(row.merchant || row.merchantName) || 'Shop Like You Give A Damn'
+  const merchantId = rawMerchant.replace(/\s+/g, '-').toLowerCase()
+
+  const tags = Array.isArray(row.tags) ? row.tags.filter(Boolean).join(', ') : undefined
+
+  return {
+    id: generateId('slygad', merchantId, productId),
+    source: 'slygad',
+    merchant: rawMerchant,
+
+    title: cleanText(row.name || row.title) || 'Untitled',
+    description: cleanText(row.description || row.shortDescription),
+    brand: cleanText(row.brand),
+
+    price: parsePrice(row.price || row.currentPrice),
+    currency: row.currency || 'EUR',
+    originalPrice: parsePrice(row.originalPrice || row.listPrice || row.previousPrice),
+
+    images: extractImages(row.image || row.imageUrl || row.images),
+    url: row.affiliateLink || row.url || row.link || '',
+
+    categoryPath: cleanText(row.category),
+    productType: cleanText(tags || row.productType),
+    googleProductCategory: cleanText(row.googleProductCategory),
+
+    gtin: cleanText(row.gtin || row.ean),
+    mpn: cleanText(row.mpn || row.id),
+    sku: cleanText(row.sku || productId),
+
+    inStock: row.inStock !== false,
+    condition: 'new',
+
+    _raw: {
+      ...row,
+      merchant_name: rawMerchant,
+    },
+  }
+}
+
+// ==================== PartyPro Adapter ====================
+
+export function normalizePartyPro(row: RawFeedRow): Product {
+  const productId = row.id || row.product_id || row.sku || row.ean || 'unknown'
+  const rawMerchant = cleanText(row.merchant || 'PartyPro.nl') || 'PartyPro.nl'
+  const merchantId = rawMerchant.replace(/\s+/g, '-').toLowerCase()
+
+  const stripQuotes = (value?: string): string | undefined => {
+    const cleaned = cleanText(value)
+    return cleaned ? cleaned.replace(/^"+|"+$/g, '') : undefined
+  }
+
+  const normalizeBrandLabel = (value?: string): string => {
+    const cleaned = stripQuotes(value)
+    if (!cleaned) return rawMerchant
+
+    const normalized = cleaned.trim()
+    const looksNumeric = /^\d+(\.\d+)?$/.test(normalized)
+    const isShortCode = normalized.length <= 2
+    const isCurrency = /^eur$/i.test(normalized)
+    const looksUrl = /^https?:\/\//i.test(normalized)
+
+    if (!normalized || looksNumeric || isShortCode || isCurrency || looksUrl) {
+      return rawMerchant
+    }
+
+    return normalized
+  }
+
+  return {
+    id: generateId('partypro', merchantId, productId),
+    source: 'partypro',
+    merchant: rawMerchant,
+
+    title: stripQuotes(row.name) || 'Untitled',
+    description: stripQuotes(row.description || row.shortDescription),
+    brand: normalizeBrandLabel(row.brand),
+
+    price: parsePrice(row.price),
+    currency: row.currency || 'EUR',
+    originalPrice: parsePrice(row.originalPrice || row.listPrice),
+
+    images: extractImages(row.image || row.imageUrl || row.merchantImageUrl || row.awinImageUrl),
+    url: row.affiliateLink || row.url || '',
+
+    categoryPath: stripQuotes(row.category),
+    productType: stripQuotes(row.productType),
+
+    gtin: cleanText(row.gtin || row.ean),
+    mpn: cleanText(row.mpn || row.id),
+    sku: cleanText(row.sku || productId),
+
+    inStock: row.inStock !== false,
+    condition: 'new',
+
+    _raw: {
+      ...row,
+      merchant_name: rawMerchant,
+    },
+  }
+}
+
 // ==================== Manual/Editorial Adapter ====================
 
 /**
@@ -316,6 +425,10 @@ export function normalize(
         return normalizeBol(row)
       case 'amazon':
         return normalizeAmazon(row)
+      case 'slygad':
+        return normalizeSlygad(row)
+      case 'partypro':
+        return normalizePartyPro(row)
       case 'manual':
         return normalizeManual(row)
       default:

@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState, useRef, useContext } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
+import {
+  dealOfTheWeek as fallbackDealOfWeek,
+  top10Deals as fallbackTopDeals,
+  dealCategories as fallbackDealCategories,
+} from '../data/dealsData'
+import { isAutomationEnvironment } from '../lib/automationEnvironment'
 import { logger } from '../lib/logger'
 import { withAffiliate } from '../services/affiliate'
 import CoolblueAffiliateService from '../services/coolblueAffiliateService'
@@ -32,8 +38,8 @@ import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
 import ProductCarousel from './ProductCarousel'
-import type { ProductCarouselControls } from './ProductCarousel'
 import { SocialShare } from './SocialShare'
+import type { ProductCarouselControls } from './ProductCarousel'
 import type { NavigateTo, DealCategory, DealItem, Gift } from '../types'
 
 type RetailerInfo = {
@@ -42,6 +48,8 @@ type RetailerInfo = {
   badgeClass: string
   accentClass: string
 }
+
+const REQUIRED_PARTNER_BRANDS = ['Coolblue', 'Shop Like You Give A Damn', 'PartyPro.nl'] as const
 
 const parseHost = (url: string): string | null => {
   if (!url) return null
@@ -132,6 +140,26 @@ const DEFAULT_STATE: DealsPageState = {
   dealOfWeek: null,
   topDeals: [],
   categories: [],
+}
+
+const AUTOMATION_TOP_DEALS_LIMIT = 12
+const AUTOMATION_CATEGORY_LIMIT = 3
+const AUTOMATION_PINNED_LIMIT = 4
+
+const buildAutomationDealsSnapshot = () => {
+  const topDeals = fallbackTopDeals.slice(0, AUTOMATION_TOP_DEALS_LIMIT)
+  const categories = fallbackDealCategories.slice(0, AUTOMATION_CATEGORY_LIMIT)
+
+  const state: DealsPageState = {
+    dealOfWeek: fallbackDealOfWeek ?? topDeals[0] ?? null,
+    topDeals,
+    categories,
+  }
+
+  const pinned = topDeals.slice(0, AUTOMATION_PINNED_LIMIT)
+  const lastUpdated = new Date()
+
+  return { state, pinned, lastUpdated }
 }
 
 type GtagFunction = (...args: unknown[]) => void
@@ -328,18 +356,19 @@ interface HeroCarouselProps {
   partnerBadges: string[]
 }
 
-const _HeroCarousel: React.FC<HeroCarouselProps> = ({
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const HeroCarousel: React.FC<HeroCarouselProps> = ({
   topDeals,
   dealOfWeek,
   navigateTo,
   handleFeaturedClick,
   handleRefresh,
-  _lastUpdated,
-  _formatDate,
+  lastUpdated: _lastUpdated,
+  formatDate: _formatDate,
   partnerBadges,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const [_isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const isAutoPlaying = true
   const [isHovering, setIsHovering] = useState(false)
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -512,7 +541,7 @@ const _HeroCarousel: React.FC<HeroCarouselProps> = ({
                 originalPrice && currentPrice && originalPrice > 0
                   ? Math.max(0, Math.round(((originalPrice - currentPrice) / originalPrice) * 100))
                   : null
-              
+
               // Calculate position relative to current slide
               const offset = (index - currentSlide + featuredDeals.length) % featuredDeals.length
               const isCenter = offset === 0
@@ -572,7 +601,6 @@ const _HeroCarousel: React.FC<HeroCarouselProps> = ({
                         }
                         try {
                           // Optional GTM event for affiliate click attribution
-                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
                           ;(window as any)?.dataLayer?.push({
                             event: 'affiliate_click',
                             source: 'deals_hero',
@@ -738,7 +766,7 @@ const _HeroCarousel: React.FC<HeroCarouselProps> = ({
               <span>Top retailers</span>
             </div>
           </div>
-          
+
           {partnerBadges.length > 0 && (
             <div className="flex flex-wrap items-center justify-center gap-3 text-xs mt-4">
               <span className="font-semibold text-white/70">Partnerwinkels:</span>
@@ -787,7 +815,9 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
   const deck = React.useMemo(() => {
     const sourceDeals = selectedCategory
       ? selectedCategory.items || []
-      : (dealOfWeek ? [dealOfWeek, ...topDeals] : topDeals)
+      : dealOfWeek
+        ? [dealOfWeek, ...topDeals]
+        : topDeals
     const arr = (sourceDeals || []).filter(Boolean)
     // Deduplicate by id
     const map = new Map(arr.map((d) => [d.id, d]))
@@ -797,11 +827,10 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
   const [idx, setIdx] = React.useState(0)
 
   // Ensure required partner brands are always present in the hero marquee
-  const requiredPartners = ['Coolblue', 'Shop Like You Give A Damn', 'PartyPro.nl']
   const marqueeBrands = React.useMemo(() => {
     const lower = new Set(partnerBadges.map((b) => b.toLowerCase()))
     const merged = [...partnerBadges]
-    requiredPartners.forEach((r) => {
+    REQUIRED_PARTNER_BRANDS.forEach((r) => {
       if (!lower.has(r.toLowerCase())) merged.push(r)
     })
     // Deduplicate while preserving order
@@ -814,7 +843,10 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
 
   const parseEuro = React.useCallback((input?: string): number | null => {
     if (!input) return null
-    const normalized = input.replace(/[^0-9,.-]/g, '').replace(/\./g, '').replace(',', '.')
+    const normalized = input
+      .replace(/[^0-9,.-]/g, '')
+      .replace(/\./g, '')
+      .replace(',', '.')
     const n = Number.parseFloat(normalized)
     return Number.isNaN(n) ? null : n
   }, [])
@@ -861,9 +893,15 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
     <section className={`relative deals-hero overflow-hidden bg-gradient-to-br ${themeVisuals.bg}`}>
       {/* background accents */}
       <div className="absolute inset-0 opacity-30">
-        <div className={`absolute -top-12 -left-8 w-[420px] h-[420px] ${themeVisuals.blob1} rounded-full mix-blend-multiply filter blur-3xl animate-blob`} />
-        <div className={`absolute -bottom-16 left-1/3 w-[420px] h-[420px] ${themeVisuals.blob2} rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000`} />
-        <div className={`absolute -top-10 -right-10 w-[520px] h-[520px] ${themeVisuals.blob3} rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000`} />
+        <div
+          className={`absolute -top-12 -left-8 w-[420px] h-[420px] ${themeVisuals.blob1} rounded-full mix-blend-multiply filter blur-3xl animate-blob`}
+        />
+        <div
+          className={`absolute -bottom-16 left-1/3 w-[420px] h-[420px] ${themeVisuals.blob2} rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000`}
+        />
+        <div
+          className={`absolute -top-10 -right-10 w-[520px] h-[520px] ${themeVisuals.blob3} rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000`}
+        />
       </div>
 
       <Container size="xl" padded className="relative py-10 md:py-14">
@@ -874,7 +912,9 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
             <div className="flex flex-wrap items-center gap-2 mb-1 justify-center lg:justify-start">
               {[
                 { id: 'spotlight', title: 'Spotlight' },
-                ...themeCategories.slice(0, 4).map((c) => ({ id: c.id || c.title, title: c.title })),
+                ...themeCategories
+                  .slice(0, 4)
+                  .map((c) => ({ id: c.id || c.title, title: c.title })),
               ].map((t) => (
                 <button
                   key={t.id}
@@ -895,14 +935,14 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
 
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white text-sm font-bold">Live • {deck.length} toppers vandaag</span>
+              <span className="text-white text-sm font-bold">
+                Live • {deck.length} toppers vandaag
+              </span>
             </div>
 
             <h1 className="font-display leading-tight font-black text-4xl md:text-5xl lg:text-6xl text-white">
               {selectedCategory ? (
-                <>
-                  {selectedCategory.title} deals zonder keuzestress
-                </>
+                <>{selectedCategory.title} deals zonder keuzestress</>
               ) : (
                 <>
                   <span className="block">Beste cadeau deals</span>
@@ -913,14 +953,19 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
             {/* Subregel voor spotlight verwijderd op verzoek (hoogte blijft geborgd via beschrijving) */}
             <p className="text-white/90 text-lg md:text-xl leading-relaxed line-clamp-4 max-w-xl lg:max-w-none min-h-[112px] md:min-h-[132px]">
               {selectedCategory?.description || (
-                <>Handgepickt van top retailers als {marqueeBrands[0] ?? 'onze partners'}. Snelle levering, hoge scores en scherpe prijzen.</>
+                <>
+                  Handgepickt van top retailers als {marqueeBrands[0] ?? 'onze partners'}. Snelle
+                  levering, hoge scores en scherpe prijzen.
+                </>
               )}
             </p>
 
             {/* Thematic helper badge */}
             {selectedCategory && (
               <div className="inline-flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full bg-white/15 text-white/90 border border-white/20">
-                {selectedCategory.title.toLowerCase().includes('duurzaam') ? '✨ Impactvolle keuzes' : '🎉 Direct feestklaar'}
+                {selectedCategory.title.toLowerCase().includes('duurzaam')
+                  ? '✨ Impactvolle keuzes'
+                  : '🎉 Direct feestklaar'}
               </div>
             )}
 
@@ -944,11 +989,20 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
 
             {/* trust mini row */}
             <div className="flex flex-wrap gap-4 items-center justify-center lg:justify-start text-xs text-white/80">
-              <div className="flex items-center gap-2"><CheckIcon className="h-4 w-4 text-green-400"/>Gratis verzending</div>
-              <div className="w-px h-4 bg-white/20"/>
-              <div className="flex items-center gap-2"><CheckIcon className="h-4 w-4 text-green-400"/>Snelle levering</div>
-              <div className="w-px h-4 bg-white/20"/>
-              <div className="flex items-center gap-2"><CheckIcon className="h-4 w-4 text-green-400"/>Top retailers</div>
+              <div className="flex items-center gap-2">
+                <CheckIcon className="h-4 w-4 text-green-400" />
+                Gratis verzending
+              </div>
+              <div className="w-px h-4 bg-white/20" />
+              <div className="flex items-center gap-2">
+                <CheckIcon className="h-4 w-4 text-green-400" />
+                Snelle levering
+              </div>
+              <div className="w-px h-4 bg-white/20" />
+              <div className="flex items-center gap-2">
+                <CheckIcon className="h-4 w-4 text-green-400" />
+                Top retailers
+              </div>
             </div>
 
             {/* brand marquee */}
@@ -956,21 +1010,25 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
               <div className="hero-marquee border-white/30 bg-white/70">
                 <div className="hero-marquee-track">
                   {marqueeBrands.concat(marqueeBrands).map((b, i) => (
-                    <span key={`${b}-${i}`} className="hero-marquee-item">{b}</span>
+                    <span key={`${b}-${i}`} className="hero-marquee-item">
+                      {b}
+                    </span>
                   ))}
                 </div>
               </div>
             )}
 
             {lastUpdated && (
-              <div className="text-white/60 text-xs">Laatst bijgewerkt: {formatDate(lastUpdated)}</div>
+              <div className="text-white/60 text-xs">
+                Laatst bijgewerkt: {formatDate(lastUpdated)}
+              </div>
             )}
           </div>
 
           {/* Right spotlight card */}
           <div className="relative">
             <div className="relative mx-auto w-full max-w-sm">
-              <div className="absolute -inset-6 bg-gradient-to-br from-rose-500/20 via-pink-500/10 to-purple-500/10 blur-2xl rounded-[2rem]"/>
+              <div className="absolute -inset-6 bg-gradient-to-br from-rose-500/20 via-pink-500/10 to-purple-500/10 blur-2xl rounded-[2rem]" />
               <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
                 <div className="relative aspect-square flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
                   <div className="ring-gradient animate-spin-slower" />
@@ -979,7 +1037,9 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
                       <TagIcon className="h-4 w-4" /> -{pct}%
                     </div>
                   )}
-                  <div className={`absolute bottom-3 right-3 inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg ${retailer.badgeClass}`}>
+                  <div
+                    className={`absolute bottom-3 right-3 inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg ${retailer.badgeClass}`}
+                  >
                     {retailer.shortLabel}
                   </div>
                   <div className="relative w-full h-full p-8">
@@ -992,12 +1052,18 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
                   </div>
                 </div>
                 <div className="p-5 space-y-3">
-                  <h2 className="font-display text-xl font-black text-slate-900 line-clamp-2">{active.name}</h2>
+                  <h2 className="font-display text-xl font-black text-slate-900 line-clamp-2">
+                    {active.name}
+                  </h2>
                   <div className="flex items-baseline gap-2">
                     {active.isOnSale && active.originalPrice && (
-                      <span className="text-slate-400 line-through text-sm font-semibold">{active.originalPrice}</span>
+                      <span className="text-slate-400 line-through text-sm font-semibold">
+                        {active.originalPrice}
+                      </span>
                     )}
-                    <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-600">{active.price || 'Bekijk prijs'}</span>
+                    <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-600 to-pink-600">
+                      {active.price || 'Bekijk prijs'}
+                    </span>
                   </div>
                   <a
                     href={withAffiliate(active.affiliateLink, {
@@ -1014,7 +1080,9 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
                   >
                     Shop bij {retailer.shortLabel}
                   </a>
-                  <p className="text-[11px] text-slate-500 text-center">Partnerlink • wij kunnen commissie ontvangen</p>
+                  <p className="text-[11px] text-slate-500 text-center">
+                    Partnerlink • wij kunnen commissie ontvangen
+                  </p>
                 </div>
               </div>
             </div>
@@ -1045,7 +1113,10 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
   )
 }
 
-class DealsErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; message?: string }>{
+class DealsErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; message?: string }
+> {
   constructor(props: { children: React.ReactNode }) {
     super(props)
     this.state = { hasError: false }
@@ -1056,9 +1127,10 @@ class DealsErrorBoundary extends React.Component<{ children: React.ReactNode }, 
   componentDidCatch(error: unknown, errorInfo: unknown) {
     try {
       // Best-effort logging without breaking the UI
-      // eslint-disable-next-line no-console
       console.error('Deals page runtime error:', error, errorInfo)
-    } catch {}
+    } catch (loggingError) {
+      console.error('Deals page error logging failed:', loggingError)
+    }
   }
   render() {
     if (this.state.hasError) {
@@ -1066,7 +1138,9 @@ class DealsErrorBoundary extends React.Component<{ children: React.ReactNode }, 
         <div className="min-h-[40vh] flex items-center justify-center">
           <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 max-w-xl text-center">
             <p className="font-semibold mb-1">Er ging iets mis bij het laden van de deals.</p>
-            <p className="text-sm opacity-80">Probeer de pagina te verversen. Blijft dit gebeuren? Laat het ons weten.</p>
+            <p className="text-sm opacity-80">
+              Probeer de pagina te verversen. Blijft dit gebeuren? Laat het ons weten.
+            </p>
           </div>
         </div>
       )
@@ -1076,13 +1150,11 @@ class DealsErrorBoundary extends React.Component<{ children: React.ReactNode }, 
 }
 
 const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
+  const automationModeActive = useMemo(() => isAutomationEnvironment(), [])
   const [state, setState] = useState<DealsPageState>(DEFAULT_STATE)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
-  const [manualConfigUpdatedAt, setManualConfigUpdatedAt] = useState<string | null>(null)
-  const [dealOfWeekIndex, setDealOfWeekIndex] = useState(0)
-  const [premiumDeals, setPremiumDeals] = useState<DealItem[]>([])
   const [pinnedDeals, setPinnedDeals] = useState<DealItem[]>([])
 
   // Filter state
@@ -1145,6 +1217,15 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       setError(null)
       impressionTrackedRef.current = new Set()
 
+      if (automationModeActive) {
+        const snapshot = buildAutomationDealsSnapshot()
+        setState(snapshot.state)
+        setPinnedDeals(snapshot.pinned)
+        setLastUpdated(snapshot.lastUpdated)
+        setIsLoading(false)
+        return
+      }
+
       try {
         // Always force refresh on first load to ensure fresh data
         const shouldForceRefresh =
@@ -1181,7 +1262,6 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
         const stats = DynamicProductService.getStats()
         setLastUpdated(stats?.lastUpdated ?? null)
-        setManualConfigUpdatedAt(config?.updatedAt ?? null)
 
         // Collect premium candidates (featured deal + high scoring top deals)
         const premiumCandidates = [
@@ -1199,8 +1279,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               ? [featuredDeal]
               : []
 
-        setPremiumDeals(premiumRotation)
-        setDealOfWeekIndex(0)
+        if (premiumRotation.length > 0) {
+          logger.info('Premium rotation prepared', {
+            scope: 'deals.load',
+            candidateCount: premiumRotation.length,
+          })
+        }
 
         const pinned = pinnedEntries
           .map((entry) => entry?.deal)
@@ -1383,29 +1467,13 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         setIsLoading(false)
       }
     },
-    []
+    [automationModeActive]
   )
 
   useEffect(() => {
     // Force fresh data load on mount to prevent stale cache issues
     void loadDeals({ forceRefresh: true })
   }, [loadDeals])
-
-  // Function to rotate to the next premium deal
-  const showNextDeal = useCallback(() => {
-    if (premiumDeals.length <= 1) {
-      return
-    }
-
-    const nextIndex = (dealOfWeekIndex + 1) % premiumDeals.length
-
-    setDealOfWeekIndex(nextIndex)
-
-    setState((prev) => ({
-      ...prev,
-      dealOfWeek: premiumDeals[nextIndex],
-    }))
-  }, [premiumDeals, dealOfWeekIndex])
 
   // Filter deals based on selected filters
   const filterDeals = useCallback(
@@ -1703,8 +1771,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       if (!touchStart || !touchEnd) return
 
       const distance = touchStart - touchEnd
-            const isLeftSwipe = distance > 50
-            const isRightSwipe = distance < -50
+      const isLeftSwipe = distance > 50
+      const isRightSwipe = distance < -50
 
       if (isLeftSwipe && canScrollRight) {
         scroll('right')
@@ -1824,7 +1892,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     // Favorites state
     const [isFavorite, setIsFavorite] = useState(false)
     const [favoritePulse, setFavoritePulse] = useState(false)
-  const favoritePulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const favoritePulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     // Check if this is a top deal (score 9+) or hot deal (sale + score 8+)
     const isTopDeal = deal.giftScore && deal.giftScore >= 9
@@ -1836,11 +1904,11 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     )
     const imageHeightClass =
       variant === 'feature' ? 'h-64 md:h-72' : variant === 'grid' ? 'h-44' : 'h-48'
-  const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4'
-  // Reserve consistent content height for non-feature cards so all cards align
-  const contentMinHClass = variant === 'feature' ? '' : 'min-h-[190px]'
-  const metaRowMinHClass = variant === 'feature' ? '' : 'min-h-[28px]'
-  const titleMinHClass = variant === 'feature' ? '' : 'min-h-[44px]'
+    const bodyPaddingClass = variant === 'feature' ? 'p-6' : variant === 'grid' ? 'p-5' : 'p-4'
+    // Reserve consistent content height for non-feature cards so all cards align
+    const contentMinHClass = variant === 'feature' ? '' : 'min-h-[190px]'
+    const metaRowMinHClass = variant === 'feature' ? '' : 'min-h-[28px]'
+    const titleMinHClass = variant === 'feature' ? '' : 'min-h-[44px]'
     const priceBadgeClass = variant === 'feature' ? 'px-4 py-2 text-base' : 'px-3 py-1.5 text-sm'
     const buttonPaddingClass =
       variant === 'feature' ? 'px-6 py-3.5 text-base' : 'px-4 py-2.5 text-sm'
@@ -2006,11 +2074,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     }
 
     return (
-      <div
-        ref={cardRef}
-        className="h-full"
-        data-testid={`deal-card-${variant}`}
-      >
+      <div ref={cardRef} className="h-full" data-testid={`deal-card-${variant}`}>
         <div
           onClick={handleClick}
           className={`group relative flex h-full flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02] cursor-pointer p-[2px] ${
@@ -2261,7 +2325,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false)
     const [canScrollRight, setCanScrollRight] = useState(true)
     const [currentIndex, setCurrentIndex] = useState(0)
-  const carouselRef = useRef<ProductCarouselControls | null>(null)
+    const carouselRef = useRef<ProductCarouselControls | null>(null)
 
     const retailerLabels = useMemo(() => {
       const unique = new Set<string>()

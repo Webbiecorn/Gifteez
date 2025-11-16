@@ -14,9 +14,9 @@ import {
   ShareIcon,
 } from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
+import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
-import JsonLd from './JsonLd'
 import { SocialShare } from './SocialShare'
 import StickyAffiliateBar from './StickyAffiliateBar'
 import { CountdownTimer, SocialProofBadge, TrustBadges } from './UrgencyBadges'
@@ -179,7 +179,7 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
         console.error('Failed to update guest favorites', e)
         return
       }
-            <JsonLd id={`ld-product-${product.id}`} data={productSchema} />
+      ;<JsonLd id={`ld-product-${product.id}`} data={productSchema} />
     }
 
     setIsFavorite(isNowFavorite)
@@ -219,8 +219,14 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
         '@type': 'Offer',
         priceCurrency: 'EUR',
         price: numericPrice,
-        url: withAffiliate(product.affiliateLink, { pageType: 'product-landing', placement: 'schema' }),
-        availability: product.inStock === false ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
+        url: withAffiliate(product.affiliateLink, {
+          pageType: 'product-landing',
+          placement: 'schema',
+        }),
+        availability:
+          product.inStock === false
+            ? 'https://schema.org/OutOfStock'
+            : 'https://schema.org/InStock',
       },
       ...(product.giftScore && product.giftScore >= 8
         ? {
@@ -233,7 +239,16 @@ const ProductLandingPage: React.FC<ProductLandingPageProps> = ({
           }
         : {}),
     }
-  }, [product.name, product.imageUrl, product.description, product.affiliateLink, product.inStock, product.giftScore, retailer.shortName, numericPrice])
+  }, [
+    product.name,
+    product.imageUrl,
+    product.description,
+    product.affiliateLink,
+    product.inStock,
+    product.giftScore,
+    retailer.shortName,
+    numericPrice,
+  ])
 
   // Generate mock review rating (in production, would come from data)
   const mockRating = product.giftScore ? product.giftScore / 2 : 4.5

@@ -22,7 +22,9 @@ const contentToString = (content: BlogPost['content']): string => {
       case 'image':
         return block.alt ?? ''
       case 'comparisonTable':
-        return [block.headers.join(' | '), ...block.rows.map((row) => row.values.join(' | '))].join('\n')
+        return [block.headers.join(' | '), ...block.rows.map((row) => row.values.join(' | '))].join(
+          '\n'
+        )
       case 'prosCons':
         return block.items
           .map((item) => `${item.title}\n+ ${item.pros.join(', ')}\n- ${item.cons.join(', ')}`)
@@ -93,7 +95,9 @@ const renderContent = (rawContent: BlogPost['content']): string => {
 export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose }) => {
   if (!isOpen) return null
 
-  const formattedDate = new Date(post.publishedAt ?? post.createdAt ?? post.publishedDate).toLocaleDateString('nl-NL', {
+  const formattedDate = new Date(
+    post.publishedAt ?? post.createdAt ?? post.publishedDate
+  ).toLocaleDateString('nl-NL', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -156,7 +160,9 @@ export const BlogPreview: React.FC<BlogPreviewProps> = ({ post, isOpen, onClose 
               <div className="flex items-center text-sm text-gray-500 mt-4 pt-4 border-t">
                 <time dateTime={post.publishedAt || post.createdAt}>{formattedDate}</time>
                 <span className="mx-2">•</span>
-                <span>{Math.ceil(contentString.split(' ').filter(Boolean).length / 200)} min leestijd</span>
+                <span>
+                  {Math.ceil(contentString.split(' ').filter(Boolean).length / 200)} min leestijd
+                </span>
               </div>
             </header>
 

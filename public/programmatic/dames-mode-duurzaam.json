@@ -1,11 +1,11 @@
 {
-  "routeKey": "cadeaus/dames-mode-duurzaam",
+  "routeKey": "cadeaugidsen/dames-mode-duurzaam",
   "metadata": {
     "title": "Duurzame Dames Mode Cadeaus - Eco Fashion",
     "description": "Stijlvolle en duurzame mode cadeaus voor vrouwen. Eco-friendly merken met impact.",
     "audience": "women",
     "totalProducts": 24,
-    "generatedAt": "2025-11-04T12:04:54.710Z"
+    "generatedAt": "2025-11-16T12:31:30.302Z"
   },
   "featured": [],
   "products": [
@@ -19,7 +19,9 @@
       "price": 229,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_68771_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_68771_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=35108924007&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -125,13 +127,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "mode",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "mode"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "mode"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for mode"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 4 keyword(s) for mode"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -148,7 +160,9 @@
       "price": 261,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_69841_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_69841_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41813692939&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -254,13 +268,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "duurzaam",
         "priceBucket": "over-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "kunst"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for duurzaam"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -277,7 +301,9 @@
       "price": 69,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/T42-B42-Green.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/T42-B42-Green.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=35825435204&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -383,13 +409,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sport",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "fitness"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "fitness"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for sport"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 4 keyword(s) for sport"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -513,13 +549,24 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "gadgets",
         "priceBucket": "25-50",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "tech", "kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "tech",
+          "kunst"
+        ],
         "confidence": 0.9,
-        "reasons": ["Title contains women keyword", "Matched 3 keyword(s) for gadgets"],
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 3 keyword(s) for gadgets"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -536,7 +583,9 @@
       "price": 210,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_107273_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_107273_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42805639381&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -642,13 +691,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "koken",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for koken"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for koken"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -773,13 +831,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -796,7 +861,9 @@
       "price": 139.95,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_81043_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_81043_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42521836315&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -902,13 +969,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "wellness",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for wellness"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for wellness"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -916,135 +990,79 @@
       "canonicalKey": "mud jeans|mud jeans dames vegan losse jeans jamie flow stone vintage"
     },
     {
-      "id": "coolblue:24072:41813693499",
-      "source": "coolblue",
-      "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "Amber Linen dames vegan Set Vest & Broek Cremona Pak Zwart",
-      "description": "Ontdek ons stijlvolle en comfortabele Cremona vest en broekpak, perfect voor warme zomerdagen en speciale gelegenheden. Samenstelling 100% voorgewassen en onthard Europees linnen Details Handgemaakt vakmanschap Broek ontworpen met klassieke voorkant en elastische taille aan de achterkant voor een comfortabele pasvorm Losvallend vest met verstelbare riem aan de achterkant Twee praktische zijzakken in de broeknaden",
-      "brand": "Amber Linen",
-      "price": 210,
+      "id": "slygad:shop-like-you-give-a-damn:35462735866",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "LaLu Products dames vegan Draagtas Kamala Zwart & Grijs",
+      "description": "Beperkte editie Veganistisch Organische katoenen stof Eerlijke handel Handgemaakt Uniseks Kunststofvrij Waterafstotend Afmeting: 20 x 45 x 30 cm Onze Kamala zijtas is een Special Edition. De tas is sterk en duurzaam, gemaakt van meerdere lagen katoen. De tas is volledig handgemaakt, van het weven van de stof tot het maken van de tas. De tas is afsluitbaar met een hoogwaardige ritssluiting. De binnenkant van de tas is voorzien van een extra vak, eveneens af te sluiten met een rits. Zo weet je zeker dat al je spullen veilig zijn. Aan de voorkant zit ook nog een extra zak, om alles georganiseerd te houden. Een comfortabele en unieke tas, perfect voor een dagje uit.",
+      "brand": "LaLu Products",
+      "price": 59,
       "currency": "EUR",
-      "originalPrice": 0,
+      "originalPrice": 59,
       "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_275446495.jpg"
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_145151461_cropped.jpg&feedId=65481&k=353816dba3c74a9908b37e2586e302307e48dd86"
       ],
-      "url": "https://www.awin1.com/pclick.php?p=41813693499&a=2566111&m=24072",
-      "categoryPath": "Dames",
-      "googleProductCategory": "Women's Clothing",
-      "gtin": "103243",
-      "mpn": "103243-XXL",
-      "sku": "41813693499",
+      "url": "https://www.awin1.com/pclick.php?p=35462735866&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "35462735866",
+      "sku": "35462735866",
       "inStock": true,
       "condition": "new",
-      "shippingCost": 5.95,
-      "deliveryDays": 5,
       "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=41813693499&a=2566111&m=24072",
-        "product_name": "Amber Linen dames vegan Set Vest & Broek Cremona Pak Zwart",
-        "aw_product_id": "41813693499",
-        "merchant_product_id": "22c8eafabdf6f690f8cf9c9dd8a82e50",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_275446495.jpg",
-        "description": "Ontdek ons stijlvolle en comfortabele Cremona vest en broekpak, perfect voor warme zomerdagen en speciale gelegenheden. Samenstelling 100% voorgewassen en onthard Europees linnen Details Handgemaakt vakmanschap Broek ontworpen met klassieke voorkant en elastische taille aan de achterkant voor een comfortabele pasvorm Losvallend vest met verstelbare riem aan de achterkant Twee praktische zijzakken in de broeknaden",
-        "merchant_category": "Dames",
-        "search_price": "210.00",
-        "merchant_name": "Shop Like You Give A Damn - NL & BE",
-        "merchant_id": "24072",
-        "category_name": "Women's Clothing",
-        "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_275446495.jpg&feedId=59155&k=5eeaafcf54c6e7f3a7f9d9f9f22559660ea8020b",
+        "id": "35462735866",
+        "name": "LaLu Products dames vegan Draagtas Kamala Zwart & Grijs",
+        "price": 59,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_145151461_cropped.jpg&feedId=65481&k=353816dba3c74a9908b37e2586e302307e48dd86",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_145151461_cropped.jpg&feedId=65481&k=353816dba3c74a9908b37e2586e302307e48dd86",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=35462735866&a=2566111&m=24072",
+        "description": "Beperkte editie Veganistisch Organische katoenen stof Eerlijke handel Handgemaakt Uniseks Kunststofvrij Waterafstotend Afmeting: 20 x 45 x 30 cm Onze Kamala zijtas is een Special Edition. De tas is sterk en duurzaam, gemaakt van meerdere lagen katoen. De tas is volledig handgemaakt, van het weven van de stof tot het maken van de tas. De tas is afsluitbaar met een hoogwaardige ritssluiting. De binnenkant van de tas is voorzien van een extra vak, eveneens af te sluiten met een rits. Zo weet je zeker dat al je spullen veilig zijn. Aan de voorkant zit ook nog een extra zak, om alles georganiseerd te houden. Een comfortabele en unieke tas, perfect voor een dagje uit.",
+        "shortDescription": "Beperkte editie Veganistisch Organische katoenen stof Eerlijke handel Handgemaakt Uniseks Kunststofvrij Waterafstotend Afmeting: 20 x 45 x 30 cm Onze Kamala zijtas is een Special Edition. De tas is st...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "LaLu Products",
+        "giftScore": 9,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Zwart",
+        "material": "Katoen, biologisch",
+        "originalPrice": 59,
         "currency": "EUR",
-        "store_price": "",
-        "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/set-vest-broek-cremona-pak-zwart/p-103243",
-        "language": "",
-        "last_updated": "",
-        "display_price": "EUR210.00",
-        "data_feed_id": "59155",
-        "brand_name": "Amber Linen",
-        "brand_id": "",
-        "colour": "Zwart",
-        "product_short_description": "",
-        "specifications": "",
-        "condition": "new",
-        "product_model": "",
-        "model_number": "",
-        "dimensions": "",
-        "keywords": "",
-        "promotional_text": "",
-        "product_type": "",
-        "commission_group": "",
-        "merchant_product_category_path": "",
-        "merchant_product_second_category": "T-shirts & tops",
-        "merchant_product_third_category": "Mouwloze tops",
-        "rrp_price": "",
-        "saving": "",
-        "savings_percent": "",
-        "base_price": "",
-        "base_price_amount": "",
-        "base_price_text": "",
-        "product_price_old": "",
-        "delivery_restrictions": "",
-        "delivery_weight": "",
-        "warranty": "",
-        "terms_of_contract": "",
-        "delivery_time": "5 tot 8 werkdagen",
-        "in_stock": "1",
-        "stock_quantity": "",
-        "valid_from": "",
-        "valid_to": "",
-        "is_for_sale": "1",
-        "web_offer": "",
-        "pre_order": "",
-        "stock_status": "",
-        "size_stock_status": "",
-        "size_stock_amount": "",
-        "merchant_thumb_url": "",
-        "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_275446495.jpg",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_275446495.jpg&feedId=59155&k=5eeaafcf54c6e7f3a7f9d9f9f22559660ea8020b",
-        "alternate_image_two": "",
-        "alternate_image_three": "",
-        "alternate_image_four": "",
-        "reviews": "",
-        "average_rating": "",
-        "rating": "",
-        "number_available": "",
-        "custom_1": "",
-        "custom_2": "cheap",
-        "custom_3": "20.00%",
-        "custom_4": "adult",
-        "custom_5": "",
-        "custom_6": "",
-        "custom_7": "",
-        "custom_8": "",
-        "custom_9": "",
-        "ean": "103243",
-        "isbn": "",
-        "upc": "",
-        "mpn": "103243-XXL",
-        "parent_product_id": "103243",
-        "product_GTIN": "",
-        "basket_link": "",
-        "Fashion:suitable_for": "female",
-        "Fashion:category": "",
-        "Fashion:size": "XXL",
-        "Fashion:material": "Linnen, regulier",
-        "Fashion:pattern": "",
-        "Fashion:swatch": ""
+        "active": true,
+        "featured": false,
+        "createdAt": "2025-10-18T14:24:24.087Z",
+        "updatedAt": "2025-10-18T14:24:24.087Z",
+        "merchant_name": "Shop Like You Give A Damn"
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "kunst",
-        "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
-        "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for kunst"],
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "kunst"
+        ],
+        "confidence": 0.9,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 3 keyword(s) for kunst"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
-      "searchText": "amber linen dames vegan set vest & broek cremona pak zwart amber linen dames ontdek ons stijlvolle en comfortabele cremona vest en broekpak, perfect voor warme zomerdagen en speciale gelegenheden. samenstelling 100% voorgewassen en onthard europees linnen details handgemaakt v",
-      "canonicalKey": "amber linen|amber linen dames vegan set vest broek cremona pak"
+      "searchText": "lalu products dames vegan draagtas kamala zwart & grijs lalu products duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus beperkte editie veganistisch organische katoenen stof eerlijke handel handgemaakt uniseks kunststofvrij waterafstotend afmeting: 20 x 45 x 30 cm onze kamala zijtas is een special edition. de tas is st",
+      "canonicalKey": "lalu products|lalu products dames vegan draagtas kamala"
     },
     {
       "id": "coolblue:24072:36488668193",
@@ -1056,7 +1074,9 @@
       "price": 219.5,
       "currency": "EUR",
       "originalPrice": 439,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_78334.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_78334.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=36488668193&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1162,13 +1182,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "outdoor",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for outdoor"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for outdoor"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1293,13 +1320,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "wonen",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "muziek"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "muziek"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wonen"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for wonen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1316,7 +1353,9 @@
       "price": 169,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_105406.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_105406.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42247664162&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1422,13 +1461,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "riemen",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for riemen"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for riemen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1445,7 +1493,9 @@
       "price": 223.5,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_103642.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_103642.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41895748386&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1551,13 +1601,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "geuren",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.825,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 1 keyword(s) for geuren"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 1 keyword(s) for geuren"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1574,7 +1633,9 @@
       "price": 64.95,
       "currency": "EUR",
       "originalPrice": 89.95,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_100332.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_100332.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41853204052&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1680,150 +1741,29 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "beauty",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["muziek", "kunst", "beauty"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "muziek",
+          "kunst",
+          "beauty"
+        ],
         "confidence": 0.825,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 1 keyword(s) for beauty"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 1 keyword(s) for beauty"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
       "searchText": "dedicated dames vegan top furusund schiffli zwart dedicated dames damestop furusund schiffli in de kleur zwart van dedicated met volumineuze snit en geplooide schouderbandjes. gemaakt van biologisch katoenen poplin. materialen en verzorging materiaal: 100% gots biol",
       "canonicalKey": "dedicated|dedicated dames vegan top furusund schiffli"
-    },
-    {
-      "id": "coolblue:24072:42236243513",
-      "source": "coolblue",
-      "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "Green Laces dames vegan Portemonnee Arlo Zwart",
-      "description": "De vegan Arlo portemonnee van Green Laces met relifleer is ons eigen ontwerp en maakt deel uit van onze kerncollectie. Het materiaal is zeer duurzaam en ontwikkelt een prachtige patina, net als dierlijk leer. De binnenkant is voorzien van ons logo en heeft 6 kaartvakken plus een hoofdvak voor kleine spullen zoals oorbellen, ringen, sleutels van je sportkluisje, enz. Het patroon weerspiegelt het idee van onze collectie: bewegingsplezier in een stedelijke omgeving met naadloze overgangen tussen werk en vrije tijd. Samenstelling Buitenkant: Hoogwaardig imitatieleer uit Spanje Voering: Hoogwaardig imitatieleer op katoenen basis Oeko-tex gecertificeerd Standaard 100 PVC-vrij Chrome gratis REACH-verordening 1907:2006 Recyclebaar PETA-gecertificeerd Maat Afmetingen: 108 cm, rits 3/4 Duurzaamheid Veganistische materialen Eerlijk geproduceerd in Spanje",
-      "brand": "Green Laces",
-      "price": 54.5,
-      "currency": "EUR",
-      "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_105058_cropped.jpg"],
-      "url": "https://www.awin1.com/pclick.php?p=42236243513&a=2566111&m=24072",
-      "categoryPath": "Dames",
-      "googleProductCategory": "Women's Clothing",
-      "gtin": "105058",
-      "mpn": "105058-none",
-      "sku": "42236243513",
-      "inStock": true,
-      "condition": "new",
-      "shippingCost": 5.95,
-      "deliveryDays": 4,
-      "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=42236243513&a=2566111&m=24072",
-        "product_name": "Green Laces dames vegan Portemonnee Arlo Zwart",
-        "aw_product_id": "42236243513",
-        "merchant_product_id": "105058-none",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_105058_cropped.jpg",
-        "description": "De vegan Arlo portemonnee van Green Laces met reliÃ«fleer is ons eigen ontwerp en maakt deel uit van onze kerncollectie. Het materiaal is zeer duurzaam en ontwikkelt een prachtige patina, net als dierlijk leer. De binnenkant is voorzien van ons logo en heeft 6 kaartvakken plus een hoofdvak voor kleine spullen zoals oorbellen, ringen, sleutels van je sportkluisje, enz. Het patroon weerspiegelt het idee van onze collectie: bewegingsplezier in een stedelijke omgeving met naadloze overgangen tussen werk en vrije tijd. Samenstelling Buitenkant: Hoogwaardig imitatieleer uit Spanje Voering: Hoogwaardig imitatieleer op katoenen basis Oeko-texÂ® gecertificeerd Standaard 100 PVC-vrij Chrome gratis REACH-verordening 1907:2006 Recyclebaar PETA-gecertificeerd Maat Afmetingen: 10Ã—8 cm, rits 3/4 Duurzaamheid Veganistische materialen Eerlijk geproduceerd in Spanje",
-        "merchant_category": "Dames",
-        "search_price": "54.50",
-        "merchant_name": "Shop Like You Give A Damn - NL & BE",
-        "merchant_id": "24072",
-        "category_name": "Women's Clothing",
-        "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_105058_cropped.jpg&feedId=59157&k=94b3792ff35af2da9b2afdcb86a10423b9a45728",
-        "currency": "EUR",
-        "store_price": "",
-        "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/portemonnee-arlo-zwart/p-105058",
-        "language": "",
-        "last_updated": "",
-        "display_price": "EUR54.50",
-        "data_feed_id": "59157",
-        "brand_name": "Green Laces",
-        "brand_id": "",
-        "colour": "Zwart",
-        "product_short_description": "",
-        "specifications": "",
-        "condition": "new",
-        "product_model": "",
-        "model_number": "",
-        "dimensions": "",
-        "keywords": "",
-        "promotional_text": "",
-        "product_type": "",
-        "commission_group": "",
-        "merchant_product_category_path": "",
-        "merchant_product_second_category": "Portemonnees",
-        "merchant_product_third_category": "Portemonnees",
-        "rrp_price": "",
-        "saving": "",
-        "savings_percent": "",
-        "base_price": "",
-        "base_price_amount": "",
-        "base_price_text": "",
-        "product_price_old": "",
-        "delivery_restrictions": "",
-        "delivery_weight": "",
-        "warranty": "",
-        "terms_of_contract": "",
-        "delivery_time": "4 tot 8 werkdagen",
-        "in_stock": "1",
-        "stock_quantity": "",
-        "valid_from": "",
-        "valid_to": "",
-        "is_for_sale": "1",
-        "web_offer": "",
-        "pre_order": "",
-        "stock_status": "",
-        "size_stock_status": "",
-        "size_stock_amount": "",
-        "merchant_thumb_url": "",
-        "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_299760748.jpg",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_105058_cropped.jpg&feedId=59157&k=94b3792ff35af2da9b2afdcb86a10423b9a45728",
-        "alternate_image_two": "",
-        "alternate_image_three": "",
-        "alternate_image_four": "",
-        "reviews": "",
-        "average_rating": "",
-        "rating": "",
-        "number_available": "",
-        "custom_1": "",
-        "custom_2": "cheap",
-        "custom_3": "20.00%",
-        "custom_4": "adult",
-        "custom_5": "",
-        "custom_6": "",
-        "custom_7": "",
-        "custom_8": "",
-        "custom_9": "",
-        "ean": "105058",
-        "isbn": "",
-        "upc": "",
-        "mpn": "",
-        "parent_product_id": "105058",
-        "product_GTIN": "",
-        "basket_link": "",
-        "Fashion:suitable_for": "female",
-        "Fashion:category": "",
-        "Fashion:size": "none",
-        "Fashion:material": "Katoen, regulier/Kunstleer/Micronappa (microvezel)",
-        "Fashion:pattern": "",
-        "Fashion:swatch": ""
-      },
-      "facets": {
-        "audience": ["women"],
-        "category": "portemonnees",
-        "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "kunst"],
-        "confidence": 0.825,
-        "reasons": [
-          "Fashion:suitable_for indicates women",
-          "Matched 1 keyword(s) for portemonnees"
-        ],
-        "needsReview": false,
-        "isGiftable": true
-      },
-      "searchText": "green laces dames vegan portemonnee arlo zwart green laces dames de vegan arlo portemonnee van green laces met relifleer is ons eigen ontwerp en maakt deel uit van onze kerncollectie. het materiaal is zeer duurzaam en ontwikkelt een prachtige patina, net als dierli",
-      "canonicalKey": "green laces|laces dames vegan portemonnee arlo"
     },
     {
       "id": "coolblue:24072:42944539166",
@@ -1943,13 +1883,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "duurzaam",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for duurzaam"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2074,13 +2023,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "mode",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["muziek"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "muziek"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 6 keyword(s) for mode"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 6 keyword(s) for mode"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2097,7 +2055,9 @@
       "price": 250,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_105788.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_105788.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42335091105&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -2203,13 +2163,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "koken",
         "priceBucket": "over-250",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for koken"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for koken"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2226,7 +2193,9 @@
       "price": 65.89,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_106595.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_106595.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42672272796&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -2332,13 +2301,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sport",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["fitness", "kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "fitness",
+          "kunst"
+        ],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sport"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sport"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2463,13 +2442,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2477,135 +2463,79 @@
       "canonicalKey": "fejn|fejn dames vegan ketting effen zilver"
     },
     {
-      "id": "coolblue:24072:42746598804",
-      "source": "coolblue",
-      "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "Understatement dames vegan Bralette Mesh Triangle Lichtroze/Dieprood",
-      "description": "Semi-transparante mesh. Optimaal comfort. Driehoekige cups van zacht, doorschijnend gaas met fluweelzachte flockhartprint Mesh onderband met binnenelastiek en picotrand Dunne, dubbele schouderbanden aan de achterkant met metalen verstellers Verstelbare haak- en oogsluiting aan de achterkant Zacht siliconen waslabel = geen jeukende plekjes Materialen 72% Polyamide, 5% Elastaan, 23% Rayon",
-      "brand": "Understatement",
-      "price": 69,
+      "id": "slygad:shop-like-you-give-a-damn:36655556888",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Fraenck dames vegan Schoudertas Elly Zwart",
+      "description": "ELLY is een kleine schoudertas, handgemaakt van upcycled vegan leer. Punt voor punt Afmetingen tas: 19 x 17 x 4 cm Inhoud: circa 0,5 liter En binnenzak Rits Materiaal: vegan kunstleer Waterafstotend Langer verhaal ELLY heeft een handvat dat je op maat kunt verstellen door de knopen eenvoudig te verplaatsen. Stijlvol door zijn uiterlijk en handzaam formaat. Door de tas te maken met upcycled vegan leer heb je een sterk product. Een touwhandvat van sterk polypropyleen maakt de tas compleet. Leuk voor een pauze en een avondje uit. Let op: de voering kan per tas verschillen omdat wij met restmaterialen werken. Wij zorgen altijd voor een leuke combinatie! Zelfs MORE informatie Afmetingen binnendoos: 14 x 10 cm Lengte handvat: tot 125 cm. Gemakkelijk verstelbaar Makkelijk schoon te maken Goed verhaal ",
+      "brand": "Fraenck",
+      "price": 55,
       "currency": "EUR",
-      "originalPrice": 0,
+      "originalPrice": 55,
       "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_246097928_cropped.jpg"
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_176572149_cropped.jpg&feedId=65481&k=f7d07d44ff2c3c09c273ba726e6f4424684a3ec0"
       ],
-      "url": "https://www.awin1.com/pclick.php?p=42746598804&a=2566111&m=24072",
-      "categoryPath": "Dames",
-      "googleProductCategory": "Women's Clothing",
-      "gtin": "100235",
-      "mpn": "100235-3XL",
-      "sku": "42746598804",
+      "url": "https://www.awin1.com/pclick.php?p=36655556888&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "36655556888",
+      "sku": "36655556888",
       "inStock": true,
       "condition": "new",
-      "shippingCost": 5.95,
-      "deliveryDays": 2,
       "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=42746598804&a=2566111&m=24072",
-        "product_name": "Understatement dames vegan Bralette Mesh Triangle Lichtroze/Dieprood",
-        "aw_product_id": "42746598804",
-        "merchant_product_id": "100235-3XL",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_246097928_cropped.jpg",
-        "description": "Semi-transparante mesh. Optimaal comfort. Driehoekige cups van zacht, doorschijnend gaas met fluweelzachte flockhartprint Mesh onderband met binnenelastiek en picotrand Dunne, dubbele schouderbanden aan de achterkant met metalen verstellers Verstelbare haak- en oogsluiting aan de achterkant Zacht siliconen waslabel = geen jeukende plekjes Materialen 72% Polyamide, 5% Elastaan, 23% Rayon",
-        "merchant_category": "Dames",
-        "search_price": "69.00",
-        "merchant_name": "Shop Like You Give A Damn - NL & BE",
-        "merchant_id": "24072",
-        "category_name": "Women's Clothing",
-        "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_246097928_cropped.jpg&feedId=59157&k=fd526f2dcfc6f620946b0d8f7cb8840d18f332c6",
+        "id": "36655556888",
+        "name": "Fraenck dames vegan Schoudertas Elly Zwart",
+        "price": 55,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_176572149_cropped.jpg&feedId=65481&k=f7d07d44ff2c3c09c273ba726e6f4424684a3ec0",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_176572149_cropped.jpg&feedId=65481&k=f7d07d44ff2c3c09c273ba726e6f4424684a3ec0",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=36655556888&a=2566111&m=24072",
+        "description": "ELLY   is een kleine schoudertas, handgemaakt van upcycled vegan leer. Punt voor punt Afmetingen tas: 19 x 17 x 4 cm Inhoud: circa 0,5 liter Eén binnenzak Rits Materiaal: vegan kunstleer Waterafstotend Langer verhaal ELLY heeft een handvat dat je op maat kunt verstellen door de knopen eenvoudig te verplaatsen. Stijlvol door zijn uiterlijk en handzaam formaat. Door de tas te maken met upcycled vegan leer heb je een sterk product. Een touwhandvat van sterk polypropyleen maakt de tas compleet. Leuk voor een pauze en een avondje uit. Let op: de voering kan per tas verschillen omdat wij met restmaterialen werken. Wij zorgen altijd voor een leuke combinatie! Zelfs MORE informatie Afmetingen binnendoos: 14 x 10 cm Lengte handvat: tot 125 cm. Gemakkelijk verstelbaar Makkelijk schoon te maken Goed verhaal 🙌",
+        "shortDescription": "ELLY   is een kleine schoudertas, handgemaakt van upcycled vegan leer. Punt voor punt Afmetingen tas: 19 x 17 x 4 cm Inhoud: circa 0,5 liter Eén binnenzak Rits Materiaal: vegan kunstleer Waterafstoten...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Fraenck",
+        "giftScore": 9,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Zwart",
+        "material": "Vegan plantenleer",
+        "originalPrice": 55,
         "currency": "EUR",
-        "store_price": "",
-        "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/bralette-mesh-triangle-lichtrozedieprood/p-100235",
-        "language": "",
-        "last_updated": "",
-        "display_price": "EUR69.00",
-        "data_feed_id": "59157",
-        "brand_name": "Understatement",
-        "brand_id": "",
-        "colour": "Donkerrood",
-        "product_short_description": "",
-        "specifications": "",
-        "condition": "new",
-        "product_model": "",
-        "model_number": "",
-        "dimensions": "",
-        "keywords": "",
-        "promotional_text": "",
-        "product_type": "",
-        "commission_group": "",
-        "merchant_product_category_path": "",
-        "merchant_product_second_category": "Lingerie & ondergoed",
-        "merchant_product_third_category": "Bralettes",
-        "rrp_price": "",
-        "saving": "",
-        "savings_percent": "",
-        "base_price": "",
-        "base_price_amount": "",
-        "base_price_text": "",
-        "product_price_old": "",
-        "delivery_restrictions": "",
-        "delivery_weight": "",
-        "warranty": "",
-        "terms_of_contract": "",
-        "delivery_time": "2 tot 3 werkdagen",
-        "in_stock": "1",
-        "stock_quantity": "",
-        "valid_from": "",
-        "valid_to": "",
-        "is_for_sale": "1",
-        "web_offer": "",
-        "pre_order": "",
-        "stock_status": "",
-        "size_stock_status": "",
-        "size_stock_amount": "",
-        "merchant_thumb_url": "",
-        "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_246097927.jpg",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_246097928_cropped.jpg&feedId=59157&k=fd526f2dcfc6f620946b0d8f7cb8840d18f332c6",
-        "alternate_image_two": "",
-        "alternate_image_three": "",
-        "alternate_image_four": "",
-        "reviews": "",
-        "average_rating": "",
-        "rating": "",
-        "number_available": "",
-        "custom_1": "",
-        "custom_2": "cheap",
-        "custom_3": "20.00%",
-        "custom_4": "adult",
-        "custom_5": "",
-        "custom_6": "",
-        "custom_7": "",
-        "custom_8": "",
-        "custom_9": "",
-        "ean": "100235",
-        "isbn": "",
-        "upc": "",
-        "mpn": "",
-        "parent_product_id": "100235",
-        "product_GTIN": "",
-        "basket_link": "",
-        "Fashion:suitable_for": "female",
-        "Fashion:category": "",
-        "Fashion:size": "3XL",
-        "Fashion:material": "Elastaan (lycra)/Polyamide (nylon)/Viscose (rayon), regulier",
-        "Fashion:pattern": "",
-        "Fashion:swatch": ""
+        "active": true,
+        "featured": false,
+        "createdAt": "2025-10-18T14:24:24.087Z",
+        "updatedAt": "2025-10-18T14:24:24.087Z",
+        "merchant_name": "Shop Like You Give A Damn"
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "kunst",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
-        "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "kunst"
+        ],
+        "confidence": 0.9,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 3 keyword(s) for kunst"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
-      "searchText": "understatement dames vegan bralette mesh triangle lichtroze/dieprood understatement dames semi-transparante mesh. optimaal comfort. driehoekige cups van zacht, doorschijnend gaas met fluweelzachte flockhartprint mesh onderband met binnenelastiek en picotrand dunne, dubbele schouderbanden a",
-      "canonicalKey": "understatement|understatement dames vegan bralette mesh triangle lichtrozedieprood"
+      "searchText": "fraenck dames vegan schoudertas elly zwart fraenck duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus elly is een kleine schoudertas, handgemaakt van upcycled vegan leer. punt voor punt afmetingen tas: 19 x 17 x 4 cm inhoud: circa 0,5 liter en binnenzak rits materiaal: vegan kunstleer waterafstotend l",
+      "canonicalKey": "fraenck|fraenck dames vegan schoudertas elly"
     },
     {
       "id": "coolblue:24072:41925323369",
@@ -2725,13 +2655,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "wellness",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wellness"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for wellness"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2856,13 +2793,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "wonen",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wonen"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for wonen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2987,13 +2933,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "outdoor",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for outdoor"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for outdoor"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -3118,25 +3073,176 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "riemen",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for riemen"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for riemen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
       "searchText": "olly lingerie dames vegan bikinitop kara blauw olly lingerie dames met een licht ronde halslijn, een mooie strik op de rug en een prachtige terracotta kleur, is kara onze nieuwe bikinitop! zowel elegant als praktisch dankzij de verstelbare rug en riemen, we houden er",
       "canonicalKey": "olly lingerie|olly lingerie dames vegan bikinitop kara"
+    },
+    {
+      "id": "coolblue:24072:37082753202",
+      "source": "coolblue",
+      "merchant": "Shop Like You Give A Damn - NL & BE",
+      "title": "Swedish Stockings dames vegan Basisset! Malva Laddervaste Panty 3st Zwart",
+      "description": "Malva Panty's worden geproduceerd met de langdurige prestaties van LYCRA FUSION-technologie die voorkomt dat gaten en haken in looppas veranderen. Malva is de eerste fusion panty op de markt gemaakt van gerecycled polyamide in combinatie met Fusion Lycra. Koop Malva als set van 3 en bespaar 20%. Alle drie de paren zijn in het zwart. Dit zijn de redenen waarom je van ze zult houden: 20 denier panty's Puur Zachte en brede tailleband Platte naden Katoenen kruisje Teenversteviging Gebreid van gerecycled garen 100% emissievrije productie 78% gerecycled polyamide, 22% Fusion Lycra",
+      "brand": "Swedish Stockings",
+      "price": 79.2,
+      "currency": "EUR",
+      "originalPrice": 99,
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_65201_cropped.jpg"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=37082753202&a=2566111&m=24072",
+      "categoryPath": "Dames",
+      "googleProductCategory": "Women's Clothing",
+      "gtin": "65201",
+      "mpn": "65201-XL",
+      "sku": "37082753202",
+      "inStock": true,
+      "condition": "new",
+      "shippingCost": 5.95,
+      "deliveryDays": 3,
+      "_raw": {
+        "aw_deep_link": "https://www.awin1.com/pclick.php?p=37082753202&a=2566111&m=24072",
+        "product_name": "Swedish Stockings dames vegan Basisset! Malva Laddervaste Panty 3st Zwart",
+        "aw_product_id": "37082753202",
+        "merchant_product_id": "65201-XL",
+        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_65201_cropped.jpg",
+        "description": "Malva Panty's worden geproduceerd met de langdurige prestaties van LYCRAÂ® FUSIONâ„¢-technologie die voorkomt dat gaten en haken in looppas veranderen. Malva is de eerste fusion panty op de markt gemaakt van gerecycled polyamide in combinatie met Fusion Lycra. Koop Malva als set van 3 en bespaar 20%. Alle drie de paren zijn in het zwart. Dit zijn de redenen waarom je van ze zult houden: 20 denier panty's Puur Zachte en brede tailleband Platte naden Katoenen kruisje Teenversteviging Gebreid van gerecycled garen 100% emissievrije productie 78% gerecycled polyamide, 22% Fusion Lycra",
+        "merchant_category": "Dames",
+        "search_price": "79.20",
+        "merchant_name": "Shop Like You Give A Damn - NL & BE",
+        "merchant_id": "24072",
+        "category_name": "Women's Clothing",
+        "category_id": "141",
+        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_65201_cropped.jpg&feedId=59157&k=1b3824d627b6ef7fa15a679810b4c60b150d2b6e",
+        "currency": "EUR",
+        "store_price": "",
+        "delivery_cost": "5,95 EUR",
+        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/basisset-malva-laddervaste-panty-3st-zwart/p-65201",
+        "language": "",
+        "last_updated": "",
+        "display_price": "EUR79.20",
+        "data_feed_id": "59157",
+        "brand_name": "Swedish Stockings",
+        "brand_id": "",
+        "colour": "Zwart",
+        "product_short_description": "",
+        "specifications": "",
+        "condition": "new",
+        "product_model": "",
+        "model_number": "",
+        "dimensions": "",
+        "keywords": "",
+        "promotional_text": "",
+        "product_type": "",
+        "commission_group": "",
+        "merchant_product_category_path": "",
+        "merchant_product_second_category": "Beenmode",
+        "merchant_product_third_category": "Panty's",
+        "rrp_price": "",
+        "saving": "",
+        "savings_percent": "",
+        "base_price": "",
+        "base_price_amount": "",
+        "base_price_text": "",
+        "product_price_old": "99,00 EUR",
+        "delivery_restrictions": "",
+        "delivery_weight": "",
+        "warranty": "",
+        "terms_of_contract": "",
+        "delivery_time": "3 tot 4 werkdagen",
+        "in_stock": "1",
+        "stock_quantity": "",
+        "valid_from": "",
+        "valid_to": "",
+        "is_for_sale": "1",
+        "web_offer": "",
+        "pre_order": "",
+        "stock_status": "",
+        "size_stock_status": "",
+        "size_stock_amount": "",
+        "merchant_thumb_url": "",
+        "large_image": "",
+        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_133661192.jpg",
+        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_65201_cropped.jpg&feedId=59157&k=1b3824d627b6ef7fa15a679810b4c60b150d2b6e",
+        "alternate_image_two": "",
+        "alternate_image_three": "",
+        "alternate_image_four": "",
+        "reviews": "",
+        "average_rating": "",
+        "rating": "",
+        "number_available": "",
+        "custom_1": "",
+        "custom_2": "",
+        "custom_3": "20.00%",
+        "custom_4": "adult",
+        "custom_5": "",
+        "custom_6": "",
+        "custom_7": "",
+        "custom_8": "",
+        "custom_9": "",
+        "ean": "65201",
+        "isbn": "",
+        "upc": "",
+        "mpn": "",
+        "parent_product_id": "65201",
+        "product_GTIN": "",
+        "basket_link": "",
+        "Fashion:suitable_for": "female",
+        "Fashion:category": "",
+        "Fashion:size": "XL",
+        "Fashion:material": "Gerecycled synthetisch materiaal",
+        "Fashion:pattern": "",
+        "Fashion:swatch": ""
+      },
+      "facets": {
+        "audience": [
+          "women"
+        ],
+        "category": "gadgets",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "tech",
+          "kunst"
+        ],
+        "confidence": 0.875,
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for gadgets"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "swedish stockings dames vegan basisset! malva laddervaste panty 3st zwart swedish stockings dames malva panty's worden geproduceerd met de langdurige prestaties van lycra fusion-technologie die voorkomt dat gaten en haken in looppas veranderen. malva is de eerste fusion panty op de markt gemaakt v",
+      "canonicalKey": "swedish stockings|swedish stockings dames vegan basisset malva laddervaste panty 3st"
     }
   ],
   "stats": {
     "uniqueBrands": 24,
-    "uniqueCategories": 14,
-    "averagePrice": 136.15041666666667,
-    "priceRange": [49.99, 261],
+    "uniqueCategories": 13,
+    "averagePrice": 130.30458333333334,
+    "priceRange": [
+      49.99,
+      261
+    ],
     "confidenceDistribution": {
       "high (>0.8)": 24,
       "medium (0.5-0.8)": 0,

@@ -41,6 +41,7 @@ import { TextSkeleton } from './components/SkeletonLoader'
 import Toast from './components/Toast'
 import { AuthContext } from './contexts/AuthContext'
 import { BlogProvider } from './contexts/BlogContext'
+import { GUIDE_BASE_PATH, GUIDE_SEGMENT, LEGACY_GUIDE_SEGMENT, buildGuidePath } from './guidePaths'
 import { useCookieConsent } from './hooks/useCookieConsent'
 import { usePerformanceMonitor } from './hooks/usePerformanceMonitor'
 import { BlogNotificationService } from './services/blogNotificationService'
@@ -76,21 +77,18 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home')
   const [currentPostSlug, setCurrentPostSlug] = useState<string | null>(null)
   const [initialGiftFinderData, setInitialGiftFinderData] = useState<InitialGiftFinderData>({})
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [categoryDetailData, setCategoryDetailData] = useState<any>(null)
   const [productLandingData, setProductLandingData] = useState<{
     productId: string
     product: DealItem
   } | null>(null)
   const [programmaticSlug, setProgrammaticSlug] = useState<string | null>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [comparisonData, setComparisonData] = useState<any>(null)
   const [toastState, setToastState] = useState<{ message: string; variant: ToastVariant } | null>(
     null
   )
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pathFor = (page: Page, data?: any) => {
     switch (page) {
       case 'home':
@@ -141,9 +139,9 @@ const App: React.FC = () => {
       case 'affiliateDisclosure':
         return '/affiliate-disclosure'
       case 'cadeausHub':
-        return '/cadeaus'
+        return GUIDE_BASE_PATH
       case 'programmatic':
-        return `/cadeaus/${data?.slug ?? ''}`
+        return buildGuidePath(data?.slug ?? '')
       case 'notFound':
         return '/404'
       case 'error':
@@ -166,24 +164,41 @@ const App: React.FC = () => {
       return
     }
     const [first, second, third] = parts
-    switch (first) {
-      case 'cadeaus': {
-        // Support both /cadeaus/<slug-with-dashes> and /cadeaus/kerst/voor-hem/onder-50
-        let slug = ''
-        if (second && second.includes('-')) {
-          slug = second
-        } else if (second) {
-          slug = parts.slice(1).join('-')
-        }
-        if (slug) {
-          setProgrammaticSlug(slug)
-          setCurrentPage('programmatic')
-        } else {
-          setProgrammaticSlug(null)
-          setCurrentPage('cadeausHub')
-        }
-        break
+    const isGuideRoute = first === GUIDE_SEGMENT
+    const isLegacyGuideRoute = first === LEGACY_GUIDE_SEGMENT
+    if (isGuideRoute || isLegacyGuideRoute) {
+      // Support both /cadeaus/<slug-with-dashes> and legacy /cadeaugidsen/kerst/voor-hem/onder-50
+      const slugSegments = parts.slice(1)
+      let slug = ''
+      if (slugSegments[0]?.includes('-')) {
+        slug = slugSegments[0]
+      } else if (slugSegments.length > 0) {
+        slug = slugSegments.join('-')
       }
+
+      if (slug) {
+        setProgrammaticSlug(slug)
+        setCurrentPage('programmatic')
+      } else {
+        setProgrammaticSlug(null)
+        setCurrentPage('cadeausHub')
+      }
+
+      const needsRewrite =
+        isLegacyGuideRoute || (slugSegments.length > 0 && !slugSegments[0]?.includes('-'))
+      if (needsRewrite) {
+        const newPath = buildGuidePath(slug)
+        if (window.location.pathname !== newPath) {
+          window.history.replaceState({}, '', newPath)
+        }
+      }
+      return
+    }
+    switch (first) {
+      case GUIDE_SEGMENT:
+      case LEGACY_GUIDE_SEGMENT:
+        // Already handled above
+        break
       case 'giftfinder':
         setCurrentPage('giftFinder')
         break
@@ -233,33 +248,15 @@ const App: React.FC = () => {
       case 'quiz':
         setCurrentPage('quiz')
         break
-      case 'download':
-        setCurrentPage('download')
-        break
-      // case 'shop': setCurrentPage('shop'); break; // Temporarily disabled
-      case 'cart':
-        setCurrentPage('cart')
-        break
-      case 'checkout-success':
-        setCurrentPage('checkoutSuccess')
-        break
       case 'deals':
         if (second === 'category' && third) {
           setCurrentPage('categoryDetail')
-          // Set basic category info from URL slug
-          if (!categoryDetailData || categoryDetailData.categoryId !== third) {
-            const categoryTitle = third
-              .split('-')
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' ')
-
-            setCategoryDetailData({
-              categoryId: third,
-              categoryTitle: categoryTitle,
-              categoryDescription: '',
-              products: [],
-            })
-          }
+          setCategoryDetailData({
+            categoryId: third,
+            categoryTitle: decodeURIComponent(third.replace(/-/g, ' ')),
+            categoryDescription: '',
+            products: [],
+          })
         } else {
           setCurrentPage('deals')
         }
@@ -267,7 +264,7 @@ const App: React.FC = () => {
       case 'product':
         if (second) {
           setCurrentPage('productLanding')
-          // Product data will be passed via navigation or fetched
+          // Product data will be passed via navigation or fetched later
         } else {
           setCurrentPage('notFound')
         }
@@ -316,7 +313,6 @@ const App: React.FC = () => {
     }
   }, [applyRoute])
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigateTo = useCallback((page: Page, data?: any) => {
     setInitialGiftFinderData({})
     setCurrentPostSlug(null)
@@ -375,7 +371,7 @@ const App: React.FC = () => {
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Handgepickte Collecties',
-        cadeausHub: 'Cadeaus voor elk Moment',
+        cadeausHub: 'Cadeaugidsen voor elk moment',
         categoryDetail: data?.categoryTitle
           ? `${data.categoryTitle} — Collectie`
           : 'Categorie — Collectie',
@@ -406,6 +402,7 @@ const App: React.FC = () => {
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
         shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
         deals: 'Zorgvuldig samengestelde cadeau collecties voor elke gelegenheid.',
+        cadeausHub: 'Ontdek alle cadeaugidsen met slimme filters op budget, thema en interesses.',
         categoryDetail: data?.categoryDescription || 'Bekijk alle producten in deze collectie.',
         adminDealsPreview: 'Controleer als admin de live deals-selectie van Gifteez.',
       }
@@ -621,9 +618,7 @@ const App: React.FC = () => {
       <ErrorBoundary
         onError={(error) => {
           // Log error to analytics
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           if (typeof window !== 'undefined' && (window as any).gtag) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ;(window as any).gtag('event', 'exception', {
               description: `React Error: ${error.toString()}`,
               fatal: false,

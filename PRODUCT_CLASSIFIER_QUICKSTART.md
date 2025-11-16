@@ -5,12 +5,14 @@
 ## 🎯 Wat is dit?
 
 Een complete classificatie-laag die voorkomt:
+
 - ❌ Herenriemen in dames-gidsen
 - ❌ 10 dezelfde producten (kleur/maat varianten)
 - ❌ Alle producten van 1 merk
 - ❌ Random producten zonder giftworthiness
 
 En zorgt voor:
+
 - ✅ Correcte doelgroep-matching (audience: men/women/unisex/kids)
 - ✅ Slimme categorisatie (riemen, horloges, sieraden, etc.)
 - ✅ Diversiteit (max 2 per merk, spread over categorieën)
@@ -54,23 +56,26 @@ npm install csv-parse yaml
 Open `data/taxonomy/keywords.yaml` en check of de keywords voor jouw producten kloppen.
 
 **Tip**: Zoek naar "riemen" en kijk of alle varianten erin staan:
+
 ```yaml
 categories:
   riemen:
     - riem
     - riemen
     - belt
-    - ceintuur  # ← Gebruik jij dit woord? Zo niet, verwijder het
+    - ceintuur # ← Gebruik jij dit woord? Zo niet, verwijder het
 ```
 
 ### 3. Voeg feed-bestanden toe
 
 Maak directory aan:
+
 ```bash
 mkdir -p data/feeds
 ```
 
 Kopieer je Coolblue CSV:
+
 ```bash
 cp coolblue-feed.csv data/feeds/
 ```
@@ -82,6 +87,7 @@ npm run classifier:build
 ```
 
 **Expected output**:
+
 ```
 📚 Loading taxonomy...
   ✓ Keywords loaded
@@ -115,6 +121,7 @@ cat public/programmatic/kerst-voor-hem-onder-50.json | head -50
 ```
 
 Check:
+
 - [ ] Zijn er producten?
 - [ ] Klopt de audience? (men/women/unisex)
 - [ ] Klopt de category? (riemen, horloges, etc.)
@@ -125,6 +132,7 @@ Check:
 
 **Probleem: Te weinig producten**
 → Verlaag caps in `scripts/build-programmatic-indices.mts`:
+
 ```typescript
 maxPerBrand: 3,     // was 2
 maxPerCategory: 12  // was 8
@@ -136,6 +144,7 @@ maxPerCategory: 12  // was 8
 
 **Probleem: Nog steeds herenriemen in dames-gids**
 → Check je PROGRAMMATIC_INDEX config in `data/programmatic/index.ts`:
+
 ```typescript
 {
   slug: 'vrouwen-riemen',
@@ -159,13 +168,13 @@ function MijnCadeauGids({ slug }: { slug: string }) {
 
   useEffect(() => {
     fetch(`/programmatic/${slug}.json`)
-      .then(r => r.json())
+      .then((r) => r.json())
       .then(setData)
   }, [slug])
 
   return (
     <div>
-      {data?.products.map(product => (
+      {data?.products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
@@ -178,6 +187,7 @@ function MijnCadeauGids({ slug }: { slug: string }) {
 ### 8. Automatiseer (optioneel)
 
 Voeg toe aan je CI/CD pipeline:
+
 ```yaml
 # .github/workflows/build-indices.yml
 - name: Build product indices
@@ -209,6 +219,7 @@ jq '.stats' public/programmatic/kerst-voor-hem-onder-50.json
 ## 📊 KPIs om te meten
 
 Na deployment, track:
+
 - **CTR per guide**: Wordt er meer geklikt?
 - **Diversiteit**: Hoeveel unique brands per page?
 - **Confidence**: Gemiddelde confidence score per page?
@@ -221,7 +232,7 @@ collection('product-clicks').add({
   routeKey: 'cadeaus/kerst-voor-hem',
   audience: product.facets.audience,
   confidence: product.facets.confidence,
-  timestamp: new Date()
+  timestamp: new Date(),
 })
 ```
 
@@ -242,6 +253,7 @@ collection('product-clicks').add({
 ## 📚 Volledige docs
 
 Zie `PRODUCT_CLASSIFIER_README.md` voor:
+
 - Architectuur details
 - API reference
 - Advanced configuratie

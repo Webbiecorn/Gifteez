@@ -451,7 +451,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
   )
 
   return (
-    <div className="relative h-full group">
+    <div className="relative h-full group" data-testid="gift-result-card" data-card-index={index}>
       {isEmbedded ? (
         <div className={outerWrapperClasses}>
           <div className={containerClasses}>{cardContent}</div>

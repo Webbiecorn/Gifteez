@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test'
-import { navigateTo } from './helpers'
+import { navigateTo, dismissCookieBannerIfPresent, ensureCookieConsent } from './helpers'
 
 test.describe('Deals Page Flow', () => {
   test.beforeEach(async ({ page }) => {
+    await ensureCookieConsent(page)
     await navigateTo(page, '/deals')
+    await dismissCookieBannerIfPresent(page)
   })
 
   test.describe('Page Layout', () => {
@@ -297,7 +299,7 @@ test.describe('Deals Page Flow', () => {
     test('should show content within 2 seconds', async ({ page }) => {
       const startTime = Date.now()
       
-  await page.waitForSelector('[data-testid*="deal"], .deal-card, h2, h3', { timeout: 4000 })
+    await page.waitForSelector('[data-testid^="deal-card"], .deal-card', { timeout: 4000 })
       
       const endTime = Date.now()
       const loadTime = endTime - startTime

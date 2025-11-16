@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
@@ -21,32 +21,25 @@ export default defineConfig({
           'ai-services': ['@google/genai'],
 
           // Route-based code splitting
-          'pages-core': [
-            './components/Header',
-            './components/Footer',
-            './components/Toast'
-          ],
+          'pages-core': ['./components/Header', './components/Footer', './components/Toast'],
           'pages-home': [
             './components/HomePage',
             './components/PlannerIllustration',
-            './components/QuizIllustration'
+            './components/QuizIllustration',
           ],
-          'pages-blog': [
-            './components/BlogPage',
-            './components/BlogDetailPage'
-          ],
+          'pages-blog': ['./components/BlogPage', './components/BlogDetailPage'],
           'pages-shop': [
             './components/ShopPage',
             './components/CartPage',
-            './components/CheckoutSuccessPage'
+            './components/CheckoutSuccessPage',
           ],
           'pages-auth': [
             './components/LoginPage',
             './components/SignUpPage',
-            './components/AccountPage'
-          ]
+            './components/AccountPage',
+          ],
         },
-      }
+      },
     },
     // Enable compression
     minify: 'terser',
@@ -61,6 +54,6 @@ export default defineConfig({
   },
   // Add preload hints for critical chunks
   optimizeDeps: {
-    include: ['react', 'react-dom', '@google/genai']
-  }
-});
+    include: ['react', 'react-dom', '@google/genai'],
+  },
+})

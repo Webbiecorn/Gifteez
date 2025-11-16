@@ -1,11 +1,11 @@
 {
-  "routeKey": "cadeaus/dames-sieraden-onder-100",
+  "routeKey": "cadeaugidsen/dames-sieraden-onder-100",
   "metadata": {
     "title": "Dames Sieraden Cadeaus onder €100",
     "description": "Prachtige sieraden voor vrouwen - kettingen, armbanden, oorbellen en ringen.",
     "audience": "women",
-    "totalProducts": 9,
-    "generatedAt": "2025-11-04T12:04:54.793Z"
+    "totalProducts": 14,
+    "generatedAt": "2025-11-16T12:31:30.353Z"
   },
   "featured": [],
   "products": [
@@ -127,13 +127,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -258,13 +265,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "duurzaam",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for duurzaam"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for duurzaam"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -389,13 +403,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -403,47 +424,197 @@
       "canonicalKey": "fejn|fejn dames vegan ketting effen zilver"
     },
     {
-      "id": "coolblue:24072:41853191506",
+      "id": "slygad:shop-like-you-give-a-damn:34458240403",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Nouare Jewelry dames vegan Oorbellen Halve Maan Zilver",
+      "description": "Onze favoriete symbool&nbsp;is hier vertegenwoordigd en de tekening is ge&iuml;nspireerd op de tekening van Jean Cocteau. Handgemaakt, elk stuk is uniek in zijn soort Gerecycled zilver Gerecycled Goud Vermeil optie; verguld 18ct 3 micron bovenop gerecycled zilver nikkel- en loodvrij, dus geschikt voor de gevoelige huid. Geleverd met een katoenen zakje NOUARE. &nbsp;",
+      "brand": "Nouare Jewelry",
+      "price": 79.5,
+      "currency": "EUR",
+      "originalPrice": 79.5,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_35156_cropped.jpg&feedId=65481&k=48f8733483553da075c82d08a58aca030abc3d0d"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=34458240403&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "34458240403",
+      "sku": "34458240403",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "34458240403",
+        "name": "Nouare Jewelry dames vegan Oorbellen Halve Maan Zilver",
+        "price": 79.5,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_35156_cropped.jpg&feedId=65481&k=48f8733483553da075c82d08a58aca030abc3d0d",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_35156_cropped.jpg&feedId=65481&k=48f8733483553da075c82d08a58aca030abc3d0d",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=34458240403&a=2566111&m=24072",
+        "description": "Onze favoriete symbool&nbsp;is hier vertegenwoordigd en de tekening is ge&iuml;nspireerd op de tekening van Jean Cocteau. Handgemaakt, elk stuk is uniek in zijn soort Gerecycled zilver Gerecycled Goud Vermeil optie; verguld 18ct 3 micron bovenop gerecycled zilver nikkel- en loodvrij, dus geschikt voor de gevoelige huid. Geleverd met een katoenen zakje NOUARE. &nbsp;",
+        "shortDescription": "Onze favoriete symbool&nbsp;is hier vertegenwoordigd en de tekening is ge&iuml;nspireerd op de tekening van Jean Cocteau. Handgemaakt, elk stuk is uniek in zijn soort Gerecycled zilver Gerecycled Goud...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Nouare Jewelry",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Zilver",
+        "material": "Goud, gerecycled/Zilver, gerecycled",
+        "originalPrice": 79.5,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.086Z",
+        "updatedAt": "2025-10-18T14:24:24.086Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "women"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
+        "confidence": 0.925,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "nouare jewelry dames vegan oorbellen halve maan zilver nouare jewelry duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus onze favoriete symbool&nbsp;is hier vertegenwoordigd en de tekening is ge&iuml;nspireerd op de tekening van jean cocteau. handgemaakt, elk stuk is uniek in zijn soort gerecycled zilver gerecycled goud",
+      "canonicalKey": "nouare jewelry|nouare jewelry dames vegan oorbellen halve maan zilver"
+    },
+    {
+      "id": "slygad:shop-like-you-give-a-damn:34458248403",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Loft and Daughter dames vegan Ketting Met Shala Hanger Zilver",
+      "description": "&nbsp; Kettinglengte: 50cm met verstelbaar stukje vanaf 45cm Godin hanger: 29mm (inclusief haakje aan bovenkant) Gewicht: 6.71g Materiaal: Sterling zilver* * Hanger is gerecycled sterling zilver, ketting is niet gerecycled. Ter ere van de bloei van de Shala-boom, overvloed en nieuw leven, wordt deze oude boomgod, haar arm om zijn tak gedrapeerd, vaak gevonden om de muren en pilaren van heilige tempels in heel India te verlevendigen. Deze verleidelijke hanger viert de schoonheid van de vrouwelijke vorm, moeder aarde, hun kracht, potentieel en de onderlinge verbondenheid tussen hen.",
+      "brand": "Loft and Daughter",
+      "price": 55.5,
+      "currency": "EUR",
+      "originalPrice": 55.5,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_63520_cropped.jpg&feedId=65481&k=1e394bc666997ce28220da0a7a7db9f85f552ff8"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=34458248403&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "34458248403",
+      "sku": "34458248403",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "34458248403",
+        "name": "Loft and Daughter dames vegan Ketting Met Shala Hanger Zilver",
+        "price": 55.5,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_63520_cropped.jpg&feedId=65481&k=1e394bc666997ce28220da0a7a7db9f85f552ff8",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_63520_cropped.jpg&feedId=65481&k=1e394bc666997ce28220da0a7a7db9f85f552ff8",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=34458248403&a=2566111&m=24072",
+        "description": "&nbsp; Kettinglengte: 50cm met verstelbaar stukje vanaf 45cm Godin hanger: 29mm (inclusief haakje aan bovenkant) Gewicht: 6.71g Materiaal: Sterling zilver* * Hanger is gerecycled sterling zilver, ketting is niet gerecycled. Ter ere van de bloei van de Shala-boom, overvloed en nieuw leven, wordt deze oude boomgod, haar arm om zijn tak gedrapeerd, vaak gevonden om de muren en pilaren van heilige tempels in heel India te verlevendigen. Deze verleidelijke hanger viert de schoonheid van de vrouwelijke vorm, moeder aarde, hun kracht, potentieel en de onderlinge verbondenheid tussen hen.",
+        "shortDescription": "&nbsp; Kettinglengte: 50cm met verstelbaar stukje vanaf 45cm Godin hanger: 29mm (inclusief haakje aan bovenkant) Gewicht: 6.71g Materiaal: Sterling zilver* * Hanger is gerecycled sterling zilver, kett...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Loft and Daughter",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Zilver",
+        "material": "Zilver/Zilver, gerecycled",
+        "originalPrice": 55.5,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.086Z",
+        "updatedAt": "2025-10-18T14:24:24.086Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "women"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
+        "confidence": 0.925,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "loft and daughter dames vegan ketting met shala hanger zilver loft and daughter duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus &nbsp; kettinglengte: 50cm met verstelbaar stukje vanaf 45cm godin hanger: 29mm (inclusief haakje aan bovenkant) gewicht: 6.71g materiaal: sterling zilver* * hanger is gerecycled sterling zilver, kett",
+      "canonicalKey": "loft and daughter|loft and daughter dames vegan ketting met shala hanger zilver"
+    },
+    {
+      "id": "coolblue:24072:42247663683",
       "source": "coolblue",
       "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "Jyoti Fair Works dames vegan Ring Patthar Zilver",
-      "description": "Glanzende ring met drie messing platen in organische, onregelmatige vormen. Materiaal : gerecycled zilver Afmetingen : Breedte: 1,5 mm, Grootte: 1 x 2,7 cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
+      "title": "Jyoti Fair Works dames vegan Ring Mota Zilver",
+      "description": "Opvallende, brede ring met glanzend oppervlak. Materiaal : gerecycled zilver Afmetingen : Breedte: 1cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
       "brand": "Jyoti Fair Works",
-      "price": 58.65,
+      "price": 51.75,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_92971.jpg"],
-      "url": "https://www.awin1.com/pclick.php?p=41853191506&a=2566111&m=24072",
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_93002.jpg"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=42247663683&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
-      "gtin": "92971",
-      "mpn": "92971-52",
-      "sku": "41853191506",
+      "gtin": "93002",
+      "mpn": "93002-52",
+      "sku": "42247663683",
       "inStock": true,
       "condition": "new",
       "shippingCost": 5.95,
       "deliveryDays": 3,
       "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=41853191506&a=2566111&m=24072",
-        "product_name": "Jyoti Fair Works dames vegan Ring Patthar Zilver",
-        "aw_product_id": "41853191506",
-        "merchant_product_id": "92971-52",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_92971.jpg",
-        "description": "Glanzende ring met drie messing platen in organische, onregelmatige vormen. Materiaal : gerecycled zilver Afmetingen : Breedte: 1,5 mm, Grootte: 1 x 2,7 cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
+        "aw_deep_link": "https://www.awin1.com/pclick.php?p=42247663683&a=2566111&m=24072",
+        "product_name": "Jyoti Fair Works dames vegan Ring Mota Zilver",
+        "aw_product_id": "42247663683",
+        "merchant_product_id": "93002-52",
+        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_93002.jpg",
+        "description": "Opvallende, brede ring met glanzend oppervlak. Materiaal : gerecycled zilver Afmetingen : Breedte: 1cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
         "merchant_category": "Dames",
-        "search_price": "58.65",
+        "search_price": "51.75",
         "merchant_name": "Shop Like You Give A Damn - NL & BE",
         "merchant_id": "24072",
         "category_name": "Women's Clothing",
         "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_92971.jpg&feedId=59157&k=0d067e8ff53df817a803fd1dcae81402b0752850",
+        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_93002.jpg&feedId=59157&k=0ef972c8a796da40ba98154cd5a227b73fca5a49",
         "currency": "EUR",
         "store_price": "",
         "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/ring-patthar-zilver/p-92971",
+        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/ring-mota-zilver/p-93002",
         "language": "",
         "last_updated": "",
-        "display_price": "EUR58.65",
+        "display_price": "EUR51.75",
         "data_feed_id": "59157",
         "brand_name": "Jyoti Fair Works",
         "brand_id": "",
@@ -485,8 +656,8 @@
         "size_stock_amount": "",
         "merchant_thumb_url": "",
         "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_222931387.jpg",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_92971.jpg&feedId=59157&k=0d067e8ff53df817a803fd1dcae81402b0752850",
+        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_222931560.jpg",
+        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_93002.jpg&feedId=59157&k=0ef972c8a796da40ba98154cd5a227b73fca5a49",
         "alternate_image_two": "",
         "alternate_image_three": "",
         "alternate_image_four": "",
@@ -494,7 +665,7 @@
         "average_rating": "",
         "rating": "",
         "number_available": "",
-        "custom_1": "",
+        "custom_1": "populair",
         "custom_2": "cheap",
         "custom_3": "20.00%",
         "custom_4": "adult",
@@ -503,11 +674,11 @@
         "custom_7": "",
         "custom_8": "",
         "custom_9": "",
-        "ean": "92971",
+        "ean": "93002",
         "isbn": "",
         "upc": "",
         "mpn": "",
-        "parent_product_id": "92971",
+        "parent_product_id": "93002",
         "product_GTIN": "",
         "basket_link": "",
         "Fashion:suitable_for": "female",
@@ -518,18 +689,99 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
-        "category": "duurzaam",
+        "audience": [
+          "women"
+        ],
+        "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for duurzaam"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
-      "searchText": "jyoti fair works dames vegan ring patthar zilver jyoti fair works dames glanzende ring met drie messing platen in organische, onregelmatige vormen. materiaal : gerecycled zilver afmetingen : breedte: 1,5 mm, grootte: 1 x 2,7 cm zorg na verloop van tijd kan het oppervlak v",
-      "canonicalKey": "jyoti fair works|jyoti fair works dames vegan ring patthar zilver"
+      "searchText": "jyoti fair works dames vegan ring mota zilver jyoti fair works dames opvallende, brede ring met glanzend oppervlak. materiaal : gerecycled zilver afmetingen : breedte: 1cm zorg na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden.",
+      "canonicalKey": "jyoti fair works|jyoti fair works dames vegan ring mota zilver"
+    },
+    {
+      "id": "slygad:shop-like-you-give-a-damn:35056265607",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "TAJ dames vegan Necklace Chessa Goud",
+      "description": "Subtiele basic ketting gemaakt van gerecycled goud.&nbsp; Draag met andere kettingen, of hang er een bedel naar keuze aan. DETAILS Fair gemaakt op Bali Gerecycled goud &nbsp; &nbsp;",
+      "brand": "TAJ",
+      "price": 67,
+      "currency": "EUR",
+      "originalPrice": 67,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_21019.jpg&feedId=65481&k=d5d372e22e50788d341e8eb576d50e1ed506bb44"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=35056265607&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "35056265607",
+      "sku": "35056265607",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "35056265607",
+        "name": "TAJ dames vegan Necklace Chessa Goud",
+        "price": 67,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_21019.jpg&feedId=65481&k=d5d372e22e50788d341e8eb576d50e1ed506bb44",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_21019.jpg&feedId=65481&k=d5d372e22e50788d341e8eb576d50e1ed506bb44",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=35056265607&a=2566111&m=24072",
+        "description": "Subtiele basic ketting gemaakt van gerecycled goud.&nbsp; Draag met andere kettingen, of hang er een bedel naar keuze aan. DETAILS Fair gemaakt op Bali Gerecycled goud &nbsp; &nbsp;",
+        "shortDescription": "Subtiele basic ketting gemaakt van gerecycled goud.&nbsp; Draag met andere kettingen, of hang er een bedel naar keuze aan. DETAILS Fair gemaakt op Bali Gerecycled goud &nbsp; &nbsp;...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "TAJ",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Goud",
+        "material": "Goud, gerecycled",
+        "originalPrice": 67,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.087Z",
+        "updatedAt": "2025-10-18T14:24:24.087Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "women"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
+        "confidence": 0.925,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "taj dames vegan necklace chessa goud taj duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus subtiele basic ketting gemaakt van gerecycled goud.&nbsp; draag met andere kettingen, of hang er een bedel naar keuze aan. details fair gemaakt op bali gerecycled goud &nbsp; &nbsp;",
+      "canonicalKey": "taj|taj dames vegan necklace chessa goud"
     },
     {
       "id": "coolblue:24072:41853196497",
@@ -649,149 +901,27 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.825,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 1 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 1 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
       "searchText": "les reines dames vegan ketting regal serpent 24k goud verguld les reines dames de kronkelende gratie. ketting van 24-karaats verguld goud. als een elegant ontwerp van 'italian chain'. de kunst van verfijning, evenwicht dat in u huist, u in staat stelt uw koninklijke essence te o",
       "canonicalKey": "les reines|les reines dames vegan ketting regal serpent 24k goud verguld"
-    },
-    {
-      "id": "coolblue:24072:41853177255",
-      "source": "coolblue",
-      "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "Bound Studios dames vegan Ring Jada Verguld 18k Goud",
-      "description": "DE JADA RING - VERGULD Volledig gemaakt van gerecyclede materialen! - Drievoudige ring&nbsp; - gerecycled sterling zilver met gerecycled gouden bovenlaag - 18k verguld- 3 micron - Geweldig om te mixen en matchen - Nikkelvrij - allergeenvrij - Europees gemaakt",
-      "brand": "Bound Studios",
-      "price": 70,
-      "currency": "EUR",
-      "originalPrice": 135,
-      "images": [
-        "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_255141291(2)_cropped.jpg"
-      ],
-      "url": "https://www.awin1.com/pclick.php?p=41853177255&a=2566111&m=24072",
-      "categoryPath": "Dames",
-      "googleProductCategory": "Women's Clothing",
-      "gtin": "44918",
-      "mpn": "44918-5 - 15 mm - J - 49 - 15.5",
-      "sku": "41853177255",
-      "inStock": true,
-      "condition": "new",
-      "shippingCost": 5.95,
-      "deliveryDays": 1,
-      "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=41853177255&a=2566111&m=24072",
-        "product_name": "Bound Studios dames vegan Ring Jada Verguld 18k Goud",
-        "aw_product_id": "41853177255",
-        "merchant_product_id": "44918-5 - 15 mm - J - 49 - 15.5",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_255141291(2)_cropped.jpg",
-        "description": "DE JADA RING - VERGULD Volledig gemaakt van gerecyclede materialen! - Drievoudige ring&nbsp; - gerecycled sterling zilver met gerecycled gouden bovenlaag - 18k verguld- 3 micron - Geweldig om te mixen en matchen - Nikkelvrij - allergeenvrij - Europees gemaakt",
-        "merchant_category": "Dames",
-        "search_price": "70.00",
-        "merchant_name": "Shop Like You Give A Damn - NL & BE",
-        "merchant_id": "24072",
-        "category_name": "Women's Clothing",
-        "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_255141291%282%29_cropped.jpg&feedId=59157&k=df695adeebd01d5f7772cb6a3b42843d432ab616",
-        "currency": "EUR",
-        "store_price": "",
-        "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/ring-jada-verguld-18k-goud/p-44918",
-        "language": "",
-        "last_updated": "",
-        "display_price": "EUR70.00",
-        "data_feed_id": "59157",
-        "brand_name": "Bound Studios",
-        "brand_id": "",
-        "colour": "Goud",
-        "product_short_description": "",
-        "specifications": "",
-        "condition": "new",
-        "product_model": "",
-        "model_number": "",
-        "dimensions": "",
-        "keywords": "",
-        "promotional_text": "",
-        "product_type": "",
-        "commission_group": "",
-        "merchant_product_category_path": "",
-        "merchant_product_second_category": "Sieraden",
-        "merchant_product_third_category": "Ringen",
-        "rrp_price": "",
-        "saving": "",
-        "savings_percent": "",
-        "base_price": "",
-        "base_price_amount": "",
-        "base_price_text": "",
-        "product_price_old": "135,00 EUR",
-        "delivery_restrictions": "",
-        "delivery_weight": "",
-        "warranty": "",
-        "terms_of_contract": "",
-        "delivery_time": "1 tot 3 werkdagen",
-        "in_stock": "1",
-        "stock_quantity": "",
-        "valid_from": "",
-        "valid_to": "",
-        "is_for_sale": "1",
-        "web_offer": "",
-        "pre_order": "",
-        "stock_status": "",
-        "size_stock_status": "",
-        "size_stock_amount": "",
-        "merchant_thumb_url": "",
-        "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_255141291.png",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_ProductPropertyID_255141291%282%29_cropped.jpg&feedId=59157&k=df695adeebd01d5f7772cb6a3b42843d432ab616",
-        "alternate_image_two": "",
-        "alternate_image_three": "",
-        "alternate_image_four": "",
-        "reviews": "",
-        "average_rating": "",
-        "rating": "",
-        "number_available": "",
-        "custom_1": "populair",
-        "custom_2": "",
-        "custom_3": "25.00%",
-        "custom_4": "adult",
-        "custom_5": "",
-        "custom_6": "",
-        "custom_7": "",
-        "custom_8": "",
-        "custom_9": "",
-        "ean": "44918",
-        "isbn": "",
-        "upc": "",
-        "mpn": "",
-        "parent_product_id": "44918",
-        "product_GTIN": "",
-        "basket_link": "",
-        "Fashion:suitable_for": "female",
-        "Fashion:category": "",
-        "Fashion:size": "5 - 15 mm - J - 49 - 15.5",
-        "Fashion:material": "Gerecycled zilver/Goud, gerecycled/Zilver, gerecycled",
-        "Fashion:pattern": "",
-        "Fashion:swatch": ""
-      },
-      "facets": {
-        "audience": ["women"],
-        "category": "duurzaam",
-        "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": [],
-        "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for duurzaam"],
-        "needsReview": false,
-        "isGiftable": true
-      },
-      "searchText": "bound studios dames vegan ring jada verguld 18k goud bound studios dames de jada ring - verguld volledig gemaakt van gerecyclede materialen! - drievoudige ring&nbsp; - gerecycled sterling zilver met gerecycled gouden bovenlaag - 18k verguld- 3 micron - geweldig om te mixen",
-      "canonicalKey": "bound studios|bound studios dames vegan ring jada verguld 18k goud"
     },
     {
       "id": "coolblue:24072:41853208218",
@@ -911,18 +1041,99 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
       "searchText": "amadeus dames vegan creolen eden goud & amethist amadeus dames eden gouden creolen met amethistbedel onze bestverkochte duurzame creolen voor elke dag met een vleugje kleur. deze oorbellen zijn handgemaakt en creren een flatterende lichtkrans rond je gezicht. 18",
       "canonicalKey": "amadeus|amadeus dames vegan creolen eden goud amethist"
+    },
+    {
+      "id": "slygad:shop-like-you-give-a-damn:34458239547",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Nouare Jewelry dames vegan Choker Ketting Figaro Verguld",
+      "description": "Indo-choker is de perfecte ketting om toe te voegen aan je &quot;gelaagde kettinggame&quot; of gewoon om op zichzelf te dragen. Gerecycled sterling zilveren ketting of 18krt goud gevuld Handgemaakt, elk stuk is uniek in zijn soort nikkel- en loodvrij, dus geschikt voor de gevoelige huid. Geleverd met een katoenen zakje NOUARE.",
+      "brand": "Nouare Jewelry",
+      "price": 58.5,
+      "currency": "EUR",
+      "originalPrice": 58.5,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_35179_cropped.jpg&feedId=65481&k=53c7d0c43a5a9db9e2754ba7caac80a1cf5023bf"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=34458239547&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "34458239547",
+      "sku": "34458239547",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "34458239547",
+        "name": "Nouare Jewelry dames vegan Choker Ketting Figaro Verguld",
+        "price": 58.5,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_35179_cropped.jpg&feedId=65481&k=53c7d0c43a5a9db9e2754ba7caac80a1cf5023bf",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_35179_cropped.jpg&feedId=65481&k=53c7d0c43a5a9db9e2754ba7caac80a1cf5023bf",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=34458239547&a=2566111&m=24072",
+        "description": "Indo-choker is de perfecte ketting om toe te voegen aan je &quot;gelaagde kettinggame&quot; of gewoon om op zichzelf te dragen. Gerecycled sterling zilveren ketting of 18krt goud gevuld Handgemaakt, elk stuk is uniek in zijn soort nikkel- en loodvrij, dus geschikt voor de gevoelige huid. Geleverd met een katoenen zakje NOUARE.",
+        "shortDescription": "Indo-choker is de perfecte ketting om toe te voegen aan je &quot;gelaagde kettinggame&quot; of gewoon om op zichzelf te dragen. Gerecycled sterling zilveren ketting of 18krt goud gevuld Handgemaakt, e...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Nouare Jewelry",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Goud",
+        "material": "Goud, gerecycled/Zilver, gerecycled",
+        "originalPrice": 58.5,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.086Z",
+        "updatedAt": "2025-10-18T14:24:24.086Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "women"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
+        "confidence": 0.925,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "nouare jewelry dames vegan choker ketting figaro verguld nouare jewelry duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus indo-choker is de perfecte ketting om toe te voegen aan je &quot;gelaagde kettinggame&quot; of gewoon om op zichzelf te dragen. gerecycled sterling zilveren ketting of 18krt goud gevuld handgemaakt, e",
+      "canonicalKey": "nouare jewelry|nouare jewelry dames vegan choker ketting figaro verguld"
     },
     {
       "id": "coolblue:24072:41853188833",
@@ -934,7 +1145,9 @@
       "price": 79,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_91357_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_91357_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41853188833&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1040,13 +1253,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 3 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 3 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1054,47 +1274,123 @@
       "canonicalKey": "fejn|fejn dames vegan ketting effen goud"
     },
     {
-      "id": "coolblue:24072:42247663683",
+      "id": "slygad:shop-like-you-give-a-damn:37130248734",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Bound Studios dames vegan Ring De Panda Sterling Zilver",
+      "description": "DE PANDA-RING Volledig gemaakt van gerecyclede materialen! - Bamboe geinspireerde ring - 100% recycled sterling zilver - Gerhodineerd - Nikkelvrij - Allergeenvrij - Gemaakt in Europa",
+      "brand": "Bound Studios",
+      "price": 60,
+      "currency": "EUR",
+      "originalPrice": 60,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_44896_cropped.png&feedId=65481&k=0bef26e088125d4cf02cf8cbabcfe416a58f8973"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=37130248734&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "37130248734",
+      "sku": "37130248734",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "37130248734",
+        "name": "Bound Studios dames vegan Ring De Panda Sterling Zilver",
+        "price": 60,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_44896_cropped.png&feedId=65481&k=0bef26e088125d4cf02cf8cbabcfe416a58f8973",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_44896_cropped.png&feedId=65481&k=0bef26e088125d4cf02cf8cbabcfe416a58f8973",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=37130248734&a=2566111&m=24072",
+        "description": "DE PANDA-RING Volledig gemaakt van gerecyclede materialen! - Bamboe geinspireerde ring - 100% recycled sterling zilver - Gerhodineerd - Nikkelvrij - Allergeenvrij - Gemaakt in Europa",
+        "shortDescription": "DE PANDA-RING Volledig gemaakt van gerecyclede materialen! - Bamboe geinspireerde ring - 100% recycled sterling zilver - Gerhodineerd - Nikkelvrij - Allergeenvrij - Gemaakt in Europa...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Bound Studios",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Zilver",
+        "material": "Bamboe/Zilver, gerecycled",
+        "originalPrice": 60,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.086Z",
+        "updatedAt": "2025-10-18T14:24:24.086Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "women"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
+        "confidence": 0.925,
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "bound studios dames vegan ring de panda sterling zilver bound studios duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus de panda-ring volledig gemaakt van gerecyclede materialen! - bamboe geinspireerde ring - 100% recycled sterling zilver - gerhodineerd - nikkelvrij - allergeenvrij - gemaakt in europa",
+      "canonicalKey": "bound studios|bound studios dames vegan ring de panda sterling zilver"
+    },
+    {
+      "id": "coolblue:24072:41853191506",
       "source": "coolblue",
       "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "Jyoti Fair Works dames vegan Ring Mota Zilver",
-      "description": "Opvallende, brede ring met glanzend oppervlak. Materiaal : gerecycled zilver Afmetingen : Breedte: 1cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
+      "title": "Jyoti Fair Works dames vegan Ring Patthar Zilver",
+      "description": "Glanzende ring met drie messing platen in organische, onregelmatige vormen. Materiaal : gerecycled zilver Afmetingen : Breedte: 1,5 mm, Grootte: 1 x 2,7 cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
       "brand": "Jyoti Fair Works",
-      "price": 51.75,
+      "price": 58.65,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_93002.jpg"],
-      "url": "https://www.awin1.com/pclick.php?p=42247663683&a=2566111&m=24072",
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_92971.jpg"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=41853191506&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
-      "gtin": "93002",
-      "mpn": "93002-52",
-      "sku": "42247663683",
+      "gtin": "92971",
+      "mpn": "92971-52",
+      "sku": "41853191506",
       "inStock": true,
       "condition": "new",
       "shippingCost": 5.95,
       "deliveryDays": 3,
       "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=42247663683&a=2566111&m=24072",
-        "product_name": "Jyoti Fair Works dames vegan Ring Mota Zilver",
-        "aw_product_id": "42247663683",
-        "merchant_product_id": "93002-52",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_93002.jpg",
-        "description": "Opvallende, brede ring met glanzend oppervlak. Materiaal : gerecycled zilver Afmetingen : Breedte: 1cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
+        "aw_deep_link": "https://www.awin1.com/pclick.php?p=41853191506&a=2566111&m=24072",
+        "product_name": "Jyoti Fair Works dames vegan Ring Patthar Zilver",
+        "aw_product_id": "41853191506",
+        "merchant_product_id": "92971-52",
+        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_92971.jpg",
+        "description": "Glanzende ring met drie messing platen in organische, onregelmatige vormen. Materiaal : gerecycled zilver Afmetingen : Breedte: 1,5 mm, Grootte: 1 x 2,7 cm Zorg Na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden. Als u wilt dat het weer glanst zoals in het begin, hoeft u het alleen maar zachtjes te wrijven met een zilverpoetsdoek.",
         "merchant_category": "Dames",
-        "search_price": "51.75",
+        "search_price": "58.65",
         "merchant_name": "Shop Like You Give A Damn - NL & BE",
         "merchant_id": "24072",
         "category_name": "Women's Clothing",
         "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_93002.jpg&feedId=59157&k=0ef972c8a796da40ba98154cd5a227b73fca5a49",
+        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_92971.jpg&feedId=59157&k=0d067e8ff53df817a803fd1dcae81402b0752850",
         "currency": "EUR",
         "store_price": "",
         "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/ring-mota-zilver/p-93002",
+        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/ring-patthar-zilver/p-92971",
         "language": "",
         "last_updated": "",
-        "display_price": "EUR51.75",
+        "display_price": "EUR58.65",
         "data_feed_id": "59157",
         "brand_name": "Jyoti Fair Works",
         "brand_id": "",
@@ -1136,8 +1432,8 @@
         "size_stock_amount": "",
         "merchant_thumb_url": "",
         "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_222931560.jpg",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_93002.jpg&feedId=59157&k=0ef972c8a796da40ba98154cd5a227b73fca5a49",
+        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_222931387.jpg",
+        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_92971.jpg&feedId=59157&k=0d067e8ff53df817a803fd1dcae81402b0752850",
         "alternate_image_two": "",
         "alternate_image_three": "",
         "alternate_image_four": "",
@@ -1145,7 +1441,7 @@
         "average_rating": "",
         "rating": "",
         "number_available": "",
-        "custom_1": "populair",
+        "custom_1": "",
         "custom_2": "cheap",
         "custom_3": "20.00%",
         "custom_4": "adult",
@@ -1154,11 +1450,11 @@
         "custom_7": "",
         "custom_8": "",
         "custom_9": "",
-        "ean": "93002",
+        "ean": "92971",
         "isbn": "",
         "upc": "",
         "mpn": "",
-        "parent_product_id": "93002",
+        "parent_product_id": "92971",
         "product_GTIN": "",
         "basket_link": "",
         "Fashion:suitable_for": "female",
@@ -1169,27 +1465,115 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
-        "category": "sieraden",
+        "audience": [
+          "women"
+        ],
+        "category": "duurzaam",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for duurzaam"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
-      "searchText": "jyoti fair works dames vegan ring mota zilver jyoti fair works dames opvallende, brede ring met glanzend oppervlak. materiaal : gerecycled zilver afmetingen : breedte: 1cm zorg na verloop van tijd kan het oppervlak van het sieraad doffer en soms zelfs donkerder worden.",
-      "canonicalKey": "jyoti fair works|jyoti fair works dames vegan ring mota zilver"
+      "searchText": "jyoti fair works dames vegan ring patthar zilver jyoti fair works dames glanzende ring met drie messing platen in organische, onregelmatige vormen. materiaal : gerecycled zilver afmetingen : breedte: 1,5 mm, grootte: 1 x 2,7 cm zorg na verloop van tijd kan het oppervlak v",
+      "canonicalKey": "jyoti fair works|jyoti fair works dames vegan ring patthar zilver"
+    },
+    {
+      "id": "slygad:shop-like-you-give-a-damn:36010722016",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Loft and Daughter dames vegan Ketting Baby Lakshmi Zilver",
+      "description": "~ Prelude ~ Lakshmi, de stralende godin van rijkdom en welvaart, leverancier van spirituele en materi&euml;le overvloed, beschermer van slechte gezondheid en tegenspoed, wordt gevierd in deze op antiek ge&iuml;nspireerde munthanger. Het kleine zusje van onze bestverkochte Lakshmi-hanger; sierlijker van formaat met een elegante langwerpige beugel. Stylingtip; Hanger kan op onze Arambol Pearls worden geschoven als je op zoek bent naar een andere look :) ~ Details ~ Kettinglengte: Totale lengte 46cm met verstelling vanaf 41cm. Afmetingen hanger: ongeveer 12 mm x 21 mm (inclusief bovenkant van de borgtocht) Materiaal: Gerecycled sterling zilveren hanger aan een sterling zilveren ketting. ~ Sociale impact ~ De Baby Lakshmi-hanger is zorgvuldig vervaardigd door een klein team van gemarginaliseerde ambachtslieden die zijn verdreven uit West-Bengalen. Ze zijn gecertificeerd door de World Fair Trade Organization. Elk stuk is verpakt in een zacht biologisch zakje, dat liefdevol is gemaakt door enkele van de meest kwetsbare vrouwen van Jaipur, die hun leven verbeteren door de inkomsten uit het blokprinten, het maken van kwastjes en het naaien van deze zakjes. Geen twee zijn hetzelfde, elk mooi in zijn onvolkomenheden.",
+      "brand": "Loft and Daughter",
+      "price": 76,
+      "currency": "EUR",
+      "originalPrice": 76,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_47801_cropped.jpg&feedId=65481&k=8f27334e7e4803ffe986daf90f9a3b164ddb6a0c"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=36010722016&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "36010722016",
+      "sku": "36010722016",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "36010722016",
+        "name": "Loft and Daughter dames vegan Ketting Baby Lakshmi Zilver",
+        "price": 76,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_47801_cropped.jpg&feedId=65481&k=8f27334e7e4803ffe986daf90f9a3b164ddb6a0c",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_47801_cropped.jpg&feedId=65481&k=8f27334e7e4803ffe986daf90f9a3b164ddb6a0c",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=36010722016&a=2566111&m=24072",
+        "description": "~ Prelude ~ Lakshmi, de stralende godin van rijkdom en welvaart, leverancier van spirituele en materi&euml;le overvloed, beschermer van slechte gezondheid en tegenspoed, wordt gevierd in deze op antiek ge&iuml;nspireerde munthanger. Het kleine zusje van onze bestverkochte Lakshmi-hanger; sierlijker van formaat met een elegante langwerpige beugel. Stylingtip; Hanger kan op onze Arambol Pearls worden geschoven als je op zoek bent naar een andere look :) ~ Details ~ Kettinglengte: Totale lengte 46cm met verstelling vanaf 41cm. Afmetingen hanger: ongeveer 12 mm x 21 mm (inclusief bovenkant van de borgtocht) Materiaal: Gerecycled sterling zilveren hanger aan een sterling zilveren ketting. ~ Sociale impact ~ De Baby Lakshmi-hanger is zorgvuldig vervaardigd door een klein team van gemarginaliseerde ambachtslieden die zijn verdreven uit West-Bengalen. Ze zijn gecertificeerd door de World Fair Trade Organization. Elk stuk is verpakt in een zacht biologisch zakje, dat liefdevol is gemaakt door enkele van de meest kwetsbare vrouwen van Jaipur, die hun leven verbeteren door de inkomsten uit het blokprinten, het maken van kwastjes en het naaien van deze zakjes. Geen twee zijn hetzelfde, elk mooi in zijn onvolkomenheden.",
+        "shortDescription": "~ Prelude ~ Lakshmi, de stralende godin van rijkdom en welvaart, leverancier van spirituele en materi&euml;le overvloed, beschermer van slechte gezondheid en tegenspoed, wordt gevierd in deze op antie...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Loft and Daughter",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Zilver",
+        "material": "Zilver, gerecycled",
+        "originalPrice": 76,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.086Z",
+        "updatedAt": "2025-10-18T14:24:24.086Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "women",
+          "baby"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "fitness",
+          "kunst"
+        ],
+        "confidence": 0.8500000000000001,
+        "reasons": [
+          "Title contains women keyword",
+          "Title contains baby keyword",
+          "Matched 2 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "loft and daughter dames vegan ketting baby lakshmi zilver loft and daughter duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus ~ prelude ~ lakshmi, de stralende godin van rijkdom en welvaart, leverancier van spirituele en materi&euml;le overvloed, beschermer van slechte gezondheid en tegenspoed, wordt gevierd in deze op antie",
+      "canonicalKey": "loft and daughter|loft and daughter dames vegan ketting baby lakshmi zilver"
     }
   ],
   "stats": {
-    "uniqueBrands": 5,
+    "uniqueBrands": 8,
     "uniqueCategories": 2,
-    "averagePrice": 77.15555555555555,
-    "priceRange": [51.75, 100],
+    "averagePrice": 72.92142857142856,
+    "priceRange": [
+      51.75,
+      100
+    ],
     "confidenceDistribution": {
-      "high (>0.8)": 9,
+      "high (>0.8)": 14,
       "medium (0.5-0.8)": 0,
       "low (<0.5)": 0
     }

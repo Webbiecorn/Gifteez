@@ -30,7 +30,6 @@ export type Page =
   | 'notFound'
   | 'error'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type NavigateTo = (_page: Page, _data?: any) => void
 
 export type ToastVariant = 'default' | 'success' | 'info' | 'warning' | 'error'
@@ -184,6 +183,7 @@ export interface ImageBlock {
 
 export type ContentBlock =
   | { type: 'heading'; content: string }
+  | { type: 'subheading'; content: string }
   | { type: 'paragraph'; content: string }
   | { type: 'gift'; content: Gift }
   | ImageBlock
@@ -193,10 +193,15 @@ export type ContentBlock =
   | FAQBlock
 
 export interface BlogPost {
+  id?: string
   slug: string
   title: string
+  subtitle?: string
   excerpt: string
   imageUrl: string
+  heroImage?: string
+  readTime?: string
+  featured?: boolean
   category: string
   author: Author
   publishedDate: string

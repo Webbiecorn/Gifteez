@@ -11,7 +11,7 @@ Voorkomt dubbele producten, zorgt voor goede doelgroep-matching (geen herenrieme
 Dit systeem zit als laag tussen je **ruwe product feeds** en je **cadeau-gidsen**:
 
 ```
-Feed (AWIN/Coolblue/Bol) 
+Feed (AWIN/Coolblue/Bol)
   → Normalize (uniform model)
   → Classify (audience, category, price bucket)
   → Deduplicate (geen varianten)
@@ -78,6 +78,7 @@ data/feeds/
 Bewerk `data/taxonomy/keywords.yaml` voor jouw specifieke trefwoorden.
 
 **Voorbeeld: extra categorie toevoegen**
+
 ```yaml
 categories:
   dieren:
@@ -95,6 +96,7 @@ node scripts/build-programmatic-indices.mts
 ```
 
 Of voeg toe aan `package.json`:
+
 ```json
 {
   "scripts": {
@@ -115,8 +117,8 @@ function CadeauGidsPage({ slug }: { slug: string }) {
 
   useEffect(() => {
     fetch(`/programmatic/${slug}.json`)
-      .then(r => r.json())
-      .then(data => setIndex(data))
+      .then((r) => r.json())
+      .then((data) => setIndex(data))
   }, [slug])
 
   if (!index) return <div>Loading...</div>
@@ -125,9 +127,9 @@ function CadeauGidsPage({ slug }: { slug: string }) {
     <div>
       <h1>{index.metadata.title}</h1>
       <p>{index.metadata.description}</p>
-      
+
       <div className="products">
-        {index.products.map(product => (
+        {index.products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
@@ -149,6 +151,7 @@ function CadeauGidsPage({ slug }: { slug: string }) {
 ### Overrides toevoegen
 
 **Brand-specifieke regels** (`data/taxonomy/overrides.json`):
+
 ```json
 {
   "brands": {
@@ -166,6 +169,7 @@ function CadeauGidsPage({ slug }: { slug: string }) {
 ```
 
 **Producten uitsluiten**:
+
 ```json
 {
   "exclude": {
@@ -179,6 +183,7 @@ function CadeauGidsPage({ slug }: { slug: string }) {
 ### Keywords aanpassen
 
 **Nieuwe audience toevoegen** (`data/taxonomy/keywords.yaml`):
+
 ```yaml
 audience:
   pet_lovers:
@@ -190,6 +195,7 @@ audience:
 ```
 
 Dan in `types.ts`:
+
 ```typescript
 export type Audience = 'men' | 'women' | 'unisex' | 'kids' | 'pet_lovers'
 ```
@@ -197,14 +203,15 @@ export type Audience = 'men' | 'women' | 'unisex' | 'kids' | 'pet_lovers'
 ### Diversificatie tunen
 
 In `scripts/build-programmatic-indices.mts`:
+
 ```typescript
 const diversified = diversifyMMR(filtered, {
-  maxTotal: 24,           // Totaal aantal producten
-  maxPerBrand: 2,         // Max 2 per merk
-  maxPerCategory: 8,      // Max 8 per categorie
-  maxPerPriceBucket: 10,  // Spread over prijsranges
-  diversityWeight: 0.6,   // Hoe belangrijk is variëteit?
-  popularityWeight: 0.3   // Hoe belangrijk is confidence/kwaliteit?
+  maxTotal: 24, // Totaal aantal producten
+  maxPerBrand: 2, // Max 2 per merk
+  maxPerCategory: 8, // Max 8 per categorie
+  maxPerPriceBucket: 10, // Spread over prijsranges
+  diversityWeight: 0.6, // Hoe belangrijk is variëteit?
+  popularityWeight: 0.3, // Hoe belangrijk is confidence/kwaliteit?
 })
 ```
 
@@ -215,16 +222,19 @@ const diversified = diversifyMMR(filtered, {
 ### Audience Detection (prioriteit: title > productType > description)
 
 1. **Title scan** (confidence 0.9):
+
    ```
    "Heren riem leer zwart" → audience: ['men']
    ```
 
 2. **ProductType scan** (confidence 0.7):
+
    ```
    categoryPath: "Apparel > Men > Belts" → audience: ['men']
    ```
 
 3. **Full-text scan** (confidence 0.5, needs ≥2 matches):
+
    ```
    description: "Perfect voor mannen die... heren stijl"
    → 2 keywords → audience: ['men']
@@ -235,12 +245,14 @@ const diversified = diversifyMMR(filtered, {
 ### Category Detection
 
 1. **GPC mapping** (confidence 0.85):
+
    ```
    googleProductCategory: "Apparel & Accessories > Belts"
    → gpc-mapping.json → category: 'riemen'
    ```
 
 2. **Keyword matching** (confidence 0.6-0.95):
+
    ```
    title: "Lederen portemonnee RFID"
    → matches keywords: ['portemonnee', 'wallet']
@@ -252,11 +264,12 @@ const diversified = diversifyMMR(filtered, {
 ### Deduplicatie
 
 **Canonical key** verwijdert kleur/maat varianten:
+
 ```typescript
-canonicalKey("Tommy Hilfiger Riem Bruin XL")
+canonicalKey('Tommy Hilfiger Riem Bruin XL')
 // → "tommy hilfiger|riem"
 
-canonicalKey("Tommy Hilfiger Riem Zwart M")
+canonicalKey('Tommy Hilfiger Riem Zwart M')
 // → "tommy hilfiger|riem"
 
 // ✅ Gedetecteerd als duplicaat, alleen eerste blijft
@@ -265,11 +278,13 @@ canonicalKey("Tommy Hilfiger Riem Zwart M")
 ### Diversificatie
 
 **MMR-algoritme** (Maximal Marginal Relevance):
+
 ```
 score = (0.3 × confidence) + (0.6 × diversity)
 ```
 
 Selecteert producten die:
+
 - Hoge confidence hebben (goede classificatie)
 - Verschillen van al geselecteerde producten (ander merk/categorie)
 - Binnen caps blijven (max 2 per merk)
@@ -283,14 +298,16 @@ Selecteert producten die:
 **Oorzaak**: Zwakke keywords of verkeerde feed data.
 
 **Fix 1**: Controleer keywords
+
 ```yaml
 audience:
   men:
     - heren
-    - man      # ← Ontbreekt dit?
+    - man # ← Ontbreekt dit?
 ```
 
 **Fix 2**: Brand override
+
 ```json
 {
   "brands": {
@@ -303,6 +320,7 @@ audience:
 ```
 
 **Fix 3**: Filter in page config
+
 ```typescript
 // In data/programmatic/index.ts
 {
@@ -317,6 +335,7 @@ audience:
 ### Probleem: "Te weinig producten na classificatie"
 
 **Diagnose**:
+
 ```bash
 node scripts/build-programmatic-indices.mts
 # Kijk naar output:
@@ -326,22 +345,26 @@ node scripts/build-programmatic-indices.mts
 ```
 
 **Fix**: Verlaag caps
+
 ```typescript
 diversifyMMR(filtered, {
-  maxPerBrand: 3,        // Was 2 → nu 3
-  maxPerCategory: 12,    // Was 8 → nu 12
+  maxPerBrand: 3, // Was 2 → nu 3
+  maxPerCategory: 12, // Was 8 → nu 12
 })
 ```
 
 ### Probleem: "Build script crasht"
 
 **Check**:
+
 1. Zijn feed files aanwezig?
+
    ```bash
    ls data/feeds/
    ```
 
 2. Is YAML syntax correct?
+
    ```bash
    npx js-yaml data/taxonomy/keywords.yaml
    ```
@@ -396,7 +419,7 @@ Elk JSON bestand (`public/programmatic/{slug}.json`):
   "stats": {
     "uniqueBrands": 18,
     "uniqueCategories": 5,
-    "averagePrice": 38.50,
+    "averagePrice": 38.5,
     "priceRange": [15.99, 49.99],
     "confidenceDistribution": {
       "high (>0.8)": 20,
@@ -414,36 +437,37 @@ Elk JSON bestand (`public/programmatic/{slug}.json`):
 ### GitHub Actions
 
 `.github/workflows/build-indices.yml`:
+
 ```yaml
 name: Build Product Indices
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Dagelijks om 2:00
-  workflow_dispatch:      # Handmatig trigger
+    - cron: '0 2 * * *' # Dagelijks om 2:00
+  workflow_dispatch: # Handmatig trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Download feeds
         run: |
           # Download AWIN/Coolblue feeds via API/FTP
           # curl ... > data/feeds/awin-feed.csv
-      
+
       - name: Build indices
         run: npm run build:indices
-      
+
       - name: Commit updated indices
         run: |
           git config user.name "GitHub Actions"
@@ -479,7 +503,7 @@ const overridesRef = collection(db, 'classifier-overrides')
 await setDoc(doc(overridesRef, product.id), {
   audience: ['women'],
   reason: 'Manual correction by admin',
-  timestamp: serverTimestamp()
+  timestamp: serverTimestamp(),
 })
 ```
 
@@ -490,7 +514,7 @@ await setDoc(doc(overridesRef, product.id), {
 await addDoc(collection(db, 'product-clicks'), {
   productId: product.id,
   routeKey: 'cadeaus/kerst-voor-hem',
-  timestamp: new Date()
+  timestamp: new Date(),
 })
 
 // Use voor popularity scoring in diversify

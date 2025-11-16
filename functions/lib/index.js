@@ -3,22 +3,27 @@ import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import * as functions from 'firebase-functions/v1';
+import { initializeApp, getApps } from 'firebase-admin/app';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { Resend } from 'resend';
 import { getItem, searchItems, isPaapiConfigured } from './amazon.js';
 // Export email functions
-export { onNewsletterSubscribe, sendNewsletterCampaign, sendGiftFinderResults, onContactFormSubmit } from './email.js';
+export { onNewsletterSubscribe, sendNewsletterCampaign, sendGiftFinderResults, onContactFormSubmit, } from './email.js';
 const cache = new Map();
 const TTL_MS = 1000 * 60 * 60; // 1 hour
+const adminApp = getApps().length ? getApps()[0] : initializeApp();
+const firestore = getFirestore(adminApp);
+const COLLECTION_EVENTS = 'productPerformanceEvents';
 function getCache(key) {
     const now = Date.now();
-    const ent = cache.get(key);
-    if (!ent)
+    const entry = cache.get(key);
+    if (!entry)
         return null;
-    if (ent.expiresAt < now) {
+    if (entry.expiresAt < now) {
         cache.delete(key);
         return null;
     }
-    return ent.value;
+    return entry.value;
 }
 function setCache(key, value, ttlMs = TTL_MS) {
     cache.set(key, { value, expiresAt: Date.now() + ttlMs });
@@ -80,8 +85,8 @@ app.post('/api/contact', async (req, res) => {
         }
         // Validate fields
         const errors = {};
-        function reqStr(v) {
-            return typeof v === 'string' ? v.trim() : '';
+        function reqStr(value) {
+            return typeof value === 'string' ? value.trim() : '';
         }
         const vName = reqStr(name);
         const vEmail = reqStr(email);
@@ -117,8 +122,8 @@ app.post('/api/contact', async (req, res) => {
         });
         res.json({ ok: true });
     }
-    catch (e) {
-        console.error('contact_error', e);
+    catch (error) {
+        console.error('contact_error', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
@@ -149,8 +154,9 @@ app.get('/api/amazon-search', async (req, res) => {
         res.set('Cache-Control', 'public, max-age=300');
         res.json(data);
     }
-    catch (e) {
-        res.status(500).json({ error: e?.message || 'Unknown error' });
+    catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        res.status(500).json({ error: message });
     }
 });
 app.get('/api/amazon-item/:asin', async (req, res) => {
@@ -172,8 +178,36 @@ app.get('/api/amazon-item/:asin', async (req, res) => {
         res.set('Cache-Control', 'public, max-age=600');
         res.json(data);
     }
-    catch (e) {
-        res.status(500).json({ error: e?.message || 'Unknown error' });
+    catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        res.status(500).json({ error: message });
+    }
+});
+app.get('/api/performance/source', async (req, res) => {
+    try {
+        const daysParam = Number(req.query.days);
+        const normalizedDays = Number.isFinite(daysParam)
+            ? Math.min(Math.max(Math.round(daysParam), 1), 90)
+            : 7;
+        const cacheKey = `perf_source:${normalizedDays}`;
+        const cached = getCache(cacheKey);
+        if (cached) {
+            res.set('Cache-Control', 'public, max-age=60');
+            return res.json({ ...cached, cached: true });
+        }
+        const rows = await fetchSourcePerformance(normalizedDays);
+        const payload = {
+            days: normalizedDays,
+            generatedAt: new Date().toISOString(),
+            rows,
+        };
+        setCache(cacheKey, payload, 1000 * 60 * 5);
+        res.set('Cache-Control', 'public, max-age=60');
+        res.json(payload);
+    }
+    catch (error) {
+        console.error('perf_source_error', error);
+        res.status(500).json({ error: 'Failed to load source performance' });
     }
 });
 // 404 fallback voor alle overige /api routes
@@ -188,4 +222,95 @@ export const api = functions.region('europe-west1').https.onRequest(app);
 // Helper to escape HTML
 function escapeHtml(str) {
     return str.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+}
+async function fetchSourcePerformance(days) {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - days);
+    const cutoffTimestamp = Timestamp.fromDate(cutoffDate);
+    const snapshot = await firestore
+        .collection(COLLECTION_EVENTS)
+        .where('timestamp', '>=', cutoffTimestamp)
+        .orderBy('timestamp', 'desc')
+        .get();
+    const buckets = new Map();
+    snapshot.forEach((doc) => {
+        const data = doc.data();
+        const sourceKey = typeof data.source === 'string' && data.source.trim().length > 0 ? data.source : 'unknown';
+        const bucket = buckets.get(sourceKey) ?? {
+            impressions: 0,
+            clicks: 0,
+            uniqueProducts: new Set(),
+        };
+        if (data.eventType === 'impression') {
+            bucket.impressions += 1;
+        }
+        else if (data.eventType === 'click') {
+            bucket.clicks += 1;
+        }
+        if (data.productId) {
+            bucket.uniqueProducts.add(String(data.productId));
+        }
+        const ts = data.timestamp?.toDate ? data.timestamp.toDate() : undefined;
+        if (ts && (!bucket.lastEvent || ts > bucket.lastEvent)) {
+            bucket.lastEvent = ts;
+        }
+        buckets.set(sourceKey, bucket);
+    });
+    return Array.from(buckets.entries())
+        .map(([sourceKey, stats]) => {
+        const parsed = parseSourceKey(sourceKey);
+        const ctr = stats.impressions > 0 ? (stats.clicks / stats.impressions) * 100 : 0;
+        return {
+            sourceKey,
+            channel: parsed.channel,
+            guideSlug: parsed.guideSlug,
+            context: parsed.context,
+            feed: parsed.feed,
+            impressions: stats.impressions,
+            clicks: stats.clicks,
+            ctr: Number(ctr.toFixed(4)),
+            uniqueProducts: stats.uniqueProducts.size,
+            lastEventISO: stats.lastEvent?.toISOString(),
+        };
+    })
+        .sort((a, b) => {
+        if (b.clicks !== a.clicks)
+            return b.clicks - a.clicks;
+        return b.impressions - a.impressions;
+    });
+}
+const PROGRAMMATIC_CONTEXTS = new Set(['grid', 'editor', 'editors', 'hero', 'schema-item-list']);
+function parseSourceKey(sourceKey) {
+    if (!sourceKey)
+        return { channel: 'unknown' };
+    const parts = sourceKey.split(':').filter(Boolean);
+    const channel = parts.shift() || 'unknown';
+    if (channel !== 'programmatic') {
+        return {
+            channel,
+            context: parts.length ? parts.join(':') : undefined,
+        };
+    }
+    const guideSlug = parts.shift();
+    let context;
+    let feed;
+    if (parts.length === 1) {
+        const token = parts[0];
+        if (isKnownProgrammaticContext(token)) {
+            context = token;
+        }
+        else {
+            feed = token;
+        }
+    }
+    else if (parts.length >= 2) {
+        context = parts[0];
+        feed = parts[parts.length - 1];
+    }
+    return { channel, guideSlug, context, feed };
+}
+function isKnownProgrammaticContext(value) {
+    if (!value)
+        return false;
+    return PROGRAMMATIC_CONTEXTS.has(value.toLowerCase());
 }

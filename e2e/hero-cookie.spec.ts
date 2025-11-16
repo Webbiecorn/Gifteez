@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { dismissCookieBannerIfPresent } from './helpers'
 
 test.describe('Hero mascot visibility with cookie consent', () => {
   test('mascot stays visible after accepting cookies', async ({ page }) => {
@@ -8,7 +9,7 @@ test.describe('Hero mascot visibility with cookie consent', () => {
     const mascot = page.locator('img[alt="Gifteez mascotte - vrolijk cadeau karakter"]')
     await mascot.waitFor({ state: 'visible' })
 
-    await page.getByRole('button', { name: /alles accepteren/i }).click()
+  await dismissCookieBannerIfPresent(page)
 
     await expect(mascot).toBeVisible()
 

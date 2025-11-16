@@ -1,8 +1,11 @@
 # Amazon SiteStripe Installatie & Setup Handleiding
+
 ## Voor Gifteez Product Feed Management
 
 ### 🎯 **Wat is Amazon SiteStripe?**
+
 Amazon SiteStripe is een gratis browser toolbar voor Amazon Associates die je helpt om:
+
 - Affiliate links te genereren
 - Productgegevens te verzamelen
 - Commissie tracking in te stellen
@@ -13,11 +16,13 @@ Amazon SiteStripe is een gratis browser toolbar voor Amazon Associates die je he
 ## 📋 **Stap 1: Amazon Associates Account**
 
 ### **A. Controleer je Associates Status**
+
 1. Ga naar: https://affiliate-program.amazon.nl/
 2. Log in met je Amazon account
 3. Controleer of je account actief is (groene status)
 
 ### **B. Geen Associates Account?**
+
 1. Klik op "Registreren" op https://affiliate-program.amazon.nl/
 2. Vul bedrijfsgegevens in:
    - **Website**: gifteez-7533b.web.app
@@ -30,21 +35,25 @@ Amazon SiteStripe is een gratis browser toolbar voor Amazon Associates die je he
 ## 🔧 **Stap 2: SiteStripe Activeren**
 
 ### **Geen installatie nodig! 🎉**
+
 SiteStripe is automatisch beschikbaar zodra je bent ingelogd op Amazon PartnerNet.
 
 ### **Activatie stappen:**
+
 1. **Ga naar Amazon.nl** (gewone Amazon website)
 2. **Log in met je Amazon account** (hetzelfde account als PartnerNet)
 3. **SiteStripe verschijnt automatisch** bovenaan elke productpagina
 4. **Klik op een product** om de SiteStripe balk te zien
 
 ### **SiteStripe Interface:**
+
 - **Zwarte balk** bovenaan productpagina's
 - **Drie opties**: Text, Image, Custom
 - **Jouw Associate Tag**: `gifteez77-21` (zoals in je screenshot)
 - **Direct link genereren** zonder extra tools
 
 ### **Verificatie:**
+
 ✅ SiteStripe balk zichtbaar op productpagina's  
 ✅ Je Associate Tag `gifteez77-21` zichtbaar in links  
 ✅ "Text", "Image", "Custom" opties beschikbaar
@@ -56,6 +65,7 @@ SiteStripe is automatisch beschikbaar zodra je bent ingelogd op Amazon PartnerNe
 ### **Workflow voor Gifteez:**
 
 #### **A. Productzoeken**
+
 ```
 1. Ga naar amazon.nl
 2. Zoek populaire cadeau items:
@@ -67,6 +77,7 @@ SiteStripe is automatisch beschikbaar zodra je bent ingelogd op Amazon PartnerNe
 ```
 
 #### **B. Data Extraheren**
+
 Voor elk product:
 
 1. **Klik SiteStripe → "Text"**
@@ -81,7 +92,9 @@ Voor elk product:
    ```
 
 #### **C. ASIN Vinden**
+
 **Methode 1 - URL:**
+
 ```
 https://www.amazon.nl/dp/B08N5WRWNW/
                       ^^^^^^^^^^
@@ -89,6 +102,7 @@ https://www.amazon.nl/dp/B08N5WRWNW/
 ```
 
 **Methode 2 - SiteStripe:**
+
 ```
 Hover over SiteStripe link
 ASIN staat in tooltip of URL preview
@@ -99,6 +113,7 @@ ASIN staat in tooltip of URL preview
 ## 📝 **Stap 4: Product Toevoegen aan Gifteez**
 
 ### **Template Invullen:**
+
 ```javascript
 {
   asin: 'B08N5WRWNW',
@@ -126,6 +141,7 @@ ASIN staat in tooltip of URL preview
 ```
 
 ### **Script Updaten:**
+
 ```bash
 # 1. Open script
 nano scripts/manualAmazonFeed.mjs
@@ -147,6 +163,7 @@ npm run build && firebase deploy
 ## 🎯 **Stap 5: Aanbevolen Producten voor Gifteez**
 
 ### **Priority 1 - Must Have (10 producten):**
+
 - ✅ Echo Dot (4e gen) - €59,99
 - ✅ Apple AirPods (3e gen) - €179,00
 - ✅ Kindle Paperwhite - €139,99
@@ -160,11 +177,13 @@ npm run build && firebase deploy
   - Nintendo Switch Pro Controller - €69,99
 
 ### **Priority 2 - Seizoensgebonden (5 producten):**
+
 - **Kerst**: Amazon geschenkbonnen, Kerstverlichting
 - **Verjaardag**: Populaire gadgets, Boeken
 - **Moederdag**: Beauty items, Keuken gadgets
 
 ### **Priority 3 - Premium (5 producten):**
+
 - iPad (9e gen) - €389,99
 - Sony WH-1000XM5 - €399,99
 - Dyson V15 Detect - €749,99
@@ -176,18 +195,21 @@ npm run build && firebase deploy
 ## ⚡ **Quick Start Checklist**
 
 ### **Setup (10 minuten):**
+
 - [x] Amazon Associates account actief ✅
 - [x] SiteStripe beschikbaar (geen installatie nodig) ✅
 - [ ] Test link gegenereerd en geverifieerd
 - [ ] Affiliate tag werkend (gifteez77-21)
 
 ### **Product Collection (2 uur):**
+
 - [ ] 10 Priority 1 producten verzameld
 - [ ] Data correct genoteerd (ASIN, prijs, specs)
 - [ ] Affiliate links gegenereerd en getest
 - [ ] Screenshots/notities gemaakt
 
 ### **Implementation (1 uur):**
+
 - [ ] Producten toegevoegd aan script
 - [ ] Feed gegenereerd en getest
 - [ ] Website geupdate en gedeployed
@@ -198,6 +220,7 @@ npm run build && firebase deploy
 ## 🔍 **Troubleshooting**
 
 ### **SiteStripe niet zichtbaar?**
+
 ```
 1. Controleer dat je bent ingelogd op Amazon.nl
 2. Ga naar een productpagina (niet homepage)
@@ -207,14 +230,16 @@ npm run build && firebase deploy
 ```
 
 ### **Affiliate links werken niet?**
+
 ```
 1. Controleer Associate Tag in links
-2. Test links in incognito venster  
+2. Test links in incognito venster
 3. Verificeer account status op Associates portal
 4. Wacht 24u voor link propagatie
 ```
 
 ### **ASIN niet gevonden?**
+
 ```
 1. Zoek in URL na /dp/ of /gp/product/
 2. Check product details pagina onderaan
@@ -227,12 +252,14 @@ npm run build && firebase deploy
 ## 📊 **Performance Monitoring**
 
 ### **Weekly Checklist:**
+
 - [ ] Prijzen gecontroleerd en bijgewerkt
 - [ ] Out-of-stock items vervangen
 - [ ] Nieuwe seasonal items toegevoegd
 - [ ] Affiliate performance bekeken
 
 ### **Monthly Review:**
+
 - [ ] Top performing producten geïdentificeerd
 - [ ] Underperforming items vervangen
 - [ ] Nieuwe categorieën overwogen
@@ -241,6 +268,7 @@ npm run build && firebase deploy
 ---
 
 ## 🎉 **Success Metrics**
+
 - **Target**: 20-50 Amazon producten actief
 - **Conversion**: 2-5% click-through rate
 - **Revenue**: €50-200/maand Amazon commissies

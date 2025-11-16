@@ -35,7 +35,7 @@ import { assignCanonicalKeys } from '../utils/product-classifier/hash.ts'
 import { dedupMultiSource, diversifyMMR, getDiversityStats } from '../utils/product-classifier/diversify.ts'
 
 // Import your programmatic configs
-import { PROGRAMMATIC_INDEX } from '../data/programmatic/index.js'
+import { PROGRAMMATIC_INDEX, validateProgrammaticConfigs } from '../data/programmatic/index.js'
 import type { ProgrammaticConfig } from '../data/programmatic/index.js'
 
 // ==================== Configuration ====================
@@ -46,7 +46,12 @@ const TAXONOMY_DIR = resolve('./data/taxonomy')
 
 // Feed file paths (adjust to your setup)
 const FEED_PATHS = {
-  coolblue: resolve(FEEDS_DIR, process.env.TEST_MODE === 'true' ? 'coolblue-test-500.csv' : 'coolblue-feed.csv'),
+  coolblue: resolve(
+    FEEDS_DIR,
+    process.env.TEST_MODE === 'true' ? 'coolblue-test-500.csv' : 'coolblue-feed.csv'
+  ),
+  slygad: resolve('./data/shop-like-you-give-a-damn-import-ready.json'),
+  partypro: resolve('./data/partypro-import-ready.json'),
   // awin: resolve(FEEDS_DIR, 'awin-feed.csv'), // Add when available
   // bol: resolve(FEEDS_DIR, 'bol-feed.csv'),
 }
@@ -66,12 +71,19 @@ const APPROVED_MERCHANTS = [
   // 'Bol.com',
 ]
 
+// Fail fast when a programmatic config is inconsistent
+validateProgrammaticConfigs(Object.values(PROGRAMMATIC_INDEX))
+
 /**
  * Check if a product is from an approved merchant
  */
 function isApprovedMerchant(product: Product | ClassifiedProduct): boolean {
   // Get merchant name from raw data (not brand!)
-  const merchantName = (product as any)._raw?.merchant_name || ''
+  const merchantName =
+    (product as any)._raw?.merchant_name ||
+    (product as any)._raw?.merchant ||
+    product.merchant ||
+    ''
   
   // If no merchant info, allow (for direct Amazon/custom feeds without merchant field)
   if (!merchantName) return true
@@ -128,6 +140,24 @@ function loadCSVFeed(filePath: string): Record<string, any>[] {
   return records
 }
 
+function loadJSONFeed(filePath: string): Record<string, any>[] {
+  if (!existsSync(filePath)) {
+    console.warn(`⚠️  Feed not found: ${filePath}`)
+    return []
+  }
+
+  try {
+    const content = readFileSync(filePath, 'utf-8')
+    const data = JSON.parse(content)
+    if (Array.isArray(data)) return data
+    if (Array.isArray(data?.products)) return data.products
+    return []
+  } catch (error) {
+    console.error(`❌ Failed to parse JSON feed ${filePath}:`, error)
+    return []
+  }
+}
+
 function loadAllFeeds(): { source: string; products: Product[] }[] {
   console.log('\n📦 Loading product feeds...')
   const feeds: { source: string; products: Product[] }[] = []
@@ -139,6 +169,24 @@ function loadAllFeeds(): { source: string; products: Product[] }[] {
     const products = normalizeBatch(rows, 'coolblue')
     console.log(`  ✓ Coolblue: ${products.length} products`)
     feeds.push({ source: 'coolblue', products })
+  }
+
+  // Load Shop Like You Give A Damn (JSON)
+  if (existsSync(FEED_PATHS.slygad)) {
+    console.log('  Loading Shop Like You Give A Damn feed...')
+    const rows = loadJSONFeed(FEED_PATHS.slygad)
+    const products = normalizeBatch(rows, 'slygad')
+    console.log(`  ✓ SLYGAD: ${products.length} products`)
+    feeds.push({ source: 'slygad', products })
+  }
+
+  // Load PartyPro editorial feed
+  if (existsSync(FEED_PATHS.partypro)) {
+    console.log('  Loading PartyPro feed...')
+    const rows = loadJSONFeed(FEED_PATHS.partypro)
+    const products = normalizeBatch(rows, 'partypro')
+    console.log(`  ✓ PartyPro: ${products.length} products`)
+    feeds.push({ source: 'partypro', products })
   }
   
   // Add AWIN, Bol, etc. here when available
@@ -190,7 +238,7 @@ function filterForPage(
   }
   
   // Filter by occasion
-  if (config.occasion) {
+  if (config.occasion && !config.disableOccasionFilter) {
     filtered = filtered.filter(p =>
       p.facets.occasions?.includes(config.occasion as any)
     )
@@ -222,6 +270,43 @@ function filterForPage(
       return !config.filters!.excludeKeywords!.some(kw =>
         searchText.includes(kw.toLowerCase())
       )
+    })
+  }
+
+  if (config.filters?.categories && config.filters.categories.length > 0) {
+    filtered = filtered.filter(p => config.filters!.categories!.includes(p.facets.category))
+  }
+
+  if (config.filters?.productTypeIncludes && config.filters.productTypeIncludes.length > 0) {
+    filtered = filtered.filter(p => {
+      const productType = (p.productType || '').toLowerCase()
+      return config.filters!.productTypeIncludes!.some(keyword =>
+        productType.includes(keyword.toLowerCase())
+      )
+    })
+  }
+
+  if (config.filters?.categoryPathIncludes && config.filters.categoryPathIncludes.length > 0) {
+    filtered = filtered.filter(p => {
+      const categoryPath = (p.categoryPath || '').toLowerCase()
+      return config.filters!.categoryPathIncludes!.some(keyword =>
+        categoryPath.includes(keyword.toLowerCase())
+      )
+    })
+  }
+
+  if (config.filters?.fastDelivery) {
+    filtered = filtered.filter(p => {
+      if (typeof p.deliveryDays !== 'number') return true
+      return p.deliveryDays <= 2
+    })
+  }
+
+  if (config.filters?.eco) {
+    const ecoRegex = /duurzaam|eco|vegan|recycled|bamboe|biologisch|organic/i
+    filtered = filtered.filter(p => {
+      if (p.facets.interests?.includes('duurzaam')) return true
+      return ecoRegex.test(p.searchText)
     })
   }
   
@@ -264,18 +349,54 @@ function buildIndexForPage(
   
   // Diversify
   const maxResults = config.filters?.maxResults || 24
+  const maxPerBrand = config.filters?.maxPerBrand ?? 2
+  const maxPerCategory = config.filters?.maxPerCategory ?? 8
   const diversified = diversifyMMR(filtered, {
     maxTotal: maxResults,
-    maxPerBrand: 2,
-    maxPerCategory: 8
+    maxPerBrand,
+    maxPerCategory
   })
   console.log(`    After diversify: ${diversified.length} products`)
+  let finalProducts = diversified
+
+  if (config.editorPicks && config.editorPicks.length > 0) {
+    const pickMatches = config.editorPicks
+      .map((pick) =>
+        filtered.find((product) => product.id === pick.sku || product.sku === pick.sku)
+      )
+      .filter(Boolean) as ClassifiedProduct[]
+
+    if (pickMatches.length > 0) {
+      const combined: ClassifiedProduct[] = []
+      const seen = new Set<string>()
+
+      pickMatches.forEach((product) => {
+        if (!seen.has(product.id)) {
+          combined.push(product)
+          seen.add(product.id)
+        }
+      })
+
+      for (const product of diversified) {
+        if (!seen.has(product.id)) {
+          combined.push(product)
+          seen.add(product.id)
+        }
+        if (combined.length >= maxResults) break
+      }
+
+      finalProducts = combined.slice(0, maxResults)
+      console.log(
+        `    Applied ${pickMatches.length} editor pick(s) → ${finalProducts.length} products`
+      )
+    }
+  }
   
   // Get stats
-  const stats = getDiversityStats(diversified)
+  const stats = getDiversityStats(finalProducts)
   
   // Calculate price range
-  const prices = diversified.map(p => p.price)
+  const prices = finalProducts.map(p => p.price)
   const priceRange: [number, number] = [
     Math.min(...prices),
     Math.max(...prices)
@@ -283,23 +404,23 @@ function buildIndexForPage(
   
   // Confidence distribution
   const confidenceDistribution: Record<string, number> = {
-    'high (>0.8)': diversified.filter(p => p.facets.confidence > 0.8).length,
-    'medium (0.5-0.8)': diversified.filter(p => p.facets.confidence >= 0.5 && p.facets.confidence <= 0.8).length,
-    'low (<0.5)': diversified.filter(p => p.facets.confidence < 0.5).length
+    'high (>0.8)': finalProducts.filter(p => p.facets.confidence > 0.8).length,
+    'medium (0.5-0.8)': finalProducts.filter(p => p.facets.confidence >= 0.5 && p.facets.confidence <= 0.8).length,
+    'low (<0.5)': finalProducts.filter(p => p.facets.confidence < 0.5).length
   }
   
   return {
-    routeKey: `cadeaus/${slug}`,
+    routeKey: `cadeaugidsen/${slug}`,
     metadata: {
       title: config.title,
       description: config.intro,
       audience: config.audience?.[0] as any,
       occasion: config.occasion as any,
-      totalProducts: diversified.length,
+      totalProducts: finalProducts.length,
       generatedAt: new Date().toISOString()
     },
     featured: [], // TODO: Add editorial picks from config.editorPicks
-    products: diversified,
+    products: finalProducts,
     stats: {
       uniqueBrands: stats.uniqueBrands,
       uniqueCategories: stats.uniqueCategories,

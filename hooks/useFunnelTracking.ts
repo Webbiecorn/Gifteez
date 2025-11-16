@@ -69,17 +69,22 @@ export function useFunnelTracking(
   const funnelNameRef = useRef(funnelName)
   const hasStartedRef = useRef(false)
 
+  useEffect(() => {
+    funnelNameRef.current = funnelName
+  }, [funnelName])
+
   // Start funnel on mount
   useEffect(() => {
+    const currentFunnelName = funnelNameRef.current
     if (autoStart && !hasStartedRef.current) {
-      startFunnel(funnelNameRef.current)
+      startFunnel(currentFunnelName)
       hasStartedRef.current = true
     }
 
     // End funnel on unmount
     return () => {
       if (autoEnd && hasStartedRef.current) {
-        endFunnel(funnelNameRef.current)
+        endFunnel(currentFunnelName)
       }
     }
   }, [autoStart, autoEnd])

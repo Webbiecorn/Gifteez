@@ -9,6 +9,7 @@
 ## 📊 Bundle Size Reduction
 
 ### Before:
+
 ```
 dist/assets/importedProducts.js        1.8 MB (273 KB gzip)
 dist/assets/shop-like-you-give-a-damn.js  2.0 MB (143 KB gzip)
@@ -16,6 +17,7 @@ Total problematic chunks: ~4 MB (416 KB gzip)
 ```
 
 ### After:
+
 ```
 ✅ NO importedProducts.js in bundle
 ✅ NO shop-like-you-give-a-damn.js in bundle
@@ -24,6 +26,7 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
 ```
 
 ### Impact:
+
 - **4 MB removed from bundle** (416 KB gzip)
 - **Faster initial load** for first-time visitors
 - **On-demand loading** alleen wanneer nodig
@@ -34,12 +37,14 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
 ## 💾 IndexedDB Cache Layer
 
 ### Implementation:
+
 - **File:** `services/productCacheService.ts`
 - **TTL:** 60 minutes (configurable)
 - **Pattern:** Stale-while-revalidate
 - **Storage:** IndexedDB (browser-native)
 
 ### Integration:
+
 1. **coolblueFeedService.ts**
    - Cache key: `coolblue-products`
    - Checks cache before fetch
@@ -51,6 +56,7 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
    - Both Firebase and fallback cached
 
 ### Expected Results:
+
 - **First visit:** ~2-3s to load products (fetch from server)
 - **Repeat visit:** ~50-100ms (IndexedDB cache)
 - **Cache hit rate:** 80%+ (1 hour TTL)
@@ -61,14 +67,17 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
 ## 🎯 LCP (Largest Contentful Paint) Optimization
 
 ### Changes:
+
 1. **index.html preload:**
+
    ```html
-   <link rel="preload" as="image" href="/images/mascotte-hero-final2.png" fetchpriority="high">
+   <link rel="preload" as="image" href="/images/mascotte-hero-final2.png" fetchpriority="high" />
    ```
 
 2. **HomePage.tsx hero image:**
+
    ```tsx
-   <img 
+   <img
      src="/images/mascotte-hero-final2.png"
      width={800}
      height={800}
@@ -82,6 +91,7 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
    - Added `fetchPriority` prop (high/low/auto)
 
 ### Expected Improvement:
+
 - **Before:** LCP ~2.5-3s (hero loads after CSS/JS)
 - **After:** LCP ~1.8-2s (hero prioritized + preloaded)
 - **Gain:** ~500-700ms faster LCP ⚡
@@ -91,6 +101,7 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
 ## 🎨 CLS (Cumulative Layout Shift) Prevention
 
 ### Fixed Components:
+
 1. **HomePage.tsx:**
    - Hero image: `width={800} height={800}`
    - Aspect-ratio: 1:1 container prevents shift
@@ -100,6 +111,7 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
    - Candidate variant: `width={400} height={300}`
 
 ### Impact:
+
 - **Before:** CLS ~0.15-0.2 (images load → layout shifts)
 - **After:** CLS <0.1 (dimensions reserved upfront)
 - **Google threshold:** <0.1 ✅
@@ -109,10 +121,20 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
 ## 💅 Critical CSS Expansion
 
 ### Added to `index.html`:
+
 ```css
 /* Hero styles */
-.hero-title { font-weight: 700; line-height: 1.1 }
-.hero-container { display: flex; align-items: center; justify-content: center; min-height: 60vh; padding: 2rem 1rem }
+.hero-title {
+  font-weight: 700;
+  line-height: 1.1;
+}
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2rem 1rem;
+}
 
 /* Button styles */
 .btn-primary {
@@ -121,20 +143,33 @@ Largest chunk: AdminPage 338 KB (85 KB gzip) - lazy loaded
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   font-weight: 600;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 /* Typography */
 body {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 /* Layout skeleton */
-#root { min-height: 100vh; display: flex; flex-direction: column }
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 ```
 
 ### Benefits:
+
 - **Faster First Paint:** Critical styles inline (~2 KB)
 - **No FOUC:** Hero/buttons styled before main CSS loads
 - **Single roundtrip:** <14 KB total HTML (gzip: 3.16 KB)
@@ -144,6 +179,7 @@ body {
 ## 📦 New Component: ResponsiveImage
 
 ### File: `components/ResponsiveImage.tsx`
+
 - **Purpose:** Modern image loading with WebP/AVIF support
 - **Features:**
   - `<picture>` element for format selection
@@ -153,6 +189,7 @@ body {
   - Fallback to original format
 
 ### Usage (not yet integrated):
+
 ```tsx
 <ResponsiveImage
   src="/images/hero.png"
@@ -164,6 +201,7 @@ body {
 ```
 
 ### Next Steps:
+
 - Replace ImageWithFallback in critical components
 - Test browser compatibility
 - Monitor format adoption (WebP vs AVIF)
@@ -173,6 +211,7 @@ body {
 ## 🔄 Data Loading Strategy
 
 ### Coolblue Products (~2 MB JSON):
+
 ```
 1. Check localStorage (old cache)
 2. Check IndexedDB (new cache, 60 min TTL)
@@ -182,6 +221,7 @@ body {
 ```
 
 ### SLYGAD Products (~2.2 MB JSON):
+
 ```
 1. Check IndexedDB (60 min TTL)
 2. Try Firebase Firestore
@@ -191,6 +231,7 @@ body {
 ```
 
 ### Advantages:
+
 - **No bundle bloat:** JSON not in webpack/vite build
 - **On-demand loading:** Only when user navigates to products
 - **Fast repeat visits:** IndexedDB cache = instant
@@ -201,22 +242,25 @@ body {
 ## 📈 Expected Core Web Vitals
 
 ### Before Performance Work:
-| Metric | Score | Status |
-|--------|-------|--------|
-| LCP | ~2.8s | 🟡 Needs Improvement |
-| FID | <100ms | 🟢 Good |
-| CLS | ~0.18 | 🔴 Poor |
-| FCP | ~1.5s | 🟡 Needs Improvement |
+
+| Metric | Score  | Status               |
+| ------ | ------ | -------------------- |
+| LCP    | ~2.8s  | 🟡 Needs Improvement |
+| FID    | <100ms | 🟢 Good              |
+| CLS    | ~0.18  | 🔴 Poor              |
+| FCP    | ~1.5s  | 🟡 Needs Improvement |
 
 ### After Performance Work:
-| Metric | Expected | Status |
-|--------|----------|--------|
-| LCP | ~1.8s | 🟢 Good (<2.5s) |
-| FID | <100ms | 🟢 Good |
-| CLS | <0.1 | 🟢 Good (<0.1) |
-| FCP | ~1.2s | 🟢 Good (<1.8s) |
+
+| Metric | Expected | Status          |
+| ------ | -------- | --------------- |
+| LCP    | ~1.8s    | 🟢 Good (<2.5s) |
+| FID    | <100ms   | 🟢 Good         |
+| CLS    | <0.1     | 🟢 Good (<0.1)  |
+| FCP    | ~1.2s    | 🟢 Good (<1.8s) |
 
 ### Lighthouse Score Predictions:
+
 - **Performance:** 85-92 (was: 70-78)
 - **Accessibility:** 95+ (unchanged)
 - **Best Practices:** 100 (unchanged)
@@ -227,6 +271,7 @@ body {
 ## 🛠️ Technical Implementation
 
 ### Files Created:
+
 1. **services/productCacheService.ts**
    - IndexedDB wrapper with TTL
    - get/set/delete/clear methods
@@ -241,6 +286,7 @@ body {
 4. **public/data/shop-like-you-give-a-damn-import-ready.json** (moved from data/)
 
 ### Files Modified:
+
 1. **services/coolblueFeedService.ts**
    - Added productCache import
    - Check cache before fetch
@@ -273,18 +319,21 @@ body {
 ## 🎯 Success Metrics
 
 ### Bundle Analysis:
+
 ✅ **NO 2MB+ chunks in production build**  
 ✅ **Initial JS: 199 KB (63 KB gzip)**  
 ✅ **Target <150 KB gzip achieved**  
 ✅ **Largest chunk lazy-loaded (AdminPage 85 KB gzip)**
 
 ### Cache Effectiveness:
+
 🔄 **Monitor cache hit rate** in browser console  
 🔄 **Check IndexedDB in DevTools** → Application → Storage  
 🔄 **Verify 60 min TTL** works as expected  
 🔄 **Test fallback** when cache expired
 
 ### Core Web Vitals:
+
 🔄 **Google Search Console** → Experience → Core Web Vitals (28 days)  
 🔄 **PageSpeed Insights** → Run test after 24h  
 🔄 **Real User Monitoring** → Check actual user metrics
@@ -297,33 +346,37 @@ body {
 **Firebase:** https://gifteez-7533b.web.app  
 **Git commit:** 3c5b9ae  
 **Build time:** 9.05s  
-**Deploy time:** ~30s  
+**Deploy time:** ~30s
 
 ---
 
 ## 📝 Next Steps
 
 ### Immediate (done):
+
 ✅ Bundle size reduction  
 ✅ IndexedDB cache implementation  
 ✅ LCP optimization  
 ✅ CLS prevention  
 ✅ Critical CSS expansion  
-✅ Production deployment  
+✅ Production deployment
 
 ### Short-term (1-2 weeks):
+
 - [ ] Monitor Core Web Vitals in Search Console
 - [ ] Check cache hit rate in production
 - [ ] Lighthouse score verification
 - [ ] Real user metrics analysis
 
 ### Medium-term (1 month):
+
 - [ ] Integrate ResponsiveImage component
 - [ ] A/B test WebP vs AVIF adoption
 - [ ] Fine-tune cache TTL based on usage
 - [ ] Consider service worker for offline support
 
 ### Long-term (2-3 months):
+
 - [ ] Implement lazy loading for images below fold
 - [ ] Optimize third-party scripts (GTM, analytics)
 - [ ] Consider code splitting for admin routes
@@ -336,6 +389,7 @@ body {
 **Performance overhaul COMPLEET!**
 
 Alle 7 taken afgerond:
+
 1. ✅ Product data lazy loading (fetch)
 2. ✅ LCP image preload (hero mascot)
 3. ✅ Aspect-ratio fix (width/height)
@@ -345,6 +399,7 @@ Alle 7 taken afgerond:
 7. ✅ Critical CSS expansion (hero + buttons)
 
 **Impact:**
+
 - 4 MB kleiner bundle
 - ~500ms snellere LCP
 - <0.1 CLS score

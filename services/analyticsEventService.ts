@@ -87,6 +87,17 @@ export interface FunnelStepEvent {
   time_on_step?: number // milliseconds since last step
 }
 
+export interface QuickScanInteractionEvent {
+  event: 'quick_scan_interaction'
+  slug: string
+  persona_id: string
+  persona_label: string
+  action: 'apply_filters' | 'open_link'
+  fast_delivery?: boolean | null
+  sort_option?: string | null
+  target_href?: string | null
+}
+
 // ============================================================================
 // PRODUCT EVENTS
 // ============================================================================
@@ -291,6 +302,29 @@ export function trackFunnelStep(
   pushToDataLayer(event)
 }
 
+export function trackQuickScanInteraction(params: {
+  slug: string
+  personaId: string
+  personaLabel: string
+  action: 'apply_filters' | 'open_link'
+  fastDelivery?: boolean | null
+  sortOption?: string | null
+  targetHref?: string | null
+}): void {
+  const event: QuickScanInteractionEvent = {
+    event: 'quick_scan_interaction',
+    slug: params.slug,
+    persona_id: params.personaId,
+    persona_label: params.personaLabel,
+    action: params.action,
+    fast_delivery: params.fastDelivery ?? null,
+    sort_option: params.sortOption ?? null,
+    target_href: params.targetHref ?? null,
+  }
+
+  pushToDataLayer(event)
+}
+
 // ============================================================================
 // BATCH TRACKING (for lists/collections)
 // ============================================================================
@@ -368,6 +402,7 @@ export const AnalyticsEvents = {
   // User journey
   startGiftFinder: trackStartGiftFinder,
   applyFilter: trackApplyFilter,
+  quickScanInteraction: trackQuickScanInteraction,
 
   // Social
   sharePin: trackSharePin,

@@ -10,7 +10,6 @@ import type { CoolblueFeedMeta, CoolblueProduct } from '../services/coolblueFeed
 interface ProductPostWizardProps {
   isOpen: boolean
   onCancel: () => void
-  // eslint-disable-next-line no-unused-vars
   onGenerate: (postTemplate: BlogPostData) => void
 }
 
@@ -226,7 +225,6 @@ const ProductPostWizard: React.FC<ProductPostWizardProps> = ({ isOpen, onCancel,
           }
         }
         // Voor Coolblue producten, return as-is (verwijder source en originalProduct)
-        // eslint-disable-next-line no-unused-vars
         const { source: _source, originalProduct: _originalProduct, ...coolblueProduct } = product
         return coolblueProduct
       })

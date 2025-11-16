@@ -1,10 +1,12 @@
 # SEO Audit Report - Gifteez.nl
+
 **Datum**: 27 oktober 2025
 **Status**: ✅ Grotendeels in orde, enkele optimalisaties uitgevoerd
 
 ## ✅ In Orde
 
 ### 1. **Robots.txt**
+
 - ✅ Correct geconfigureerd
 - ✅ Admin pagina's geblokkeerd
 - ✅ AI crawlers (GPTBot, Claude, Perplexity) toegestaan
@@ -12,6 +14,7 @@
 - **Locatie**: `/public/robots.txt`
 
 ### 2. **Sitemap.xml**
+
 - ✅ **Bijgewerkt**: 17 URLs (was 15)
 - ✅ Alle belangrijke pagina's aanwezig
 - ✅ **Nieuw toegevoegd**:
@@ -21,6 +24,7 @@
 - **Locatie**: `/public/sitemap.xml`
 
 ### 3. **Meta Tags (index.html)**
+
 - ✅ Title tag
 - ✅ Description
 - ✅ Open Graph (Facebook/Pinterest)
@@ -30,23 +34,27 @@
 - ✅ Geo tags (NL)
 
 ### 4. **Dynamische Meta Tags**
+
 - ✅ Meta component voor alle pagina's
 - ✅ CategoryDetailPage heeft correcte meta tags
 - ✅ Blog posts hebben meta data
 - ✅ Canonical URLs
 
 ### 5. **Structured Data**
+
 - ✅ JSON-LD voor breadcrumbs (CategoryDetailPage)
 - ✅ Organization schema
 - ✅ Product schema (waar van toepassing)
 
 ### 6. **Performance**
+
 - ✅ Preload kritieke fonts (Inter)
 - ✅ Preload LCP image (hero mascotte)
 - ✅ Critical CSS inline
 - ✅ Lazy loading images
 
 ### 7. **Mobile Optimization**
+
 - ✅ Viewport meta tag
 - ✅ Responsive design
 - ✅ Mobile-first approach
@@ -55,13 +63,17 @@
 ## ⚠️ Actiepunten / Verbeteringen
 
 ### 1. **Google Search Console Verificatie**
+
 **Status**: ⚠️ Nog niet ingesteld
 **Actie**:
+
 ```html
 <!-- In index.html vervangen: -->
 <meta name="google-site-verification" content="YOUR_CODE_FROM_SEARCH_CONSOLE" />
 ```
+
 **Stappen**:
+
 1. Ga naar https://search.google.com/search-console
 2. Voeg `gifteez.nl` toe als property
 3. Kies "HTML tag" verificatie methode
@@ -69,8 +81,10 @@
 5. Vervang `YOUR_VERIFICATION_CODE_HERE` in `index.html`
 
 ### 2. **Schema.org voor ProductCategory**
+
 **Status**: ✅ Partieel - zou verbeterd kunnen worden
 **Suggestie**: Voeg ItemList schema toe aan CategoryDetailPage
+
 ```javascript
 {
   "@context": "https://schema.org",
@@ -82,18 +96,22 @@
 ```
 
 ### 3. **Canonical URLs voor Dynamische Pagina's**
+
 **Status**: ✅ CategoryDetailPage heeft canonical
 **Check**: Alle andere dynamische pagina's ook
 
 ## 📊 Google Tag Manager
 
 ### Huidige Status:
+
 - ✅ GTM container geïnstalleerd (`GTM-KC68DTEN`)
 - ✅ Correct in `<head>` geplaatst
 - ✅ AWIN MasterTag actief
 
 ### Voor Google Analytics 4:
+
 **Volgende stap**: Configureer tags in GTM
+
 1. Google Analytics 4 Configuration Tag
 2. Page View trigger
 3. Event tracking (button clicks, conversions)
@@ -101,16 +119,19 @@
 ## 🎯 Aanbevelingen
 
 ### Prioriteit 1 (Direct)
+
 1. ✅ **Sitemap bijwerken** - GEDAAN
 2. ⚠️ **Google Search Console verificatie**
 3. ⚠️ **Google Analytics 4 via GTM** - VOLGENDE STAP
 
 ### Prioriteit 2 (Deze week)
+
 1. Controleer alle blog posts hebben correcte meta data
 2. Voeg meer structured data toe (FAQ schema, Review schema)
 3. Optimaliseer OG images (1200x630 per pagina)
 
 ### Prioriteit 3 (Later)
+
 1. Implementeer hreflang tags (als je internationale versies krijgt)
 2. Voeg video schema toe (als je video content toevoegt)
 3. Implementeer AMP versies (optioneel)
@@ -118,6 +139,7 @@
 ## 📈 Monitoring Setup
 
 ### Tools om in te stellen:
+
 1. ✅ Google Tag Manager - ACTIEF
 2. ⚠️ Google Search Console - TE DOEN
 3. ⚠️ Google Analytics 4 - TE CONFIGUREREN
@@ -127,6 +149,7 @@
 ## 🔍 SEO Checklist voor Nieuwe Pagina's
 
 Bij het toevoegen van nieuwe pagina's:
+
 - [ ] Voeg URL toe aan `scripts/generate-sitemap.mjs`
 - [ ] Zorg voor unieke title tag (<60 karakters)
 - [ ] Zorg voor unieke meta description (150-160 karakters)
@@ -150,4 +173,5 @@ Bij het toevoegen van nieuwe pagina's:
 ⚠️ **Volgende stap**: Google Search Console + Analytics 4 configureren
 
 ---
-*Laatste update: 27 oktober 2025 - Na PartyPro implementatie*
+
+_Laatste update: 27 oktober 2025 - Na PartyPro implementatie_

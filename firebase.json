@@ -44,9 +44,7 @@
       },
       {
         "source": "**/robots.txt",
-        "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=300" }
-        ]
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }]
       },
       {
         "source": "**/*.{js,css}",
@@ -88,6 +86,8 @@
     ],
     "redirects": [
       { "source": "www.gifteez.nl/**", "destination": "https://gifteez.nl/:splat", "type": 301 },
+      { "source": "/cadeaugidsen", "destination": "/cadeaus", "type": 301 },
+      { "source": "/cadeaugidsen/**", "destination": "/cadeaus/:splat", "type": 301 },
       { "source": "/shop", "destination": "/deals", "type": 301 },
       { "source": "/shop/**", "destination": "/deals", "type": 301 },
       { "source": "/api/visit", "destination": "/deals", "type": 301 },

@@ -211,7 +211,7 @@ export class CoolblueNormalizer extends BaseNormalizer {
 
     // Extract keywords from name and description
     const text = `${name} ${description}`.toLowerCase()
-  const keywords: string[] = text.match(/\b\w{4,}\b/g) ?? []
+    const keywords: string[] = text.match(/\b\w{4,}\b/g) ?? []
 
     // Common gift-related keywords
     const giftKeywords = ['cadeau', 'gift', 'present', 'kado', 'relatiegeschenk']

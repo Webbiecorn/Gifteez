@@ -1,8 +1,8 @@
 /**
  * Product Classifier - Main Export
- * 
+ *
  * Use this to import all classifier functionality in one go:
- * 
+ *
  * import {
  *   normalize,
  *   classify,
@@ -28,7 +28,7 @@ export type {
   DiversifyOptions,
   ProgrammaticIndex,
   RawFeedRow,
-  FeedSource
+  FeedSource,
 } from './types'
 
 // Normalization
@@ -39,23 +39,14 @@ export {
   normalizeCoolblue,
   normalizeBol,
   normalizeAmazon,
-  normalizeManual
+  normalizeManual,
 } from './normalize'
 
 // Classification
-export {
-  classify,
-  classifyBatch,
-  createDefaultConfig
-} from './classifier'
+export { classify, classifyBatch, createDefaultConfig } from './classifier'
 
 // Hashing & Deduplication
-export {
-  canonicalKey,
-  identifierHash,
-  areDuplicates,
-  assignCanonicalKeys
-} from './hash'
+export { canonicalKey, identifierHash, areDuplicates, assignCanonicalKeys } from './hash'
 
 // Diversification
 export {
@@ -64,5 +55,5 @@ export {
   diversify,
   diversifyMMR,
   getDiversityStats,
-  DEFAULT_DIVERSIFY_OPTIONS
+  DEFAULT_DIVERSIFY_OPTIONS,
 } from './diversify'

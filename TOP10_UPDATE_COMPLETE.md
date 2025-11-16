@@ -9,7 +9,7 @@
    - Grootse draagbare Bluetooth speaker
 
 2. **RITUALS Amsterdam Collection** - €39,95 (Amazon)
-   - Afbeelding: Amazon productfoto  
+   - Afbeelding: Amazon productfoto
    - Luxe foaming shower gel set
 
 3. **LEGO Technic Fast & Furious** - €149,99 (Amazon)
@@ -45,15 +45,18 @@
     - Luxe microvezel hoeslaken set
 
 **Bonus #11**: **Logitech C920 HD Pro Webcam** - €69,99 (Coolblue)
+
 - Afbeelding: Coolblue productfoto
 - Full HD webcam met stereo microfoons
 
 ### 📊 Retailer verdeling:
+
 - **Amazon**: 7 producten (63.6%)
 - **Coolblue**: 4 producten (36.4%)
 - **Totaal**: 11 producten
 
 ### 💰 Prijsrange:
+
 - **Laagste**: €19,99 (AOHAN Waterfles)
 - **Hoogste**: €1.499,00 (Thrustmaster Racestuur)
 - **Gemiddeld**: ~€185
@@ -67,6 +70,7 @@
 5. **Mix van retailers** - Zowel Amazon als Coolblue voor optimale conversie
 
 ### 🚀 Live status:
+
 ✅ **URL**: https://gifteez-7533b.web.app/deals
 ✅ **Affiliate tracking**: Alle links via Awin/Amazon Associate
 ✅ **Afbeeldingen**: Echte productfoto's geladen

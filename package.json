@@ -18,6 +18,7 @@
     "feeds:chain:slim": "node scripts/feeds-chain.mjs --skipList=true --countries=NL,BE --languages=nl --maxAgeHours=24 --limit=8 --whitelistFids=F951,F1655,20669,50381 --maxPrice=150 --requireImage=true --language=nl --noCombined=true",
     "show:coolblue-feed": "node scripts/show-coolblue-feed.mjs",
     "classifier:build": "npx tsx scripts/build-programmatic-indices.mts",
+    "build-programmatic-indices": "npx tsx scripts/build-programmatic-indices.mts",
     "lint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",

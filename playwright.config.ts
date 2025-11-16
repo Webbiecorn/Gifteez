@@ -64,7 +64,14 @@ export default defineConfig({
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        launchOptions: {
+          env: {
+            LD_PRELOAD: '/lib/x86_64-linux-gnu/libpthread.so.0',
+          },
+        },
+      },
     },
 
     // Mobile browsers
@@ -74,7 +81,14 @@ export default defineConfig({
     },
     {
       name: 'mobile-safari',
-      use: { ...devices['iPhone 13'] },
+      use: {
+        ...devices['iPhone 13'],
+        launchOptions: {
+          env: {
+            LD_PRELOAD: '/lib/x86_64-linux-gnu/libpthread.so.0',
+          },
+        },
+      },
     },
   ],
 

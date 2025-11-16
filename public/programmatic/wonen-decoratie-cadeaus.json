@@ -1,10 +1,10 @@
 {
-  "routeKey": "cadeaus/wonen-decoratie-cadeaus",
+  "routeKey": "cadeaugidsen/wonen-decoratie-cadeaus",
   "metadata": {
     "title": "Wonen & Decoratie Cadeaus",
     "description": "Stijlvolle woonaccessoires en decoratie voor elk interieur.",
     "totalProducts": 24,
-    "generatedAt": "2025-11-04T12:04:55.809Z"
+    "generatedAt": "2025-11-16T12:31:31.130Z"
   },
   "featured": [],
   "products": [
@@ -126,13 +126,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "duurzaam",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 4 keyword(s) for duurzaam"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 4 keyword(s) for duurzaam"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -257,13 +266,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["men"],
+        "audience": [
+          "men"
+        ],
         "category": "mode",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.925,
-        "reasons": ["Fashion:suitable_for indicates men", "Matched 3 keyword(s) for mode"],
+        "reasons": [
+          "Fashion:suitable_for indicates men",
+          "Matched 3 keyword(s) for mode"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -387,13 +405,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["men"],
+        "audience": [
+          "men"
+        ],
         "category": "sieraden",
         "priceBucket": "25-50",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.8,
-        "reasons": ["Title contains men keyword", "Matched 1 keyword(s) for sieraden"],
+        "reasons": [
+          "Title contains men keyword",
+          "Matched 1 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -517,10 +542,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "wonen",
         "priceBucket": "under-25",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -651,13 +680,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "kunst",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for kunst"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for kunst"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -674,7 +712,9 @@
       "price": 59.95,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_91429_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_91429_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41853188858&a=2566111&m=24072",
       "gtin": "91429",
       "mpn": "91429-36",
@@ -778,13 +818,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "koken",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for koken"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for koken"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -907,13 +954,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "outdoor",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.8,
-        "reasons": ["Fashion:suitable_for indicates unisex", "Matched 1 keyword(s) for outdoor"],
+        "reasons": [
+          "Fashion:suitable_for indicates unisex",
+          "Matched 1 keyword(s) for outdoor"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -930,7 +984,9 @@
       "price": 179,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_99857_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_99857_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41853202256&a=2566111&m=24072",
       "gtin": "99857",
       "mpn": "99857-King 260x220",
@@ -1034,13 +1090,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "geuren",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.8,
-        "reasons": ["Fashion:suitable_for indicates unisex", "Matched 1 keyword(s) for geuren"],
+        "reasons": [
+          "Fashion:suitable_for indicates unisex",
+          "Matched 1 keyword(s) for geuren"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1164,13 +1229,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "gadgets",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["tech", "kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "tech",
+          "kunst"
+        ],
         "confidence": 0.7,
-        "reasons": ["Product type indicates women", "Matched 1 keyword(s) for gadgets"],
+        "reasons": [
+          "Product type indicates women",
+          "Matched 1 keyword(s) for gadgets"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1187,7 +1262,9 @@
       "price": 99.9,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_64510_cropped.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_64510_cropped.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42216204439&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -1293,13 +1370,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "duurzaam",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 5 keyword(s) for duurzaam"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 5 keyword(s) for duurzaam"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1423,13 +1509,24 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["men"],
+        "audience": [
+          "men"
+        ],
         "category": "wonen",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "tech", "kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "tech",
+          "kunst"
+        ],
         "confidence": 0.9,
-        "reasons": ["Title contains men keyword", "Matched 3 keyword(s) for wonen"],
+        "reasons": [
+          "Title contains men keyword",
+          "Matched 3 keyword(s) for wonen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1554,13 +1651,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "muziek"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "muziek"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1684,13 +1791,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "mode",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["mode"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "mode"
+        ],
         "confidence": 0.8500000000000001,
-        "reasons": ["Title contains women keyword", "Matched 2 keyword(s) for mode"],
+        "reasons": [
+          "Title contains women keyword",
+          "Matched 2 keyword(s) for mode"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1707,7 +1823,9 @@
       "price": 65,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_103198.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_103198.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41853209802&a=2566111&m=24072",
       "categoryPath": "Home",
       "googleProductCategory": "Home Accessories",
@@ -1813,13 +1931,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "koken",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.8500000000000001,
-        "reasons": ["Fashion:suitable_for indicates unisex", "Matched 2 keyword(s) for koken"],
+        "reasons": [
+          "Fashion:suitable_for indicates unisex",
+          "Matched 2 keyword(s) for koken"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1943,11 +2070,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "25-50",
-        "occasions": ["algemeen"],
-        "interests": ["tech"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "tech"
+        ],
         "confidence": 0.55,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -2076,11 +2209,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "kunst",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["kunst"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.55,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -2091,6 +2230,81 @@
       },
       "searchText": "epson expression home xp-2200 + 1 set extra inkt epson printers printers met de epson expression home xp-2200 + 1 set extra inkt bundel haal je meteen een voorraad inkt in huis bij je printer. je ontvangt naast de printer een zwarte, cyaan, geel en magenta cartridge. de ep",
       "canonicalKey": "epson|epson expression home xp2200 1 set extra inkt"
+    },
+    {
+      "id": "slygad:shop-like-you-give-a-damn:36167791916",
+      "source": "slygad",
+      "merchant": "Shop Like You Give A Damn",
+      "title": "Infinitdenim unisex vegan Medium Kussen Gerecycled Denim",
+      "description": "Middelgroot kussen ontworpen met de patchwork-techniek met gerecyclede items van post-consumer denim. Ethisch ontworpen en gemaakt in onze Back To Eco-werkplaats in Barcelona. Onze producten gemaakt met gerecyclede spijkerbroeken kunnen verschillen in kleur en textuur hebben, afhankelijk van de gebruikte spijkerbroek, zie de foto's. Maar ze volgen hetzelfde ontwerp en een kleurencombinatie die lijkt op het gefotografeerde monster.",
+      "brand": "Infinitdenim",
+      "price": 50.5,
+      "currency": "EUR",
+      "originalPrice": 50.5,
+      "images": [
+        "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_68295.jpg&feedId=65481&k=eae26a0943e2c7e180ce40c079d43c9c87b3ef4e"
+      ],
+      "url": "https://www.awin1.com/pclick.php?p=36167791916&a=2566111&m=24072",
+      "categoryPath": "Duurzame & Vegan Cadeaus",
+      "productType": "duurzaam, vegan, ethisch, sustainable",
+      "mpn": "36167791916",
+      "sku": "36167791916",
+      "inStock": true,
+      "condition": "new",
+      "_raw": {
+        "id": "36167791916",
+        "name": "Infinitdenim unisex vegan Medium Kussen Gerecycled Denim",
+        "price": 50.5,
+        "image": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_68295.jpg&feedId=65481&k=eae26a0943e2c7e180ce40c079d43c9c87b3ef4e",
+        "imageUrl": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_68295.jpg&feedId=65481&k=eae26a0943e2c7e180ce40c079d43c9c87b3ef4e",
+        "affiliateLink": "https://www.awin1.com/pclick.php?p=36167791916&a=2566111&m=24072",
+        "description": "Middelgroot kussen ontworpen met de patchwork-techniek met gerecyclede items van post-consumer denim. Ethisch ontworpen en gemaakt in onze Back To Eco-werkplaats in Barcelona. Onze producten gemaakt met gerecyclede spijkerbroeken kunnen verschillen in kleur en textuur hebben, afhankelijk van de gebruikte spijkerbroek, zie de foto's. Maar ze volgen hetzelfde ontwerp en een kleurencombinatie die lijkt op het gefotografeerde monster.",
+        "shortDescription": "Middelgroot kussen ontworpen met de patchwork-techniek met gerecyclede items van post-consumer denim. Ethisch ontworpen en gemaakt in onze Back To Eco-werkplaats in Barcelona. Onze producten gemaakt m...",
+        "category": "Duurzame & Vegan Cadeaus",
+        "tags": [
+          "duurzaam",
+          "vegan",
+          "ethisch",
+          "sustainable"
+        ],
+        "brand": "Infinitdenim",
+        "giftScore": 9.5,
+        "inStock": true,
+        "merchant": "Shop Like You Give A Damn",
+        "source": "shop-like-you-give-a-damn",
+        "color": "Donkerblauw",
+        "material": "Katoen, gerecycled",
+        "originalPrice": 50.5,
+        "currency": "EUR",
+        "active": true,
+        "featured": true,
+        "createdAt": "2025-10-18T14:24:24.086Z",
+        "updatedAt": "2025-10-18T14:24:24.086Z",
+        "merchant_name": "Shop Like You Give A Damn"
+      },
+      "facets": {
+        "audience": [
+          "unisex"
+        ],
+        "category": "duurzaam",
+        "priceBucket": "50-100",
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "tech"
+        ],
+        "confidence": 0.925,
+        "reasons": [
+          "Title contains unisex keyword",
+          "Matched 5 keyword(s) for duurzaam"
+        ],
+        "needsReview": false,
+        "isGiftable": true
+      },
+      "searchText": "infinitdenim unisex vegan medium kussen gerecycled denim infinitdenim duurzaam, vegan, ethisch, sustainable duurzame & vegan cadeaus middelgroot kussen ontworpen met de patchwork-techniek met gerecyclede items van post-consumer denim. ethisch ontworpen en gemaakt in onze back to eco-werkplaats in barcelona. onze producten gemaakt m",
+      "canonicalKey": "infinitdenim|infinitdenim unisex vegan medium kussen gerecycled denim"
     },
     {
       "id": "coolblue:24072:41853209302",
@@ -2210,13 +2424,23 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "wonen",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "muziek"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam",
+          "muziek"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wonen"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for wonen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2233,7 +2457,9 @@
       "price": 70,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_90182.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_90182.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42192006043&a=2566111&m=24072",
       "categoryPath": "Home",
       "googleProductCategory": "Home Accessories",
@@ -2339,13 +2565,22 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["koken"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "koken"
+        ],
         "confidence": 0.8500000000000001,
-        "reasons": ["Fashion:suitable_for indicates unisex", "Matched 2 keyword(s) for sieraden"],
+        "reasons": [
+          "Fashion:suitable_for indicates unisex",
+          "Matched 2 keyword(s) for sieraden"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2362,7 +2597,9 @@
       "price": 150,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_83421.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_83421.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=41853182421&a=2566111&m=24072",
       "categoryPath": "Heren",
       "googleProductCategory": "Men's Clothing",
@@ -2468,13 +2705,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["men"],
+        "audience": [
+          "men"
+        ],
         "category": "geuren",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.825,
-        "reasons": ["Fashion:suitable_for indicates men", "Matched 1 keyword(s) for geuren"],
+        "reasons": [
+          "Fashion:suitable_for indicates men",
+          "Matched 1 keyword(s) for geuren"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2597,13 +2841,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "outdoor",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.8,
-        "reasons": ["Fashion:suitable_for indicates unisex", "Matched 1 keyword(s) for outdoor"],
+        "reasons": [
+          "Fashion:suitable_for indicates unisex",
+          "Matched 1 keyword(s) for outdoor"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -2727,11 +2978,19 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["gamer", "tech", "muziek"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "gamer",
+          "tech",
+          "muziek"
+        ],
         "confidence": 0.55,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -2860,10 +3119,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "koken",
         "priceBucket": "25-50",
-        "occasions": ["algemeen"],
+        "occasions": [
+          "algemeen"
+        ],
         "interests": [],
         "confidence": 0.55,
         "reasons": [
@@ -2886,7 +3149,9 @@
       "price": 169.95,
       "currency": "EUR",
       "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_103858.jpg"],
+      "images": [
+        "https://assets.shoplikeyougiveadamn.com/uploads/Product_103858.jpg"
+      ],
       "url": "https://www.awin1.com/pclick.php?p=42081354127&a=2566111&m=24072",
       "categoryPath": "Dames",
       "googleProductCategory": "Women's Clothing",
@@ -2992,154 +3257,37 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["women"],
+        "audience": [
+          "women"
+        ],
         "category": "wonen",
         "priceBucket": "100-250",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam"],
+        "occasions": [
+          "algemeen"
+        ],
+        "interests": [
+          "duurzaam"
+        ],
         "confidence": 0.875,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 2 keyword(s) for wonen"],
+        "reasons": [
+          "Fashion:suitable_for indicates women",
+          "Matched 2 keyword(s) for wonen"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
       "searchText": "alchemist dames vegan boven helen black alchemist dames een unieke top met rijkelijk geborduurde details en decoratieve stiksels op de pofmouwen. de ronde hals en iets kortere lengte geven dit item een frisse, vrouwelijke look. op het rugpand zorgen fijn a",
       "canonicalKey": "alchemist|alchemist dames vegan boven helen"
-    },
-    {
-      "id": "coolblue:24072:42216204513",
-      "source": "coolblue",
-      "merchant": "Shop Like You Give A Damn - NL & BE",
-      "title": "ORGANICATION dames vegan Rok Bio-Katoen Mix Zwart Camel",
-      "description": "Pasvorm: normale pasvorm Lengte: midi-lengte Met een blinde ritssluiting aan de zijkant Decoratieve knopen aan de voorkant Materiaal: 57 % biologisch katoen - 24% gerecycled polyester - 16% viscose (LENZING&trade; ECOVERO&trade;) - 3% elastaan Ons model is 1.76m lang en draagt maat S",
-      "brand": "ORGANICATION",
-      "price": 79.9,
-      "currency": "EUR",
-      "originalPrice": 0,
-      "images": ["https://assets.shoplikeyougiveadamn.com/uploads/Product_64557_cropped.jpg"],
-      "url": "https://www.awin1.com/pclick.php?p=42216204513&a=2566111&m=24072",
-      "categoryPath": "Dames",
-      "googleProductCategory": "Women's Clothing",
-      "gtin": "64557",
-      "mpn": "64557-L",
-      "sku": "42216204513",
-      "inStock": true,
-      "condition": "new",
-      "shippingCost": 5.95,
-      "deliveryDays": 3,
-      "_raw": {
-        "aw_deep_link": "https://www.awin1.com/pclick.php?p=42216204513&a=2566111&m=24072",
-        "product_name": "ORGANICATION dames vegan Rok Bio-Katoen Mix Zwart Camel",
-        "aw_product_id": "42216204513",
-        "merchant_product_id": "64557-L",
-        "merchant_image_url": "https://assets.shoplikeyougiveadamn.com/uploads/Product_64557_cropped.jpg",
-        "description": "Pasvorm: normale pasvorm Lengte: midi-lengte Met een blinde ritssluiting aan de zijkant Decoratieve knopen aan de voorkant Materiaal: 57 % biologisch katoen - 24% gerecycled polyester - 16% viscose (LENZING&trade; ECOVERO&trade;) - 3% elastaan Ons model is 1.76m lang en draagt maat S",
-        "merchant_category": "Dames",
-        "search_price": "79.90",
-        "merchant_name": "Shop Like You Give A Damn - NL & BE",
-        "merchant_id": "24072",
-        "category_name": "Women's Clothing",
-        "category_id": "141",
-        "aw_image_url": "https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_64557_cropped.jpg&feedId=59157&k=a8f6a7ee7fd81186b2c7c65a08f971ebcfc7db77",
-        "currency": "EUR",
-        "store_price": "",
-        "delivery_cost": "5,95 EUR",
-        "merchant_deep_link": "https://www.shoplikeyougiveadamn.nl/rok-bio-katoen-mix-zwart-camel/p-64557",
-        "language": "",
-        "last_updated": "",
-        "display_price": "EUR79.90",
-        "data_feed_id": "59157",
-        "brand_name": "ORGANICATION",
-        "brand_id": "27547",
-        "colour": "Zwart",
-        "product_short_description": "",
-        "specifications": "",
-        "condition": "new",
-        "product_model": "",
-        "model_number": "",
-        "dimensions": "",
-        "keywords": "",
-        "promotional_text": "",
-        "product_type": "",
-        "commission_group": "",
-        "merchant_product_category_path": "",
-        "merchant_product_second_category": "Rokken",
-        "merchant_product_third_category": "Midirokken",
-        "rrp_price": "",
-        "saving": "",
-        "savings_percent": "",
-        "base_price": "",
-        "base_price_amount": "",
-        "base_price_text": "",
-        "product_price_old": "",
-        "delivery_restrictions": "",
-        "delivery_weight": "",
-        "warranty": "",
-        "terms_of_contract": "",
-        "delivery_time": "3 tot 7 werkdagen",
-        "in_stock": "1",
-        "stock_quantity": "",
-        "valid_from": "",
-        "valid_to": "",
-        "is_for_sale": "1",
-        "web_offer": "",
-        "pre_order": "",
-        "stock_status": "",
-        "size_stock_status": "",
-        "size_stock_amount": "",
-        "merchant_thumb_url": "",
-        "large_image": "",
-        "alternate_image": "https://assets.shoplikeyougiveadamn.com/uploads/Product_ProductPropertyID_132193086.jpg",
-        "aw_thumb_url": "https://images2.productserve.com/?w=70&h=70&bg=white&trim=5&t=letterbox&url=ssl%3Aassets.shoplikeyougiveadamn.com%2Fuploads%2FProduct_64557_cropped.jpg&feedId=59157&k=a8f6a7ee7fd81186b2c7c65a08f971ebcfc7db77",
-        "alternate_image_two": "",
-        "alternate_image_three": "",
-        "alternate_image_four": "",
-        "reviews": "",
-        "average_rating": "",
-        "rating": "",
-        "number_available": "",
-        "custom_1": "",
-        "custom_2": "cheap",
-        "custom_3": "17.00%",
-        "custom_4": "adult",
-        "custom_5": "",
-        "custom_6": "",
-        "custom_7": "",
-        "custom_8": "",
-        "custom_9": "",
-        "ean": "64557",
-        "isbn": "",
-        "upc": "",
-        "mpn": "",
-        "parent_product_id": "64557",
-        "product_GTIN": "",
-        "basket_link": "",
-        "Fashion:suitable_for": "female",
-        "Fashion:category": "",
-        "Fashion:size": "L",
-        "Fashion:material": "EcoVeroâ„¢, LENZINGâ„¢/Elastaan (lycra)/Gerecycled synthetisch materiaal /Katoen, biologisch",
-        "Fashion:pattern": "",
-        "Fashion:swatch": ""
-      },
-      "facets": {
-        "audience": ["women"],
-        "category": "duurzaam",
-        "priceBucket": "50-100",
-        "occasions": ["algemeen"],
-        "interests": ["duurzaam", "kunst"],
-        "confidence": 0.95,
-        "reasons": ["Fashion:suitable_for indicates women", "Matched 5 keyword(s) for duurzaam"],
-        "needsReview": false,
-        "isGiftable": true
-      },
-      "searchText": "organication dames vegan rok bio-katoen mix zwart camel organication dames pasvorm: normale pasvorm lengte: midi-lengte met een blinde ritssluiting aan de zijkant decoratieve knopen aan de voorkant materiaal: 57 % biologisch katoen - 24% gerecycled polyester - 16% viscose (l",
-      "canonicalKey": "organication|organication dames vegan rok biokatoen mix camel"
     }
   ],
   "stats": {
-    "uniqueBrands": 21,
+    "uniqueBrands": 22,
     "uniqueCategories": 9,
-    "averagePrice": 87.72291666666666,
-    "priceRange": [21.99, 179],
+    "averagePrice": 86.49791666666665,
+    "priceRange": [
+      21.99,
+      179
+    ],
     "confidenceDistribution": {
       "high (>0.8)": 14,
       "medium (0.5-0.8)": 10,

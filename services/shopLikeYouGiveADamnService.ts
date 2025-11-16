@@ -2,8 +2,6 @@ import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 import { productCache } from './productCacheService'
 
-/* eslint-disable no-console */
-
 export interface SLYGADProduct {
   id: string
   name: string

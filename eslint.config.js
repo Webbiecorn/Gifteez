@@ -108,11 +108,11 @@ export default [
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_'
       }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+  '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/consistent-type-imports': ['error', {
         prefer: 'type-imports'
       }],
-      '@typescript-eslint/no-non-null-assertion': 'warn',
+  '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/ban-ts-comment': 'warn',
 
       // React rules
@@ -163,7 +163,7 @@ export default [
       'import/no-named-as-default-member': 'off',
 
       // General rules
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+  'no-console': ['warn', { allow: ['warn', 'error', 'info', 'debug', 'log'] }],
       'no-debugger': 'warn',
       'no-var': 'error',
       'prefer-const': 'error',

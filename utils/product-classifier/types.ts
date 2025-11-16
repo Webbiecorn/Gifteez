@@ -7,7 +7,7 @@
 
 export type RawFeedRow = Record<string, any>
 
-export type FeedSource = 'awin' | 'coolblue' | 'bol' | 'amazon' | 'manual'
+export type FeedSource = 'awin' | 'coolblue' | 'bol' | 'amazon' | 'slygad' | 'partypro' | 'manual'
 
 // ==================== Normalized Product ====================
 
@@ -19,37 +19,37 @@ export interface Product {
   id: string // Format: {source}:{merchantId}:{productId} e.g. "awin:12345:ABC123"
   source: FeedSource
   merchant?: string // Actual merchant name (e.g., "Coolblue", "Shop Like You Give A Damn")
-  
+
   // Core data
   title: string
   description?: string
   brand?: string
-  
+
   // Pricing
   price: number
   currency: string
   originalPrice?: number // For discount calculation
-  
+
   // Media
   images: string[]
   url: string
-  
+
   // Taxonomy (raw from feed)
   categoryPath?: string // e.g. "Apparel & Accessories > Belts"
   productType?: string // Merchant's custom category
   googleProductCategory?: string // GPC code or path
-  
+
   // Identifiers
   gtin?: string // EAN/UPC
   mpn?: string // Manufacturer Part Number
   sku?: string
-  
+
   // Metadata
   inStock?: boolean
   condition?: 'new' | 'refurbished' | 'used'
   shippingCost?: number
   deliveryDays?: number
-  
+
   // Raw data (for debugging/overrides)
   _raw?: RawFeedRow
 }
@@ -131,16 +131,16 @@ export interface Facets {
   audience: Audience[]
   category: Category
   priceBucket: PriceBucket
-  
+
   // Optional dimensions
   occasions?: Occasion[]
   interests?: Interest[]
   subcategory?: string // More specific than category
-  
+
   // Quality metrics
   confidence: number // 0-1, how certain are we?
   reasons: string[] // Why did we classify this way?
-  
+
   // Flags
   needsReview: boolean // Low confidence or ambiguous
   isGiftable: boolean // Suitable as a gift?
@@ -165,7 +165,7 @@ export interface KeywordSet {
   categories: Record<Category, string[]>
   occasions: Record<Occasion, string[]>
   interests: Record<Interest, string[]>
-  
+
   // Special keywords
   exclude: string[] // Products containing these are excluded
   forceGiftable: string[] // Always mark as giftable
@@ -183,13 +183,13 @@ export type GPCMapping = Record<string, Category>
 export interface Overrides {
   brands: Record<string, Partial<Facets> & { reason?: string }>
   skus: Record<string, Partial<Facets> & { reason?: string }>
-  
+
   exclude: {
     sku: string[] // Specific products to exclude
     contains: string[] // Exclude if title/description contains
     brands: string[] // Exclude entire brands
   }
-  
+
   forceInclude: string[] // Always include these SKUs regardless of rules
 }
 
@@ -200,12 +200,12 @@ export interface ClassifierConfig {
   keywords: KeywordSet
   gpcMapping: GPCMapping
   overrides: Overrides
-  
+
   // Thresholds
   confidenceThreshold: number // Below this = needs review
   minPrice: number // Exclude products below this
   maxPrice: number // Exclude products above this
-  
+
   // Weights for prioritization
   titleWeight: number // How much to trust title vs description
   categoryWeight: number // How much to trust feed category
@@ -222,11 +222,11 @@ export interface DiversifyOptions {
   maxPerBrand: number // Max products from same brand
   maxPerCategory: number // Max products in same category
   maxPerPriceBucket: number // Spread across price ranges
-  
+
   // Minimum requirements
   minDifferentBrands: number // Aim for this many different brands
   minDifferentCategories: number // Aim for this many categories
-  
+
   // Scoring
   diversityWeight: number // 0-1, how much to prioritize variety
   popularityWeight: number // 0-1, how much to prioritize clicks/sales
@@ -239,7 +239,7 @@ export interface DiversifyOptions {
  * Output format for programmatic landing pages
  */
 export interface ProgrammaticIndex {
-  routeKey: string // e.g. "cadeaus/vrouwen/sieraden/25-50"
+  routeKey: string // e.g. "cadeaugidsen/vrouwen/sieraden/25-50"
   metadata: {
     title: string
     description: string
@@ -250,13 +250,13 @@ export interface ProgrammaticIndex {
     totalProducts: number
     generatedAt: string
   }
-  
+
   // Editorial picks (manual, always on top)
   featured: ClassifiedProduct[]
-  
+
   // Automated diverse selection
   products: ClassifiedProduct[]
-  
+
   // Stats for debugging
   stats: {
     uniqueBrands: number

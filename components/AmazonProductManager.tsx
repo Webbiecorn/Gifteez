@@ -176,7 +176,7 @@ const AmazonProductManager: React.FC = () => {
     })
   }, [categoryConfig])
 
-  const categoryOptions = categoryConfig?.categories ?? []
+  const categoryOptions = useMemo(() => categoryConfig?.categories ?? [], [categoryConfig])
 
   const productCategoryMap = useMemo(() => {
     const map = new Map<string, Array<{ id: string; title: string }>>()

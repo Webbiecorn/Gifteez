@@ -14,7 +14,8 @@ const variantClasses: Record<ToastVariant, string> = {
   info: 'bg-info text-white shadow-[0_18px_45px_-25px_rgba(59,130,246,0.55)] border border-info/40',
   warning:
     'bg-warning text-primary shadow-[0_18px_45px_-25px_rgba(245,158,11,0.55)] border border-warning/40',
-  error: 'bg-error text-white shadow-[0_18px_45px_-25px_rgba(239,68,68,0.55)] border border-error/40',
+  error:
+    'bg-error text-white shadow-[0_18px_45px_-25px_rgba(239,68,68,0.55)] border border-error/40',
 }
 
 const Toast: React.FC<ToastProps> = ({ message, variant = 'default' }) => {

@@ -2,11 +2,7 @@ import type { Config } from 'tailwindcss'
 import typography from '@tailwindcss/typography'
 
 export default {
-  content: [
-    './index.html',
-    './**/*.{ts,tsx}',
-    '!./node_modules/**'
-  ],
+  content: ['./index.html', './**/*.{ts,tsx}', '!./node_modules/**'],
   safelist: [
     // Background gradients
     'bg-gradient-to-br',
@@ -65,7 +61,7 @@ export default {
         DEFAULT: '1rem',
         sm: '1.25rem',
         md: '1.5rem',
-        lg: '2rem'
+        lg: '2rem',
       },
       screens: {
         xs: '480px',
@@ -73,13 +69,13 @@ export default {
         md: '768px',
         lg: '1024px',
         xl: '1280px',
-        '2xl': '1440px'
-      }
+        '2xl': '1440px',
+      },
     },
     extend: {
       screens: {
         xs: '480px',
-        '3xl': '1680px'
+        '3xl': '1680px',
       },
       colors: {
         // Brand Colors - Primary palette
@@ -97,7 +93,7 @@ export default {
           900: '#7f1d1d',
           950: '#450a0a',
         },
-        
+
         // Secondary Colors - Backgrounds
         secondary: {
           DEFAULT: '#fff7ed', // soft peach backdrop
@@ -107,7 +103,7 @@ export default {
           300: '#fde8c8',
           400: '#fcd9a6',
         },
-        
+
         // Accent Colors - CTAs & Interactive elements
         accent: {
           DEFAULT: '#f43f5e', // vibrant rose for CTAs
@@ -115,14 +111,14 @@ export default {
           light: '#fb7185',
           dark: '#be123c',
         },
-        
+
         // Highlight Colors - Badges & accents
         highlight: {
           DEFAULT: '#fb923c', // amber accent
           light: '#fdba74',
           dark: '#ea580c',
         },
-        
+
         // Muted Colors - Subtle backgrounds
         muted: {
           rose: '#ffe4e6',
@@ -131,7 +127,7 @@ export default {
           green: '#d1fae5',
           yellow: '#fef3c7',
         },
-        
+
         // Neutral Colors - Text & UI elements
         neutral: {
           50: '#fafafa',
@@ -146,7 +142,7 @@ export default {
           900: '#171717',
           950: '#0a0a0a',
         },
-        
+
         // Semantic Colors - Status & feedback
         success: {
           DEFAULT: '#10b981',
@@ -172,37 +168,37 @@ export default {
           dark: '#2563eb',
           bg: '#dbeafe',
         },
-        
+
         // Legacy colors (keep for backwards compatibility)
         'light-bg': '#fff4f7',
         'accent-hover': '#e11d48',
         'muted-rose': '#ffe4e6',
       },
-      
+
       // Spacing scale - Consistent spacing tokens
       spacing: {
-        '18': '4.5rem',   // 72px
-        '22': '5.5rem',   // 88px
-        '26': '6.5rem',   // 104px
-        '30': '7.5rem',   // 120px
-        '34': '8.5rem',   // 136px
-        '38': '9.5rem',   // 152px
-        '42': '10.5rem',  // 168px
-        '46': '11.5rem',  // 184px
-        '50': '12.5rem',  // 200px
+        '18': '4.5rem', // 72px
+        '22': '5.5rem', // 88px
+        '26': '6.5rem', // 104px
+        '30': '7.5rem', // 120px
+        '34': '8.5rem', // 136px
+        '38': '9.5rem', // 152px
+        '42': '10.5rem', // 168px
+        '46': '11.5rem', // 184px
+        '50': '12.5rem', // 200px
       },
-      
+
       // Border Radius - Consistent rounding
       borderRadius: {
-        'none': '0',
-        'sm': '0.25rem',    // 4px
-        DEFAULT: '0.5rem',  // 8px - default for most elements
-        'md': '0.75rem',    // 12px
-        'lg': '1rem',       // 16px - cards, modals
-        'xl': '1.25rem',    // 20px - prominent cards
-        '2xl': '1.5rem',    // 24px - hero sections
-        '3xl': '2rem',      // 32px - extra large
-        'full': '9999px',   // pills, badges
+        none: '0',
+        sm: '0.25rem', // 4px
+        DEFAULT: '0.5rem', // 8px - default for most elements
+        md: '0.75rem', // 12px
+        lg: '1rem', // 16px - cards, modals
+        xl: '1.25rem', // 20px - prominent cards
+        '2xl': '1.5rem', // 24px - hero sections
+        '3xl': '2rem', // 32px - extra large
+        full: '9999px', // pills, badges
       },
       fontFamily: {
         sans: ['Inter', 'Open Sans', 'system-ui', 'sans-serif'],
@@ -210,7 +206,7 @@ export default {
         body: ['Open Sans', 'system-ui', 'sans-serif'],
         'serif-italic': ['Playfair Display', 'serif'],
       },
-      
+
       // Font weights
       fontWeight: {
         light: '300',
@@ -221,7 +217,7 @@ export default {
         extrabold: '800',
         black: '900',
       },
-      
+
       // Line height scale
       lineHeight: {
         none: '1',
@@ -231,7 +227,7 @@ export default {
         relaxed: '1.625',
         loose: '2',
       },
-      
+
       // Letter spacing scale
       letterSpacing: {
         tighter: '-0.05em',
@@ -241,20 +237,29 @@ export default {
         wider: '0.05em',
         widest: '0.1em',
       },
-      
+
       // Font sizes with corresponding line heights
-      
+
       fontSize: {
         // Semantic scale for consistent headings
-        h1: ['clamp(2.5rem,4.5vw,3.5rem)', { lineHeight: '1.05', letterSpacing: '-0.02em', fontWeight: '700' }], // ~40–56px
-        h2: ['clamp(2rem,3.5vw,2.75rem)', { lineHeight: '1.08', letterSpacing: '-0.015em', fontWeight: '700' }], // ~32–44px
-        h3: ['clamp(1.625rem,2.5vw,2.125rem)', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '600' }], // ~26–34px
+        h1: [
+          'clamp(2.5rem,4.5vw,3.5rem)',
+          { lineHeight: '1.05', letterSpacing: '-0.02em', fontWeight: '700' },
+        ], // ~40–56px
+        h2: [
+          'clamp(2rem,3.5vw,2.75rem)',
+          { lineHeight: '1.08', letterSpacing: '-0.015em', fontWeight: '700' },
+        ], // ~32–44px
+        h3: [
+          'clamp(1.625rem,2.5vw,2.125rem)',
+          { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '600' },
+        ], // ~26–34px
         h4: ['clamp(1.375rem,1.8vw,1.75rem)', { lineHeight: '1.2', fontWeight: '600' }], // ~22–28px
         h5: ['1.125rem', { lineHeight: '1.35', fontWeight: '600' }], // 18px
         lead: ['clamp(1.125rem,1.4vw,1.375rem)', { lineHeight: '1.55', fontWeight: '400' }], // Leading paragraph
         body: ['1rem', { lineHeight: '1.6' }],
         small: ['0.8125rem', { lineHeight: '1.4', letterSpacing: '0.005em' }],
-        micro: ['0.6875rem', { lineHeight: '1.2', letterSpacing: '0.04em', fontWeight: '500' }]
+        micro: ['0.6875rem', { lineHeight: '1.2', letterSpacing: '0.04em', fontWeight: '500' }],
       },
       keyframes: {
         'fade-in': {
@@ -276,16 +281,16 @@ export default {
         'gradient-xy': {
           '0%, 100%': {
             'background-size': '400% 400%',
-            'background-position': 'left center'
+            'background-position': 'left center',
           },
           '50%': {
             'background-size': '200% 200%',
-            'background-position': 'right center'
-          }
+            'background-position': 'right center',
+          },
         },
-        'shimmer': {
+        shimmer: {
           '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' }
+          '100%': { transform: 'translateX(100%)' },
         },
         'bounce-subtle': {
           '0%, 100%': { transform: 'translateY(0)' },
@@ -328,7 +333,7 @@ export default {
         'slide-in-left': 'slide-in-left 0.3s ease-out forwards',
         'slide-in-right': 'slide-in-right 0.3s ease-out forwards',
         'gradient-xy': 'gradient-xy 3s ease infinite',
-        'shimmer': 'shimmer 2s infinite',
+        shimmer: 'shimmer 2s infinite',
         'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
         'scale-in': 'scale-in 0.3s ease-out forwards',
         'subtle-float': 'subtle-float 6s ease-in-out infinite',
@@ -339,24 +344,24 @@ export default {
         'pulse-slower': 'pulse-slower 6s ease-in-out infinite',
       },
       transitionProperty: {
-        'height': 'height',
-        'spacing': 'margin, padding',
+        height: 'height',
+        spacing: 'margin, padding',
       },
-      
+
       // Box Shadow tokens - Elevation system
       boxShadow: {
-        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         DEFAULT: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
-        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+        md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+        lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+        xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
-        'glow': '0 0 20px rgba(244, 63, 94, 0.3)', // Accent glow for CTAs
+        inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
+        glow: '0 0 20px rgba(244, 63, 94, 0.3)', // Accent glow for CTAs
         'glow-lg': '0 0 40px rgba(244, 63, 94, 0.4)', // Larger accent glow
-        'none': 'none',
+        none: 'none',
       },
-      
+
       // Z-index scale - Layering system
       zIndex: {
         '0': '0',
@@ -371,7 +376,7 @@ export default {
         '90': '90', // Cookie banners
         '100': '100', // Top layer (urgent notifications)
       },
-      
+
       // Typography scale classes
       typography: {
         DEFAULT: {

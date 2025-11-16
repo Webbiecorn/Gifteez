@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { PROGRAMMATIC_INDEX } from '../data/programmatic'
+import { buildGuidePath, GUIDE_BASE_PATH, replaceLegacyGuidePathSegment } from '../guidePaths'
 import JsonLd from './JsonLd'
 import Container from './layout/Container'
 import type { NavigateTo } from '../types'
@@ -23,13 +24,21 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
     [variants]
   )
 
-  const quickLinks = [
-    { label: 'Budget onder €25', href: '/cadeaus/sinterklaas/voor-kinderen-onder-25' },
-    { label: 'Onder €50 voor haar', href: '/cadeaus/kerst/voor-haar/onder-50' },
-    { label: 'Onder €50 voor hem', href: '/cadeaus/kerst/voor-hem/onder-50' },
-    { label: 'Duurzame cadeaus', href: '/cadeaus/duurzamere-cadeaus-onder-50' },
-    { label: 'Gamer cadeaus', href: '/cadeaus/gamer-cadeaus-onder-100' },
-  ]
+  const quickLinks = useMemo(
+    () =>
+      [
+        { label: 'Budget onder €25', href: '/cadeaus/sinterklaas/voor-kinderen-onder-25' },
+        { label: 'Onder €50 voor haar', href: '/cadeaus/kerst/voor-haar/onder-50' },
+        { label: 'Onder €50 voor hem', href: '/cadeaus/kerst/voor-hem/onder-50' },
+        { label: 'Duurzame cadeaus', href: '/cadeaus/duurzamere-cadeaus-onder-50' },
+        { label: 'Duurzaam kerstcadeau', href: '/cadeaus/kerst-duurzaam-onder-50' },
+        { label: 'Gamer cadeaus', href: '/cadeaus/gamer-cadeaus-onder-100' },
+      ].map((link) => ({
+        ...link,
+        href: replaceLegacyGuidePathSegment(link.href),
+      })),
+    []
+  )
 
   const breadcrumbSchema = useMemo(() => {
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://gifteez.nl'
@@ -37,7 +46,12 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Cadeaus', item: `${baseUrl}/cadeaus` },
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Cadeaugidsen',
+          item: `${baseUrl}${GUIDE_BASE_PATH}`,
+        },
       ],
     }
   }, [])
@@ -47,13 +61,13 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
     return {
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      name: 'Cadeaus voor elk Moment',
+      name: 'Cadeaugidsen voor elk Moment',
       itemListOrder: 'https://schema.org/ItemListOrderAscending',
       itemListElement: variants.map((v, i) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `${baseUrl}/cadeaus/${v.slug}`,
-        item: { '@type': 'WebPage', name: v.title, url: `${baseUrl}/cadeaus/${v.slug}` },
+        url: `${baseUrl}${buildGuidePath(v.slug)}`,
+        item: { '@type': 'WebPage', name: v.title, url: `${baseUrl}${buildGuidePath(v.slug)}` },
       })),
     }
   }, [variants])
@@ -115,7 +129,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
             {featuredCollections.map((v) => (
               <a
                 key={v.slug}
-                href={`/cadeaus/${v.slug}`}
+                href={buildGuidePath(v.slug)}
                 className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-[0_10px_35px_-25px_rgba(15,23,42,0.35)] transition hover:-translate-y-1 hover:shadow-[0_22px_55px_-30px_rgba(219,39,119,0.45)]"
                 aria-label={`Open ${v.title}`}
               >
@@ -162,7 +176,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
             {holidayCollections.map((v) => (
               <a
                 key={v.slug}
-                href={`/cadeaus/${v.slug}`}
+                href={buildGuidePath(v.slug)}
                 className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
               >
                 <span className="inline-flex w-fit items-center rounded-full bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-blue-600">
@@ -198,7 +212,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
               {interestCollections.map((v) => (
                 <a
                   key={v.slug}
-                  href={`/cadeaus/${v.slug}`}
+                  href={buildGuidePath(v.slug)}
                   className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
                 >
                   <span className="inline-flex w-fit items-center rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-indigo-600">
@@ -233,7 +247,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
               {sustainableCollections.map((v) => (
                 <a
                   key={v.slug}
-                  href={`/cadeaus/${v.slug}`}
+                  href={buildGuidePath(v.slug)}
                   className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
                 >
                   <span className="inline-flex w-fit items-center rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600">
@@ -301,7 +315,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
                 </a>
               ))}
               <a
-                href="/cadeaus"
+                href={GUIDE_BASE_PATH}
                 className="mt-2 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-400"
               >
                 Alle cadeaugidsen
@@ -311,8 +325,8 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
         </section>
       </div>
 
-      <JsonLd id="jsonld-breadcrumbs-cadeaus" data={breadcrumbSchema} />
-      <JsonLd id="jsonld-itemlist-cadeaus" data={itemListSchema} />
+      <JsonLd id="jsonld-breadcrumbs-cadeaugidsen" data={breadcrumbSchema} />
+      <JsonLd id="jsonld-itemlist-cadeaugidsen" data={itemListSchema} />
     </Container>
   )
 }

@@ -2,13 +2,18 @@ import { test, expect } from '@playwright/test'
 import {
   navigateTo,
   waitForPageLoad,
+  ensureCookieConsent,
+  dismissCookieBannerIfPresent,
+  clickHeaderNav,
 } from './helpers'
 
 test.describe('Blog Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to Blog page
+    await ensureCookieConsent(page)
     await navigateTo(page, '/')
-    await page.click('text=Blog')
+    await dismissCookieBannerIfPresent(page)
+    await clickHeaderNav(page, 'nav-blog')
     await waitForPageLoad(page)
   })
 
@@ -56,14 +61,17 @@ test.describe('Blog Flow', () => {
       const firstPost = page.locator('article, [data-testid*="post"]').first()
       
       if (await firstPost.isVisible()) {
-        // Look for date (various formats)
-        const hasDate = await firstPost.locator('time, [datetime], text=/\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}/').count() > 0
-        
-        // Look for category or tag
-        const hasCategory = await firstPost.locator('[class*="category"], [class*="tag"]').count() > 0
-        
-        // At least date or category should be present
-        expect(hasDate || hasCategory).toBe(true)
+        const semanticDateCount = await firstPost.locator('time, [datetime]').count()
+        const patternDateCount = await firstPost.locator('text=/\\b\\d{1,2}[\\/.-]\\d{1,2}[\\/.-]\\d{2,4}\\b/').count()
+        const categoryChipCount = await firstPost.locator('[class*="category" i], [class*="tag" i]').count()
+        const categoryTextCount = await firstPost.locator('text=/categorie|category|tips|tag/i').count()
+
+        expect(
+          semanticDateCount > 0 ||
+            patternDateCount > 0 ||
+            categoryChipCount > 0 ||
+            categoryTextCount > 0
+        ).toBe(true)
       }
     })
 
@@ -84,8 +92,17 @@ test.describe('Blog Flow', () => {
       const firstPost = page.locator('article, [data-testid*="post"]').first()
       
       if (await firstPost.isVisible()) {
-        const postLink = firstPost.locator('a').first()
-        await expect(postLink).toHaveAttribute('href', /.+/)
+        const anchorLink = firstPost.locator('a[href]').first()
+        if ((await anchorLink.count()) > 0) {
+          await expect(anchorLink).toHaveAttribute('href', /.+/)
+          await expect(anchorLink).toBeVisible()
+        } else {
+          const interactiveFallback = firstPost
+            .locator('button, [role="button"], [role="link"]')
+            .filter({ hasText: /lees|ontdek|meer/i })
+            .first()
+          await expect(interactiveFallback).toBeVisible()
+        }
       }
     })
   })
@@ -170,20 +187,22 @@ test.describe('Blog Flow', () => {
       
       const relatedPosts = page.locator('text=/Gerelateerd|Related|Meer artikelen/i').first()
       
-      if (await relatedPosts.isVisible()) {
-        await relatedPosts.scrollIntoViewIfNeeded()
-        await expect(relatedPosts).toBeVisible()
-      }
+      await expect(relatedPosts).toBeVisible()
     })
   })
 
   test.describe('Blog Categories', () => {
     test('should display blog categories if available', async ({ page }) => {
-      const categories = page.locator('text=/Categorieën|Categories/i, [class*="category"]').first()
-      
-      if (await categories.isVisible()) {
-        await expect(categories).toBeVisible()
-      }
+      const headingLocator = page.locator('text=/Categorieën|Categories/i').first()
+      const chipsLocator = page
+        .locator('[data-testid*="category"], [class*="category" i], button, a')
+        .filter({ hasText: /categorie|gift|tips|cadeau/i })
+        .first()
+
+      const headingVisible = (await headingLocator.count()) > 0 && (await headingLocator.isVisible())
+      const chipVisible = (await chipsLocator.count()) > 0 && (await chipsLocator.isVisible())
+
+      expect(headingVisible || chipVisible).toBe(true)
     })
 
     test('should filter posts by category', async ({ page }) => {

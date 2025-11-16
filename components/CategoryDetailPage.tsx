@@ -18,9 +18,9 @@ import {
   LockIcon,
 } from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
+import JsonLd from './JsonLd'
 import { Container } from './layout/Container'
 import Meta from './Meta'
-import JsonLd from './JsonLd'
 import type { NavigateTo, DealItem } from '../types'
 
 interface CategoryDetailPageProps {
@@ -824,7 +824,7 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           : 'Je rekent af via de beveiligde betaalpagina van de partner met vertrouwde methoden zoals iDEAL en PayPal.',
       },
     ],
-    [isSustainableCategory, isPartyCategory]
+    [isSustainableCategory]
   )
 
   const bulletAccentClass = accentTheme.bulletAccent
@@ -878,7 +878,10 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   }
 
   // Product Card Component - Enhanced with conversion optimization
-  const ProductCard: React.FC<{ deal: DealItem }> = ({ deal }) => {
+  const ProductCard: React.FC<{ deal: DealItem; isSustainable: boolean }> = ({
+    deal,
+    isSustainable,
+  }) => {
     const retailerInfo = useMemo(
       () => resolveRetailerInfo(deal.affiliateLink),
       [deal.affiliateLink]
@@ -891,14 +894,14 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         pageType: 'category',
         placement: 'card-cta',
       })
-      if (isSustainableCategory) {
+      if (isSustainable) {
         // Preserve additional content tagging
         return appendTrackingParams(baseUrl, {
           utm_content: deal.id,
         })
       }
       return baseUrl
-    }, [deal.affiliateLink, deal.id, isSustainableCategory])
+    }, [deal.affiliateLink, deal.id, isSustainable])
     const deliveryMessage = useMemo(() => extractDeliveryMessage(deal), [deal])
 
     // Calculate mock savings percentage for conversion boost
@@ -1111,7 +1114,10 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           '@type': 'ItemList',
           name: `${categoryTitle} — Collectie`,
           itemListElement: products.slice(0, 24).map((p, index) => {
-            const price = typeof p.price === 'string' ? p.price.replace(/[^0-9,.]/g, '').replace(',', '.') : p.price
+            const price =
+              typeof p.price === 'string'
+                ? p.price.replace(/[^0-9,.]/g, '').replace(',', '.')
+                : p.price
             const retailer = resolveRetailerInfo(p.affiliateLink)
             return {
               '@type': 'ListItem',
@@ -1126,7 +1132,10 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                   '@type': 'Offer',
                   priceCurrency: 'EUR',
                   price: price || undefined,
-                  url: withAffiliate(p.affiliateLink, { pageType: 'category', placement: 'schema' }),
+                  url: withAffiliate(p.affiliateLink, {
+                    pageType: 'category',
+                    placement: 'schema',
+                  }),
                   availability: 'https://schema.org/InStock',
                 },
               },
@@ -1663,7 +1672,13 @@ const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                           </React.Fragment>
                         )
                       }
-                      return <ProductCard key={product.id ?? `product-${productIndex}`} deal={product} />
+                      return (
+                        <ProductCard
+                          key={product.id ?? `product-${productIndex}`}
+                          deal={product}
+                          isSustainable={isSustainableCategory}
+                        />
+                      )
                     })}
                   </div>
 

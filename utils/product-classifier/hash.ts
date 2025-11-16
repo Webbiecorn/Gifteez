@@ -24,18 +24,15 @@ function normalizeForHash(text: string): string {
  */
 function removeVariants(title: string): string {
   const normalized = normalizeForHash(title)
-  
+
   // Common size patterns
   const sizePattern = /\b(xs|s|m|l|xl|xxl|xxxl|\d+\s?(cm|mm|ml|cl|l|kg|g))\b/gi
-  
+
   // Common color words (extend as needed)
-  const colorPattern = /\b(rood|blauw|groen|geel|zwart|wit|grijs|paars|roze|oranje|bruin|beige|red|blue|green|yellow|black|white|grey|gray|purple|pink|orange|brown)\b/gi
-  
-  return normalized
-    .replace(sizePattern, '')
-    .replace(colorPattern, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+  const colorPattern =
+    /\b(rood|blauw|groen|geel|zwart|wit|grijs|paars|roze|oranje|bruin|beige|red|blue|green|yellow|black|white|grey|gray|purple|pink|orange|brown)\b/gi
+
+  return normalized.replace(sizePattern, '').replace(colorPattern, '').replace(/\s+/g, ' ').trim()
 }
 
 /**
@@ -45,7 +42,7 @@ function removeVariants(title: string): string {
 export function canonicalKey(product: Product): string {
   const brand = normalizeForHash(product.brand || 'unknown')
   const title = removeVariants(product.title)
-  
+
   return `${brand}|${title}`
 }
 
@@ -54,16 +51,12 @@ export function canonicalKey(product: Product): string {
  * Useful for multi-source deduplication (GTIN, MPN, etc.)
  */
 export function identifierHash(product: Product): string {
-  const identifiers = [
-    product.gtin,
-    product.mpn,
-    product.sku
-  ].filter(Boolean)
-  
+  const identifiers = [product.gtin, product.mpn, product.sku].filter(Boolean)
+
   if (identifiers.length > 0) {
     return identifiers.join('|').toLowerCase()
   }
-  
+
   // Fallback to canonical key
   return canonicalKey(product)
 }
@@ -75,13 +68,13 @@ export function areDuplicates(a: Product, b: Product): boolean {
   // Exact identifier match (high confidence)
   if (a.gtin && b.gtin && a.gtin === b.gtin) return true
   if (a.mpn && b.mpn && a.mpn === b.mpn) return true
-  
+
   // Same source and SKU
   if (a.source === b.source && a.sku === b.sku) return true
-  
+
   // Canonical key match (title + brand similarity)
   if (canonicalKey(a) === canonicalKey(b)) return true
-  
+
   return false
 }
 
@@ -89,8 +82,8 @@ export function areDuplicates(a: Product, b: Product): boolean {
  * Assign canonical keys to products
  */
 export function assignCanonicalKeys(products: ClassifiedProduct[]): ClassifiedProduct[] {
-  return products.map(p => ({
+  return products.map((p) => ({
     ...p,
-    canonicalKey: canonicalKey(p)
+    canonicalKey: canonicalKey(p),
   }))
 }

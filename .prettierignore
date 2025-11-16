@@ -36,6 +36,15 @@ public/favicon*.png
 public/apple-touch-icon*.png
 public/manifest.webmanifest
 
+# Bulk data exports (skip formatting)
+data/awin/ingest/
+data/importedProducts.json
+data/partypro-import-ready.json
+data/sampleProducts.json
+data/shop-like-you-give-a-damn-*.json
+public/data/
+public/programmatic/
+
 # Lock files (generated)
 package-lock.json
 yarn.lock

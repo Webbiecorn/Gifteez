@@ -9,8 +9,8 @@ Allow: /blog/*
 Allow: /giftfinder
 Allow: /deals
 Allow: /deals/*
-Allow: /cadeaus
-Allow: /cadeaus/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 
 # Crawl-delay for respectful bots
 Crawl-delay: 1
@@ -23,6 +23,8 @@ Allow: /blog
 Allow: /blog/*
 Allow: /deals
 Allow: /deals/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Anthropic Claude
@@ -32,6 +34,8 @@ Allow: /blog
 Allow: /blog/*
 Allow: /deals
 Allow: /deals/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Perplexity AI
@@ -41,6 +45,8 @@ Allow: /blog
 Allow: /blog/*
 Allow: /deals
 Allow: /deals/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Google Extended (Bard/Gemini training)
@@ -50,6 +56,8 @@ Allow: /blog
 Allow: /blog/*
 Allow: /deals
 Allow: /deals/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Meta AI
@@ -57,6 +65,8 @@ User-agent: FacebookBot
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Common Crawl (used by many AI models)
@@ -64,6 +74,8 @@ User-agent: CCBot
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Cohere AI
@@ -71,6 +83,8 @@ User-agent: cohere-ai
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Bytespider (used by AI models)
@@ -82,12 +96,16 @@ User-agent: AI2Bot
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # Omgilibot
 User-agent: omgilibot
 Allow: /
 Allow: /blog
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 # YouBot (You.com AI search)
@@ -95,6 +113,8 @@ User-agent: YouBot
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /cadeaugidsen
+Allow: /cadeaugidsen/*
 Disallow: /admin
 
 Sitemap: https://gifteez.nl/sitemap.xml

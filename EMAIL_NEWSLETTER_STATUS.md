@@ -8,11 +8,13 @@
 ## ✅ WAT WERKT AL
 
 ### 1. Contact Form Backend
+
 **File:** `functions/src/index.ts`
 **Endpoint:** `POST /api/contact`
 **Status:** ✅ Volledig geïmplementeerd
 
 **Features:**
+
 - Rate limiting (60 req/min per IP)
 - Spam protection (honeypot + timing check)
 - Email verzenden via Resend API
@@ -21,6 +23,7 @@
 - Error handling
 
 **Vereist:**
+
 ```env
 RESEND_API_KEY=re_...
 CONTACT_FROM=contact@gifteez.nl  (optioneel, default)
@@ -28,10 +31,12 @@ CONTACT_TO=info@gifteez.nl       (optioneel, default)
 ```
 
 ### 2. Newsletter Service (Frontend)
+
 **File:** `services/newsletterService.ts`
 **Status:** ✅ Volledig geïmplementeerd
 
 **Features:**
+
 - Firestore integratie
 - Add/update/remove subscribers
 - Unsubscribe functie
@@ -43,14 +48,17 @@ CONTACT_TO=info@gifteez.nl       (optioneel, default)
 **Firestore Collection:** `newsletter_subscribers`
 
 ### 3. Newsletter Component
+
 **File:** `components/NewsletterSignup.tsx`
 **Status:** ✅ Bestaat maar wordt niet gebruikt!
 
 **Variants:**
+
 - `inline` - Voor in footer of sidebar
 - `modal` - Voor popup/dedicated page
 
 **Features:**
+
 - Email + naam velden
 - Frequency selection (immediate/daily/weekly)
 - Category preferences
@@ -58,6 +66,7 @@ CONTACT_TO=info@gifteez.nl       (optioneel, default)
 - Loading states
 
 ### 4. Email Notification Service
+
 **File:** `services/emailNotificationService.ts`
 **Status:** ✅ Geïmplementeerd (maar geen backend)
 
@@ -66,7 +75,9 @@ CONTACT_TO=info@gifteez.nl       (optioneel, default)
 ## ❌ WAT ONTBREEKT
 
 ### 1. Newsletter API Endpoint
+
 **Probleem:** Frontend NewsletterService schrijft direct naar Firestore, maar:
+
 - ❌ Geen email bevestiging verzonden
 - ❌ Geen welcome email
 - ❌ Geen double opt-in
@@ -74,6 +85,7 @@ CONTACT_TO=info@gifteez.nl       (optioneel, default)
 - ❌ Geen rate limiting
 
 **Nodig:**
+
 ```typescript
 POST /api/newsletter/subscribe
 {
@@ -91,13 +103,16 @@ GET /api/newsletter/confirm/:token
 ```
 
 ### 2. Email Templates
+
 **Ontbreekt:**
+
 - Welcome email voor nieuwe subscribers
 - Blog notification emails
 - Deal alerts
 - Contact form confirmation (naar verzender)
 
 ### 3. Newsletter in Footer
+
 **Probleem:** Footer heeft wel social links, maar geen newsletter signup!
 
 ---
@@ -111,9 +126,11 @@ GET /api/newsletter/confirm/:token
 Voeg toe in footer grid:
 
 ```tsx
-{/* Newsletter Signup */}
-<div>
-  <NewsletterSignup 
+{
+  /* Newsletter Signup */
+}
+;<div>
+  <NewsletterSignup
     showToast={showToast}
     variant="inline"
     title="Blijf op de hoogte"
@@ -132,17 +149,17 @@ Toevoegen:
 // POST /api/newsletter/subscribe
 app.post('/api/newsletter/subscribe', async (req: Request, res: Response) => {
   try {
-    const { email, name, preferences } = req.body;
-    
+    const { email, name, preferences } = req.body
+
     // Validation
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      return res.status(400).json({ error: 'Invalid email' });
+      return res.status(400).json({ error: 'Invalid email' })
     }
 
     // Check if already subscribed
-    const existing = await NewsletterService.getSubscriberByEmail(email);
+    const existing = await NewsletterService.getSubscriberByEmail(email)
     if (existing && existing.isActive) {
-      return res.status(400).json({ error: 'Already subscribed' });
+      return res.status(400).json({ error: 'Already subscribed' })
     }
 
     // Add to Firestore
@@ -155,9 +172,9 @@ app.post('/api/newsletter/subscribe', async (req: Request, res: Response) => {
         frequency: 'weekly',
         categories: ['all'],
         deals: true,
-        newPosts: true
-      }
-    });
+        newPosts: true,
+      },
+    })
 
     // Send welcome email via Resend
     if (resend) {
@@ -165,16 +182,16 @@ app.post('/api/newsletter/subscribe', async (req: Request, res: Response) => {
         from: 'Gifteez <newsletter@gifteez.nl>',
         to: [email],
         subject: '🎁 Welkom bij Gifteez!',
-        html: getWelcomeEmailTemplate(name || 'daar')
-      });
+        html: getWelcomeEmailTemplate(name || 'daar'),
+      })
     }
 
-    res.json({ ok: true });
+    res.json({ ok: true })
   } catch (e: any) {
-    console.error('newsletter_error', e);
-    res.status(500).json({ error: 'Server error' });
+    console.error('newsletter_error', e)
+    res.status(500).json({ error: 'Server error' })
   }
-});
+})
 ```
 
 ### PRIORITY 3: Welcome Email Template (10 min)
@@ -227,7 +244,7 @@ export function getWelcomeEmailTemplate(name: string): string {
       </div>
     </body>
     </html>
-  `;
+  `
 }
 ```
 
@@ -236,22 +253,26 @@ export function getWelcomeEmailTemplate(name: string): string {
 ## 🚀 QUICK IMPLEMENTATION PLAN
 
 ### Fase 1: Frontend (5 min)
+
 1. ✅ Newsletter component toevoegen aan Footer
 2. ✅ Testen of inschrijving werkt (schrijft naar Firestore)
 
 ### Fase 2: Backend API (30 min)
+
 1. ❌ Newsletter subscribe endpoint toevoegen
 2. ❌ Newsletter unsubscribe endpoint toevoegen
 3. ❌ Welcome email template maken
 4. ❌ Email verzenden via Resend
 
 ### Fase 3: Email Setup (15 min)
+
 1. ❌ Resend account aanmaken (gratis tot 3000 emails/maand)
 2. ❌ Domain verifiëren (gifteez.nl)
 3. ❌ DKIM/SPF records instellen
 4. ❌ API key toevoegen aan Firebase Functions env
 
 ### Fase 4: Testing (10 min)
+
 1. ❌ Test inschrijving vanaf website
 2. ❌ Check of welcome email aankomt
 3. ❌ Test uitschrijven
@@ -262,16 +283,19 @@ export function getWelcomeEmailTemplate(name: string): string {
 ## 📊 RESEND SETUP
 
 ### Stap 1: Account Aanmaken
+
 1. Ga naar https://resend.com/
 2. Sign up (gratis tot 3000 emails/maand, 100/dag)
 3. Verifieer email
 
 ### Stap 2: Domain Toevoegen
+
 1. Dashboard → Domains → Add Domain
 2. Voer in: `gifteez.nl`
 3. Kopieer DNS records
 
 ### Stap 3: DNS Records (bij jouw domain provider)
+
 ```
 Type: TXT
 Name: _resend
@@ -281,18 +305,20 @@ Type: CNAME
 Name: resend._domainkey
 Value: [krijg je van Resend]
 
-Type: TXT  
+Type: TXT
 Name: @
 Value: "v=spf1 include:_spf.resend.com ~all"
 ```
 
 ### Stap 4: API Key
+
 1. Dashboard → API Keys → Create API Key
 2. Name: `Gifteez Production`
 3. Permission: `Sending access`
 4. Kopieer key: `re_...`
 
 ### Stap 5: Add to Firebase
+
 ```bash
 cd functions
 firebase functions:config:set resend.api_key="re_..."
@@ -300,6 +326,7 @@ firebase deploy --only functions
 ```
 
 **Of via .env file:**
+
 ```env
 RESEND_API_KEY=re_...
 ```
@@ -309,20 +336,23 @@ RESEND_API_KEY=re_...
 ## ✅ CHECKLIST
 
 **Frontend:**
+
 - [ ] Newsletter component in Footer
 - [ ] Test inschrijven (schrijft naar Firestore)
 - [ ] Error handling + loading states
 - [ ] Toast notifications
 
 **Backend:**
+
 - [ ] Newsletter subscribe endpoint
-- [ ] Newsletter unsubscribe endpoint  
+- [ ] Newsletter unsubscribe endpoint
 - [ ] Welcome email template
 - [ ] Contact form confirmation email (optioneel)
 - [ ] Rate limiting voor newsletter endpoints
 - [ ] Email validation
 
 **Email Setup:**
+
 - [ ] Resend account aangemaakt
 - [ ] Domain geverifieerd
 - [ ] DNS records ingesteld
@@ -330,6 +360,7 @@ RESEND_API_KEY=re_...
 - [ ] Test emails verzonden
 
 **Testing:**
+
 - [ ] Inschrijven werkt
 - [ ] Welcome email komt aan
 - [ ] Uitschrijven werkt
@@ -353,11 +384,12 @@ RESEND_API_KEY=re_...
 ❌ Email templates
 
 **Geschatte tijd om te fixen:**
+
 - Frontend (newsletter in footer): **5 minuten**
 - Backend API + templates: **30 minuten**
 - Resend setup: **15 minuten**
 - Testing: **10 minuten**
-**Total: ~60 minuten**
+  **Total: ~60 minuten**
 
 ---
 

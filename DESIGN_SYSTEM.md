@@ -1,6 +1,7 @@
 # Design System Implementation
 
 ## Overview
+
 Complete design system implementation for Gifteez with comprehensive design tokens and reusable base components. Built for consistency, accessibility, and maintainability.
 
 **Status**: ✅ Design tokens complete | ✅ Base components complete | ⏳ Migration in progress
@@ -8,6 +9,7 @@ Complete design system implementation for Gifteez with comprehensive design toke
 ## 1. Design Tokens (tailwind.config.ts)
 
 ### Color System (~70 tokens)
+
 ```typescript
 // Primary colors (11 shades)
 primary: {
@@ -37,11 +39,14 @@ info: '#3b82f6',       // Blue for informational messages
 ```
 
 ### Spacing Scale
+
 Extended with intermediate values for fine-tuned layouts:
+
 - Added: 18 (4.5rem), 22 (5.5rem), 26 (6.5rem), 30 (7.5rem), etc.
 - Use: Consistent spacing across all components
 
 ### Border Radius
+
 ```typescript
 sm: '4px',     // Small elements (badges, tags)
 DEFAULT: '8px', // Default rounded corners
@@ -54,6 +59,7 @@ full: '9999px' // Fully rounded (buttons, badges)
 ```
 
 ### Typography
+
 ```typescript
 // Font families
 sans: 'Inter' (primary), 'Open Sans' (fallback)
@@ -61,7 +67,7 @@ display: 'Poppins' (headings)
 body: 'Open Sans' (body text)
 
 // Font weights
-light: 300, normal: 400, medium: 500, semibold: 600, 
+light: 300, normal: 400, medium: 500, semibold: 600,
 bold: 700, extrabold: 800, black: 900
 
 // Line heights
@@ -72,6 +78,7 @@ tight: -0.025em, normal: 0, wide: 0.025em, wider: 0.05em
 ```
 
 ### Shadows (Elevation System)
+
 ```typescript
 sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'           // Subtle
 md: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'         // Default cards
@@ -83,6 +90,7 @@ glow-lg: '0 0 40px rgba(244, 63, 94, 0.4)'      // Large accent glow
 ```
 
 ### Z-Index Scale (Layering)
+
 ```typescript
 10: Base layer
 50: Modals, overlays
@@ -98,6 +106,7 @@ glow-lg: '0 0 40px rgba(244, 63, 94, 0.4)'      // Large accent glow
 ### Button Component (`components/ui/Button.tsx`)
 
 **Variants:**
+
 - `primary`: Main action buttons (bg-primary-600, hover:bg-primary-700)
 - `secondary`: Secondary actions (bg-secondary-100, text-secondary-400)
 - `accent`: High-impact CTAs (bg-accent, shadow-glow, hover:shadow-glow-lg)
@@ -107,6 +116,7 @@ glow-lg: '0 0 40px rgba(244, 63, 94, 0.4)'      // Large accent glow
 - `error`: Red for destructive actions
 
 **Sizes:**
+
 - `sm`: h-9 px-3 text-sm
 - `md`: h-11 px-5 text-base (default)
 - `lg`: h-13 px-6 text-lg
@@ -114,6 +124,7 @@ glow-lg: '0 0 40px rgba(244, 63, 94, 0.4)'      // Large accent glow
 - `icon`: h-11 w-11 (square icon button)
 
 **Features:**
+
 - Loading state with spinner
 - Left/right icon support
 - Full width option
@@ -121,6 +132,7 @@ glow-lg: '0 0 40px rgba(244, 63, 94, 0.4)'      // Large accent glow
 - Focus ring for accessibility
 
 **Usage:**
+
 ```tsx
 import { Button } from '@/components/ui';
 
@@ -144,6 +156,7 @@ import { Button } from '@/components/ui';
 ### Badge Component (`components/ui/Badge.tsx`)
 
 **Variants:**
+
 - `default`: Neutral grey
 - `primary`: Primary brand color
 - `secondary`: Secondary brand color
@@ -155,16 +168,19 @@ import { Button } from '@/components/ui';
 - `muted`: Muted rose background
 
 **Sizes:**
+
 - `sm`: px-2 py-0.5 text-xs
 - `md`: px-2.5 py-1 text-sm (default)
 - `lg`: px-3 py-1.5 text-base
 
 **Features:**
+
 - Removable badges with close button
 - Icon support
 - Rounded pill shape
 
 **Usage:**
+
 ```tsx
 import { Badge } from '@/components/ui';
 
@@ -185,6 +201,7 @@ import { Badge } from '@/components/ui';
 ### Card Component (`components/ui/Card.tsx`)
 
 **Variants:**
+
 - `default`: White background, subtle border and shadow
 - `elevated`: White background, medium shadow, hover effect
 - `bordered`: White background, thicker border
@@ -193,12 +210,14 @@ import { Badge } from '@/components/ui';
 - `highlight`: Highlight background
 
 **Padding:**
+
 - `none`: No padding
 - `sm`: p-4
 - `md`: p-6 (default)
 - `lg`: p-8
 
 **Sub-components:**
+
 - `CardHeader`: Header section
 - `CardTitle`: Title (h3)
 - `CardDescription`: Description text
@@ -206,6 +225,7 @@ import { Badge } from '@/components/ui';
 - `CardFooter`: Footer section
 
 **Usage:**
+
 ```tsx
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui';
 
@@ -238,7 +258,9 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 ## 3. Utility Functions (`lib/utils.ts`)
 
 ### cn() - Class Name Merger
+
 Combines `clsx` for conditional classes and `tailwind-merge` for proper Tailwind precedence:
+
 ```tsx
 cn('px-4 py-2', isActive && 'bg-blue-500', 'text-white')
 // Returns: "px-4 py-2 bg-blue-500 text-white" if isActive is true
@@ -248,6 +270,7 @@ cn('px-2 py-1', 'px-4')
 ```
 
 ### Other Utilities
+
 - `formatCurrency(amount: number)`: Format cents to EUR
 - `formatDate(date: Date | string)`: Format date in Dutch
 - `truncate(str: string, maxLength: number)`: Truncate with ellipsis
@@ -256,11 +279,12 @@ cn('px-2 py-1', 'px-4')
 - `generateId(prefix)`: Generate random IDs
 
 ## 4. Dependencies Installed
+
 ```json
 {
-  "class-variance-authority": "^0.7.0",  // Variant management
-  "clsx": "^2.1.0",                      // Conditional classes
-  "tailwind-merge": "^2.2.0"              // Tailwind class merging
+  "class-variance-authority": "^0.7.0", // Variant management
+  "clsx": "^2.1.0", // Conditional classes
+  "tailwind-merge": "^2.2.0" // Tailwind class merging
 }
 ```
 
@@ -269,6 +293,7 @@ cn('px-2 py-1', 'px-4')
 ### Replace Scattered Tailwind Classes
 
 **Before:**
+
 ```tsx
 <button className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2 rounded-lg transition-colors">
   Click me
@@ -276,6 +301,7 @@ cn('px-2 py-1', 'px-4')
 ```
 
 **After:**
+
 ```tsx
 <Button>Click me</Button>
 ```
@@ -283,6 +309,7 @@ cn('px-2 py-1', 'px-4')
 ### Replace Custom Badge Styles
 
 **Before:**
+
 ```tsx
 <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
   Nieuw
@@ -290,13 +317,17 @@ cn('px-2 py-1', 'px-4')
 ```
 
 **After:**
+
 ```tsx
-<Badge variant="success" size="sm">Nieuw</Badge>
+<Badge variant="success" size="sm">
+  Nieuw
+</Badge>
 ```
 
 ### Replace Card Containers
 
 **Before:**
+
 ```tsx
 <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow">
   {content}
@@ -304,6 +335,7 @@ cn('px-2 py-1', 'px-4')
 ```
 
 **After:**
+
 ```tsx
 <Card variant="elevated">{content}</Card>
 ```
@@ -311,17 +343,16 @@ cn('px-2 py-1', 'px-4')
 ## 6. Component Migration Priority
 
 ### High Priority (Most Used)
+
 1. **Button replacements**:
    - GiftFinderPage CTAs
    - BlogPage "Lees meer" buttons
    - DealsPage filter buttons
    - Header navigation buttons
-   
 2. **Badge replacements**:
    - Product tags (Nieuw, Sale, Duurzaam)
    - Filter pills
    - Status indicators
-   
 3. **Card replacements**:
    - GiftResultCard
    - BlogPreview cards
@@ -329,17 +360,20 @@ cn('px-2 py-1', 'px-4')
    - TestimonialCard
 
 ### Medium Priority
+
 4. Form components (ContactPage, AccountPage)
 5. Modal buttons (DealQuickViewModal)
 6. Navigation elements (Footer, Header)
 
 ### Low Priority
+
 7. Admin components
-8. Legacy components (marked _OLD)
+8. Legacy components (marked \_OLD)
 
 ## 7. Best Practices
 
 ### When to Use Each Button Variant
+
 - **primary**: Main actions (Submit, Save, Continue)
 - **accent**: High-impact CTAs (Start GiftFinder, Koop Nu, Toevoegen aan Winkelwagen)
 - **secondary**: Supporting actions (Cancel, Back, Filter)
@@ -349,6 +383,7 @@ cn('px-2 py-1', 'px-4')
 - **error**: Destructive actions (Delete, Remove, Cancel order)
 
 ### When to Use Each Badge Variant
+
 - **success**: Positive status (Beschikbaar, Op voorraad, Actief)
 - **error**: Negative status (Uitverkocht, Fout, Inactief)
 - **warning**: Attention needed (Beperkte voorraad, Let op)
@@ -357,6 +392,7 @@ cn('px-2 py-1', 'px-4')
 - **muted**: Low-priority tags
 
 ### When to Use Each Card Variant
+
 - **default**: Standard content cards
 - **elevated**: Important cards that need to stand out
 - **bordered**: Cards that need clear separation
@@ -365,7 +401,9 @@ cn('px-2 py-1', 'px-4')
 - **highlight**: Featured content
 
 ### Accessibility
+
 All components include:
+
 - **Focus rings**: Visible keyboard navigation (focus-visible:ring-2)
 - **ARIA labels**: Screen reader support
 - **Disabled states**: Clear disabled appearance
@@ -388,16 +426,19 @@ All components include:
 ## 9. Next Steps
 
 ### Immediate (CTA Flow)
+
 1. Add persistent "Start GiftFinder" button to Header using accent Button
 2. Add floating CTA at bottom of content pages
 3. Replace all existing buttons with new Button component
 
 ### Short Term (Navigation)
+
 4. Update Header with new navigation structure
 5. Add "Duurzaam" route
 6. Update mobile menu
 
 ### Medium Term (Empty States & A11y)
+
 7. Create EmptyState component
 8. Add skeleton loaders
 9. Implement skip-to-content link
@@ -417,15 +458,17 @@ All components include:
 ## 11. Import Path
 
 All components can be imported from a single location:
+
 ```tsx
-import { Button, Badge, Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
+import { Button, Badge, Card, CardHeader, CardTitle, CardContent } from '@/components/ui'
 ```
 
 Or individually:
+
 ```tsx
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button'
+import { Badge } from '@/components/ui/Badge'
+import { Card } from '@/components/ui/Card'
 ```
 
 ---

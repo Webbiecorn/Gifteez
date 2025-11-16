@@ -1,11 +1,11 @@
 {
-  "routeKey": "cadeaus/kerst-voor-hem-onder-150",
+  "routeKey": "cadeaugidsen/kerst-voor-hem-onder-150",
   "metadata": {
     "title": "Beste kerstcadeaus voor hem onder €150 (2025)",
     "description": "Van slimme gadgets tot betaalbare tech: cadeaus die hij écht gebruikt.",
     "occasion": "kerst",
     "totalProducts": 20,
-    "generatedAt": "2025-11-04T12:04:56.136Z"
+    "generatedAt": "2025-11-16T12:31:31.361Z"
   },
   "featured": [],
   "products": [
@@ -126,13 +126,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["teen"],
+        "audience": [
+          "teen"
+        ],
         "category": "outdoor",
         "priceBucket": "25-50",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.8,
-        "reasons": ["Title contains teen keyword", "Matched 1 keyword(s) for outdoor"],
+        "reasons": [
+          "Title contains teen keyword",
+          "Matched 1 keyword(s) for outdoor"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -256,10 +263,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "koken",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.55,
         "reasons": [
@@ -389,11 +400,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "100-250",
-        "occasions": ["kerst"],
-        "interests": ["kunst"],
+        "occasions": [
+          "kerst"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.5,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -522,10 +539,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "elektronica",
         "priceBucket": "under-25",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -655,10 +676,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "wellness",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -788,10 +813,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "sieraden",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -921,11 +950,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "kunst",
         "priceBucket": "100-250",
-        "occasions": ["kerst"],
-        "interests": ["kunst"],
+        "occasions": [
+          "kerst"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.5,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -1054,10 +1089,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "speelgoed",
         "priceBucket": "100-250",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -1187,10 +1226,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "overig",
         "priceBucket": "100-250",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.25,
         "reasons": [
@@ -1321,10 +1364,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "koken",
         "priceBucket": "100-250",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.55,
         "reasons": [
@@ -1454,11 +1501,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
-        "interests": ["kunst"],
+        "occasions": [
+          "kerst"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.5,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -1587,13 +1640,20 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["teen"],
+        "audience": [
+          "teen"
+        ],
         "category": "kunst",
         "priceBucket": "25-50",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.8,
-        "reasons": ["Title contains teen keyword", "Matched 1 keyword(s) for kunst"],
+        "reasons": [
+          "Title contains teen keyword",
+          "Matched 1 keyword(s) for kunst"
+        ],
         "needsReview": false,
         "isGiftable": true
       },
@@ -1717,11 +1777,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "25-50",
-        "occasions": ["kerst"],
-        "interests": ["kunst"],
+        "occasions": [
+          "kerst"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.5,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -1850,10 +1916,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "koken",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -1983,10 +2053,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "elektronica",
         "priceBucket": "25-50",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -2116,10 +2190,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "outdoor",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -2249,10 +2327,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "koken",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.55,
         "reasons": [
@@ -2382,11 +2464,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "25-50",
-        "occasions": ["kerst"],
-        "interests": ["kunst"],
+        "occasions": [
+          "kerst"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.5,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -2515,10 +2603,14 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "50-100",
-        "occasions": ["kerst"],
+        "occasions": [
+          "kerst"
+        ],
         "interests": [],
         "confidence": 0.5,
         "reasons": [
@@ -2648,11 +2740,17 @@
         "Fashion:swatch": ""
       },
       "facets": {
-        "audience": ["unisex"],
+        "audience": [
+          "unisex"
+        ],
         "category": "gadgets",
         "priceBucket": "25-50",
-        "occasions": ["kerst"],
-        "interests": ["kunst"],
+        "occasions": [
+          "kerst"
+        ],
+        "interests": [
+          "kunst"
+        ],
         "confidence": 0.5,
         "reasons": [
           "No clear gender indicators, defaulting to unisex",
@@ -2669,7 +2767,10 @@
     "uniqueBrands": 13,
     "uniqueCategories": 9,
     "averagePrice": 75.4475,
-    "priceRange": [10, 149],
+    "priceRange": [
+      10,
+      149
+    ],
     "confidenceDistribution": {
       "high (>0.8)": 0,
       "medium (0.5-0.8)": 19,

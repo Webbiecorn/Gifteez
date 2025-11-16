@@ -1,3 +1,4 @@
+import { deepReplaceLegacyGuidePaths } from '../guidePaths'
 import type { BlogPost, Gift } from '../types'
 
 // ==================== AMAZON TOP 3 CAMPAGNE ====================
@@ -1260,7 +1261,7 @@ const gift_partypro_reuze_ballonnen_blauw: Gift = {
     'Met 90 cm doorsnede creëer je dramatische luchtfoto’s of een highlight boven desserttafel of DJ booth.',
 }
 
-export const blogPosts: BlogPost[] = [
+const RAW_BLOG_POSTS: BlogPost[] = [
   {
     slug: 'cadeaugidsen-snel-starten',
     title: 'Cadeaugidsen: snel starten per budget en thema',
@@ -1281,7 +1282,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          '<strong>🎄 Kerstcadeaus per budget:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/kerst-voor-haar-onder-50">Kerstcadeaus voor haar onder €100</a> – 24 duurzame mode, sieraden & slimme gadgets</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/kerst-voor-hem-onder-150">Kerstcadeaus voor hem onder €150</a> – 20 BBQ, audio & tech die hij écht gebruikt</li></ul><br><strong>🌱 Duurzame & Bewuste Cadeaus:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/duurzamere-cadeaus-onder-50">Duurzame cadeaus onder €100</a> – 24 vegan, eco & fair trade producten (Shop Like You Give A Damn)</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/duurzame-lifestyle-cadeaus">Duurzame lifestyle cadeaus</a> – 24 ethical & sustainable items voor bewuste kopers</li></ul><br><strong>👗 Mode & Accessoires:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/dames-mode-onder-150">Dames mode onder €150</a> – 24 vegan fashion items van duurzame merken</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/dames-sieraden-onder-100">Dames sieraden onder €100</a> – 9 stijlvolle sieraden (ringen, kettingen, oorbellen)</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/heren-mode-accessoires">Heren mode & accessoires</a> – 24 fashion items voor mannen</li></ul><br><strong>🎮 Gaming & Wonen:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/gamer-cadeaus-onder-100">Gamer cadeaus onder €100</a> – 17 controllers, headsets & gaming gear</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus/wonen-decoratie-cadeaus">Wonen & decoratie cadeaus</a> – 24 items voor een stijlvol interieur</li></ul>',
+          '<strong>🎄 Kerstcadeaus per budget:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/kerst-voor-haar-onder-50">Kerstcadeaus voor haar onder €100</a> – 24 duurzame mode, sieraden & slimme gadgets</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/kerst-voor-hem-onder-150">Kerstcadeaus voor hem onder €150</a> – 20 BBQ, audio & tech die hij écht gebruikt</li></ul><br><strong>🌱 Duurzame & Bewuste Cadeaus:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/duurzamere-cadeaus-onder-50">Duurzame cadeaus onder €100</a> – 24 vegan, eco & fair trade producten (Shop Like You Give A Damn)</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/duurzame-lifestyle-cadeaus">Duurzame lifestyle cadeaus</a> – 24 ethical & sustainable items voor bewuste kopers</li></ul><br><strong>👗 Mode & Accessoires:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/dames-mode-onder-150">Dames mode onder €150</a> – 24 vegan fashion items van duurzame merken</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/dames-sieraden-onder-100">Dames sieraden onder €100</a> – 9 stijlvolle sieraden (ringen, kettingen, oorbellen)</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/heren-mode-accessoires">Heren mode & accessoires</a> – 24 fashion items voor mannen</li></ul><br><strong>🎮 Gaming & Wonen:</strong><ul class="list-disc space-y-2 pl-5 text-sm text-gray-700 mt-2"><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/gamer-cadeaus-onder-100">Gamer cadeaus onder €100</a> – 17 controllers, headsets & gaming gear</li><li><a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen/wonen-decoratie-cadeaus">Wonen & decoratie cadeaus</a> – 24 items voor een stijlvol interieur</li></ul>',
       },
       { type: 'heading', content: 'Wanneer kies je welke gids?' },
       {
@@ -1305,7 +1306,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          'Wil je alle guides zien? Ga naar ons <a class="text-rose-600 underline hover:text-rose-700" href="/cadeaus">cadeau-overzicht</a> voor het complete aanbod. Of gebruik de <a class="text-rose-600 underline hover:text-rose-700" href="/giftfinder">AI GiftFinder</a> voor gepersonaliseerde suggesties op basis van interesses, leeftijd en budget.',
+          'Wil je alle guides zien? Ga naar ons <a class="text-rose-600 underline hover:text-rose-700" href="/cadeaugidsen">cadeau-overzicht</a> voor het complete aanbod. Of gebruik de <a class="text-rose-600 underline hover:text-rose-700" href="/giftfinder">AI GiftFinder</a> voor gepersonaliseerde suggesties op basis van interesses, leeftijd en budget.',
       },
     ],
     seo: {
@@ -3478,7 +3479,7 @@ export const blogPosts: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          'Deze 9 producten zijn slechts een selectie. Wil je alle 24 zorgvuldig geselecteerde kerstcadeaus zien? Van mode en sieraden tot tech en lifestyle — met filters op prijs, categorie en merk?<br><br>👉 <strong><a href="/cadeaus/kerst-voor-haar-onder-50" class="text-rose-600 hover:text-rose-700 underline">Bekijk alle 24 kerstcadeaus voor haar</a></strong><br><br>Je vindt er een perfecte mix van:<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>15 duurzame mode & sieraden items (SLYAGD)</li><li>9 slimme tech & lifestyle producten (Coolblue)</li><li>Prijzen van €18 tot €100</li><li>Alle producten direct online te bestellen</li><li>Snelle levering (vaak 1-2 dagen)</li></ul>',
+          'Deze 9 producten zijn slechts een selectie. Wil je alle 24 zorgvuldig geselecteerde kerstcadeaus zien? Van mode en sieraden tot tech en lifestyle — met filters op prijs, categorie en merk?<br><br>👉 <strong><a href="/cadeaugidsen/kerst-voor-haar-onder-50" class="text-rose-600 hover:text-rose-700 underline">Bekijk alle 24 kerstcadeaus voor haar</a></strong><br><br>Je vindt er een perfecte mix van:<ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>15 duurzame mode & sieraden items (SLYAGD)</li><li>9 slimme tech & lifestyle producten (Coolblue)</li><li>Prijzen van €18 tot €100</li><li>Alle producten direct online te bestellen</li><li>Snelle levering (vaak 1-2 dagen)</li></ul>',
       },
       { type: 'heading', content: 'Tips Voor Het Perfecte Kerstcadeau' },
       {
@@ -3696,3 +3697,5 @@ export const blogPosts: BlogPost[] = [
     ],
   },
 ]
+
+export const blogPosts: BlogPost[] = deepReplaceLegacyGuidePaths(RAW_BLOG_POSTS)

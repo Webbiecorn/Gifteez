@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { AuthContext } from '../contexts/AuthContext'
 import Button from './Button'
 import {
+  GiftIcon,
   HeartIcon,
   HeartIconFilled,
   MenuIcon,
@@ -79,6 +79,11 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   }, [isMobileMenuOpen])
 
   const navItems: NavItem[] = [
+    {
+      page: 'giftFinder',
+      label: 'Gift Finder',
+      icon: GiftIcon,
+    },
     {
       page: 'deals',
       label: 'Cadeaus',

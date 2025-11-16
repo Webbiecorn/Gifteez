@@ -185,6 +185,54 @@ const { trackConversion } = useABTest('test_name', variants)
 trackConversion('click')
 ```
 
+### **Phase 3b: Quick Scan Analytics Instrumentation** (Week 2)
+
+#### Step 1: Hook into Quick Scan actions
+
+```typescript
+import AnalyticsEvents from '../services/analyticsEventService'
+
+const handleQuickScan = (persona, action) => {
+  AnalyticsEvents.quickScanInteraction({
+    slug: variantSlug,
+    personaId: persona.id,
+    personaLabel: persona.label,
+    action: action.type === 'filters' ? 'apply_filters' : 'open_link',
+    fastDelivery: action.type === 'filters' ? (action.fastDeliveryOnly ?? null) : null,
+    sortOption: action.type === 'filters' ? (action.sortOption ?? null) : null,
+    targetHref: action.type === 'link' ? action.href : null,
+  })
+
+  if (action.type === 'filters') {
+    // apply preset filters + scroll to grid
+  } else {
+    navigate(action.href)
+  }
+}
+```
+
+#### Step 2: Expected dataLayer payload
+
+```json
+{
+  "event": "quick_scan_interaction",
+  "slug": "kerst-voor-haar-onder-50",
+  "persona_id": "quickscan-haar-spa-rituals",
+  "persona_label": "Spa & Rituals",
+  "action": "apply_filters",
+  "fast_delivery": true,
+  "sort_option": "featured",
+  "target_href": null
+}
+```
+
+#### Step 3: KPIs
+
+- Conversieratio per persona (filter vs link)
+- Fast-delivery preset usage per slug
+- Populair sorteeralgoritme binnen quick scan
+- Link persona doorklikken (target_href invullen)
+
 ---
 
 ### **Phase 4: GTM Configuration** (Week 2-3)
@@ -206,6 +254,13 @@ trackConversion('click')
 11. `dlv - session_id` → Data Layer Variable → `session_id`
 12. `dlv - test_name` → Data Layer Variable → `test_name`
 13. `dlv - variant_name` → Data Layer Variable → `variant_name`
+14. `dlv - quickscan_slug` → Data Layer Variable → `slug`
+15. `dlv - quickscan_persona_id` → Data Layer Variable → `persona_id`
+16. `dlv - quickscan_persona_label` → Data Layer Variable → `persona_label`
+17. `dlv - quickscan_action` → Data Layer Variable → `action`
+18. `dlv - quickscan_fast_delivery` → Data Layer Variable → `fast_delivery`
+19. `dlv - quickscan_sort_option` → Data Layer Variable → `sort_option`
+20. `dlv - quickscan_target_href` → Data Layer Variable → `target_href`
 
 #### Step 2: Create Custom Event Triggers
 
@@ -219,6 +274,7 @@ trackConversion('click')
 6. **Custom Event Trigger**: `funnel_step_complete`
 7. **Custom Event Trigger**: `ab_variant_impression`
 8. **Custom Event Trigger**: `ab_variant_conversion`
+9. **Custom Event Trigger**: `quick_scan_interaction`
 
 #### Step 3: Create GA4 Event Tags
 
@@ -289,6 +345,20 @@ trackConversion('click')
   - `conversion_action`: `{{dlv - conversion_action}}`
 - Trigger: `ab_variant_conversion`
 
+**7. GA4 - Quick Scan Interaction**
+
+- Tag Type: Google Analytics: GA4 Event
+- Event Name: `quick_scan_interaction`
+- Parameters:
+  - `slug`: `{{dlv - quickscan_slug}}`
+  - `persona_id`: `{{dlv - quickscan_persona_id}}`
+  - `persona_label`: `{{dlv - quickscan_persona_label}}`
+  - `action`: `{{dlv - quickscan_action}}`
+  - `fast_delivery`: `{{dlv - quickscan_fast_delivery}}`
+  - `sort_option`: `{{dlv - quickscan_sort_option}}`
+  - `target_href`: `{{dlv - quickscan_target_href}}`
+- Trigger: `quick_scan_interaction`
+
 #### Step 4: Test in GTM Preview Mode
 
 ```bash
@@ -353,6 +423,7 @@ window.dataLayer
 - [ ] `view_product` fires for each product impression
 - [ ] `click_affiliate` fires when affiliate link clicked
 - [ ] `share_pin` fires when Pinterest share clicked
+- [ ] `quick_scan_interaction` fires when persona preset gebruikt wordt
 
 ### **Funnel Tracking**
 

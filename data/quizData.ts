@@ -1,3 +1,4 @@
+import { deepReplaceLegacyGuidePaths } from '../guidePaths'
 import type { QuizQuestion, QuizResult } from '../types'
 
 export const quizQuestions: QuizQuestion[] = [
@@ -131,7 +132,7 @@ export const quizQuestions: QuizQuestion[] = [
   },
 ]
 
-export const quizResults: Record<string, QuizResult> = {
+const RAW_QUIZ_RESULTS: Record<string, QuizResult> = {
   homebody: {
     title: 'De Huiselijke Genieter',
     description:
@@ -144,36 +145,36 @@ export const quizResults: Record<string, QuizResult> = {
         {
           title: 'Aroma relax-set',
           description: 'Mini wellnesspakket met geurkaars en zachte sokken.',
-          url: '/cadeaus/homebody-budget-low',
+          url: '/cadeaugidsen/homebody-budget-low',
         },
         {
           title: 'Warmte kruik 2.0',
           description: 'Stijlvolle kruik die decoratief blijft in de woonkamer.',
-          url: '/cadeaus/homebody-haard',
+          url: '/cadeaugidsen/homebody-haard',
         },
       ],
       'budget-mid': [
         {
           title: 'Luxe plaid van gerecyclede wol',
           description: 'Duurzaam en superzacht voor knusse avonden.',
-          url: '/cadeaus/homebody-plaid',
+          url: '/cadeaugidsen/homebody-plaid',
         },
         {
           title: 'Slow-coffee starterset',
           description: 'Mooie koffiecarafe met premium bonen voor slow mornings.',
-          url: '/cadeaus/homebody-coffee',
+          url: '/cadeaugidsen/homebody-coffee',
         },
       ],
       'budget-high': [
         {
           title: 'Smart ambient lighting bundle',
           description: 'Slimme lichtsets voor ultieme relax vibe.',
-          url: '/cadeaus/homebody-lighting',
+          url: '/cadeaugidsen/homebody-lighting',
         },
         {
           title: 'Wellness weekend getaway',
           description: 'Hotelvoucher inclusief spa en massages.',
-          url: '/cadeaus/homebody-wellness',
+          url: '/cadeaugidsen/homebody-wellness',
         },
       ],
     },
@@ -195,36 +196,36 @@ export const quizResults: Record<string, QuizResult> = {
         {
           title: 'Travel mini-utility kit',
           description: 'Compact setje met must-have travel gadgets.',
-          url: '/cadeaus/adventurer-kit',
+          url: '/cadeaugidsen/adventurer-kit',
         },
         {
           title: 'Outdoor koffie set',
           description: 'Opvouwbaar koffiefilter voor onderweg.',
-          url: '/cadeaus/adventurer-coffee',
+          url: '/cadeaugidsen/adventurer-coffee',
         },
       ],
       'budget-mid': [
         {
           title: 'Ervaringsvoucher city escape',
           description: 'Weekend escape room + hoteldeal voor twee.',
-          url: '/cadeaus/adventurer-experience',
+          url: '/cadeaugidsen/adventurer-experience',
         },
         {
           title: 'Duurzame daypack',
           description: 'Waterafstotende rugzak gemaakt van gerecyclede materialen.',
-          url: '/cadeaus/adventurer-daypack',
+          url: '/cadeaugidsen/adventurer-daypack',
         },
       ],
       'budget-high': [
         {
           title: 'Smart travel drone',
           description: 'Compacte drone om elk avontuur vast te leggen.',
-          url: '/cadeaus/adventurer-drone',
+          url: '/cadeaugidsen/adventurer-drone',
         },
         {
           title: 'Bucketlist ervaring',
           description: 'Hot-air ballooning of ice driving experience.',
-          url: '/cadeaus/adventurer-bucketlist',
+          url: '/cadeaugidsen/adventurer-bucketlist',
         },
       ],
     },
@@ -247,36 +248,36 @@ export const quizResults: Record<string, QuizResult> = {
         {
           title: 'Taste flight mini',
           description: 'Set van drie bijzondere kruidenmixen van lokale makers.',
-          url: '/cadeaus/foodie-kruiden',
+          url: '/cadeaugidsen/foodie-kruiden',
         },
         {
           title: 'Espresso tonic kit',
           description: 'Trendy zomerdrank die je thuis naschenkt.',
-          url: '/cadeaus/foodie-espresso-tonic',
+          url: '/cadeaugidsen/foodie-espresso-tonic',
         },
       ],
       'budget-mid': [
         {
           title: "Chef's workshop voucher",
           description: 'Leer een signature gerecht maken met een pro-chef.',
-          url: '/cadeaus/foodie-workshop',
+          url: '/cadeaugidsen/foodie-workshop',
         },
         {
           title: 'Premium serveerplank',
           description: 'Handgemaakte plank met gegraveerde boodschap.',
-          url: '/cadeaus/foodie-plank',
+          url: '/cadeaugidsen/foodie-plank',
         },
       ],
       'budget-high': [
         {
           title: 'Fine dining tasting experience',
           description: 'Reservering bij een toprestaurant inclusief wine pairing.',
-          url: '/cadeaus/foodie-tasting',
+          url: '/cadeaugidsen/foodie-tasting',
         },
         {
           title: 'Smart sous-vide bundle',
           description: 'Professionele set om sterrenchef thuis te worden.',
-          url: '/cadeaus/foodie-sous-vide',
+          url: '/cadeaugidsen/foodie-sous-vide',
         },
       ],
     },
@@ -298,36 +299,36 @@ export const quizResults: Record<string, QuizResult> = {
         {
           title: 'Creative spark kit',
           description: 'Set met premium schetsboek en art markers.',
-          url: '/cadeaus/creative-spark',
+          url: '/cadeaugidsen/creative-spark',
         },
         {
           title: 'Mini soundscapes abonnement',
           description: 'Maandelijkse playlists en inspiratiekaartjes.',
-          url: '/cadeaus/creative-soundscapes',
+          url: '/cadeaugidsen/creative-soundscapes',
         },
       ],
       'budget-mid': [
         {
           title: 'Workshop keramiek of screenprinting',
           description: 'Hands-on sessie met lokale maker.',
-          url: '/cadeaus/creative-workshop',
+          url: '/cadeaugidsen/creative-workshop',
         },
         {
           title: 'Design smart lighting',
           description: 'Modulaire lichtsculptuur voor studio of woonkamer.',
-          url: '/cadeaus/creative-lighting',
+          url: '/cadeaugidsen/creative-lighting',
         },
       ],
       'budget-high': [
         {
           title: 'Artist-in-residence retreat',
           description: 'Weekend retreat om te creëren met begeleiding.',
-          url: '/cadeaus/creative-retreat',
+          url: '/cadeaugidsen/creative-retreat',
         },
         {
           title: 'Premium digitale tekentablet',
           description: 'Voor next-level illustraties en design.',
-          url: '/cadeaus/creative-tablet',
+          url: '/cadeaugidsen/creative-tablet',
         },
       ],
     },
@@ -339,3 +340,5 @@ export const quizResults: Record<string, QuizResult> = {
     },
   },
 }
+
+export const quizResults: Record<string, QuizResult> = deepReplaceLegacyGuidePaths(RAW_QUIZ_RESULTS)

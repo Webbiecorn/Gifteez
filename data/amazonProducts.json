@@ -14,23 +14,11 @@
     "prime": true,
     "rating": 4.5,
     "reviewCount": 45000,
-    "features": [
-      "Alexa spraakbesturing",
-      "Compact design",
-      "Smart home hub"
-    ],
-    "tags": [
-      "smart-home",
-      "alexa",
-      "speaker"
-    ],
+    "features": ["Alexa spraakbesturing", "Compact design", "Smart home hub"],
+    "tags": ["smart-home", "alexa", "speaker"],
     "giftScore": 8,
     "ageGroup": "18-65",
-    "occasion": [
-      "verjaardag",
-      "kerstmis",
-      "housewarming"
-    ],
+    "occasion": ["verjaardag", "kerstmis", "housewarming"],
     "priceRange": "budget",
     "lastUpdated": "2025-09-13T16:46:49.505Z"
   },
@@ -49,24 +37,11 @@
     "prime": true,
     "rating": 4.4,
     "reviewCount": 25000,
-    "features": [
-      "Ruimtelijke audio",
-      "MagSafe case",
-      "30 uur batterij"
-    ],
-    "tags": [
-      "audio",
-      "wireless",
-      "apple",
-      "premium"
-    ],
+    "features": ["Ruimtelijke audio", "MagSafe case", "30 uur batterij"],
+    "tags": ["audio", "wireless", "apple", "premium"],
     "giftScore": 9,
     "ageGroup": "16-45",
-    "occasion": [
-      "verjaardag",
-      "geslaagd",
-      "valentijn"
-    ],
+    "occasion": ["verjaardag", "geslaagd", "valentijn"],
     "priceRange": "mid-range",
     "lastUpdated": "2025-09-13T16:46:49.505Z"
   },
@@ -85,24 +60,11 @@
     "prime": true,
     "rating": 4.6,
     "reviewCount": 75000,
-    "features": [
-      "Waterbestendig",
-      "Warm licht",
-      "Wekenlange batterij"
-    ],
-    "tags": [
-      "reading",
-      "e-reader",
-      "waterproof",
-      "books"
-    ],
+    "features": ["Waterbestendig", "Warm licht", "Wekenlange batterij"],
+    "tags": ["reading", "e-reader", "waterproof", "books"],
     "giftScore": 7,
     "ageGroup": "25-65",
-    "occasion": [
-      "verjaardag",
-      "kerstmis",
-      "moederdag"
-    ],
+    "occasion": ["verjaardag", "kerstmis", "moederdag"],
     "priceRange": "mid-range",
     "lastUpdated": "2025-09-13T16:46:49.505Z"
   },
@@ -121,24 +83,11 @@
     "prime": true,
     "rating": 4.3,
     "reviewCount": 30000,
-    "features": [
-      "4K Ultra HD",
-      "Wi-Fi 6",
-      "Alexa Voice Remote"
-    ],
-    "tags": [
-      "streaming",
-      "4k",
-      "tv",
-      "entertainment"
-    ],
+    "features": ["4K Ultra HD", "Wi-Fi 6", "Alexa Voice Remote"],
+    "tags": ["streaming", "4k", "tv", "entertainment"],
     "giftScore": 8,
     "ageGroup": "18-55",
-    "occasion": [
-      "verjaardag",
-      "housewarming",
-      "kerstmis"
-    ],
+    "occasion": ["verjaardag", "housewarming", "kerstmis"],
     "priceRange": "budget",
     "lastUpdated": "2025-09-13T16:46:49.505Z"
   },
@@ -157,24 +106,11 @@
     "prime": true,
     "rating": 4.4,
     "reviewCount": 15000,
-    "features": [
-      "IP67 waterdicht",
-      "Karabijnhaak",
-      "10 uur batterij"
-    ],
-    "tags": [
-      "speaker",
-      "portable",
-      "waterproof",
-      "outdoor"
-    ],
+    "features": ["IP67 waterdicht", "Karabijnhaak", "10 uur batterij"],
+    "tags": ["speaker", "portable", "waterproof", "outdoor"],
     "giftScore": 8,
     "ageGroup": "16-45",
-    "occasion": [
-      "verjaardag",
-      "sport",
-      "zomer"
-    ],
+    "occasion": ["verjaardag", "sport", "zomer"],
     "priceRange": "budget",
     "lastUpdated": "2025-09-13T16:46:49.505Z"
   }

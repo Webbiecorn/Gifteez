@@ -40,11 +40,11 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
 
   useEffect(() => {
     setCategories(defaultCategories ?? [])
-  }, [defaultCategories?.join(',')])
+  }, [defaultCategories])
 
   const showMessage = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text })
-  showToast?.(text, type === 'success' ? 'success' : 'error')
+    showToast?.(text, type === 'success' ? 'success' : 'error')
     window.setTimeout(() => setMessage(null), 4000)
   }
 

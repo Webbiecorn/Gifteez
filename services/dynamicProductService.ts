@@ -3,6 +3,7 @@ import {
   top10Deals as curatedTop10Deals,
   dealCategories as curatedDealCategories,
 } from '../data/dealsData'
+import { isAutomationEnvironment } from '../lib/automationEnvironment'
 import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary'
 import CoolblueFeedService from './coolblueFeedService'
 import { DealCategoryConfigService, type DealCategoryConfig } from './dealCategoryConfigService'
@@ -117,84 +118,91 @@ export class DynamicProductService {
           this.slygadProducts = []
         }
 
-        // Load AWIN products — prefer shards via index, fallback to combined
-        try {
-          const mapProduct = (p: any) => {
-            const priceNum = Number(p.price) || 0
-            const priceStr = priceNum > 0 ? `€${priceNum.toFixed(2)}` : 'Prijs onbekend'
-            return {
-              id: String(p.id),
-              name: String(p.name),
-              price: priceStr,
-              image: p.image || p.imageUrl || '',
-              imageUrl: p.imageUrl || p.image || '',
-              affiliateLink: p.affiliateLink || p.url || '',
-              description: p.description || '',
-              brand: p.brand || '',
-              category: p.category || '',
-              merchant: p.merchant || '',
-              source: 'awin',
-              isOnSale: false,
-              giftScore: 6,
+        const automationModeActive = isAutomationEnvironment()
+
+        if (automationModeActive) {
+          this.debugLog('🧪 Automation detected – skip AWIN feed for faster E2E tests')
+          this.awinProducts = []
+        } else {
+          // Load AWIN products — prefer shards via index, fallback to combined
+          try {
+            const mapProduct = (p: any) => {
+              const priceNum = Number(p.price) || 0
+              const priceStr = priceNum > 0 ? `€${priceNum.toFixed(2)}` : 'Prijs onbekend'
+              return {
+                id: String(p.id),
+                name: String(p.name),
+                price: priceStr,
+                image: p.image || p.imageUrl || '',
+                imageUrl: p.imageUrl || p.image || '',
+                affiliateLink: p.affiliateLink || p.url || '',
+                description: p.description || '',
+                brand: p.brand || '',
+                category: p.category || '',
+                merchant: p.merchant || '',
+                source: 'awin',
+                isOnSale: false,
+                giftScore: 6,
+              }
             }
-          }
 
-          // Try loading shards via index first
-          const idxRes = await fetch('/data/awin-index.json', {
-            headers: { 'cache-control': 'no-cache' },
-          })
-          if (idxRes.ok) {
-            const idx = await idxRes.json()
-            const shards: string[] = Array.isArray(idx?.shards)
-              ? idx.shards.map((s: any) => s?.shard).filter(Boolean)
-              : []
+            // Try loading shards via index first
+            const idxRes = await fetch('/data/awin-index.json', {
+              headers: { 'cache-control': 'no-cache' },
+            })
+            if (idxRes.ok) {
+              const idx = await idxRes.json()
+              const shards: string[] = Array.isArray(idx?.shards)
+                ? idx.shards.map((s: any) => s?.shard).filter(Boolean)
+                : []
 
-            if (shards.length > 0) {
-              const awin: any[] = []
-              for (const rel of shards) {
-                try {
-                  const sres = await fetch(`/${rel}`, {
-                    headers: { 'cache-control': 'no-cache' },
-                  })
-                  if (sres.ok) {
-                    const arr = await sres.json()
-                    if (Array.isArray(arr)) {
-                      for (const p of arr) {
-                        if (p && p.id && p.name && typeof p.price === 'number') {
-                          awin.push(mapProduct(p))
+              if (shards.length > 0) {
+                const awin: any[] = []
+                for (const rel of shards) {
+                  try {
+                    const sres = await fetch(`/${rel}`, {
+                      headers: { 'cache-control': 'no-cache' },
+                    })
+                    if (sres.ok) {
+                      const arr = await sres.json()
+                      if (Array.isArray(arr)) {
+                        for (const p of arr) {
+                          if (p && p.id && p.name && typeof p.price === 'number') {
+                            awin.push(mapProduct(p))
+                          }
                         }
                       }
                     }
+                  } catch {
+                    // Shard loading failed, continue
                   }
-                } catch {
-                  // Shard loading failed, continue
                 }
+                this.awinProducts = awin
+                this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (shards)`)
+              } else {
+                // Index exists but no shards listed, fallback to combined
+                this.awinProducts = []
               }
-              this.awinProducts = awin
-              this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (shards)`)
             } else {
-              // Index exists but no shards listed, fallback to combined
-              this.awinProducts = []
+              // No index, try combined file
+              const res = await fetch('/data/awin-import-ready.json', {
+                headers: { 'cache-control': 'no-cache' },
+              })
+              if (res.ok) {
+                const json = await res.json()
+                const arr = Array.isArray(json?.products) ? json.products : []
+                this.awinProducts = arr
+                  .filter((p: any) => p && p.id && p.name && typeof p.price === 'number')
+                  .map(mapProduct)
+                this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (combined)`)
+              } else {
+                this.awinProducts = []
+              }
             }
-          } else {
-            // No index, try combined file
-            const res = await fetch('/data/awin-import-ready.json', {
-              headers: { 'cache-control': 'no-cache' },
-            })
-            if (res.ok) {
-              const json = await res.json()
-              const arr = Array.isArray(json?.products) ? json.products : []
-              this.awinProducts = arr
-                .filter((p: any) => p && p.id && p.name && typeof p.price === 'number')
-                .map(mapProduct)
-              this.debugLog(`🔗 Loaded ${this.awinProducts.length} AWIN products (combined)`)
-            } else {
-              this.awinProducts = []
-            }
+          } catch (error) {
+            console.warn('⚠️  Could not load AWIN products:', error)
+            this.awinProducts = []
           }
-        } catch (error) {
-          console.warn('⚠️  Could not load AWIN products:', error)
-          this.awinProducts = []
         }
 
         this.lastUpdated = new Date()

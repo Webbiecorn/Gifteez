@@ -54,15 +54,19 @@ const SpotlightHeroCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = 
             Spotlight
           </div>
           <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-white/80">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+            <span className="category-chip inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
               <TagIcon className="h-4 w-4" />
+              <span className="sr-only">Categorie:</span>
               {post.category}
             </span>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+            <time
+              dateTime={post.publishedDate}
+              className="post-date inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm"
+            >
               <CalendarIcon className="h-4 w-4" />
               {formattedDate}
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
+            </time>
+            <span className="reading-time inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
               <BookOpenIcon className="h-4 w-4" />
               {readingTime} min leestijd
             </span>
@@ -89,12 +93,17 @@ const SpotlightHeroCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = 
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+        <a
+          href={`/blog/${post.slug}`}
+          onClick={(event) => {
+            event.preventDefault()
+            navigateTo('blogDetail', { slug: post.slug })
+          }}
           className="absolute inset-0"
           aria-label={`Lees ${post.title}`}
-        />
+        >
+          <span className="sr-only">Lees {post.title}</span>
+        </a>
       </div>
     </article>
   )
@@ -134,7 +143,7 @@ const SpotlightSupportCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; i
       </div>
 
       <div className="flex flex-1 flex-col space-y-4 p-6">
-        <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
+        <span className="category-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
           <TagIcon className="h-3 w-3" /> {post.category}
         </span>
         <h3 className="font-display text-xl font-bold text-primary leading-tight">{post.title}</h3>
@@ -146,20 +155,28 @@ const SpotlightSupportCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; i
           </div>
           <div className="text-sm text-gray-600">
             <p className="font-semibold text-gray-900">{post.author.name}</p>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
+            <time
+              dateTime={post.publishedDate}
+              className="post-date flex items-center gap-2 text-xs text-gray-500"
+            >
               <CalendarIcon className="h-3 w-3" />
               <span>{formattedDate}</span>
-            </div>
+            </time>
           </div>
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+      <a
+        href={`/blog/${post.slug}`}
+        onClick={(event) => {
+          event.preventDefault()
+          navigateTo('blogDetail', { slug: post.slug })
+        }}
         className="absolute inset-0"
         aria-label={`Lees ${post.title}`}
-      />
+      >
+        <span className="sr-only">Lees {post.title}</span>
+      </a>
     </article>
   )
 }
@@ -190,10 +207,10 @@ const ArchiveListItem: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
         </p>
       </button>
       <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-        <span className="inline-flex items-center gap-2">
+        <time dateTime={post.publishedDate} className="post-date inline-flex items-center gap-2">
           <CalendarIcon className="h-4 w-4" />
           {formattedDate}
-        </span>
+        </time>
         <span className="inline-flex items-center gap-2">
           <BookOpenIcon className="h-4 w-4" />
           {getReadingTime(post.excerpt)} min leestijd
@@ -217,15 +234,22 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
 
   const readingTime = getReadingTime(post.excerpt)
 
+  const detailHref = `/blog/${post.slug}`
+
   return (
     <Card
       as="article"
       variant={isFeatured ? 'highlight' : 'interactive'}
       className={`group relative overflow-hidden rounded-[28px] border border-slate-100/80 bg-white/90 shadow-[0_40px_100px_-70px_rgba(15,23,42,0.65)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_55px_140px_-80px_rgba(244,63,94,0.35)] ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}
     >
-      <div
-        className="relative overflow-hidden"
-        onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+      <a
+        href={detailHref}
+        onClick={(event) => {
+          event.preventDefault()
+          navigateTo('blogDetail', { slug: post.slug })
+        }}
+        className="relative block overflow-hidden"
+        aria-label={`Lees ${post.title}`}
       >
         <ImageWithFallback
           src={post.imageUrl}
@@ -235,11 +259,11 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/20 to-transparent" />
 
         <div className="absolute top-4 left-4 flex flex-wrap gap-2 text-xs font-semibold text-white">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur">
+          <span className="category-chip inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur">
             <TagIcon className="h-3 w-3" />
             {post.category}
           </span>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur">
+          <span className="reading-time inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur">
             <BookOpenIcon className="h-3 w-3" />
             {readingTime} min
           </span>
@@ -250,18 +274,22 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
             <TargetIcon className="h-6 w-6 text-primary" />
           </div>
         </div>
-      </div>
+      </a>
 
       <div className={`flex flex-col p-6 md:p-7 ${isFeatured ? 'md:p-9' : ''}`}>
         <h3
           className={`font-display font-bold text-primary leading-tight transition-colors duration-300 group-hover:text-accent ${isFeatured ? 'text-xl md:text-2xl' : 'text-lg'}`}
         >
-          <button
-            onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+          <a
+            href={detailHref}
+            onClick={(event) => {
+              event.preventDefault()
+              navigateTo('blogDetail', { slug: post.slug })
+            }}
             className="text-left"
           >
             {post.title}
-          </button>
+          </a>
         </h3>
 
         <p
@@ -277,20 +305,27 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-900">{post.author.name}</p>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
+              <time
+                dateTime={post.publishedDate}
+                className="post-date flex items-center gap-2 text-xs text-gray-500"
+              >
                 <CalendarIcon className="h-3 w-3" />
                 <span>{formattedDate}</span>
-              </div>
+              </time>
             </div>
           </div>
 
-          <button
-            onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+          <a
+            href={detailHref}
+            onClick={(event) => {
+              event.preventDefault()
+              navigateTo('blogDetail', { slug: post.slug })
+            }}
             className="inline-flex items-center gap-2 rounded-full border border-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors duration-300 hover:border-accent/30 hover:text-accent"
           >
             <span>Lees meer</span>
             <BookOpenIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
+          </a>
         </div>
       </div>
     </Card>
@@ -305,6 +340,11 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
   const { posts, loading } = useBlogContext()
 
   const publishedPosts = posts
+
+  const canonicalHost =
+    typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : 'https://gifteez.nl'
 
   const itemListSchema = useMemo(
     () => ({
@@ -321,6 +361,43 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
     }),
     [publishedPosts]
   )
+
+  const blogPostsSchema = useMemo(() => {
+    if (!publishedPosts.length) {
+      return null
+    }
+
+    return publishedPosts.slice(0, 10).map((post) => {
+      const postUrl = `${canonicalHost}/blog/${post.slug}`
+      const safeImage = post.imageUrl?.startsWith('http')
+        ? post.imageUrl
+        : `${canonicalHost}${post.imageUrl?.startsWith('/') ? '' : '/'}${post.imageUrl ?? ''}`
+
+      return {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.excerpt,
+        image: safeImage || 'https://gifteez.nl/images/og-tech-gifts-2025.png',
+        datePublished: post.publishedDate,
+        dateModified: post.publishedDate,
+        articleSection: post.category,
+        keywords: post.tags?.join(', '),
+        author: {
+          '@type': 'Person',
+          name: post.author?.name ?? 'Gifteez Redactie',
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'Gifteez',
+          url: 'https://gifteez.nl',
+          logo: 'https://gifteez.nl/android-chrome-512x512.png',
+        },
+        mainEntityOfPage: postUrl,
+        url: postUrl,
+      }
+    })
+  }, [publishedPosts, canonicalHost])
 
   const categories = useMemo(
     () => ['All', ...new Set(publishedPosts.map((p) => p.category))],
@@ -465,6 +542,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
         ogImage="https://gifteez.nl/images/og-tech-gifts-2025.png"
       />
       <JsonLd data={itemListSchema} id="jsonld-blog-itemlist" />
+      {blogPostsSchema && <JsonLd data={blogPostsSchema} id="jsonld-blog-posts" />}
 
       <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
 
@@ -484,7 +562,8 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
               </div>
               <div className="space-y-4">
                 <h1 className="typo-h1 leading-[1.05] text-slate-900">
-                  Cadeau <span className="text-accent">Inspiratie</span> voor elke gelegenheid
+                  Blog & Cadeau <span className="text-accent">Inspiratie</span> voor elke
+                  gelegenheid
                 </h1>
                 <p className="typo-lead mx-auto max-w-2xl text-slate-600 lg:mx-0">
                   Jouw bron voor inspiratie, tips en de beste cadeau-ideeën voor elke gelegenheid.
@@ -518,19 +597,22 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
                 </div>
                 <div className="relative flex h-full flex-col justify-end gap-6 p-8 md:p-10">
                   <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-white/80">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
+                    <span className="category-chip inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
                       <TagIcon className="h-3 w-3" />
                       {featuredPost.category}
                     </span>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
+                    <time
+                      dateTime={featuredPost.publishedDate}
+                      className="post-date inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur"
+                    >
                       <CalendarIcon className="h-3 w-3" />
                       {new Date(featuredPost.publishedDate).toLocaleDateString('nl-NL', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
                       })}
-                    </span>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
+                    </time>
+                    <span className="reading-time inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
                       <BookOpenIcon className="h-3 w-3" />
                       {getReadingTime(featuredPost.excerpt)} min leestijd
                     </span>
@@ -557,7 +639,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
                     </button>
                     <div className="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white/70">
                       <UserIcon className="h-4 w-4" />
-                      {featuredPost.author.name}
+                      <span className="author-name">{featuredPost.author.name}</span>
                     </div>
                   </div>
                 </div>

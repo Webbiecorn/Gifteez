@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SparklesIcon, XIcon } from './IconComponents'
 import type { NavigateTo } from '../types'
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface FloatingCadeauCoachButtonProps {
   navigateTo: NavigateTo

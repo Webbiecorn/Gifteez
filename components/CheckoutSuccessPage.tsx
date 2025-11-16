@@ -15,7 +15,7 @@ const CheckoutSuccessPage: React.FC<CheckoutSuccessPageProps> = ({ navigateTo })
   useEffect(() => {
     // Clear the cart after "purchase" is successful
     cartContext?.clearCart()
-  }, []) // Run only once on mount
+  }, [cartContext])
 
   return (
     <div className="bg-secondary">

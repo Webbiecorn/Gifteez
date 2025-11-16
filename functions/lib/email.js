@@ -124,11 +124,7 @@ Privacybeleid: https://gifteez.nl/privacy
 export const onNewsletterSubscribe = functions
     .region('europe-west1')
     .firestore.document('newsletter_subscribers/{subscriberId}')
-    .onCreate(async (snap, context) => {
-    if (!resend) {
-        console.warn('Resend not configured, skipping welcome email');
-        return;
-    }
+    .onCreate(async (snap, _context) => {
     const subscriber = snap.data();
     const email = subscriber.email;
     const name = subscriber.name;
@@ -137,18 +133,29 @@ export const onNewsletterSubscribe = functions
         return;
     }
     try {
-        const fromAddress = process.env.NEWSLETTER_FROM || 'noreply@gifteez.nl';
-        await resend.emails.send({
-            from: `Gifteez <${fromAddress}>`,
+        // Get API key from Firebase Functions config
+        const apiKey = functions.config().resend?.api_key;
+        if (!apiKey) {
+            console.error('RESEND_API_KEY not configured in functions.config()');
+            return;
+        }
+        console.log('Using API key from functions.config()');
+        const resendClient = new Resend(apiKey);
+        // TEMPORARY: Use Resend's test domain to verify API works
+        const result = await resendClient.emails.send({
+            from: 'Gifteez <onboarding@resend.dev>',
             to: email,
             subject: 'Welkom bij Gifteez! 🎁',
             html: getWelcomeEmailHtml(name),
             text: getWelcomeEmailText(name),
         });
-        console.log(`Welcome email sent to ${email}`);
+        console.log(`Welcome email sent to ${email}, Resend ID: ${result.data?.id}`);
     }
     catch (error) {
         console.error('Error sending welcome email:', error);
+        if (error instanceof Error) {
+            console.error('Error details:', error.message, error.stack);
+        }
         // Don't throw - we don't want to fail the document creation
     }
 });
@@ -349,7 +356,7 @@ function getContactConfirmationHtml(name, message) {
 // Callable Function: Send GiftFinder Results
 export const sendGiftFinderResults = functions
     .region('europe-west1')
-    .https.onCall(async (data, context) => {
+    .https.onCall(async (data, _context) => {
     if (!resend) {
         throw new functions.https.HttpsError('failed-precondition', 'Email service not configured');
     }
@@ -381,7 +388,7 @@ export const sendGiftFinderResults = functions
 export const onContactFormSubmit = functions
     .region('europe-west1')
     .firestore.document('contact_messages/{messageId}')
-    .onCreate(async (snap, context) => {
+    .onCreate(async (snap, _context) => {
     if (!resend) {
         console.warn('Resend not configured, skipping contact emails');
         return;

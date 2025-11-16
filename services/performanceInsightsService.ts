@@ -41,14 +41,34 @@ export interface PerformanceEvent {
   userId?: string
 }
 
+export interface SourcePerformance {
+  sourceKey: string
+  channel: string
+  guideSlug?: string
+  context?: string
+  feed?: string
+  impressions: number
+  clicks: number
+  ctr: number
+  uniqueProducts: number
+  lastEvent?: Date
+}
+
 const COLLECTION_EVENTS = 'productPerformanceEvents'
 const COLLECTION_METRICS = 'productMetrics'
 const LOCAL_STORAGE_KEY = 'gifteez_performance_cache_v1'
 
+interface LocalSourceCounters {
+  impressions: number
+  clicks: number
+  lastEvent?: number
+}
+
 interface LocalCacheData {
   impressions: number
   clicks: number
-  events: Array<{ type: 'impression' | 'click'; timestamp: number }>
+  events: Array<{ type: 'impression' | 'click'; timestamp: number; source?: string }>
+  sources?: Record<string, LocalSourceCounters>
 }
 
 interface LocalCache {
@@ -106,7 +126,7 @@ export class PerformanceInsightsService {
    */
   static async trackImpression(productId: string, source?: string, userId?: string): Promise<void> {
     // Always track locally for immediate updates
-    this.trackEventLocally(productId, 'impression')
+    this.trackEventLocally(productId, 'impression', source)
 
     // Add to batch queue instead of immediate write
     if (firebaseEnabled && db) {
@@ -125,7 +145,7 @@ export class PerformanceInsightsService {
    */
   static async trackClick(productId: string, source?: string, userId?: string): Promise<void> {
     // Always track locally
-    this.trackEventLocally(productId, 'click')
+    this.trackEventLocally(productId, 'click', source)
 
     // Add to batch queue instead of immediate write
     if (firebaseEnabled && db) {
@@ -441,6 +461,91 @@ export class PerformanceInsightsService {
   }
 
   /**
+   * Aggregate performance by source (guide/feed/channel)
+   */
+  static async getSourcePerformance(days: 7 | 30 = 7): Promise<SourcePerformance[]> {
+    if (!firebaseEnabled || !db) {
+      return this.getLocalSourcePerformance(days)
+    }
+
+    try {
+      const cutoffDate = new Date()
+      cutoffDate.setDate(cutoffDate.getDate() - days)
+
+      const q = query(
+        collection(db, COLLECTION_EVENTS),
+        where('timestamp', '>=', Timestamp.fromDate(cutoffDate))
+      )
+
+      const snapshot = await getDocs(q)
+      const sourceMap = new Map<
+        string,
+        {
+          impressions: number
+          clicks: number
+          uniqueProducts: Set<string>
+          lastEvent?: Date
+        }
+      >()
+
+      snapshot.forEach((doc) => {
+        const data = doc.data()
+        const sourceKey = data.source || 'unknown'
+        const entry = sourceMap.get(sourceKey) || {
+          impressions: 0,
+          clicks: 0,
+          uniqueProducts: new Set<string>(),
+          lastEvent: undefined,
+        }
+
+        if (data.eventType === 'impression') {
+          entry.impressions++
+        } else if (data.eventType === 'click') {
+          entry.clicks++
+        }
+
+        if (data.productId) {
+          entry.uniqueProducts.add(data.productId)
+        }
+
+        if (data.timestamp?.toDate) {
+          const timestamp = data.timestamp.toDate()
+          if (!entry.lastEvent || timestamp > entry.lastEvent) {
+            entry.lastEvent = timestamp
+          }
+        }
+
+        sourceMap.set(sourceKey, entry)
+      })
+
+      return Array.from(sourceMap.entries())
+        .map(([sourceKey, stats]) => {
+          const parsed = this.parseSourceKey(sourceKey)
+          const ctr = stats.impressions > 0 ? (stats.clicks / stats.impressions) * 100 : 0
+          return {
+            sourceKey,
+            channel: parsed.channel,
+            guideSlug: parsed.guideSlug,
+            context: parsed.context,
+            feed: parsed.feed,
+            impressions: stats.impressions,
+            clicks: stats.clicks,
+            ctr,
+            uniqueProducts: stats.uniqueProducts.size,
+            lastEvent: stats.lastEvent,
+          }
+        })
+        .sort((a, b) => {
+          if (b.clicks !== a.clicks) return b.clicks - a.clicks
+          return b.impressions - a.impressions
+        })
+    } catch (error) {
+      console.error('Error getting source performance:', error)
+      return this.getLocalSourcePerformance(days)
+    }
+  }
+
+  /**
    * Get metrics for a specific period
    */
   private static async getMetricsForPeriod(
@@ -480,13 +585,17 @@ export class PerformanceInsightsService {
 
   // ============= LOCAL STORAGE FALLBACKS =============
 
-  private static trackEventLocally(productId: string, eventType: 'impression' | 'click'): void {
+  private static trackEventLocally(
+    productId: string,
+    eventType: 'impression' | 'click',
+    source?: string
+  ): void {
     try {
       const cache = this.getLocalCache()
       const key = `${productId}`
 
       if (!cache[key]) {
-        cache[key] = { impressions: 0, clicks: 0, events: [] }
+        cache[key] = { impressions: 0, clicks: 0, events: [], sources: {} }
       }
 
       if (eventType === 'impression') {
@@ -498,11 +607,29 @@ export class PerformanceInsightsService {
       cache[key].events.push({
         type: eventType,
         timestamp: Date.now(),
+        source,
       })
 
       // Keep only last 100 events per product
       if (cache[key].events.length > 100) {
         cache[key].events = cache[key].events.slice(-100)
+      }
+
+      if (source) {
+        if (!cache[key].sources) {
+          cache[key].sources = {}
+        }
+        const sourceCounters = cache[key].sources[source] || {
+          impressions: 0,
+          clicks: 0,
+        }
+        if (eventType === 'impression') {
+          sourceCounters.impressions++
+        } else {
+          sourceCounters.clicks++
+        }
+        sourceCounters.lastEvent = Date.now()
+        cache[key].sources[source] = sourceCounters
       }
 
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cache))
@@ -563,6 +690,106 @@ export class PerformanceInsightsService {
     }
 
     return trending.sort((a, b) => b.score - a.score).slice(0, maxResults)
+  }
+
+  private static getLocalSourcePerformance(days: number): SourcePerformance[] {
+    const cache = this.getLocalCache()
+    const cutoff = Date.now() - days * 24 * 60 * 60 * 1000
+    const sourceMap = new Map<
+      string,
+      { impressions: number; clicks: number; uniqueProducts: Set<string>; lastEvent?: number }
+    >()
+
+    for (const [productId, data] of Object.entries(cache) as [string, LocalCacheData][]) {
+      const events = Array.isArray(data.events) ? data.events : []
+      events
+        .filter((event) => event.timestamp >= cutoff)
+        .forEach((event) => {
+          const sourceKey = event.source || 'unknown'
+          const entry = sourceMap.get(sourceKey) || {
+            impressions: 0,
+            clicks: 0,
+            uniqueProducts: new Set<string>(),
+            lastEvent: undefined,
+          }
+          if (event.type === 'impression') {
+            entry.impressions++
+          } else if (event.type === 'click') {
+            entry.clicks++
+          }
+          entry.uniqueProducts.add(productId)
+          if (!entry.lastEvent || event.timestamp > entry.lastEvent) {
+            entry.lastEvent = event.timestamp
+          }
+          sourceMap.set(sourceKey, entry)
+        })
+    }
+
+    return Array.from(sourceMap.entries()).map(([sourceKey, stats]) => {
+      const parsed = this.parseSourceKey(sourceKey)
+      return {
+        sourceKey,
+        channel: parsed.channel,
+        guideSlug: parsed.guideSlug,
+        context: parsed.context,
+        feed: parsed.feed,
+        impressions: stats.impressions,
+        clicks: stats.clicks,
+        ctr: stats.impressions > 0 ? (stats.clicks / stats.impressions) * 100 : 0,
+        uniqueProducts: stats.uniqueProducts.size,
+        lastEvent: stats.lastEvent ? new Date(stats.lastEvent) : undefined,
+      }
+    })
+  }
+
+  private static parseSourceKey(sourceKey: string): {
+    channel: string
+    guideSlug?: string
+    context?: string
+    feed?: string
+  } {
+    if (!sourceKey) {
+      return { channel: 'unknown' }
+    }
+
+    const parts = sourceKey.split(':').filter(Boolean)
+    const channel = parts.shift() || 'unknown'
+
+    if (channel !== 'programmatic') {
+      return {
+        channel,
+        context: parts.length ? parts.join(':') : undefined,
+      }
+    }
+
+    const guideSlug = parts.shift()
+    let context: string | undefined
+    let feed: string | undefined
+
+    if (parts.length === 1) {
+      const token = parts[0]
+      if (this.isKnownProgrammaticContext(token)) {
+        context = token
+      } else {
+        feed = token
+      }
+    } else if (parts.length >= 2) {
+      context = parts[0]
+      feed = parts[parts.length - 1]
+    }
+
+    return {
+      channel,
+      guideSlug,
+      context,
+      feed,
+    }
+  }
+
+  private static isKnownProgrammaticContext(value?: string): boolean {
+    if (!value) return false
+    const normalized = value.toLowerCase()
+    return ['grid', 'editor', 'editors', 'hero', 'schema-item-list'].includes(normalized)
   }
 
   private static getLocalCache(): LocalCache {

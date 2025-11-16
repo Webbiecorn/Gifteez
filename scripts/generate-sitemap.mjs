@@ -1,12 +1,16 @@
 // scripts/generate-sitemap.mjs
 import { promises as fs } from "fs";
 import path from "path";
-import url from "url";
 
 // Import TS blog data via dynamic transpile (simple, using ts-node-esque loader is overkill). We read and regex slugs.
 const BLOG_DATA_FILE = path.resolve("data/blogData.ts");
+const PROGRAMMATIC_DATA_FILE = path.resolve("data/programmatic/index.ts");
 
 const SITE = "https://gifteez.nl";
+const guidePathConfig = JSON.parse(
+  await fs.readFile(new URL("../guide-paths.json", import.meta.url), "utf8")
+);
+const GUIDE_BASE_PATH = guidePathConfig.basePath;
 const OUT_FILE = path.resolve("public/sitemap.xml");
 
 // Handmatige "vaste routes" (passen bij jouw app)
@@ -14,6 +18,7 @@ const staticRoutes = [
   { loc: `${SITE}/`, changefreq: "daily", priority: "0.9" },
   { loc: `${SITE}/giftfinder`, changefreq: "daily", priority: "0.8" },
   { loc: `${SITE}/deals`, changefreq: "daily", priority: "0.8" },
+  { loc: `${SITE}${GUIDE_BASE_PATH}`, changefreq: "daily", priority: "0.8" },
   { loc: `${SITE}/blog`, changefreq: "daily", priority: "0.7" },
   { loc: `${SITE}/categories`, changefreq: "weekly", priority: "0.6" },
   // Category pages
@@ -77,6 +82,30 @@ async function getPostUrls() {
   return urls;
 }
 
+async function getProgrammaticUrls() {
+  try {
+    const src = await fs.readFile(PROGRAMMATIC_DATA_FILE, "utf8");
+    const regex = /slug:\s*'([^']+)'/g;
+    const seen = new Set();
+    const urls = [];
+    let match;
+    while ((match = regex.exec(src)) !== null) {
+      const slug = match[1];
+      if (seen.has(slug)) continue;
+      seen.add(slug);
+      urls.push({
+        loc: `${SITE}${GUIDE_BASE_PATH}/${encodeURIComponent(slug)}`,
+        changefreq: "daily",
+        priority: "0.74",
+      });
+    }
+    return urls;
+  } catch (err) {
+    console.warn("[sitemap] Kon programmatic index niet parsen:", err.message);
+    return [];
+  }
+}
+
 function buildXml(urls) {
   const items = urls
     .map((u) => {
@@ -100,7 +129,8 @@ ${items}
 
 async function main() {
   const posts = await getPostUrls();
-  const urls = [...staticRoutes, ...posts];
+  const programmatic = await getProgrammaticUrls();
+  const urls = [...staticRoutes, ...programmatic, ...posts];
   const xml = buildXml(urls);
   await fs.mkdir(path.dirname(OUT_FILE), { recursive: true });
   await fs.writeFile(OUT_FILE, xml.trim(), "utf8");

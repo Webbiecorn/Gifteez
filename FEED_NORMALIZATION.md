@@ -13,7 +13,7 @@ Raw Feed Data (AWIN/Coolblue/SLYGAD)
           ↓
     [Normalizers]
     - CoolblueNormalizer
-    - AwinNormalizer  
+    - AwinNormalizer
     - SlygadNormalizer
           ↓
   [Feed Processor]
@@ -29,3 +29,4 @@ Raw Feed Data (AWIN/Coolblue/SLYGAD)
     - localStorage (lookups)
           ↓
    [Application]
+```

@@ -14,7 +14,7 @@
       }
     }
   },
-  
+
   "skus": {
     "_examples": {
       "_comment": "SKU-specific overrides for problematic products",
@@ -25,11 +25,9 @@
       }
     }
   },
-  
+
   "exclude": {
-    "sku": [
-      "_examples"
-    ],
+    "sku": ["_examples"],
     "contains": [
       "refill pack only",
       "only refill",
@@ -43,12 +41,8 @@
       "B-stock",
       "open box"
     ],
-    "brands": [
-      "_examples"
-    ]
+    "brands": ["_examples"]
   },
-  
-  "forceInclude": [
-    "_comment: SKU IDs that should always be included regardless of other rules"
-  ]
+
+  "forceInclude": ["_comment: SKU IDs that should always be included regardless of other rules"]
 }

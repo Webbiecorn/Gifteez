@@ -241,7 +241,7 @@ export class SlygadNormalizer extends BaseNormalizer {
 
     // Extract from name/description
     const text = `${name} ${description}`.toLowerCase()
-  const words: string[] = text.match(/\b\w{4,}\b/g) ?? []
+    const words: string[] = text.match(/\b\w{4,}\b/g) ?? []
 
     // Gift-related and sustainability keywords
     const relevantKeywords = [

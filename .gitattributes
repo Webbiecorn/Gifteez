@@ -1,0 +1,5 @@
+public/data/**/*.json filter=lfs diff=lfs merge=lfs -text
+data/awin/ingest/**/*.json filter=lfs diff=lfs merge=lfs -text
+data/importedProducts.json filter=lfs diff=lfs merge=lfs -text
+data/partypro-import-ready.json filter=lfs diff=lfs merge=lfs -text
+data/shop-like-you-give-a-damn-*.json filter=lfs diff=lfs merge=lfs -text

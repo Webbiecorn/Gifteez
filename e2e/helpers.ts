@@ -1,5 +1,72 @@
 import { expect } from '@playwright/test'
+import { AUTOMATION_FLAG_STORAGE_KEY, AUTOMATION_GLOBAL_FLAG } from '../lib/automationEnvironment'
 import type { Page } from '@playwright/test'
+
+type CookiePreferencesForTests = {
+  necessary: boolean
+  analytics: boolean
+  marketing: boolean
+}
+
+const COOKIE_CONSENT_STORAGE_KEY = 'gifteez_cookie_consent'
+const COOKIE_CONSENT_VERSION = '1.0'
+const DEFAULT_COOKIE_PREFERENCES: CookiePreferencesForTests = {
+  necessary: true,
+  analytics: true,
+  marketing: false,
+}
+
+async function seedAutomationFlag(page: Page) {
+  await page.addInitScript(
+    ({ storageKey, globalKey }) => {
+      try {
+        window.localStorage.setItem(storageKey, 'true')
+      } catch {
+        // Ignore storage access errors
+      }
+
+      try {
+        window.sessionStorage.setItem(storageKey, 'true')
+      } catch {
+        // Ignore storage access errors
+      }
+
+      ;(window as unknown as Record<string, unknown>)[globalKey] = true
+      ;(globalThis as unknown as Record<string, unknown>)[globalKey] = true
+    },
+    { storageKey: AUTOMATION_FLAG_STORAGE_KEY, globalKey: AUTOMATION_GLOBAL_FLAG }
+  )
+
+  try {
+    await page.evaluate(
+      ({ storageKey, globalKey }) => {
+        try {
+          window.localStorage.setItem(storageKey, 'true')
+        } catch {
+          // Ignore
+        }
+
+        try {
+          window.sessionStorage.setItem(storageKey, 'true')
+        } catch {
+          // Ignore
+        }
+
+        ;(window as unknown as Record<string, unknown>)[globalKey] = true
+        ;(globalThis as unknown as Record<string, unknown>)[globalKey] = true
+      },
+      { storageKey: AUTOMATION_FLAG_STORAGE_KEY, globalKey: AUTOMATION_GLOBAL_FLAG }
+    )
+  } catch (error) {
+    if (process.env.DEBUG_PLAYWRIGHT_WAIT === 'true') {
+      console.warn('seedAutomationFlag evaluate failed:', error)
+    }
+  }
+}
+
+export async function markAutomationEnvironment(page: Page) {
+  await seedAutomationFlag(page)
+}
 
 /**
  * Helper utilities for E2E tests
@@ -156,8 +223,30 @@ export async function setLocalStorageItem(page: Page, key: string, value: string
 /**
  * Clear localStorage
  */
-export async function clearLocalStorage(page: Page) {
-  await page.evaluate(() => localStorage.clear())
+export async function clearLocalStorage(
+  page: Page,
+  options: { preserveCookieConsent?: boolean } = {}
+) {
+  const { preserveCookieConsent = true } = options
+
+  await page.evaluate(
+    ({ preserveConsent, consentKey }) => {
+      if (preserveConsent && consentKey) {
+        const consent = window.localStorage.getItem(consentKey)
+        window.localStorage.clear()
+        if (consent) {
+          window.localStorage.setItem(consentKey, consent)
+        }
+        return
+      }
+
+      window.localStorage.clear()
+    },
+    {
+      preserveConsent: preserveCookieConsent,
+      consentKey: preserveCookieConsent ? COOKIE_CONSENT_STORAGE_KEY : null,
+    }
+  )
 }
 
 /**
@@ -277,6 +366,136 @@ export function isMobileViewport(page: Page): boolean {
  */
 export async function waitForAnimation(page: Page, duration = 500) {
   await page.waitForTimeout(duration)
+}
+
+export async function ensureCookieConsent(page: Page, preferences = DEFAULT_COOKIE_PREFERENCES) {
+  await markAutomationEnvironment(page)
+  const consentData = {
+    version: COOKIE_CONSENT_VERSION,
+    timestamp: new Date().toISOString(),
+    preferences,
+  }
+
+  const serializedConsent = JSON.stringify(consentData)
+
+  await page.addInitScript(
+    ({ key, value }) => {
+      window.localStorage.setItem(key, value)
+    },
+    { key: COOKIE_CONSENT_STORAGE_KEY, value: serializedConsent }
+  )
+
+  try {
+    await page.evaluate(
+      ({ key, value }) => {
+        window.localStorage.setItem(key, value)
+      },
+      { key: COOKIE_CONSENT_STORAGE_KEY, value: serializedConsent }
+    )
+  } catch (error) {
+    if (process.env.DEBUG_PLAYWRIGHT_WAIT === 'true') {
+      console.warn('ensureCookieConsent evaluate failed:', error)
+    }
+  }
+}
+
+const COOKIE_BANNER_TEXT_SELECTOR = 'text=/Cookie\\s+Voorkeuren/i'
+const COOKIE_ACCEPT_BUTTON_SELECTOR =
+  'button:has-text("Alles Accepteren"), button:has-text("Accepteer alles"), button:has-text("Accept all")'
+const COOKIE_DECLINE_BUTTON_SELECTOR =
+  'button:has-text("Alleen Noodzakelijk"), [aria-label*="sluiten" i], button:has-text("Alleen noodzakelijk")'
+
+export async function dismissCookieBannerIfPresent(page: Page) {
+  const bannerLocator = page.locator(COOKIE_BANNER_TEXT_SELECTOR).first()
+  const bannerCount = await bannerLocator.count()
+
+  if (bannerCount === 0) {
+    return
+  }
+
+  if (!(await bannerLocator.isVisible())) {
+    return
+  }
+
+  const acceptButton = page.locator(COOKIE_ACCEPT_BUTTON_SELECTOR).first()
+  const declineButton = page.locator(COOKIE_DECLINE_BUTTON_SELECTOR).first()
+
+  if (await acceptButton.isVisible()) {
+    await acceptButton.click({ timeout: 2000 }).catch(() => {})
+  } else if (await declineButton.isVisible()) {
+    await declineButton.click({ timeout: 2000 }).catch(() => {})
+  } else {
+    await ensureCookieConsent(page)
+  }
+
+  await waitForAnimation(page, 300)
+  await bannerLocator.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {})
+}
+
+const MOBILE_MENU_BUTTON_SELECTOR = 'button[aria-label*="menu" i], button[aria-label*="Menu" i]'
+const MOBILE_NAV_CONTAINER_SELECTOR =
+  '[role="dialog"][aria-label*="mobiel" i], nav[aria-label="Mobiele navigatie"], nav[aria-label*="mobiele" i]'
+
+const HEADER_NAV_SUBMENU_TARGETS: Record<string, RegExp> = {
+  'nav-deals': /Alle Collecties/i,
+  'nav-blog': /Alle Artikelen/i,
+}
+
+export async function openMobileMenuIfNeeded(page: Page) {
+  if (!isMobileViewport(page)) {
+    return
+  }
+
+  const mobileMenuButton = page.locator(MOBILE_MENU_BUTTON_SELECTOR).first()
+  const mobileNav = page.locator(MOBILE_NAV_CONTAINER_SELECTOR).first()
+
+  if (await mobileNav.isVisible()) {
+    return
+  }
+
+  if (await mobileMenuButton.isVisible()) {
+    await mobileMenuButton.click()
+    await waitForAnimation(page, 300)
+    await mobileNav
+      .first()
+      .waitFor({ state: 'visible', timeout: 2000 })
+      .catch(() => {})
+  }
+}
+
+function getHeaderNavLocator(page: Page, testId: string) {
+  if (isMobileViewport(page)) {
+    return page.locator(MOBILE_NAV_CONTAINER_SELECTOR).locator(`[data-testid="${testId}"]`).first()
+  }
+
+  return page.getByTestId(testId).first()
+}
+
+export async function clickHeaderNav(page: Page, testId: string) {
+  await openMobileMenuIfNeeded(page)
+
+  const navLocator = getHeaderNavLocator(page, testId)
+  const submenuTarget = HEADER_NAV_SUBMENU_TARGETS[testId]
+
+  if (isMobileViewport(page) && submenuTarget) {
+    const isExpanded = (await navLocator.getAttribute('aria-expanded')) === 'true'
+
+    if (!isExpanded) {
+      await navLocator.click()
+      await waitForAnimation(page, 200)
+    }
+
+    const submenuItem = page
+      .locator(MOBILE_NAV_CONTAINER_SELECTOR)
+      .locator('button, a')
+      .filter({ hasText: submenuTarget })
+      .first()
+
+    await submenuItem.click()
+    return
+  }
+
+  await navLocator.click()
 }
 
 /**

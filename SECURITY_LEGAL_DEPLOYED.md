@@ -21,14 +21,16 @@ Added comprehensive security headers to all responses:
   "value": "DENY"
 }
 ```
+
 **Protection:** Prevents clickjacking attacks (site can't be embedded in iframes)
 
 ```json
 {
-  "key": "X-Content-Type-Options", 
+  "key": "X-Content-Type-Options",
   "value": "nosniff"
 }
 ```
+
 **Protection:** Prevents MIME-type sniffing attacks
 
 ```json
@@ -37,6 +39,7 @@ Added comprehensive security headers to all responses:
   "value": "strict-origin-when-cross-origin"
 }
 ```
+
 **Privacy:** Controls referrer information sent to external sites
 
 ```json
@@ -45,6 +48,7 @@ Added comprehensive security headers to all responses:
   "value": "geolocation=(), microphone=(), camera=()"
 }
 ```
+
 **Privacy:** Blocks access to geolocation, microphone, camera APIs
 
 ```json
@@ -53,9 +57,11 @@ Added comprehensive security headers to all responses:
   "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com..."
 }
 ```
+
 **Protection:** Prevents XSS attacks, controls allowed script/style sources
 
 **Allowed Sources:**
+
 - Scripts: Self, GTM, Google Analytics, AWIN, Pinterest, Firebase
 - Styles: Self + inline (for Tailwind)
 - Images: All HTTPS (for affiliate product images)
@@ -64,6 +70,7 @@ Added comprehensive security headers to all responses:
 - Objects: None (no Flash, etc.)
 
 **Expected Result:**
+
 - Security Headers Grade: **A** (from securityheaders.com)
 - OWASP Best Practices: ✅ Compliant
 
@@ -72,18 +79,21 @@ Added comprehensive security headers to all responses:
 ### 2. ✅ Affiliate Link Compliance
 
 **Google Guideline:**
+
 > "Use the rel='sponsored' attribute along with nofollow for affiliate links"
 
 **Before:** Inconsistent - some had `nofollow`, some didn't  
 **After:** ALL affiliate links now have: `rel="sponsored nofollow noopener noreferrer"`
 
 **Why Each Attribute:**
+
 - `sponsored`: Tells Google it's a paid/affiliate link
 - `nofollow`: Prevents PageRank flow (required by Google)
 - `noopener`: Security - prevents window.opener access
 - `noreferrer`: Privacy - no referrer header sent
 
 **Files Updated:**
+
 1. ✅ `components/DealsPage.tsx` - 3 affiliate links
 2. ✅ `components/GiftFinderPage.tsx` - 2 affiliate links (Amazon/Coolblue fallbacks)
 3. ✅ `components/DealQuickViewModal.tsx` - 1 affiliate link
@@ -93,12 +103,14 @@ Added comprehensive security headers to all responses:
 
 **New Utility Created:**
 `utils/linkHelpers.ts` - Helper functions for consistent link attributes:
+
 - `getAffiliateLinkProps(url, label)` - Returns affiliate link props
 - `getExternalLinkProps(url, label)` - Returns regular external link props
 - `isAffiliateLink(url)` - Auto-detects affiliate patterns
 - `getSmartLinkProps(url, label)` - Auto-selects correct attributes
 
 **Example Usage:**
+
 ```tsx
 // Old way (inconsistent):
 <a href={url} target="_blank" rel="noopener noreferrer sponsored">
@@ -111,6 +123,7 @@ Added comprehensive security headers to all responses:
 ```
 
 **SEO Benefits:**
+
 - ✅ No warnings in Google Search Console
 - ✅ Complies with FTC disclosure guidelines
 - ✅ Proper link attribution for affiliates
@@ -122,6 +135,7 @@ Added comprehensive security headers to all responses:
 **Created:** `components/NotFoundPage.tsx` (2.38 kB)
 
 **Features:**
+
 - **Soft Navigation:** Quick buttons to GiftFinder, Deals, Categories, Blog
 - **Help Section:** Contact + About links
 - **SEO-Friendly:** Shows error code + URL
@@ -129,6 +143,7 @@ Added comprehensive security headers to all responses:
 - **UX:** Friendly message, no dead ends
 
 **Example:**
+
 ```
 Oeps! Deze pagina bestaat niet
 
@@ -145,6 +160,7 @@ Foutcode: 404 | URL: /non-existent-page
 **Created:** `components/ErrorPage.tsx` (3.54 kB)
 
 **Features:**
+
 - **Error Recovery:** Reload button + Home button
 - **Quick Links:** GiftFinder, Deals, Categories, Blog
 - **Developer Mode:** Collapsible error details (stack trace)
@@ -152,6 +168,7 @@ Foutcode: 404 | URL: /non-existent-page
 - **Contact:** Direct link to report problem
 
 **Example:**
+
 ```
 Er ging iets mis...
 
@@ -166,12 +183,14 @@ Stack Trace: ... (for debugging)
 ```
 
 **Routing Updates:**
+
 - Added `'notFound'` and `'error'` to Page type
 - Updated App.tsx routing: unknown routes → 404 page
 - Default case → NotFoundPage (instead of HomePage)
 - ErrorBoundary fallback → ErrorPage
 
 **Testing:**
+
 ```
 404 Test: Visit https://gifteez-7533b.web.app/does-not-exist
 500 Test: Trigger JS error → ErrorBoundary catches → ErrorPage
@@ -216,6 +235,7 @@ form-action 'self'
 ```
 
 **Why 'unsafe-inline' & 'unsafe-eval':**
+
 - Vite uses inline scripts during build
 - React/Firebase require eval for dynamic imports
 - Trade-off: Performance vs strictest CSP
@@ -226,6 +246,7 @@ form-action 'self'
 ### Affiliate Link Patterns Detected:
 
 `utils/linkHelpers.ts` auto-detects these patterns:
+
 - `amazon`
 - `bol.com`
 - `coolblue`
@@ -249,13 +270,14 @@ switch (pathname) {
 }
 
 // Page type
-export type Page = 
-  | 'home' | 'giftFinder' | ... 
+export type Page =
+  | 'home' | 'giftFinder' | ...
   | 'notFound'  // NEW
   | 'error';    // NEW
 ```
 
 **Behavior:**
+
 - Unknown URL → 404 page
 - JS crash → ErrorBoundary → 500 page
 - Both provide recovery navigation
@@ -267,6 +289,7 @@ export type Page =
 ### 1. Security Headers Test:
 
 **Before Deployment:**
+
 ```bash
 curl -I https://gifteez-7533b.web.app/
 # Expected headers NOT present:
@@ -275,6 +298,7 @@ curl -I https://gifteez-7533b.web.app/
 ```
 
 **After Deployment:**
+
 ```bash
 curl -I https://gifteez-7533b.web.app/
 # Expected headers present:
@@ -295,6 +319,7 @@ Visit: https://securityheaders.com/?q=gifteez-7533b.web.app
 ### 2. Affiliate Link Audit:
 
 **Test Script:**
+
 ```javascript
 // Run in browser console on any page with affiliate links
 const affiliateLinks = Array.from(document.querySelectorAll('a[href*="amazon"], a[href*="coolblue"], a[href*="awin"]'));
@@ -319,6 +344,7 @@ affiliateLinks.forEach(link => {
 ### 3. Error Page Tests:
 
 **404 Test:**
+
 ```
 Visit: https://gifteez-7533b.web.app/this-does-not-exist
 Expected: NotFoundPage with navigation buttons
@@ -329,6 +355,7 @@ Expected: NotFoundPage with navigation buttons
 ```
 
 **500 Test:**
+
 ```javascript
 // Trigger error in browser console:
 throw new Error('Test error for ErrorBoundary');
@@ -346,6 +373,7 @@ Expected: ErrorPage with recovery options
 ## 📊 Performance Impact
 
 **Build Stats:**
+
 ```
 NotFoundPage bundle:  2.38 kB (gzip: 1.03 kB)
 ErrorPage bundle:     3.54 kB (gzip: 1.30 kB)
@@ -355,12 +383,14 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 
 **Impact:** Minimal - only loads on error scenarios
 
-**Security Headers:** 
+**Security Headers:**
+
 - No performance impact
 - Headers add ~500 bytes to response
 - Improves security score dramatically
 
 **Affiliate Link Changes:**
+
 - Zero performance impact
 - Only HTML attribute changes
 - No JS changes needed
@@ -370,26 +400,33 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 ## 🎯 SEO & Legal Benefits
 
 ### Google Search Console:
+
 **Before:**
+
 - Potential warnings about affiliate links without proper rel attributes
 
 **After:**
+
 - ✅ All affiliate links properly marked as `sponsored nofollow`
 - ✅ No GSC warnings expected
 - ✅ Compliant with Google Webmaster Guidelines
 
 ### Legal Compliance:
+
 **FTC Guidelines:**
+
 - ✅ Affiliate links clearly marked (sponsored attribute)
 - ✅ Disclosure page exists (/affiliate-disclosure)
 - ✅ Cookie consent before tracking
 
 **GDPR:**
+
 - ✅ Security headers protect user privacy
 - ✅ Permissions policy blocks invasive APIs
 - ✅ Referrer policy limits data leakage
 
 ### Trust Signals:
+
 - ✅ Professional error pages (not generic 404)
 - ✅ Security headers visible in dev tools
 - ✅ Proper link attribution
@@ -399,16 +436,19 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 ## 🚀 What's Next (Future Improvements)
 
 ### Cookie Consent Enhancement (Phase 2):
+
 **Current:** GTM/AWIN load immediately from index.html  
 **Goal:** Load only after user consent
 
 **Plan:**
+
 1. Create `consentService.ts`
 2. Remove GTM/AWIN from index.html
 3. Load scripts after CookieBanner acceptance
 4. Test: No tracking before consent ✅
 
 **Files to Update:**
+
 - `index.html` - Remove GTM/AWIN scripts
 - `services/consentService.ts` - New service
 - `components/CookieBanner.tsx` - Call service on accept
@@ -419,10 +459,12 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 ---
 
 ### Stricter CSP (Phase 3):
+
 **Current:** Uses `'unsafe-inline'` and `'unsafe-eval'`  
 **Goal:** Nonce-based CSP for inline scripts
 
 **Plan:**
+
 1. Generate nonce on server (Firebase Cloud Function)
 2. Add nonce to inline scripts
 3. Update CSP to require nonce
@@ -435,9 +477,11 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 ---
 
 ### Security Monitoring (Phase 4):
+
 **Goal:** Track CSP violations and security events
 
 **Plan:**
+
 1. Add `report-uri` to CSP header
 2. Create Firebase function to receive reports
 3. Log violations to Firestore
@@ -450,6 +494,7 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 ## ✅ Checklist
 
 ### Completed:
+
 - [x] Security headers in firebase.json
 - [x] X-Frame-Options: DENY
 - [x] X-Content-Type-Options: nosniff
@@ -469,6 +514,7 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 - [x] Documentation complete
 
 ### Pending (Phase 2):
+
 - [ ] Cookie consent service
 - [ ] Remove GTM/AWIN from index.html
 - [ ] Load tracking after consent
@@ -476,6 +522,7 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 - [ ] Document all tracking tools in Privacy Policy
 
 ### Pending (Phase 3+):
+
 - [ ] Nonce-based CSP
 - [ ] Security monitoring
 - [ ] CSP violation reporting
@@ -485,6 +532,7 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 ## 📖 Documentation
 
 **New Files:**
+
 1. `SECURITY_LEGAL_PLAN.md` - Complete implementation guide
 2. `utils/linkHelpers.ts` - Link attribute utilities
 3. `components/NotFoundPage.tsx` - 404 page
@@ -492,6 +540,7 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 5. `SECURITY_LEGAL_DEPLOYED.md` - This file (deployment summary)
 
 **Updated Files:**
+
 1. `firebase.json` - Added security headers
 2. `types.ts` - Added 'notFound' | 'error' pages
 3. `App.tsx` - Added error page routing
@@ -510,7 +559,7 @@ Total new code:       7.22 kB (gzip: 2.95 kB)
 **Security:** Grade A expected (from D/C before)  
 **SEO:** Google Search Console compliant  
 **Legal:** FTC + GDPR ready  
-**UX:** Professional error pages with recovery  
+**UX:** Professional error pages with recovery
 
 **Status:** ✅ **DEPLOYED & LIVE**  
 **Production URL:** https://gifteez-7533b.web.app  

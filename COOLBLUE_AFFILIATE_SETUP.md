@@ -1,6 +1,7 @@
 # Coolblue Affiliate Configuratie via Awin - ✅ VOLTOOID
 
 ## Status: ✅ ACTIEF
+
 - **Publisher ID**: 2566111 (Gifteez.nl)
 - **Coolblue Advertiser ID**: 85161
 - **Status**: Volledig geconfigureerd en operationeel
@@ -10,23 +11,27 @@ Coolblue werkt via het Awin affiliate netwerk (ui.awin.com).
 ## Instructies voor Awin/Coolblue setup:
 
 ### 1. Awin gegevens verzamelen
+
 In je Awin dashboard (https://ui.awin.com/awin/affiliate) vind je:
 
 - **Publisher ID**: Jouw unieke Awin publisher ID (bijv. 123456)
 - **Coolblue Advertiser ID**: Coolblue's ID binnen Awin (zoek naar Coolblue in je advertiser lijst)
 
 ### 2. Configuratie updaten
+
 Update de configuratie in `services/coolblueAffiliateService.ts`:
 
 ```typescript
 CoolblueAffiliateService.updateConfig({
   publisherId: 'JOUW_AWIN_PUBLISHER_ID',
-  advertiserId: 'COOLBLUE_AWIN_ADVERTISER_ID'
-});
+  advertiserId: 'COOLBLUE_AWIN_ADVERTISER_ID',
+})
 ```
 
 ### 3. Link structuur
+
 Awin affiliate links zien er zo uit:
+
 ```
 https://www.awin1.com/cread.php?awinmid=ADVERTISER_ID&awinaffid=PUBLISHER_ID&clickref=gifteez&p=ENCODED_COOLBLUE_URL
 ```
@@ -46,11 +51,13 @@ https://www.awin1.com/cread.php?awinmid=ADVERTISER_ID&awinaffid=PUBLISHER_ID&cli
 
 ## Test voorbeelden:
 
-**Voor:** 
+**Voor:**
+
 - `https://www.coolblue.nl/product/123456/product-naam.html`
 - `https://www.coolblue.nl/zoeken?query=lego`
 
 **Na configuratie wordt:**
+
 - `https://www.awin1.com/cread.php?awinmid=ADVERTISER_ID&awinaffid=PUBLISHER_ID&clickref=gifteez&p=https%3A//www.coolblue.nl/product/123456/product-naam.html`
 
 ## Awin voordelen:
@@ -59,7 +66,7 @@ https://www.awin1.com/cread.php?awinmid=ADVERTISER_ID&awinaffid=PUBLISHER_ID&cli
 ✅ **Gedetailleerde rapportage** - Zie exact welke producten verkopen  
 ✅ **Campaign tracking** - Via clickref parameter verschillende bronnen meten  
 ✅ **Automatic validation** - Awin valideert alle transacties  
-✅ **Cross-device tracking** - Werkt op alle apparaten  
+✅ **Cross-device tracking** - Werkt op alle apparaten
 
 ## Volgende stappen:
 

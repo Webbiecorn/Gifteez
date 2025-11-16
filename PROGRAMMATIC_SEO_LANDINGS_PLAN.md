@@ -51,6 +51,7 @@ Voorbeelden
 - H1: title
 - Intro: intro
 - Badges: occasion/recipient/budget/retailer/interest
+- Quick scan: max 4 persona-kaarten met filterpresets (fast delivery, sort, deeplink)
 - Editor’s Picks: 3–5 items (redactioneel)
 - Lijst: ItemList van gefilterde producten (via dynamicProductService + affiliate context)
 - Mini‑FAQ
