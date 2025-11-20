@@ -1,24 +1,16 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useBlogContext } from '../contexts/BlogContext'
-import { quizQuestions, quizResults } from '../data/quizData'
 import { logger } from '../lib/logger'
 import { withAffiliate } from '../services/affiliate'
 import BlogService from '../services/blogService'
-import CoolblueFeedService from '../services/coolblueFeedService'
 import { DealCategoryConfigService } from '../services/dealCategoryConfigService'
 import { DynamicProductService } from '../services/dynamicProductService'
 import { firebaseEnabled } from '../services/firebase'
-import {
-  PinnedDealsService,
-  type PinnedDealEntry,
-  clearAllPinnedDeals,
-} from '../services/pinnedDealsService'
 import ActivityLog from './ActivityLog'
 import AdminContactMessages from './AdminContactMessages'
 import AdminDashboard from './AdminDashboard'
 import AdminNewsletterPanel from './AdminNewsletterPanel'
-import AmazonProductManager from './AmazonProductManager'
 import BlogEditor from './BlogEditor'
 import { BulkProductImporter } from './BulkProductImporter'
 import Button from './Button'
@@ -36,7 +28,6 @@ import {
   DownloadIcon,
   BookmarkIcon,
   BookmarkFilledIcon,
-  QuestionMarkCircleIcon,
   CheckCircleIcon,
   XCircleIcon,
 } from './IconComponents'
@@ -45,50 +36,14 @@ import ImageWithFallback from './ImageWithFallback'
 import PerformanceInsights from './PerformanceInsights'
 import ProductPostWizard from './ProductPostWizard'
 import type { BlogPostData } from '../services/blogService'
-import type { CoolblueFeedMeta, CoolblueProduct } from '../services/coolblueFeedService'
-import type {
-  NavigateTo,
-  DealItem,
-  DealCategory,
-  QuizResult,
-  BudgetTier,
-  OccasionType,
-  RelationshipType,
-} from '../types'
+import type { NavigateTo, DealItem, DealCategory } from '../types'
 
-const budgetLabels: Record<BudgetTier, string> = {
-  'budget-low': 'Tot €25',
-  'budget-mid': '€25 - €75',
-  'budget-high': '€75+',
-}
-
-const relationshipLabels: Record<RelationshipType, string> = {
-  partner: 'Partner',
-  friend: 'Vriend(in)',
-  colleague: 'Collega',
-  family: 'Familie',
-}
-
-const occasionLabels: Record<OccasionType, string> = {
-  birthday: 'Verjaardag',
-  housewarming: 'Housewarming',
-  holidays: 'Feestdagen',
-  anniversary: 'Jubileum',
-}
-
-const personaOrder = ['homebody', 'adventurer', 'foodie', 'creative'] as const
-const budgetOrder: BudgetTier[] = ['budget-low', 'budget-mid', 'budget-high']
-const relationshipOrder: RelationshipType[] = ['partner', 'friend', 'colleague', 'family']
-const occasionOrder: OccasionType[] = ['birthday', 'housewarming', 'holidays', 'anniversary']
-const QUIZ_REMINDER_STORAGE_KEY = 'gifteez.quizAdmin.reminders.v1'
 const ADMIN_PREFERENCES_STORAGE_KEY = 'gifteez.admin.preferences.v1'
 
 type AdminTab =
   | 'overview'
   | 'blog'
   | 'deals'
-  | 'quiz'
-  | 'shop'
   | 'newsletter'
   | 'messages'
   | 'settings'
@@ -96,11 +51,6 @@ type AdminTab =
   | 'performance'
   | 'import'
   | 'images'
-
-interface QuizReminderPreferences {
-  showAlerts: boolean
-  email: string
-}
 
 interface AdminPreferences {
   defaultTab: AdminTab
@@ -191,7 +141,6 @@ type DealsStatus = { type: 'success' | 'error' | 'info'; message: string } | nul
 
 const handleAdminOpschonen = async (
   setStatus: React.Dispatch<React.SetStateAction<DealsStatus>>,
-  setPinnedDeals: React.Dispatch<React.SetStateAction<PinnedDealEntry[]>>,
   setCategories: React.Dispatch<React.SetStateAction<DealCategory[]>>
 ): Promise<void> => {
   setStatus({ type: 'info', message: 'Bezig met opschonen…' })
@@ -199,8 +148,6 @@ const handleAdminOpschonen = async (
     if (typeof DealCategoryConfigService.clearAll === 'function') {
       await DealCategoryConfigService.clearAll()
     }
-    await clearAllPinnedDeals()
-    setPinnedDeals([])
     setCategories([])
     setStatus({ type: 'success', message: 'Admin en backend zijn opgeschoond.' })
   } catch (error: unknown) {
@@ -348,35 +295,60 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
       {/* Navigation Tabs */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
-            {[
-              { key: 'overview', label: 'Overzicht', icon: '📊' },
-              { key: 'blog', label: 'Blog Posts', icon: '📝' },
-              { key: 'deals', label: 'Deals', icon: '🏷️' },
-              { key: 'quiz', label: 'Quiz', icon: '❓' },
-              { key: 'shop', label: 'Shop Items', icon: '🛍️' },
-              { key: 'newsletter', label: 'Nieuwsbrief', icon: '📧' },
-              { key: 'messages', label: 'Berichten', icon: '📨' },
-              { key: 'import', label: 'Bulk Import', icon: '📦' },
-              { key: 'images', label: 'Images', icon: '🖼️' },
-              { key: 'activity', label: 'Activiteiten', icon: '📋' },
-              { key: 'performance', label: 'Performance', icon: '📈' },
-              { key: 'settings', label: 'Instellingen', icon: '⚙️' },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key as AdminTab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.key
-                    ? 'border-rose-500 text-rose-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
-          </nav>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            {/* Primary tabs */}
+            <nav className="flex flex-wrap gap-4 lg:gap-6">
+              {[
+                { key: 'overview', label: 'Overzicht', icon: '📊' },
+                { key: 'blog', label: 'Blog Posts', icon: '📝' },
+                { key: 'deals', label: 'Deals', icon: '🏷️' },
+                { key: 'newsletter', label: 'Nieuwsbrief', icon: '📧' },
+                { key: 'messages', label: 'Berichten', icon: '📨' },
+                { key: 'settings', label: 'Instellingen', icon: '⚙️' },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key as AdminTab)}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                    activeTab === tab.key
+                      ? 'border-rose-500 text-rose-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <span className="mr-2">{tab.icon}</span>
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+
+            {/* Advanced tabs */}
+            <div className="mt-2 lg:mt-0 flex items-center gap-2 text-xs text-gray-500">
+              <span className="hidden sm:inline">Geavanceerd:</span>
+              <nav className="flex flex-wrap gap-3">
+                {[
+                  { key: 'import', label: 'Bulk Import', icon: '📦' },
+                  { key: 'images', label: 'Images', icon: '🖼️' },
+                  { key: 'activity', label: 'Activiteiten', icon: '📋' },
+                  { key: 'performance', label: 'Performance', icon: '📈' },
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveTab(tab.key as AdminTab)}
+                    className={`py-3 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors ${
+                      activeTab === tab.key
+                        ? 'border-rose-300 text-rose-600'
+                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300'
+                    }`}
+                  >
+                    <span className="mr-1">{tab.icon}</span>
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -385,8 +357,6 @@ const AdminPage: React.FC<AdminPageProps> = ({ navigateTo }) => {
         {activeTab === 'overview' && <AdminDashboard />}
         {activeTab === 'blog' && <BlogAdmin isCloudConnected={firebaseEnabled} />}
         {activeTab === 'deals' && <DealsAdmin />}
-        {activeTab === 'quiz' && <QuizAdmin navigateTo={navigateTo} />}
-        {activeTab === 'shop' && <ShopAdmin />}
         {activeTab === 'newsletter' && <AdminNewsletterPanel />}
         {activeTab === 'messages' && <AdminContactMessages />}
         {activeTab === 'import' && <BulkProductImporter />}
@@ -914,8 +884,6 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ isCloudConnected }) => {
   )
 }
 
-const MAX_PINNED_DEALS = 20
-
 const DealsAdmin: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [dealOfWeek, setDealOfWeek] = useState<DealItem | null>(null)
@@ -934,9 +902,6 @@ const DealsAdmin: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false)
   const [priceFilter, setPriceFilter] = useState<'all' | 'budget' | 'mid' | 'premium'>('all')
   const [isCopying, setIsCopying] = useState(false)
-  const [pinnedDeals, setPinnedDeals] = useState<PinnedDealEntry[]>([])
-  const [pinnedLoaded, setPinnedLoaded] = useState(false)
-  const skipNextPinnedSaveRef = useRef(true)
   const [isExporting, setIsExporting] = useState(false)
 
   const loadDeals = useCallback(async (showSuccessMessage = false) => {
@@ -974,67 +939,6 @@ const DealsAdmin: React.FC = () => {
   useEffect(() => {
     void loadDeals()
   }, [loadDeals])
-
-  useEffect(() => {
-    let active = true
-
-    const loadPinnedDeals = async () => {
-      try {
-        const entries = await PinnedDealsService.load()
-        if (!active) {
-          return
-        }
-        setPinnedDeals(entries)
-      } catch (error: unknown) {
-        logUnknownWarning('Kon vastgezette deals niet laden', error, {
-          scope: 'admin.deals.pinned.load',
-        })
-        if (active) {
-          setStatus({
-            type: 'error',
-            message:
-              'Kon vastgezette deals niet laden. Controleer de verbinding en probeer opnieuw.',
-          })
-        }
-      } finally {
-        if (active) {
-          skipNextPinnedSaveRef.current = true
-          setPinnedLoaded(true)
-        }
-      }
-    }
-
-    void loadPinnedDeals()
-
-    return () => {
-      active = false
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!pinnedLoaded) {
-      return
-    }
-
-    if (skipNextPinnedSaveRef.current) {
-      skipNextPinnedSaveRef.current = false
-      return
-    }
-
-    void (async () => {
-      try {
-        await PinnedDealsService.save(pinnedDeals)
-      } catch (error: unknown) {
-        logUnknownError('Kon vastgezette deals niet opslaan', error, {
-          scope: 'admin.deals.pinned.save',
-        })
-        setStatus({
-          type: 'error',
-          message: 'Synchroniseren van vastgezette deals is mislukt. Probeer het opnieuw.',
-        })
-      }
-    })()
-  }, [pinnedDeals, pinnedLoaded, setStatus])
 
   const formatDateTime = useCallback((value?: Date | null) => {
     if (!value) {
@@ -1092,57 +996,9 @@ const DealsAdmin: React.FC = () => {
     return lines.filter(Boolean).join('\n')
   }, [])
 
-  const orderedPinnedDeals = useMemo(() => {
-    return [...pinnedDeals].sort((a, b) => b.pinnedAt - a.pinnedAt)
-  }, [pinnedDeals])
-
-  const pinnedDealMap = useMemo(() => {
-    const map = new Map<string, PinnedDealEntry>()
-    orderedPinnedDeals.forEach((entry) => {
-      if (entry?.id) {
-        map.set(entry.id, entry)
-      }
-    })
-    return map
-  }, [orderedPinnedDeals])
-
-  const isDealPinned = useCallback(
-    (deal?: DealItem | null) => {
-      if (!deal) {
-        return false
-      }
-      return pinnedDealMap.has(deal.id)
-    },
-    [pinnedDealMap]
-  )
-
-  const togglePinDeal = useCallback(
-    (deal: DealItem) => {
-      setPinnedDeals((current) => {
-        const existing = current.find((entry) => entry.id === deal.id)
-        if (existing) {
-          setStatus({ type: 'info', message: `${deal.name} verwijderd uit vaste selectie.` })
-          return current.filter((entry) => entry.id !== deal.id)
-        }
-
-        const entry: PinnedDealEntry = {
-          id: deal.id,
-          deal,
-          pinnedAt: Date.now(),
-        }
-
-        setStatus({ type: 'success', message: `${deal.name} vastgezet in deals.` })
-        const next = [entry, ...current.filter((item) => item.id !== deal.id)]
-        return next.slice(0, MAX_PINNED_DEALS)
-      })
-    },
-    [setStatus]
-  )
-
-  const pinnedDealList = useMemo(
-    () => orderedPinnedDeals.map((entry) => entry.deal),
-    [orderedPinnedDeals]
-  )
+  // Stub functions for removed pinned deals feature (pins are deprecated)
+  const isDealPinned = useCallback((_deal: DealItem) => false, [])
+  const togglePinDeal = useCallback((_deal: DealItem) => {}, [])
 
   const handleCopyDeal = useCallback(
     async (deal: DealItem) => {
@@ -1251,7 +1107,6 @@ const DealsAdmin: React.FC = () => {
     categories.forEach((category) => {
       category.items.forEach((item) => addDealToDataset(item, `Categorie: ${category.title}`))
     })
-    pinnedDealList.forEach((deal) => addDealToDataset(deal, 'Vastgezet'))
 
     if (dataset.size === 0) {
       setStatus({ type: 'error', message: 'Geen deals beschikbaar om te exporteren.' })
@@ -1385,16 +1240,7 @@ const DealsAdmin: React.FC = () => {
     } finally {
       setIsExporting(false)
     }
-  }, [
-    categories,
-    dealOfWeek,
-    formatDateTime,
-    isDealPinned,
-    pinnedDealList,
-    setStatus,
-    stats,
-    uniqueTopDeals,
-  ])
+  }, [categories, dealOfWeek, formatDateTime, setStatus, stats, uniqueTopDeals])
 
   const handleSearch = useCallback(async () => {
     const term = searchTerm.trim()
@@ -1460,6 +1306,8 @@ const DealsAdmin: React.FC = () => {
         setIsSearching(false)
       }
     },
+    // isDealPinned is a stub function with no deps, safe to omit
+
     [topDeals]
   )
 
@@ -1482,10 +1330,7 @@ const DealsAdmin: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-wrap gap-3 items-center justify-between bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <h2 className="text-xl font-bold text-gray-900">Deals beheer</h2>
-        <Button
-          variant="danger"
-          onClick={() => handleAdminOpschonen(setStatus, setPinnedDeals, setCategories)}
-        >
+        <Button variant="danger" onClick={() => handleAdminOpschonen(setStatus, setCategories)}>
           Admin & backend opschonen
         </Button>
       </div>
@@ -1633,103 +1478,6 @@ const DealsAdmin: React.FC = () => {
               </div>
             )}
           </div>
-
-          {orderedPinnedDeals.length > 0 && (
-            <div className="rounded-lg border border-rose-100 bg-white p-6 shadow-sm">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-100 text-rose-600">
-                    <BookmarkFilledIcon className="h-6 w-6" aria-hidden="true" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Vastgezette deals</h3>
-                    <p className="text-sm text-gray-500">
-                      Handige shortlist voor social posts, nieuwsbrieven of shop updates. Klik op
-                      "Losmaken" om ze te verwijderen.
-                    </p>
-                  </div>
-                </div>
-                <span className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-rose-600">
-                  {orderedPinnedDeals.length} geselecteerd
-                </span>
-              </div>
-              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {orderedPinnedDeals.map(({ id, deal, pinnedAt }) => (
-                  <div
-                    key={id}
-                    className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-gradient-to-br from-white to-rose-50/40 p-5 shadow-sm"
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="h-24 w-24 overflow-hidden rounded-xl border border-gray-100 bg-white">
-                        <ImageWithFallback
-                          src={deal.imageUrl}
-                          alt={deal.name}
-                          className="h-full w-full"
-                          fit="contain"
-                        />
-                      </div>
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-start justify-between gap-2">
-                          <h4 className="text-base font-semibold text-gray-900 line-clamp-2">
-                            {deal.name}
-                          </h4>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-600">
-                            Vastgezet{' '}
-                            {Number.isFinite(pinnedAt)
-                              ? formatDateTime(new Date(pinnedAt))
-                              : 'Onbekend'}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-500 line-clamp-3">{deal.description}</p>
-                        <div className="flex flex-wrap items-center gap-2 text-xs">
-                          <span className="rounded-full bg-rose-100 px-3 py-1 font-semibold text-rose-600">
-                            {deal.price}
-                          </span>
-                          {deal.originalPrice && (
-                            <span className="rounded-full bg-gray-100 px-3 py-1 text-gray-500">
-                              <s>{deal.originalPrice}</s>
-                            </span>
-                          )}
-                          {deal.giftScore && (
-                            <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-600">
-                              Score {deal.giftScore}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-2 text-xs font-semibold">
-                      <button
-                        type="button"
-                        onClick={() => togglePinDeal(deal)}
-                        className="inline-flex items-center gap-1 rounded-md border border-rose-200 bg-white px-3 py-1 text-rose-600 transition hover:bg-rose-100"
-                      >
-                        <BookmarkFilledIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                        Losmaken
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => void handleCopyDeal(deal)}
-                        className="inline-flex items-center gap-1 rounded-md border border-gray-200 bg-white px-3 py-1 text-gray-600 transition hover:bg-gray-100"
-                      >
-                        <GiftIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                        Kopieer snippet
-                      </button>
-                      <a
-                        href={withAffiliate(deal.affiliateLink)}
-                        target="_blank"
-                        rel="noopener noreferrer sponsored"
-                        className="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-600 transition hover:bg-emerald-100"
-                      >
-                        <LinkIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                        Bekijk
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="rounded-3xl border border-gray-100 bg-white shadow-sm">
             <div className="grid gap-6 p-6 lg:grid-cols-[1.2fr_1fr] lg:p-8">
@@ -2209,1168 +1957,6 @@ const DealsAdmin: React.FC = () => {
   )
 }
 
-interface QuizAdminProps {
-  navigateTo: NavigateTo
-}
-
-const QuizAdmin: React.FC<QuizAdminProps> = ({ navigateTo }) => {
-  const personaEntries = useMemo(() => {
-    const ordered = personaOrder
-      .map((key) => {
-        const persona = quizResults[key]
-        return persona ? ([key, persona] as [string, QuizResult]) : null
-      })
-      .filter((entry): entry is [string, QuizResult] => Boolean(entry))
-
-    const knownPersonaKeys = new Set<string>(personaOrder)
-    const additional = Object.entries(quizResults).filter(([key]) => !knownPersonaKeys.has(key))
-
-    return [...ordered, ...additional]
-  }, [])
-
-  const [selectedPersonaKey, setSelectedPersonaKey] = useState<string>(
-    () => personaEntries[0]?.[0] ?? ''
-  )
-  const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
-  const [reminderPrefs, setReminderPrefs] = useState<QuizReminderPreferences>(() => {
-    if (typeof window === 'undefined') {
-      return { showAlerts: true, email: '' }
-    }
-    try {
-      const stored = window.localStorage.getItem(QUIZ_REMINDER_STORAGE_KEY)
-      if (stored) {
-        const parsed = JSON.parse(stored) as Partial<QuizReminderPreferences>
-        return {
-          showAlerts: parsed.showAlerts ?? true,
-          email: parsed.email ?? '',
-        }
-      }
-    } catch (error: unknown) {
-      logUnknownWarning('Kon quiz herinneringsinstellingen niet laden', error, {
-        scope: 'admin.quiz.reminders.load',
-      })
-    }
-    return { showAlerts: true, email: '' }
-  })
-
-  useEffect(() => {
-    if (!selectedPersonaKey && personaEntries.length) {
-      setSelectedPersonaKey(personaEntries[0][0])
-    }
-  }, [personaEntries, selectedPersonaKey])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-    try {
-      window.localStorage.setItem(QUIZ_REMINDER_STORAGE_KEY, JSON.stringify(reminderPrefs))
-    } catch (error: unknown) {
-      logUnknownWarning('Kon quiz herinneringsinstellingen niet opslaan', error, {
-        scope: 'admin.quiz.reminders.save',
-      })
-    }
-  }, [reminderPrefs])
-
-  useEffect(() => {
-    if (!status) {
-      return
-    }
-    if (typeof window === 'undefined') {
-      return
-    }
-    const timer = window.setTimeout(() => setStatus(null), 4000)
-    return () => window.clearTimeout(timer)
-  }, [status])
-
-  const personaQuestions = useMemo(
-    () => quizQuestions.filter((question) => question.kind === 'persona'),
-    []
-  )
-  const metaQuestions = useMemo(
-    () => quizQuestions.filter((question) => question.kind !== 'persona'),
-    []
-  )
-
-  const personaAnswerIssues = useMemo(
-    () =>
-      personaQuestions.filter((question) => question.answers.some((answer) => !answer.resultKey)),
-    [personaQuestions]
-  )
-
-  const personaCoverage = useMemo(
-    () =>
-      personaEntries.map(([key, result]) => {
-        const shopping = result.shoppingList ?? {}
-        const occasionHighlights = result.occasionHighlights ?? {}
-        const missingBudgets = budgetOrder.filter((tier) => !shopping?.[tier]?.length)
-        const missingOccasions = occasionOrder.filter((occ) => !occasionHighlights?.[occ])
-        const blogCount = result.relatedBlogSlugs?.length ?? 0
-        const interests = result.recommendedInterests
-          ? result.recommendedInterests
-              .split(',')
-              .map((part) => part.trim())
-              .filter(Boolean)
-          : []
-        return {
-          key,
-          result,
-          missingBudgets,
-          missingOccasions,
-          blogCount,
-          interests,
-        }
-      }),
-    [personaEntries]
-  )
-
-  const totalBudgetSlots = personaEntries.length * budgetOrder.length
-  const missingBudgetSlots = personaCoverage.reduce(
-    (sum, persona) => sum + persona.missingBudgets.length,
-    0
-  )
-  const budgetCoverage = totalBudgetSlots
-    ? Math.round(((totalBudgetSlots - missingBudgetSlots) / totalBudgetSlots) * 100)
-    : 0
-
-  const totalOccasionSlots = personaEntries.length * occasionOrder.length
-  const missingOccasionSlots = personaCoverage.reduce(
-    (sum, persona) => sum + persona.missingOccasions.length,
-    0
-  )
-  const occasionCoverage = totalOccasionSlots
-    ? Math.round(((totalOccasionSlots - missingOccasionSlots) / totalOccasionSlots) * 100)
-    : 0
-
-  const personaAnswerCount = personaQuestions.reduce(
-    (sum, question) => sum + question.answers.length,
-    0
-  )
-
-  const metaCoverage = useMemo(() => {
-    const budgetQuestion = metaQuestions.find((question) => question.metaKey === 'budget')
-    const relationshipQuestion = metaQuestions.find(
-      (question) => question.metaKey === 'relationship'
-    )
-    const occasionQuestion = metaQuestions.find((question) => question.metaKey === 'occasion')
-
-    const coveredBudgets = new Set(
-      (budgetQuestion?.answers ?? []).map((answer) => answer.value as BudgetTier)
-    )
-    const coveredRelationships = new Set(
-      (relationshipQuestion?.answers ?? []).map((answer) => answer.value as RelationshipType)
-    )
-    const coveredOccasions = new Set(
-      (occasionQuestion?.answers ?? []).map((answer) => answer.value as OccasionType)
-    )
-
-    return {
-      missingBudgetAnswers: budgetOrder.filter((tier) => !coveredBudgets.has(tier)),
-      missingRelationshipAnswers: relationshipOrder.filter(
-        (relation) => !coveredRelationships.has(relation)
-      ),
-      missingOccasionAnswers: occasionOrder.filter((occ) => !coveredOccasions.has(occ)),
-    }
-  }, [metaQuestions])
-
-  const selectedPersonaCoverage = personaCoverage.find(
-    (persona) => persona.key === selectedPersonaKey
-  )
-  const selectedPersona = selectedPersonaCoverage?.result
-
-  const hasReminderActions =
-    personaAnswerIssues.length > 0 ||
-    missingBudgetSlots > 0 ||
-    missingOccasionSlots > 0 ||
-    personaCoverage.some((persona) => persona.blogCount < 2)
-
-  const reminderSummaryLines = useMemo(() => {
-    const lines: string[] = []
-
-    if (personaAnswerIssues.length) {
-      lines.push(`${personaAnswerIssues.length} vraag/vraagstukken zonder gekoppelde persona`)
-    }
-
-    personaCoverage.forEach((persona) => {
-      const personaLines: string[] = []
-      if (persona.missingBudgets.length) {
-        personaLines.push(
-          `budget: ${persona.missingBudgets.map((tier) => budgetLabels[tier]).join(', ')}`
-        )
-      }
-      if (persona.missingOccasions.length) {
-        personaLines.push(
-          `gelegenheden: ${persona.missingOccasions.map((occasion) => occasionLabels[occasion]).join(', ')}`
-        )
-      }
-      if (persona.blogCount < 2) {
-        personaLines.push(`bloglinks: ${persona.blogCount}/2`)
-      }
-      if (personaLines.length) {
-        lines.push(`${persona.result.title}: ${personaLines.join(' • ')}`)
-      }
-    })
-
-    if (!lines.length) {
-      lines.push('Alles is up-to-date ✅')
-    }
-
-    return lines
-  }, [personaAnswerIssues, personaCoverage])
-
-  const reminderSummaryText = useMemo(() => {
-    const greeting = 'Hoi team,\n\nDit is de huidige quiz checklist:'
-    const body = reminderSummaryLines.map((line) => `- ${line}`).join('\n')
-    const closing = hasReminderActions
-      ? '\n\nPlan follow-up acties zodra het past.\n\nGroet,\nGifteez Admin'
-      : '\n\nGeen actie nodig op dit moment.\n\nGroet,\nGifteez Admin'
-
-    return `${greeting}\n${body}${closing}`
-  }, [hasReminderActions, reminderSummaryLines])
-
-  const reminderMailSubject = hasReminderActions
-    ? 'Quiz actiepunten & herinnering'
-    : 'Quiz status: alles up-to-date'
-
-  const readinessChecks = useMemo(
-    () => [
-      {
-        label: 'Alle persona-antwoorden gekoppeld',
-        status: personaAnswerIssues.length === 0,
-        detail:
-          personaAnswerIssues.length === 0
-            ? 'Geen ontbrekende resultKey gevonden.'
-            : `${personaAnswerIssues.length} vraag/vraagstukken missen een resultKey.`,
-      },
-      {
-        label: 'Budgetshoppinglijsten volledig',
-        status: missingBudgetSlots === 0,
-        detail:
-          missingBudgetSlots === 0
-            ? 'Alle persona’s hebben cadeaus voor elk budget.'
-            : `${missingBudgetSlots} budgetten missen nog cadeaus.`,
-      },
-      {
-        label: 'Occasionteksten ingevuld',
-        status: missingOccasionSlots === 0,
-        detail:
-          missingOccasionSlots === 0
-            ? 'Elke persona heeft occasioncopy.'
-            : `${missingOccasionSlots} occasion-velden zijn nog leeg.`,
-      },
-      {
-        label: 'Meta-vragen dekken alle opties',
-        status:
-          metaCoverage.missingBudgetAnswers.length === 0 &&
-          metaCoverage.missingRelationshipAnswers.length === 0 &&
-          metaCoverage.missingOccasionAnswers.length === 0,
-        detail:
-          [
-            metaCoverage.missingBudgetAnswers.length
-              ? `Budget: ${metaCoverage.missingBudgetAnswers.map((tier) => budgetLabels[tier]).join(', ')}`
-              : null,
-            metaCoverage.missingRelationshipAnswers.length
-              ? `Relatie: ${metaCoverage.missingRelationshipAnswers.map((relation) => relationshipLabels[relation]).join(', ')}`
-              : null,
-            metaCoverage.missingOccasionAnswers.length
-              ? `Gelegenheid: ${metaCoverage.missingOccasionAnswers.map((occ) => occasionLabels[occ]).join(', ')}`
-              : null,
-          ]
-            .filter(Boolean)
-            .join(' · ') || 'Volledig.',
-      },
-      {
-        label: 'Minimaal 2 bloglinks per persona',
-        status: personaCoverage.every((persona) => persona.blogCount >= 2),
-        detail:
-          personaCoverage
-            .filter((persona) => persona.blogCount < 2)
-            .map((persona) => `${persona.result.title}: ${persona.blogCount}/2`)
-            .join(' · ') || 'Elke persona heeft voldoende kruislinks.',
-      },
-    ],
-    [
-      metaCoverage,
-      missingBudgetSlots,
-      missingOccasionSlots,
-      personaAnswerIssues.length,
-      personaCoverage,
-    ]
-  )
-
-  const handleToggleReminderAlerts = useCallback(() => {
-    setReminderPrefs((prev) => ({ ...prev, showAlerts: !prev.showAlerts }))
-  }, [])
-
-  const handleReminderEmailChange = useCallback((email: string) => {
-    setReminderPrefs((prev) => ({ ...prev, email }))
-  }, [])
-
-  const handleSendReminder = useCallback(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    if (!hasReminderActions) {
-      setStatus({ type: 'success', message: 'Er zijn momenteel geen actiepunten voor de quiz.' })
-      return
-    }
-
-    const to = reminderPrefs.email.trim()
-    const subject = encodeURIComponent(reminderMailSubject)
-    const body = encodeURIComponent(reminderSummaryText)
-    const mailto = `mailto:${encodeURIComponent(to)}?subject=${subject}&body=${body}`
-    window.location.href = mailto
-    setStatus({ type: 'success', message: 'E-mailconcept geopend met quizactiepunten.' })
-  }, [hasReminderActions, reminderMailSubject, reminderPrefs.email, reminderSummaryText])
-
-  const writeToClipboard = useCallback(async (payload: string, successMessage: string) => {
-    try {
-      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(payload)
-        setStatus({ type: 'success', message: successMessage })
-      } else {
-        throw new Error('Clipboard API niet beschikbaar')
-      }
-    } catch (error: unknown) {
-      logUnknownError('Clipboard copy failed', error, {
-        scope: 'admin.quiz.copyToClipboard',
-      })
-      setStatus({ type: 'error', message: 'Kopiëren mislukt. Controleer de console voor details.' })
-    }
-  }, [])
-
-  const handleCopyQuestions = useCallback(
-    () =>
-      writeToClipboard(
-        JSON.stringify(quizQuestions, null, 2),
-        'Quizvragen gekopieerd naar klembord.'
-      ),
-    [writeToClipboard]
-  )
-
-  const handleCopyResults = useCallback(
-    () =>
-      writeToClipboard(
-        JSON.stringify(quizResults, null, 2),
-        'Quizresultaten gekopieerd naar klembord.'
-      ),
-    [writeToClipboard]
-  )
-
-  const handleCopyPersona = useCallback(
-    (personaKey: string) => {
-      const persona = quizResults[personaKey]
-      if (!persona) {
-        return
-      }
-      void writeToClipboard(
-        JSON.stringify({ key: personaKey, ...persona }, null, 2),
-        `${persona.title} gekopieerd naar klembord.`
-      )
-    },
-    [writeToClipboard]
-  )
-
-  const selectedPersonaInterests = selectedPersonaCoverage?.interests ?? []
-  const relatedBlogSlugs = selectedPersona?.relatedBlogSlugs ?? []
-  const showReminderBanner = reminderPrefs.showAlerts && hasReminderActions
-  const reminderBannerHeadline = reminderSummaryLines[0]
-  const reminderBannerDetails = reminderSummaryLines.slice(1, 3).join(' · ')
-
-  return (
-    <div className="space-y-8">
-      <div className="rounded-2xl bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">Quiz beheren</h2>
-            <p className="text-sm text-gray-500">
-              Monitor vragen, persona-profielen en actiepunten voor de Gifteez Cadeau Quiz.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => navigateTo('quiz')}
-              className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-100"
-            >
-              <SparklesIcon className="h-4 w-4" aria-hidden="true" />
-              Quiz bekijken
-            </button>
-            <button
-              type="button"
-              onClick={handleCopyQuestions}
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
-            >
-              <DownloadIcon className="h-4 w-4" aria-hidden="true" />
-              Exporteer vragen
-            </button>
-            <button
-              type="button"
-              onClick={handleCopyResults}
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-gray-300 hover:bg-gray-50"
-            >
-              <DownloadIcon className="h-4 w-4" aria-hidden="true" />
-              Exporteer resultaten
-            </button>
-            <button
-              type="button"
-              onClick={() => selectedPersonaKey && handleCopyPersona(selectedPersonaKey)}
-              disabled={!selectedPersona}
-              className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:border-emerald-300 hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
-              Kopieer persona
-            </button>
-          </div>
-        </div>
-
-        {status && (
-          <div
-            className={`mt-4 rounded-xl border p-4 text-sm ${
-              status.type === 'success'
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                : 'border-red-200 bg-red-50 text-red-700'
-            }`}
-          >
-            {status.message}
-          </div>
-        )}
-
-        {showReminderBanner && (
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50/80 p-4 text-sm text-amber-800 shadow-sm">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <QuestionMarkCircleIcon
-                  className="mt-0.5 h-5 w-5 text-amber-500"
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className="font-semibold">Actie aanbevolen: {reminderBannerHeadline}</p>
-                  {reminderBannerDetails && (
-                    <p className="mt-1 text-xs leading-relaxed text-amber-700">
-                      {reminderBannerDetails}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={handleSendReminder}
-                  className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-white px-4 py-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-100"
-                >
-                  Herinner per e-mail
-                </button>
-                <button
-                  type="button"
-                  onClick={handleToggleReminderAlerts}
-                  className="inline-flex items-center gap-2 rounded-full border border-transparent bg-amber-500 px-4 py-2 text-xs font-semibold text-white transition hover:bg-amber-600"
-                >
-                  Alerts {reminderPrefs.showAlerts ? 'uitschakelen' : 'inschakelen'}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
-            <div className="flex items-center justify-between">
-              <QuestionMarkCircleIcon className="h-9 w-9 text-rose-500" aria-hidden="true" />
-              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                Persona vragen
-              </span>
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-gray-900">{personaQuestions.length}</p>
-            <p className="text-xs text-gray-500">{personaAnswerCount} mogelijke antwoorden</p>
-          </div>
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
-            <div className="flex items-center justify-between">
-              <TargetIcon className="h-9 w-9 text-rose-500" aria-hidden="true" />
-              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                Meta vragen
-              </span>
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-gray-900">{metaQuestions.length}</p>
-            <p className="text-xs text-gray-500">Budget, relatie & gelegenheden</p>
-          </div>
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
-            <div className="flex items-center justify-between">
-              <SparklesIcon className="h-9 w-9 text-rose-500" aria-hidden="true" />
-              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                Persona profielen
-              </span>
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-gray-900">{personaEntries.length}</p>
-            <p className="text-xs text-gray-500">
-              {personaCoverage.reduce((sum, persona) => sum + persona.interests.length, 0)}{' '}
-              interesses in totaal
-            </p>
-          </div>
-          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
-            <div className="flex items-center justify-between">
-              <CheckCircleIcon className="h-9 w-9 text-emerald-500" aria-hidden="true" />
-              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                Dekking
-              </span>
-            </div>
-            <p className="mt-3 text-2xl font-semibold text-gray-900">
-              {budgetCoverage}% budget · {occasionCoverage}% occasions
-            </p>
-            <p className="text-xs text-gray-500">
-              {totalBudgetSlots - missingBudgetSlots}/{totalBudgetSlots} budget slots gevuld
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-              Snelle acties
-            </h3>
-            <div className="mt-4 space-y-4 text-sm text-gray-600">
-              <button
-                type="button"
-                onClick={() => navigateTo('quiz')}
-                className="flex w-full items-center justify-between rounded-xl border border-rose-100 bg-rose-50/60 px-4 py-3 font-semibold text-rose-600 transition hover:bg-rose-100"
-              >
-                <span>Doorloop quiz in preview</span>
-                <SparklesIcon className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={handleCopyQuestions}
-                className="flex w-full items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 font-semibold text-gray-600 transition hover:bg-gray-100"
-              >
-                <span>Copy quizvragen JSON</span>
-                <DownloadIcon className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={handleCopyResults}
-                className="flex w-full items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3 font-semibold text-gray-600 transition hover:bg-gray-100"
-              >
-                <span>Copy persona resultaten JSON</span>
-                <DownloadIcon className="h-4 w-4" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => selectedPersonaKey && handleCopyPersona(selectedPersonaKey)}
-                disabled={!selectedPersona}
-                className="flex w-full items-center justify-between rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 font-semibold text-emerald-600 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                <span>Kopieer geselecteerde persona</span>
-                <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                  Herinneringen
-                </h3>
-                <p className="text-xs text-gray-500">
-                  Bewaar een e-mail en blijf alerts ontvangen over openstaande actiepunten.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={handleToggleReminderAlerts}
-                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition ${
-                  reminderPrefs.showAlerts
-                    ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                }`}
-              >
-                Alerts {reminderPrefs.showAlerts ? 'aan' : 'uit'}
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-4 text-sm text-gray-600">
-              <label className="flex flex-col gap-1 text-xs text-gray-500">
-                Notificatie e-mail (optioneel)
-                <input
-                  type="email"
-                  value={reminderPrefs.email}
-                  onChange={(event) => handleReminderEmailChange(event.target.value)}
-                  placeholder="naam@bedrijf.nl"
-                  className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 shadow-sm outline-none transition focus:border-rose-300 focus:bg-white focus:ring-2 focus:ring-rose-200"
-                />
-              </label>
-
-              <div className="rounded-xl border border-gray-100 bg-gray-50/80 p-4 text-xs text-gray-600">
-                <p className="font-semibold text-gray-700">Actuele actiepunten</p>
-                <ul className="mt-2 list-disc space-y-1 pl-4">
-                  {reminderSummaryLines.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleSendReminder}
-                disabled={!hasReminderActions}
-                className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  hasReminderActions
-                    ? 'bg-rose-500 text-white hover:bg-rose-600'
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                Stuur e-mail herinnering
-              </button>
-              {!hasReminderActions && (
-                <p className="text-xs text-gray-400">
-                  Alles is rond – er zijn geen openstaande actiepunten om te mailen.
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-              Kwaliteitschecks
-            </h3>
-            <div className="mt-4 space-y-3 text-sm">
-              {readinessChecks.map((check) => (
-                <div
-                  key={check.label}
-                  className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${
-                    check.status
-                      ? 'border-emerald-100 bg-emerald-50/60 text-emerald-700'
-                      : 'border-amber-100 bg-amber-50/60 text-amber-700'
-                  }`}
-                >
-                  {check.status ? (
-                    <CheckCircleIcon className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                  ) : (
-                    <XCircleIcon className="mt-0.5 h-5 w-5 flex-shrink-0" aria-hidden="true" />
-                  )}
-                  <div>
-                    <p className="font-semibold">{check.label}</p>
-                    <p className="mt-1 text-xs leading-relaxed">{check.detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">Quiz flow</h3>
-              <span className="text-xs uppercase tracking-wide text-gray-400">Persona vragen</span>
-            </div>
-            <div className="mt-4 space-y-5">
-              {personaQuestions.map((question) => (
-                <div
-                  key={question.id}
-                  className="rounded-xl border border-gray-100 bg-gray-50/60 p-4"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">{question.text}</p>
-                      <div className="mt-1 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-                        <span className="rounded-full bg-white px-2 py-1">
-                          Vraag #{question.id}
-                        </span>
-                        <span className="rounded-full bg-white px-2 py-1">
-                          {question.answers.length} opties
-                        </span>
-                      </div>
-                    </div>
-                    {personaAnswerIssues.some((issue) => issue.id === question.id) && (
-                      <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
-                        Let op: ontbrekende persona
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {question.answers.map((answer) => {
-                      const targetPersona = answer.resultKey
-                        ? quizResults[answer.resultKey]
-                        : undefined
-                      return (
-                        <div
-                          key={answer.value}
-                          className="flex flex-col gap-1 rounded-lg border border-white bg-white/80 p-3 text-xs text-gray-600"
-                        >
-                          <span className="font-semibold text-gray-800">{answer.text}</span>
-                          {answer.helperText && (
-                            <span className="text-[11px] text-gray-500">{answer.helperText}</span>
-                          )}
-                          <div className="flex flex-wrap items-center gap-2">
-                            {answer.resultKey ? (
-                              <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-semibold text-emerald-600">
-                                → {targetPersona?.title ?? answer.resultKey}
-                              </span>
-                            ) : (
-                              <span className="rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-700">
-                                Geen persona gekoppeld
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 border-t border-gray-100 pt-6">
-              <div className="flex items-center justify-between">
-                <h4 className="text-sm font-semibold text-gray-900">Meta vragen</h4>
-                <span className="text-xs uppercase tracking-wide text-gray-400">
-                  {metaQuestions.length} stuks
-                </span>
-              </div>
-              <div className="mt-4 space-y-4">
-                {metaQuestions.map((question) => (
-                  <div
-                    key={question.id}
-                    className="rounded-xl border border-gray-100 bg-white/70 p-4"
-                  >
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm font-semibold text-gray-900">{question.text}</p>
-                      {question.metaKey && (
-                        <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-600">
-                          {question.metaKey}
-                        </span>
-                      )}
-                    </div>
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs">
-                      {question.answers.map((answer) => (
-                        <span
-                          key={answer.value}
-                          className="rounded-full bg-gray-50 px-3 py-1 font-semibold text-gray-600"
-                        >
-                          {answer.text}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">Persona detail</h3>
-                <p className="text-sm text-gray-500">
-                  Selecteer een persona om copy, shopping lists en links te controleren.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {personaEntries.map(([key, result]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSelectedPersonaKey(key)}
-                    className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                      selectedPersonaKey === key
-                        ? 'bg-rose-500 text-white'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                    }`}
-                  >
-                    {result.title}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {selectedPersona ? (
-              <div className="mt-5 space-y-6">
-                <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-5">
-                  <h4 className="text-sm font-semibold text-gray-900">Positionering</h4>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                    {selectedPersona.description}
-                  </p>
-                  {selectedPersonaInterests.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-                      {selectedPersonaInterests.map((interest) => (
-                        <span key={interest} className="rounded-full bg-white px-3 py-1">
-                          #{interest.replace(/\s+/g, '')}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-sm font-semibold text-gray-900">
-                    Shoppinglijsten per budget
-                  </h4>
-                  <div className="grid gap-3 lg:grid-cols-3">
-                    {budgetOrder.map((tier) => {
-                      const items = selectedPersona.shoppingList?.[tier]
-                      return (
-                        <div
-                          key={tier}
-                          className={`flex h-full flex-col gap-2 rounded-xl border p-4 ${
-                            items && items.length
-                              ? 'border-emerald-100 bg-emerald-50/40'
-                              : 'border-amber-100 bg-amber-50/40'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide">
-                            <span className="text-gray-600">{budgetLabels[tier]}</span>
-                            <span className="text-gray-400">{items?.length ?? 0} items</span>
-                          </div>
-                          <div className="space-y-2 text-xs text-gray-600">
-                            {items && items.length ? (
-                              items.map((item) => (
-                                <div key={item.title} className="rounded-lg bg-white/80 p-3">
-                                  <p className="font-semibold text-gray-900">{item.title}</p>
-                                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">
-                                    {item.description}
-                                  </p>
-                                  <p className="mt-2 text-[11px] font-semibold text-rose-500">
-                                    {item.url}
-                                  </p>
-                                </div>
-                              ))
-                            ) : (
-                              <p className="text-[11px] font-semibold text-amber-700">
-                                Nog geen items toegevoegd.
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                <div className="grid gap-4 lg:grid-cols-2">
-                  <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-5">
-                    <h4 className="text-sm font-semibold text-gray-900">Gelegenheid copy</h4>
-                    <div className="mt-3 space-y-3 text-xs text-gray-600">
-                      {occasionOrder.map((occasion) => (
-                        <div
-                          key={occasion}
-                          className="rounded-lg border border-white bg-white/90 p-3"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-semibold text-gray-800">
-                              {occasionLabels[occasion]}
-                            </span>
-                            {selectedPersona.occasionHighlights?.[occasion] ? (
-                              <CheckCircleIcon
-                                className="h-4 w-4 text-emerald-500"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <XCircleIcon className="h-4 w-4 text-amber-500" aria-hidden="true" />
-                            )}
-                          </div>
-                          <p className="mt-2 text-[11px] leading-relaxed">
-                            {selectedPersona.occasionHighlights?.[occasion] ??
-                              'Nog geen tekst toegevoegd.'}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-gray-100 bg-gray-50/60 p-5">
-                    <h4 className="text-sm font-semibold text-gray-900">Gerelateerde content</h4>
-                    <div className="mt-3 space-y-2 text-xs text-gray-600">
-                      <p className="font-semibold text-gray-700">Blogposts</p>
-                      <div className="flex flex-wrap gap-2">
-                        {relatedBlogSlugs.length ? (
-                          relatedBlogSlugs.map((slug) => (
-                            <span
-                              key={slug}
-                              className="rounded-full bg-white px-3 py-1 font-semibold text-gray-600"
-                            >
-                              {slug}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-700">
-                            Nog niets gelinkt
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-6 rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500">
-                Selecteer een persona om details te bekijken.
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const ShopAdmin: React.FC = () => {
-  const [meta, setMeta] = useState<CoolblueFeedMeta>(CoolblueFeedService.getMeta())
-  const [preview, setPreview] = useState<CoolblueProduct[]>([])
-  const [status, setStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
-  const [processing, setProcessing] = useState(false)
-
-  const refreshFeed = useCallback(async () => {
-    try {
-      const products = await CoolblueFeedService.loadProducts()
-      setPreview(products.slice(0, 9))
-      setMeta(CoolblueFeedService.getMeta())
-    } catch (error: unknown) {
-      logUnknownError('Kon Coolblue feed niet verversen', error, {
-        scope: 'admin.shop.refreshFeed',
-      })
-      setPreview([])
-      setStatus({
-        type: 'error',
-        message: 'Kon de productfeed niet verversen. Controleer de console voor details.',
-      })
-    }
-  }, [])
-
-  useEffect(() => {
-    refreshFeed()
-  }, [refreshFeed])
-
-  const withProcessing = async (operation: () => Promise<void>, successMessage: string) => {
-    setProcessing(true)
-    setStatus(null)
-    try {
-      await operation()
-      await refreshFeed()
-      setStatus({ type: 'success', message: successMessage })
-    } catch (error: unknown) {
-      logUnknownError('Fout bij verwerken van productfeed', error, {
-        scope: 'admin.shop.processing',
-      })
-      setStatus({
-        type: 'error',
-        message: getErrorMessage(error, 'Er ging iets mis bij het verwerken van de feed.'),
-      })
-    } finally {
-      setProcessing(false)
-    }
-  }
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    await withProcessing(async () => {
-      const text = await file.text()
-      let parsed: unknown
-      try {
-        parsed = JSON.parse(text)
-      } catch {
-        throw new Error(
-          'Kon het JSON bestand niet parseren. Controleer of het een geldige Coolblue feed is.'
-        )
-      }
-
-      if (!Array.isArray(parsed)) {
-        throw new Error('De productfeed moet een JSON array met producten bevatten.')
-      }
-
-      CoolblueFeedService.saveProducts(parsed, {
-        source: `upload:${file.name}`,
-        importedAt: new Date().toISOString(),
-      })
-    }, 'Nieuwe productfeed geïmporteerd.')
-
-    // Reset input so the same file can be selected again later
-    event.target.value = ''
-  }
-
-  const handleReset = () =>
-    withProcessing(async () => {
-      await CoolblueFeedService.resetToBundled()
-    }, 'Standaard Coolblue feed hersteld.')
-
-  const handleClear = () =>
-    withProcessing(async () => {
-      CoolblueFeedService.clearStoredFeed()
-    }, 'Opgeslagen feed verwijderd.')
-
-  const handleRefresh = () =>
-    withProcessing(async () => {
-      // Het verversen gebeurt in withProcessing na deze noop.
-      return Promise.resolve()
-    }, 'Feed opnieuw geladen.')
-
-  return (
-    <div className="space-y-8">
-      <div className="rounded-lg bg-white p-6 shadow-sm">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900">Coolblue productfeed beheren</h2>
-            <p className="text-sm text-gray-500">
-              Importeer een actuele JSON feed om nieuwe producten toe te voegen aan de AI GiftFinder
-              en deal-secties.
-            </p>
-          </div>
-          <div className="rounded-full bg-rose-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-500">
-            {meta.total} producten · {new Date(meta.importedAt).toLocaleDateString('nl-NL')}
-          </div>
-        </div>
-
-        {status && (
-          <div
-            className={`mt-4 rounded-lg border p-3 text-sm ${
-              status.type === 'success'
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                : 'border-red-200 bg-red-50 text-red-700'
-            }`}
-          >
-            {status.message}
-          </div>
-        )}
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-[2fr_3fr]">
-          <div className="rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/60 p-6">
-            <h3 className="text-sm font-semibold text-gray-900">Feed importeren</h3>
-            <p className="mt-2 text-xs text-gray-500">
-              Sleep een Coolblue productfeed (.json) naar dit vlak of kies een bestand. Na
-              importeren worden bestaande producten overschreven.
-            </p>
-
-            <label className="mt-5 flex cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-rose-200 bg-white/80 py-8 text-center text-sm text-rose-500 transition hover:border-rose-300 hover:bg-white">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 text-2xl">
-                ⬆️
-              </div>
-              <span className="font-semibold">Kies of sleep JSON bestand</span>
-              <input
-                type="file"
-                accept="application/json,.json"
-                onChange={handleFileUpload}
-                className="hidden"
-                disabled={processing}
-              />
-              <span className="text-xs text-gray-400">
-                Max. 5MB · Verwacht formaat: Coolblue productfeed via Awin
-              </span>
-            </label>
-
-            <div className="mt-5 flex flex-wrap gap-3 text-xs">
-              <button
-                onClick={handleRefresh}
-                disabled={processing}
-                className="rounded-lg border border-gray-200 bg-white px-4 py-2 font-semibold text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Ververs feed
-              </button>
-              <button
-                onClick={handleReset}
-                disabled={processing}
-                className="rounded-lg border border-rose-200 bg-rose-100 px-4 py-2 font-semibold text-rose-600 transition hover:bg-rose-200 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Herstel standaardfeed
-              </button>
-              <button
-                onClick={handleClear}
-                disabled={processing}
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 font-semibold text-red-500 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                Leeg opgeslagen feed
-              </button>
-            </div>
-
-            {processing && (
-              <div className="mt-4 flex items-center gap-3 text-xs text-gray-500">
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-rose-500 border-t-transparent" />
-                Bezig met verwerken...
-              </div>
-            )}
-
-            <div className="mt-6 rounded-xl border border-gray-200 bg-white/90 p-4 text-xs text-gray-500">
-              <p className="font-semibold text-gray-700">Feed tips</p>
-              <ul className="mt-2 list-disc pl-5">
-                <li>
-                  Zorg dat elk product een uniek{' '}
-                  <code className="rounded bg-gray-100 px-1">id</code> heeft.
-                </li>
-                <li>
-                  Gebruik velden <code className="rounded bg-gray-100 px-1">name</code>,{' '}
-                  <code className="rounded bg-gray-100 px-1">price</code>,{' '}
-                  <code className="rounded bg-gray-100 px-1">image</code>,{' '}
-                  <code className="rounded bg-gray-100 px-1">description</code>,{' '}
-                  <code className="rounded bg-gray-100 px-1">shortDescription</code> en{' '}
-                  <code className="rounded bg-gray-100 px-1">affiliateLink</code>.
-                </li>
-                <li>
-                  Nadat de feed is geïmporteerd kun je per product blogposts genereren via het
-                  tabblad blog.
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-gray-900">
-                Voorbeeldproducten ({preview.length}/{meta.total})
-              </h3>
-              <span className="text-xs text-gray-400">
-                {meta.hasCustomFeed ? 'Aangepaste feed actief' : 'Bundel feed'}
-              </span>
-            </div>
-
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {preview.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex flex-col gap-2 rounded-xl border border-white bg-white p-4 shadow-sm"
-                >
-                  <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
-                    <ImageWithFallback
-                      src={product.imageUrl || product.image || '/images/amazon-placeholder.png'}
-                      alt={product.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-gray-900 line-clamp-2">
-                      {product.name}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-500 line-clamp-3">{product.description}</p>
-                  </div>
-                  <div className="mt-auto flex items-center justify-between text-xs text-gray-500">
-                    <span className="font-semibold text-rose-500">€{product.price.toFixed(2)}</span>
-                    {product.category && (
-                      <span className="rounded-full bg-rose-100 px-2 py-0.5 text-rose-600">
-                        {product.category}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {!preview.length && (
-                <div className="col-span-full rounded-xl border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
-                  Geen producten beschikbaar. Importeer een feed om te starten.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <AmazonProductManager />
-    </div>
-  )
-}
-
 interface SettingsAdminProps {
   adminEmails: string[]
   firebaseEnabled: boolean
@@ -3384,8 +1970,6 @@ const tabLabels: Record<AdminTab, string> = {
   overview: 'Overzicht',
   blog: 'Blogbeheer',
   deals: 'Deals',
-  quiz: 'Quiz',
-  shop: 'Shop items',
   newsletter: 'Nieuwsbrief',
   messages: 'Berichten',
   import: 'Bulk Import',
@@ -3467,11 +2051,6 @@ const SettingsAdmin: React.FC<SettingsAdminProps> = ({
   const quickLinks = useMemo(
     () => [
       {
-        label: 'Quiz dashboard',
-        description: 'Controleer persona reminders en deelbare kaarten.',
-        action: () => onSelectTab('quiz'),
-      },
-      {
         label: 'Deals overzicht',
         description: 'Werk pins bij en controleer affiliate links.',
         action: () => onSelectTab('deals'),
@@ -3480,11 +2059,6 @@ const SettingsAdmin: React.FC<SettingsAdminProps> = ({
         label: 'Blogbeheer',
         description: 'Open editor, analytics en productwizard.',
         action: () => onSelectTab('blog'),
-      },
-      {
-        label: 'Shop feed',
-        description: 'Sync de Coolblue feed en Amazon bibliotheek.',
-        action: () => onSelectTab('shop'),
       },
     ],
     [onSelectTab]
@@ -3532,13 +2106,6 @@ const SettingsAdmin: React.FC<SettingsAdminProps> = ({
             >
               <SparklesIcon className="h-4 w-4" aria-hidden="true" />
               Bekijk site
-            </button>
-            <button
-              type="button"
-              onClick={() => onSelectTab('quiz')}
-              className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 transition hover:border-rose-300 hover:bg-rose-100"
-            >
-              Naar quiz tab
             </button>
           </div>
         </div>
