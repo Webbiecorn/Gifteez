@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useBlogContext } from '../contexts/BlogContext'
+import { blogSpotlightConfig } from '../data/blogSpotlightConfig'
 import Breadcrumbs from './Breadcrumbs'
 import Card from './Card'
 import {
@@ -142,14 +143,18 @@ const SpotlightSupportCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; i
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col space-y-4 p-6">
-        <span className="category-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
-          <TagIcon className="h-3 w-3" /> {post.category}
-        </span>
-        <h3 className="font-display text-xl font-bold text-primary leading-tight">{post.title}</h3>
-        <p className="text-sm leading-relaxed text-gray-600 line-clamp-3">{post.excerpt}</p>
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex flex-col space-y-4 flex-grow">
+          <span className="category-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
+            <TagIcon className="h-3 w-3" /> {post.category}
+          </span>
+          <h3 className="font-display text-xl font-bold text-primary leading-tight">
+            {post.title}
+          </h3>
+          <p className="text-sm leading-relaxed text-gray-600 line-clamp-3">{post.excerpt}</p>
+        </div>
 
-        <div className="flex items-center gap-3 pt-2">
+        <div className="flex items-center gap-3 pt-4 mt-auto">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
             ✍️
           </div>
@@ -221,6 +226,12 @@ const ArchiveListItem: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
   )
 }
 
+const {
+  prioritySlugs,
+  duplicateFeaturedPostSlugs = [],
+  duplicatePlacement = 'supporting',
+} = blogSpotlightConfig
+
 const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: boolean }> = ({
   post,
   navigateTo,
@@ -240,7 +251,8 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
     <Card
       as="article"
       variant={isFeatured ? 'highlight' : 'interactive'}
-      className={`group relative overflow-hidden rounded-[28px] border border-slate-100/80 bg-white/90 shadow-[0_40px_100px_-70px_rgba(15,23,42,0.65)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_55px_140px_-80px_rgba(244,63,94,0.35)] ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}
+      padded={false}
+      className={`group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-100/80 bg-white/90 shadow-[0_40px_100px_-70px_rgba(15,23,42,0.65)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_55px_140px_-80px_rgba(244,63,94,0.35)] ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}
     >
       <a
         href={detailHref}
@@ -248,7 +260,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
           event.preventDefault()
           navigateTo('blogDetail', { slug: post.slug })
         }}
-        className="relative block overflow-hidden"
+        className="relative block shrink-0 overflow-hidden"
         aria-label={`Lees ${post.title}`}
       >
         <ImageWithFallback
@@ -276,7 +288,7 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
         </div>
       </a>
 
-      <div className={`flex flex-col p-6 md:p-7 ${isFeatured ? 'md:p-9' : ''}`}>
+      <div className={`flex flex-1 flex-col p-6 md:p-7 ${isFeatured ? 'md:p-9' : ''}`}>
         <h3
           className={`font-display font-bold text-primary leading-tight transition-colors duration-300 group-hover:text-accent ${isFeatured ? 'text-xl md:text-2xl' : 'text-lg'}`}
         >
@@ -293,12 +305,12 @@ const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: 
         </h3>
 
         <p
-          className={`mt-3 text-gray-600 leading-relaxed ${isFeatured ? 'text-base' : 'text-sm line-clamp-4'}`}
+          className={`mt-3 text-gray-600 leading-relaxed ${isFeatured ? 'text-base' : 'text-sm line-clamp-4'} mb-6`}
         >
           {post.excerpt}
         </p>
 
-        <div className="mt-6 flex items-center justify-between border-t border-slate-100/70 pt-4">
+        <div className="mt-auto flex items-center justify-between border-t border-slate-100/70 pt-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
               ✍️
@@ -451,28 +463,97 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
     selectedYear !== 'All' ||
     searchQuery.trim() !== ''
 
+  const allowFeaturedDuplication =
+    !isFilteringActive &&
+    Boolean(featuredPost && duplicateFeaturedPostSlugs.includes(featuredPost.slug))
+
+  const orderedFilteredPosts = useMemo(() => {
+    if (isFilteringActive) {
+      return filteredPosts
+    }
+
+    const prioritized: BlogPost[] = []
+    const seen = new Set<string>()
+
+    prioritySlugs.forEach((slug) => {
+      const match = filteredPosts.find((post) => post.slug === slug)
+      if (match) {
+        prioritized.push(match)
+        seen.add(match.slug)
+      }
+    })
+
+    filteredPosts.forEach((post) => {
+      if (!seen.has(post.slug)) {
+        prioritized.push(post)
+        seen.add(post.slug)
+      }
+    })
+
+    return prioritized
+  }, [filteredPosts, isFilteringActive])
+
   const spotlightPrimaryPost = useMemo(() => {
-    if (isFilteringActive || filteredPosts.length === 0) {
+    if (isFilteringActive || orderedFilteredPosts.length === 0) {
       return undefined
     }
-    return filteredPosts[0]
-  }, [filteredPosts, isFilteringActive])
+    return orderedFilteredPosts[0]
+  }, [orderedFilteredPosts, isFilteringActive])
 
   const supportingSpotlightPosts = useMemo(() => {
     if (isFilteringActive) {
       return []
     }
     const startIndex = spotlightPrimaryPost ? 1 : 0
-    return filteredPosts.slice(startIndex, startIndex + 2)
-  }, [filteredPosts, isFilteringActive, spotlightPrimaryPost])
+    const basePosts = orderedFilteredPosts.slice(startIndex, startIndex + 2)
+
+    if (allowFeaturedDuplication && duplicatePlacement === 'supporting' && featuredPost) {
+      const deduped = [featuredPost, ...basePosts.filter((post) => post.slug !== featuredPost.slug)]
+      return deduped.slice(0, 2)
+    }
+
+    return basePosts
+  }, [
+    orderedFilteredPosts,
+    isFilteringActive,
+    spotlightPrimaryPost,
+    allowFeaturedDuplication,
+    featuredPost,
+  ])
 
   const remainingPostsForGrid = useMemo(() => {
     if (isFilteringActive) {
-      return filteredPosts
+      if (
+        allowFeaturedDuplication &&
+        duplicatePlacement === 'grid' &&
+        featuredPost &&
+        !orderedFilteredPosts.some((post) => post.slug === featuredPost.slug)
+      ) {
+        return [featuredPost, ...orderedFilteredPosts]
+      }
+      return orderedFilteredPosts
     }
     const offset = (spotlightPrimaryPost ? 1 : 0) + supportingSpotlightPosts.length
-    return filteredPosts.slice(offset)
-  }, [filteredPosts, isFilteringActive, spotlightPrimaryPost, supportingSpotlightPosts])
+    let basePosts = orderedFilteredPosts.slice(offset)
+
+    if (
+      allowFeaturedDuplication &&
+      duplicatePlacement === 'grid' &&
+      featuredPost &&
+      !basePosts.some((post) => post.slug === featuredPost.slug)
+    ) {
+      basePosts = [featuredPost, ...basePosts]
+    }
+
+    return basePosts
+  }, [
+    orderedFilteredPosts,
+    isFilteringActive,
+    spotlightPrimaryPost,
+    supportingSpotlightPosts,
+    allowFeaturedDuplication,
+    featuredPost,
+  ])
 
   const curatedGridPosts = useMemo(() => {
     if (isFilteringActive) {
@@ -896,7 +977,7 @@ const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
             </div>
           </header>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 xl:grid-cols-3">
             {curatedGridPosts.map((post) => (
               <BlogCard key={post.slug} post={post} navigateTo={navigateTo} />
             ))}

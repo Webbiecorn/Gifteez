@@ -16,6 +16,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { resolve, dirname } from 'path'
+import { gunzipSync } from 'zlib'
 import { parse as parseCSV } from 'csv-parse/sync'
 import * as yaml from 'yaml'
 
@@ -52,9 +53,28 @@ const FEED_PATHS = {
   ),
   slygad: resolve('./data/shop-like-you-give-a-damn-import-ready.json'),
   partypro: resolve('./data/partypro-import-ready.json'),
+  manual: resolve('./data/feeds/manual-products.json'),
   // awin: resolve(FEEDS_DIR, 'awin-feed.csv'), // Add when available
   // bol: resolve(FEEDS_DIR, 'bol-feed.csv'),
 }
+
+const AWIN_FEEDS: Array<{
+  name: string
+  feedId: string
+  advertiserId: string
+  filePath: string
+  language?: string
+  merchantMatch?: string
+}> = [
+  {
+    name: 'Holland & Barrett',
+    feedId: '20669',
+    advertiserId: '8108',
+    filePath: resolve('./data/awin/downloads/20669.csv.gz'),
+    language: 'nl',
+    merchantMatch: 'holland and barrett',
+  },
+]
 
 // ==================== APPROVED MERCHANTS WHITELIST ====================
 // Only show products from merchants you're approved for!
@@ -65,6 +85,9 @@ const APPROVED_MERCHANTS = [
   'Shop Like You Give A Damn',
   'PartyPro',
   'PartyPro.nl',
+  'Amazon',
+  'Holland and Barrett NL',
+  'Holland & Barrett',
   // Add more merchants ONLY after approval!
   // Examples when approved:
   // 'MediaMarkt',
@@ -129,8 +152,9 @@ function loadCSVFeed(filePath: string): Record<string, any>[] {
     console.warn(`⚠️  Feed not found: ${filePath}`)
     return []
   }
-  
-  const content = readFileSync(filePath, 'utf-8')
+
+  const buffer = readFileSync(filePath)
+  const content = filePath.endsWith('.gz') ? gunzipSync(buffer).toString('utf-8') : buffer.toString('utf-8')
   const records = parseCSV(content, {
     columns: true,
     skip_empty_lines: true,
@@ -187,6 +211,48 @@ function loadAllFeeds(): { source: string; products: Product[] }[] {
     const products = normalizeBatch(rows, 'partypro')
     console.log(`  ✓ PartyPro: ${products.length} products`)
     feeds.push({ source: 'partypro', products })
+  }
+
+  // Load Manual/Editorial feed
+  if (existsSync(FEED_PATHS.manual)) {
+    console.log('  Loading Manual feed...')
+    const rows = loadJSONFeed(FEED_PATHS.manual)
+    const products = normalizeBatch(rows, 'manual')
+    console.log(`  ✓ Manual: ${products.length} products`)
+    feeds.push({ source: 'manual', products })
+  }
+
+  for (const awinFeed of AWIN_FEEDS) {
+    if (!existsSync(awinFeed.filePath)) {
+      console.warn(`⚠️  AWIN feed not found: ${awinFeed.filePath}`)
+      continue
+    }
+
+    console.log(`  Loading AWIN feed: ${awinFeed.name} (fid ${awinFeed.feedId})...`)
+    const rows = loadCSVFeed(awinFeed.filePath)
+    if (!rows.length) {
+      console.warn(`  ⚠️  ${awinFeed.name} feed returned 0 rows`)
+      continue
+    }
+
+    const languageFilter = awinFeed.language?.toLowerCase()
+    const merchantMatch = awinFeed.merchantMatch?.toLowerCase()
+
+    const filtered = rows.filter((row) => {
+      const rowLang = String(row.language || row.Language || '').trim().toLowerCase()
+      if (languageFilter && rowLang && rowLang !== languageFilter) return false
+
+      if (merchantMatch) {
+        const merchant = String(row.merchant_name || row.merchant || '').trim().toLowerCase()
+        if (!merchant.includes(merchantMatch)) return false
+      }
+
+      return true
+    })
+
+    const products = normalizeBatch(filtered, 'awin', { advertiserId: awinFeed.advertiserId })
+    console.log(`  ✓ ${awinFeed.name}: ${products.length} products`)
+    feeds.push({ source: `awin-${awinFeed.feedId}`, products })
   }
   
   // Add AWIN, Bol, etc. here when available
@@ -277,6 +343,17 @@ function filterForPage(
     filtered = filtered.filter(p => config.filters!.categories!.includes(p.facets.category))
   }
 
+  // Apply preferredMerchants as hard filter when no keywords specified (= we only want this merchant)
+  // Otherwise it's used for boosting in the sort logic below
+  const hasKeywordFilters = config.filters?.keywords && config.filters.keywords.length > 0
+  if (config.filters?.preferredMerchants && config.filters.preferredMerchants.length > 0 && !hasKeywordFilters) {
+    const preferred = config.filters.preferredMerchants.map((m) => m.toLowerCase().trim())
+    filtered = filtered.filter((p) => {
+      const merchantName = (p.merchant || (p as any)._raw?.merchant_name || '').toLowerCase()
+      return preferred.some((name) => merchantName.includes(name))
+    })
+  }
+
   if (config.filters?.productTypeIncludes && config.filters.productTypeIncludes.length > 0) {
     filtered = filtered.filter(p => {
       const productType = (p.productType || '').toLowerCase()
@@ -316,8 +393,26 @@ function filterForPage(
   // ⚠️  CRITICAL: Only show products from approved merchants!
   filtered = filtered.filter(p => isApprovedMerchant(p))
   
-  // Sort by confidence
-  filtered.sort((a, b) => b.facets.confidence - a.facets.confidence)
+  // Sort by confidence, but boost preferredMerchants to the top
+  if (config.filters?.preferredMerchants && config.filters.preferredMerchants.length > 0) {
+    const preferred = config.filters.preferredMerchants.map((m) => m.toLowerCase().trim())
+    filtered.sort((a, b) => {
+      const merchantA = (a.merchant || (a as any)._raw?.merchant_name || '').toLowerCase()
+      const merchantB = (b.merchant || (b as any)._raw?.merchant_name || '').toLowerCase()
+      const aIsPreferred = preferred.some((name) => merchantA.includes(name))
+      const bIsPreferred = preferred.some((name) => merchantB.includes(name))
+      
+      // Boost preferred merchants to top
+      if (aIsPreferred && !bIsPreferred) return -1
+      if (!aIsPreferred && bIsPreferred) return 1
+      
+      // Otherwise sort by confidence
+      return b.facets.confidence - a.facets.confidence
+    })
+  } else {
+    // Sort by confidence only
+    filtered.sort((a, b) => b.facets.confidence - a.facets.confidence)
+  }
   
   return filtered
 }
@@ -335,7 +430,17 @@ function buildIndexForPage(
   let filtered = filterForPage(allProducts, config)
   console.log(`    Filtered: ${filtered.length} products`)
   
-  if (filtered.length === 0) {
+  // Check if we have editor picks that might save us
+  let editorPicksFound: ClassifiedProduct[] = []
+  if (config.editorPicks && config.editorPicks.length > 0) {
+     editorPicksFound = config.editorPicks
+      .map((pick) =>
+        allProducts.find((product) => product.id === pick.sku || product.sku === pick.sku)
+      )
+      .filter(Boolean) as ClassifiedProduct[]
+  }
+
+  if (filtered.length === 0 && editorPicksFound.length === 0) {
     console.warn(`    ⚠️  No products found for ${slug}`)
     return null
   }
@@ -359,37 +464,29 @@ function buildIndexForPage(
   console.log(`    After diversify: ${diversified.length} products`)
   let finalProducts = diversified
 
-  if (config.editorPicks && config.editorPicks.length > 0) {
-    const pickMatches = config.editorPicks
-      .map((pick) =>
-        filtered.find((product) => product.id === pick.sku || product.sku === pick.sku)
-      )
-      .filter(Boolean) as ClassifiedProduct[]
+  if (editorPicksFound.length > 0) {
+    const combined: ClassifiedProduct[] = []
+    const seen = new Set<string>()
 
-    if (pickMatches.length > 0) {
-      const combined: ClassifiedProduct[] = []
-      const seen = new Set<string>()
-
-      pickMatches.forEach((product) => {
-        if (!seen.has(product.id)) {
-          combined.push(product)
-          seen.add(product.id)
-        }
-      })
-
-      for (const product of diversified) {
-        if (!seen.has(product.id)) {
-          combined.push(product)
-          seen.add(product.id)
-        }
-        if (combined.length >= maxResults) break
+    editorPicksFound.forEach((product) => {
+      if (!seen.has(product.id)) {
+        combined.push(product)
+        seen.add(product.id)
       }
+    })
 
-      finalProducts = combined.slice(0, maxResults)
-      console.log(
-        `    Applied ${pickMatches.length} editor pick(s) → ${finalProducts.length} products`
-      )
+    for (const product of diversified) {
+      if (!seen.has(product.id)) {
+        combined.push(product)
+        seen.add(product.id)
+      }
+      if (combined.length >= maxResults) break
     }
+
+    finalProducts = combined.slice(0, maxResults)
+    console.log(
+      `    Applied ${editorPicksFound.length} editor pick(s) → ${finalProducts.length} products`
+    )
   }
   
   // Get stats

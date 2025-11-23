@@ -1261,7 +1261,336 @@ const gift_partypro_reuze_ballonnen_blauw: Gift = {
     'Met 90 cm doorsnede creëer je dramatische luchtfoto’s of een highlight boven desserttafel of DJ booth.',
 }
 
+const gift_holland_barrett_sambucol_kids: Gift = {
+  productName: 'Sambucol Kids Kauwtabletten',
+  description:
+    'Vlierbessenextract met vitamine C in beer-vormige kauwtabletten voor kinderen van 4–12 jaar; ondersteunt weerstand en energie.',
+  priceRange: '€12,99',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822577655&a=2566111&m=8108',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/DT/724/000004_A.png',
+  tags: ['kids', 'immuniteit', 'supplement'],
+  giftType: 'physical',
+  matchReason:
+    'Handige kauwtabletten maken het makkelijker om weerstand routines voor kinderen cadeau te doen in winterpakketten.',
+}
+
+const gift_holland_barrett_ultrasun_face: Gift = {
+  productName: 'Ultrasun Face Anti-Pigment SPF50',
+  description:
+    'Breed spectrum SPF50 voor gezicht, hals en decolleté met antipigment-complex, trekt snel in en laat geen vettig laagje achter.',
+  priceRange: '€31,49',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822577709&a=2566111&m=8108',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/DT/724/000157_A.png',
+  tags: ['skincare', 'SPF', 'premium'],
+  giftType: 'physical',
+  matchReason:
+    'Ideaal voor beauty liefhebbers die year-round bescherming zoeken; combineert goed met wellness cadeausets.',
+}
+
+const gift_holland_barrett_purasana_protein: Gift = {
+  productName: 'Purasana Vegan Protein Erwt Bio 400g',
+  description:
+    'Biologisch erwteneiwit met 80% proteïne per portie, neutrale smaak en vrij van soja, gluten en lactose.',
+  priceRange: '€19,49',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822577815&a=2566111&m=8108',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/DT/724/001094_A.png',
+  tags: ['vegan', 'protein', 'sport'],
+  giftType: 'physical',
+  matchReason:
+    'Perfect voor fitness fans of vegans die hogere eiwitbehoefte hebben; combineer met Gifteez sport filters.',
+}
+
+const gift_holland_barrett_dr_hauschka: Gift = {
+  productName: 'Dr. Hauschka Lip to Cheek Rosewood',
+  description:
+    'Multifunctionele blush stick met abrikozenpitolie en rozenwas voor lippen en wangen, geeft een warme natuurlijke gloed.',
+  priceRange: '€28,49',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=41457443135&a=2566111&m=8108',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/DT/724/000736_A.png',
+  tags: ['beauty', 'natuurlijk', 'make-up'],
+  giftType: 'physical',
+  matchReason:
+    'Clean beauty fans herkennen Dr. Hauschka meteen; stick-formaat werkt goed in beauty stockings of selfcare boxen.',
+}
+
+const gift_holland_barrett_shoti_unwind: Gift = {
+  productName: 'Shoti Maa Unwind Kruidenthee',
+  description:
+    'Biologische chai met kaneel en vanille voor avondrust; 16 zakjes voor een mindful moment.',
+  priceRange: '€3,79',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=40775304076&a=2566111&m=8108',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/DT/724/001021_A.png',
+  tags: ['wellness', 'thee', 'relax'],
+  giftType: 'physical',
+  matchReason:
+    'Voeg toe aan selfcare pakketten of nacht routine gifts; warme chai met ayurvedische kruiden verkoopt goed in Q4.',
+}
+
+const gift_holland_barrett_orakelkaarten: Gift = {
+  productName: 'Koppenhol Engelen Orakelkaarten',
+  description:
+    'Set van 44 kaarten met handleiding voor snelle intenties of journaling prompts; perfect voor mindful cadeaus.',
+  priceRange: '€25,99',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822577761&a=2566111&m=8108',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/DT/724/000705_A.png',
+  tags: ['mindfulness', 'kaarten', 'cadeauset'],
+  giftType: 'physical',
+  matchReason:
+    'Werkt geweldig als story-driven gift: combineer met theeset of kristallen om hogere basketwaarde te triggeren.',
+}
+
+// Winter wellness producten
+const gift_holland_barrett_vitamine_d: Gift = {
+  productName: 'Vitamine D3 75mcg (3000IU) - 240 Capsules',
+  description:
+    'Extra sterke vitamine D3 voor ondersteuning van het immuunsysteem en gezonde botten. Vooral belangrijk in de wintermaanden met minder zonlicht.',
+  priceRange: '€12,99',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fvitamine-d3',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/000635_A.jpg',
+  tags: ['vitamine', 'winter', 'immuniteit'],
+  giftType: 'physical',
+  matchReason:
+    'Essentieel winter supplement - perfect voor iedereen die extra ondersteuning zoekt tijdens donkere maanden.',
+}
+
+const gift_holland_barrett_gember_thee: Gift = {
+  productName: 'Jacob Hooy Gember Citroen Thee',
+  description:
+    'Verwarmende kruidenthee met gember en citroen. Perfect voor koude winterdagen. 20 theezakjes voor weken van geniet.',
+  priceRange: '€3,49',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fthee',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/058312_A.jpg',
+  tags: ['thee', 'winter', 'wellness'],
+  giftType: 'physical',
+  matchReason:
+    'Betaalbaar en praktisch - ideaal als toevoeging aan een groter cadeau of als klein attentje.',
+}
+
+const gift_holland_barrett_omega3: Gift = {
+  productName: 'Omega-3 Visolie 1000mg - 100 Capsules',
+  description:
+    'Hoogwaardige omega-3 visolie capsules voor hart, hersenen en zicht. Zuiver en duurzaam geproduceerd.',
+  priceRange: '€16,99',
+  retailers: [
+    {
+      name: 'Holland & Barrett',
+      affiliateLink:
+        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fomega-3',
+    },
+  ],
+  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/000107_A.jpg',
+  tags: ['omega-3', 'gezondheid', 'supplement'],
+  giftType: 'physical',
+  matchReason: 'Populair supplement voor gezondheid - geschikt voor actieve mensen en gezinnen.',
+}
+
 const RAW_BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'holland-barrett-partner-spotlight',
+    title: 'Wellness Cadeaus van Holland & Barrett: Voor een Gezonde Levensstijl',
+    excerpt:
+      'Ontdek de mooiste wellnesscadeaus van Holland & Barrett. Van immuunboosters tot clean beauty en mindful avondrituelen – perfect voor iedereen die van een gezonde levensstijl houdt.',
+    imageUrl: '/images/blog-holland-barrett-partner.jpg',
+    category: 'Wellness',
+    author: {
+      name: 'Gifteez Redactie',
+      avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-holland-barrett',
+    },
+    publishedDate: '2025-11-05',
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Op zoek naar een cadeau voor iemand die graag gezond bezig is? Holland & Barrett heeft een prachtig assortiment aan wellnessproducten die perfect zijn om cadeau te geven. Van voedingssupplementen en natuurlijke verzorgingsproducten tot mindfulness accessoires – er is voor ieder budget en elke interesse wel iets leuks te vinden.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'In deze gids delen we onze favoriete wellness cadeaus van Holland & Barrett. Of je nu op zoek bent naar een klein attentje of een luxe verwenpakket, je vindt hier inspiratie voor elk type gezondheidsliefhebber.',
+      },
+      {
+        type: 'image',
+        src: '/images/blog-holland-barrett-partner.jpg',
+        alt: 'Flatlay van Holland & Barrett wellness producten op natuurlijke achtergrond met eucalyptus takjes',
+        caption: 'Holland & Barrett heeft een breed assortiment aan wellness- en beautycadeaus.',
+      },
+      { type: 'heading', content: 'Waarom Holland & Barrett geweldige cadeaus heeft' },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Breed wellnessaanbod</strong> – van vitamines en supplementen tot clean beauty en mindfulness producten voor elk budget</li><li><strong>Betrouwbare merken</strong> – bekende namen zoals Jacob Hooy, Purasana en Dr. Hauschka staan garant voor kwaliteit</li><li><strong>Voor iedereen</strong> – of het nu voor sporters, gezinnen met kinderen of zelfzorgliefhebbers is, er is altijd iets passends</li><li><strong>Snel geleverd</strong> – bij spoed perfect voor last-minute cadeaus dankzij snelle levering</li></ul>',
+      },
+      { type: 'heading', content: 'Wellness voor het hele gezin' },
+      {
+        type: 'paragraph',
+        content:
+          'Een immuunbooster is altijd een welkom cadeau, vooral voor gezinnen. Sambucol Kids is een favoriet bij ouders die hun kinderen graag gezond door de winter willen helpen. Perfect om te combineren in een wellness pakket!',
+      },
+      { type: 'gift', content: gift_holland_barrett_sambucol_kids },
+      { type: 'heading', content: 'Zonbescherming & natural glow' },
+      {
+        type: 'paragraph',
+        content:
+          'Huidverzorging met natuurlijke ingrediënten is steeds populairder. Deze producten zijn perfect voor iemand die bewust bezig is met clean beauty en dagelijkse SPF-bescherming.',
+      },
+      { type: 'gift', content: gift_holland_barrett_ultrasun_face },
+      { type: 'gift', content: gift_holland_barrett_dr_hauschka },
+      { type: 'heading', content: 'Voor de sportieve vegan' },
+      {
+        type: 'paragraph',
+        content:
+          'Plantaardige eiwitpoeders zijn ideaal voor sporters die vegan eten. Deze hoogwaardige blend van Purasana is een aanrader voor iedereen die na het sporten graag een gezonde shake maakt.',
+      },
+      { type: 'gift', content: gift_holland_barrett_purasana_protein },
+      { type: 'heading', content: 'Mindful avondrituelen' },
+      {
+        type: 'paragraph',
+        content:
+          'Voor wie graag rust vindt in een avondritueel: combineer een ontspannende thee met inspirerende orakelkaarten. Dit zorgt voor een moment van zelfreflectie en mindfulness.',
+      },
+      { type: 'gift', content: gift_holland_barrett_shoti_unwind },
+      { type: 'gift', content: gift_holland_barrett_orakelkaarten },
+      { type: 'heading', content: '❄️ Winter Wellness Pakket: Essentials voor de koude maanden' },
+      {
+        type: 'paragraph',
+        content:
+          'De winter vraagt om extra aandacht voor je weerstand en welzijn. Deze producten zijn speciaal geselecteerd om door de donkere maanden heen te komen met meer energie en vitaliteit. Perfect om te geven aan iemand die graag gezond de winter door wil komen!',
+      },
+      { type: 'gift', content: gift_holland_barrett_vitamine_d },
+      { type: 'gift', content: gift_holland_barrett_gember_thee },
+      { type: 'gift', content: gift_holland_barrett_omega3 },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="my-6 rounded-xl border-l-4 border-emerald-500 bg-emerald-50 p-5"><p class="text-sm font-semibold text-emerald-900 mb-2">💡 Cadeau Tip: Winter Wellness Box</p><p class="text-sm text-emerald-800">Combineer Vitamine D3 + Gember Thee + een warme sjaal voor het ultieme winter survival pakket. Totaalprijs: ongeveer €25-30 en je hebt een doordacht cadeau dat echt helpt!</p></div>',
+      },
+      { type: 'heading', content: '💰 Cadeaus per Budget: Voor elk budget iets moois' },
+      { type: 'subheading', content: 'Onder €20: Kleine attenties met grote impact' },
+      {
+        type: 'paragraph',
+        content:
+          'Ook met een klein budget kun je iemand blij maken met een doordacht wellness cadeau. Deze producten zijn betaalbaar maar van hoge kwaliteit:',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Sambucol Kids Kauwtabletten</strong> (€12,99) - Voor gezinnen met kinderen</li><li><strong>Vitamine D3</strong> (€12,99) - Praktisch en altijd welkom in de winter</li><li><strong>Jacob Hooy Gember Thee</strong> (€3,49) - Perfect als klein attentje of toevoeging</li><li><strong>Omega-3 Visolie</strong> (€16,99) - Dagelijkse ondersteuning voor hart en hersenen</li></ul>',
+      },
+      { type: 'subheading', content: '€20-€50: De gouden middenweg' },
+      {
+        type: 'paragraph',
+        content:
+          'Met een budget tussen de €20 en €50 kun je echt impact maken. Kies voor premium producten of combineer meerdere items tot een mooi pakket:',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<ul class="list-disc space-y-2 pl-5 text-sm text-gray-700"><li><strong>Kurkuma Complex</strong> (€24,99) - Voor de bewuste gezondheidszoeker</li><li><strong>Engelen Orakelkaarten</strong> (€25,99) - Uniek en persoonlijk</li><li><strong>Collageen Poeder</strong> (€27,99) - Trending beauty supplement</li><li><strong>Dr. Hauschka Lip to Cheek</strong> (€28,49) - Clean beauty luxe</li><li><strong>Ultrasun SPF50</strong> (€31,49) - Premium huidverzorging</li></ul>',
+      },
+      { type: 'subheading', content: 'Luxe pakket €50+: Verwennerij deluxe' },
+      {
+        type: 'paragraph',
+        content:
+          'Wil je echt indruk maken? Combineer meerdere producten tot een luxe wellness pakket. Hier zijn onze favoriete combinaties:',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="my-6 space-y-4"><div class="rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-6 border border-purple-100"><p class="font-bold text-purple-900 mb-3">🎁 Beauty & Wellness Luxe Box (€89)</p><ul class="space-y-2 text-sm text-purple-800"><li>✨ Manuka Honing MGO 250+ (€32,99)</li><li>✨ Dr. Hauschka Lip to Cheek (€28,49)</li><li>✨ Collageen Poeder (€27,99)</li></ul><p class="mt-3 text-xs text-purple-700 italic">Perfect voor iemand die van natuurlijke beauty en wellness houdt</p></div><div class="rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 p-6 border border-blue-100"><p class="font-bold text-blue-900 mb-3">💪 Sport & Vitaliteit Pakket (€74)</p><ul class="space-y-2 text-sm text-blue-800"><li>💪 Purasana Vegan Protein (€19,49)</li><li>💪 Omega-3 Visolie (€16,99)</li><li>💪 Kurkuma Complex (€24,99)</li><li>💪 Vitamine D3 (€12,99)</li></ul><p class="mt-3 text-xs text-blue-700 italic">Ideaal voor de actieve sporter of fitnessfanaat</p></div><div class="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 p-6 border border-amber-100"><p class="font-bold text-amber-900 mb-3">🧘 Mindful Living Set (€62)</p><ul class="space-y-2 text-sm text-amber-800"><li>🧘 Engelen Orakelkaarten (€25,99)</li><li>🧘 Manuka Honing (€32,99)</li><li>🧘 Shoti Maa Thee (€3,79)</li></ul><p class="mt-3 text-xs text-amber-700 italic">Voor rust, reflectie en innerlijke balans</p></div></div>',
+      },
+      { type: 'heading', content: '⭐ Wat klanten zeggen: Echte reviews' },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="my-6 space-y-4"><div class="rounded-lg bg-white p-5 shadow-sm border border-gray-100"><div class="flex items-start gap-3"><div class="text-2xl">⭐⭐⭐⭐⭐</div><div><p class="text-sm font-semibold text-gray-900 mb-1">Sambucol Kids - Super voor kinderen!</p><p class="text-sm text-gray-700 italic">"Mijn kids nemen deze kauwtabletten zonder klagen. Sinds we dit gebruiken merken we echt verschil in de winter."</p><p class="text-xs text-gray-500 mt-2">- Linda, moeder van 2</p></div></div></div><div class="rounded-lg bg-white p-5 shadow-sm border border-gray-100"><div class="flex items-start gap-3"><div class="text-2xl">⭐⭐⭐⭐⭐</div><div><p class="text-sm font-semibold text-gray-900 mb-1">Manuka Honing - Elke cent waard</p><p class="text-sm text-gray-700 italic">"Cadeau gekregen en nu verslingerd! Gebruik het dagelijks in mijn thee. Smaakt heerlijk en voelt aan als een luxe moment."</p><p class="text-xs text-gray-500 mt-2">- Sarah, 34</p></div></div></div><div class="rounded-lg bg-white p-5 shadow-sm border border-gray-100"><div class="flex items-start gap-3"><div class="text-2xl">⭐⭐⭐⭐⭐</div><div><p class="text-sm font-semibold text-gray-900 mb-1">Collageen Poeder - Zichtbaar resultaat</p><p class="text-sm text-gray-700 italic">"Na 3 maanden gebruik merk ik echt verschil in mijn huid en nagels. Lost makkelijk op in mijn smoothie."</p><p class="text-xs text-gray-500 mt-2">- Emma, 29</p></div></div></div><div class="rounded-lg bg-white p-5 shadow-sm border border-gray-100"><div class="flex items-start gap-3"><div class="text-2xl">⭐⭐⭐⭐⭐</div><div><p class="text-sm font-semibold text-gray-900 mb-1">Purasana Protein - Beste vegan optie</p><p class="text-sm text-gray-700 italic">"Eindelijk een vegan proteïne dat niet klonterig is! Neutrale smaak, meng ik door alles heen."</p><p class="text-xs text-gray-500 mt-2">- Mark, personal trainer</p></div></div></div></div>',
+      },
+      { type: 'heading', content: '🎯 Welk cadeau past bij wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="my-6 rounded-xl bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 p-6 border border-rose-100"><p class="font-bold text-rose-900 mb-4 text-lg">Snelle match-gids:</p><ul class="space-y-3 text-sm text-gray-800"><li>👨‍👩‍👧‍👦 <strong>Voor gezinnen:</strong> Sambucol Kids + Vitamine D3 + Gember Thee</li><li>💪 <strong>Voor sporters:</strong> Vegan Protein + Omega-3 + Kurkuma Complex</li><li>✨ <strong>Voor beauty lovers:</strong> Collageen + Dr. Hauschka + SPF50</li><li>🧘 <strong>Voor mindfulness fans:</strong> Orakelkaarten + Shoti Maa Thee + Manuka Honing</li><li>❄️ <strong>Voor winter warriors:</strong> Vitamine D3 + Omega-3 + Gember Thee</li><li>🌱 <strong>Voor duurzaam bewust:</strong> Kurkuma + Bio Protein + Jacob Hooy Thee</li></ul></div>',
+      },
+
+      {
+        type: 'paragraph',
+        content:
+          '<div class="mt-10 mb-4 rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-lime-50 p-6 text-center shadow-sm"><p class="mb-4 text-sm text-gray-700">Ontdek het complete wellnessaanbod bij Holland & Barrett. Van supplementen tot verzorgingsproducten – alles voor een gezonde levensstijl!</p><a href="https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl" rel="nofollow sponsored noopener" class="inline-flex items-center justify-center gap-2 rounded-full bg-[#006241] px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors duration-200 hover:bg-[#004d34]">Bekijk Holland & Barrett wellness →</a></div>',
+      },
+      {
+        type: 'paragraph',
+        content:
+          'Prijzen en beschikbaarheid kunnen wijzigen. Check altijd de productpagina van Holland & Barrett voor de meest actuele informatie.',
+      },
+    ],
+    seo: {
+      metaTitle: 'Wellness Cadeaus van Holland & Barrett | Gifteez Cadeaugids',
+      metaDescription:
+        'De mooiste wellnesscadeaus van Holland & Barrett. Van immuunboosters en clean beauty tot mindfulness producten – perfect voor gezondheidsliefhebbers.',
+      keywords: [
+        'Holland & Barrett',
+        'wellness cadeaus',
+        'gezondheid',
+        'supplementen',
+        'clean beauty',
+        'mindfulness',
+      ],
+      ogTitle: 'Wellness Cadeaus van Holland & Barrett',
+      ogDescription:
+        'Ontdek de mooiste wellnesscadeaus van Holland & Barrett voor een gezonde levensstijl.',
+      ogImage: 'https://gifteez.nl/images/blog-holland-barrett-partner.svg',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Wellness Cadeaus van Holland & Barrett',
+      twitterDescription:
+        'De mooiste wellnesscadeaus voor gezondheidsliefhebbers: supplementen, clean beauty en mindfulness producten.',
+      twitterImage: 'https://gifteez.nl/images/blog-holland-barrett-partner.svg',
+      canonicalUrl: 'https://gifteez.nl/blog/holland-barrett-partner-spotlight',
+      pinterestImage: 'https://gifteez.nl/images/pinterest/holland-barrett-partner-spotlight.svg',
+    },
+    tags: ['holland & barrett', 'wellness', 'beauty', 'supplement', 'partner'],
+  },
   {
     slug: 'cadeaugidsen-snel-starten',
     title: 'Cadeaugidsen: snel starten per budget en thema',
@@ -1355,7 +1684,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     excerpt:
       'We brengen PartyPro’s ballonnenbogen, confettisets en gender reveal decor rechtstreeks naar onze feestcollecties.',
     imageUrl: '/images/blog-partypro-headerafb.png',
-    category: 'Partner Spotlight',
+    category: 'Wellness',
     author: {
       name: 'Gifteez Redactie',
       avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-partypro',
@@ -1467,7 +1796,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     excerpt:
       'Onze AI GiftFinder koppelt nu rechtstreeks naar Shop Like You Give A Damn. Ontdek vegan, eerlijke en duurzame cadeaus met affiliate links en tips van de Gifteez redactie.',
     imageUrl: '/images/Blog-afbeelding- shop like you give a damn.png',
-    category: 'Partner Spotlight',
+    category: 'Wellness',
     author: {
       name: 'Gifteez Redactie',
       avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-partner-slygad',

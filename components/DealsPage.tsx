@@ -711,19 +711,19 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({
             })}
           </div>
 
-          {/* Navigation arrows */}
+          {/* Navigation arrows - Desktop only (outside carousel) */}
           {featuredDeals.length > 1 && (
             <>
               <button
                 onClick={handlePrevious}
-                className="absolute left-0 lg:-left-12 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white shadow-2xl flex items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
+                className="hidden lg:flex absolute -left-12 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white shadow-2xl items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
                 aria-label="Vorige"
               >
                 <ChevronLeftIcon className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
               </button>
               <button
                 onClick={handleNext}
-                className="absolute right-0 lg:-right-12 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white shadow-2xl flex items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
+                className="hidden lg:flex absolute -right-12 top-1/2 -translate-y-1/2 z-40 w-12 h-12 rounded-full bg-white shadow-2xl items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
                 aria-label="Volgende"
               >
                 <ChevronRightIcon className="h-6 w-6 text-slate-700 group-hover:text-white transition-colors" />
@@ -732,21 +732,42 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({
           )}
         </div>
 
-        {/* Progress indicators */}
+        {/* Navigation controls - Mobile and Desktop */}
         {featuredDeals.length > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-8">
-            {featuredDeals.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleDotClick(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? 'w-10 bg-gradient-to-r from-pink-400 to-rose-400 shadow-lg'
-                    : 'w-2 bg-white/40 hover:bg-white/60'
-                }`}
-                aria-label={`Ga naar deal ${index + 1}`}
-              />
-            ))}
+          <div className="flex items-center justify-center gap-6 mt-8">
+            {/* Mobile navigation arrows */}
+            <button
+              onClick={handlePrevious}
+              className="lg:hidden w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
+              aria-label="Vorige"
+            >
+              <ChevronLeftIcon className="h-5 w-5 text-slate-700 group-hover:text-white transition-colors" />
+            </button>
+
+            {/* Progress indicators */}
+            <div className="flex items-center justify-center gap-2">
+              {featuredDeals.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    index === currentSlide
+                      ? 'w-10 bg-gradient-to-r from-pink-400 to-rose-400 shadow-lg'
+                      : 'w-2 bg-white/40 hover:bg-white/60'
+                  }`}
+                  aria-label={`Ga naar deal ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            {/* Mobile navigation arrows */}
+            <button
+              onClick={handleNext}
+              className="lg:hidden w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white transition-all duration-300 group"
+              aria-label="Volgende"
+            >
+              <ChevronRightIcon className="h-5 w-5 text-slate-700 group-hover:text-white transition-colors" />
+            </button>
           </div>
         )}
 
@@ -905,9 +926,9 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
       </div>
 
       <Container size="xl" padded className="relative py-10 md:py-14">
-        <div className="grid lg:grid-cols-2 gap-8 items-center">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center overflow-hidden">
           {/* Left copy */}
-          <div className="text-center lg:text-left space-y-6">
+          <div className="text-center lg:text-left space-y-4 sm:space-y-6 px-4 sm:px-2 max-w-full overflow-hidden">
             {/* Theme tabs */}
             <div className="flex flex-wrap items-center gap-2 mb-1 justify-center lg:justify-start">
               {[
@@ -933,25 +954,29 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
               ))}
             </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white text-sm font-bold">
-                Live • {deck.length} toppers vandaag
-              </span>
-            </div>
+            {deck.length > 0 && (
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-white text-sm font-bold">
+                  {deck.length} {deck.length === 1 ? 'nieuwe deal' : 'nieuwe deals'} vandaag
+                </span>
+              </div>
+            )}
 
-            <h1 className="font-display leading-tight font-black text-4xl md:text-5xl lg:text-6xl text-white">
+            <h1 className="font-display leading-tight font-black text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white break-words overflow-wrap-anywhere max-w-full">
               {selectedCategory ? (
                 <>{selectedCategory.title} deals zonder keuzestress</>
               ) : (
                 <>
                   <span className="block">Beste cadeau deals</span>
-                  <span className="block">van Amazon, Coolblue & partners</span>
+                  <span className="block break-all sm:break-words">
+                    van Amazon, Coolblue & partners
+                  </span>
                 </>
               )}
             </h1>
             {/* Subregel voor spotlight verwijderd op verzoek (hoogte blijft geborgd via beschrijving) */}
-            <p className="text-white/90 text-lg md:text-xl leading-relaxed line-clamp-4 max-w-xl lg:max-w-none min-h-[112px] md:min-h-[132px]">
+            <p className="text-white/90 text-base sm:text-lg md:text-xl leading-relaxed line-clamp-4 max-w-xl lg:max-w-none min-h-[100px] sm:min-h-[112px] md:min-h-[132px]">
               {selectedCategory?.description || (
                 <>
                   Handgepickt van top retailers als {marqueeBrands[0] ?? 'onze partners'}. Snelle
@@ -969,21 +994,21 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
               </div>
             )}
 
-            <div className="flex flex-wrap gap-3 lg:gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 lg:gap-4 justify-center lg:justify-start">
               <button
                 onClick={() => navigateTo('giftFinder')}
-                className="group relative px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full font-bold text-white shadow-xl hover:shadow-pink-500/40 hover:scale-105 transition-all"
+                className="group relative px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-600 rounded-full font-bold text-sm sm:text-base text-white shadow-xl hover:shadow-pink-500/40 hover:scale-105 transition-all"
               >
-                <span className="relative flex items-center gap-2">
-                  <SparklesIcon className="h-5 w-5" />
-                  {selectedCategory ? `Shop ${selectedCategory.title}` : 'Ontdek deals'}
+                <span className="relative flex items-center justify-center gap-2">
+                  <TagIcon className="h-5 w-5" />
+                  {selectedCategory ? `Claim ${selectedCategory.title} deals` : 'Bekijk alle deals'}
                 </span>
               </button>
               <button
                 onClick={handleRefresh}
-                className="px-5 py-3 rounded-full border border-white/25 text-white/90 hover:bg-white/10 backdrop-blur-md font-semibold"
+                className="px-5 py-3 rounded-full border border-white/25 text-white/90 text-sm sm:text-base hover:bg-white/10 backdrop-blur-md font-semibold"
               >
-                Vernieuwen
+                🔄 Ververs deals
               </button>
             </div>
 
@@ -991,7 +1016,7 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
             <div className="flex flex-wrap gap-4 items-center justify-center lg:justify-start text-xs text-white/80">
               <div className="flex items-center gap-2">
                 <CheckIcon className="h-4 w-4 text-green-400" />
-                Gratis verzending
+                Gratis verzending beschikbaar
               </div>
               <div className="w-px h-4 bg-white/20" />
               <div className="flex items-center gap-2">
@@ -1092,17 +1117,17 @@ const ProDealsHero: React.FC<ProDealsHeroProps> = (props) => {
               <>
                 <button
                   onClick={prev}
-                  className="absolute -left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition"
+                  className="absolute left-2 lg:-left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition"
                   aria-label="Vorige"
                 >
-                  <ChevronLeftIcon className="h-6 w-6 text-slate-700" />
+                  <ChevronLeftIcon className="h-5 w-5 lg:h-6 lg:w-6 text-slate-700" />
                 </button>
                 <button
                   onClick={next}
-                  className="absolute -right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition"
+                  className="absolute right-2 lg:-right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-xl flex items-center justify-center hover:scale-110 transition"
                   aria-label="Volgende"
                 >
-                  <ChevronRightIcon className="h-6 w-6 text-slate-700" />
+                  <ChevronRightIcon className="h-5 w-5 lg:h-6 lg:w-6 text-slate-700" />
                 </button>
               </>
             )}
@@ -1160,6 +1185,27 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
   // Filter state
   const [priceFilter, setPriceFilter] = useState<string>('all')
   const [scoreFilter, setScoreFilter] = useState<number>(0)
+  const [retailerFilter, setRetailerFilter] = useState<string>('all')
+
+  // Back to top button state
+  const [showBackToTop, setShowBackToTop] = useState(false)
+
+  // Track scroll position for back-to-top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 500)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    trackAnalyticsEvent('back_to_top_click', {
+      event_category: 'Deals Page',
+      event_label: 'Scroll to top',
+    })
+  }
 
   // Quick budget filter handler
   const handleQuickBudgetFilter = useCallback((budgetRange: string) => {
@@ -1499,10 +1545,18 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         const scoreValue = deal.giftScore ?? 0
         const scoreMatch = scoreFilter === 0 || scoreValue >= scoreFilter
 
-        return priceMatch && scoreMatch
+        // Retailer filter
+        let retailerMatch = true
+        if (retailerFilter !== 'all') {
+          const retailerInfo = resolveRetailerInfo(deal.affiliateLink)
+          const retailerName = retailerInfo.shortLabel.toLowerCase()
+          retailerMatch = retailerName.includes(retailerFilter.toLowerCase())
+        }
+
+        return priceMatch && scoreMatch && retailerMatch
       })
     },
-    [priceFilter, scoreFilter]
+    [priceFilter, scoreFilter, retailerFilter]
   )
 
   const handleRefresh = useCallback(() => {
@@ -1648,7 +1702,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
   // Filter Bar Component
   const FilterBar: React.FC = () => {
-    const activeFilters = priceFilter !== 'all' || scoreFilter > 0
+    // Track if any filters are active (for potential UI feedback)
+    const _activeFilters = priceFilter !== 'all' || scoreFilter > 0
 
     return (
       <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
@@ -1694,16 +1749,41 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             </select>
           </div>
 
+          {/* Retailer Filter */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="retailer-filter" className="text-sm text-slate-600">
+              Retailer:
+            </label>
+            <select
+              id="retailer-filter"
+              value={retailerFilter}
+              onChange={(e) => setRetailerFilter(e.target.value)}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 transition-all hover:border-rose-400 focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-200"
+            >
+              <option value="all">Alle retailers</option>
+              <option value="amazon">Amazon</option>
+              <option value="coolblue">Coolblue</option>
+              <option value="bol">Bol.com</option>
+              <option value="shoplikeyougiveadamn">Shop Like You Give A Damn</option>
+              <option value="partypro">PartyPro</option>
+            </select>
+          </div>
+
           {/* Reset Button */}
-          {activeFilters && (
+          {(priceFilter !== 'all' || scoreFilter > 0 || retailerFilter !== 'all') && (
             <button
               onClick={() => {
                 setPriceFilter('all')
                 setScoreFilter(0)
+                setRetailerFilter('all')
+                trackAnalyticsEvent('filters_reset', {
+                  event_category: 'Deals Page',
+                  event_label: 'Clear all filters',
+                })
               }}
               className="ml-auto rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-200"
             >
-              Reset filters
+              🗑️ Reset filters
             </button>
           )}
         </div>
@@ -1962,7 +2042,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       []
     )
 
-    // Toggle favorite handler
+    // Toggle favorite handler with auth feedback
     const handleToggleFavorite = (e: React.MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
@@ -1973,6 +2053,20 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
         auth.toggleFavorite(dealAsGift)
         isNowFavorite = !auth.isFavorite(dealAsGift)
       } else {
+        // Show feedback that user needs to log in for persistent favorites
+        const shouldUseGuest = window.confirm(
+          '💡 Tip: Log in om je favorieten te synchroniseren tussen apparaten!\n\n' +
+            'Klik OK om toch tijdelijk op te slaan (alleen dit apparaat)\n' +
+            'Of ANNULEER om in te loggen voor permanente opslag'
+        )
+
+        if (!shouldUseGuest) {
+          // User wants to log in
+          navigateTo('login')
+          return
+        }
+
+        // Continue with guest favorites
         try {
           const favorites: Gift[] = JSON.parse(localStorage.getItem('gifteezFavorites') || '[]')
           const isCurrentlyFavorite = favorites.some((fav) => fav.productName === deal.name)
@@ -2210,7 +2304,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
                   {/* Button content */}
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    <span>Naar {retailerInfo ? retailerInfo.shortLabel : 'de winkel'}</span>
+                    <span>Bekijk deal</span>
                     <svg
                       className="w-4 h-4 transition-transform group-hover/btn:translate-x-1"
                       fill="none"
@@ -2520,21 +2614,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
                 {/* Button content */}
                 <span className="relative z-10 flex items-center gap-2 whitespace-nowrap">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
-                  </svg>
-                  Shop deze collectie nu
+                  <TagIcon className="w-5 h-5" />
+                  Shop {items.length} deals met korting
                   <svg
                     className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
                     fill="none"
@@ -2621,21 +2702,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
 
               {/* Button content */}
               <span className="relative z-10 flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-                Shop deze collectie nu
+                <TagIcon className="w-5 h-5" />
+                Shop {items.length} deals met korting
                 <svg
                   className="w-5 h-5 transition-transform duration-300 group-active:translate-x-1"
                   fill="none"
@@ -2685,35 +2753,8 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
     )
   }
 
-  // Testimonials Section Component
+  // Testimonials Section Component - Removed fake testimonials, replaced with trust indicators
   const TestimonialsSection: React.FC = () => {
-    const testimonials = [
-      {
-        name: 'Lisa M.',
-        rating: 5,
-        text: 'Via Gifteez vond ik het perfecte cadeau voor mijn moeder. De collecties zijn echt handig samengesteld!',
-        occasion: 'Moederdag cadeau',
-      },
-      {
-        name: 'Thomas D.',
-        rating: 5,
-        text: 'Snelle levering en precies wat ik zocht. De gift sets zijn top en meteen klaar om te geven.',
-        occasion: 'Verjaardagscadeau',
-      },
-      {
-        name: 'Emma K.',
-        rating: 5,
-        text: 'Eindelijk een site waar ik niet urenlang hoef te zoeken. De selectie is gewoon goed en origineel.',
-        occasion: 'Valentijnscadeau',
-      },
-      {
-        name: 'Mark v.d.B.',
-        rating: 5,
-        text: 'De cadeauscore helpt echt bij het kiezen. Heb al meerdere cadeaus via Gifteez besteld.',
-        occasion: 'Kerst cadeau',
-      },
-    ]
-
     return (
       <section className="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-6 md:p-10 border border-slate-200 shadow-sm">
         <div className="max-w-5xl mx-auto">
@@ -2722,69 +2763,72 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
             <div className="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-1.5 mb-3">
               <HeartIconFilled className="h-4 w-4 text-rose-500" />
               <span className="text-xs font-bold text-rose-600 uppercase tracking-wide">
-                Tevreden cadeaugevers
+                Waarom Gifteez?
               </span>
             </div>
             <h2 className="font-display text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-              Wat anderen zeggen over Gifteez
+              Cadeaus vinden zonder stress
             </h2>
             <p className="text-base text-slate-600 max-w-2xl mx-auto">
-              Duizenden mensen vonden al het perfecte cadeau via onze collecties
+              Wij selecteren alleen de beste deals van betrouwbare partners
             </p>
           </div>
 
-          {/* Testimonials Grid */}
+          {/* Trust Grid - Real Value Props */}
           <div className="grid md:grid-cols-2 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow"
-              >
-                {/* Stars */}
-                <div className="flex items-center gap-1 mb-3">
-                  {Array.from({ length: testimonial.rating }).map((_, i) => (
-                    <StarIcon key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                  ))}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
+                  <CheckIcon className="h-6 w-6 text-emerald-600" />
                 </div>
-
-                {/* Quote */}
-                <p className="text-slate-700 leading-relaxed mb-4">"{testimonial.text}"</p>
-
-                {/* Author */}
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div>
-                    <p className="font-semibold text-slate-900">{testimonial.name}</p>
-                    <p className="text-sm text-slate-500">{testimonial.occasion}</p>
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-emerald-600 font-semibold">
-                    <CheckIcon className="h-4 w-4" />
-                    Geverifieerd
-                  </div>
+                <div>
+                  <h3 className="font-bold text-slate-900 mb-2">Gecureerde selectie</h3>
+                  <p className="text-sm text-slate-600">
+                    Elke deal handmatig gecontroleerd op kwaliteit, prijs en relevantie
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
 
-          {/* Trust stats */}
-          <div className="mt-8 pt-6 border-t border-slate-200">
-            <div className="grid grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-                  10.000+
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                  <SparklesIcon className="h-6 w-6 text-blue-600" />
                 </div>
-                <div className="text-sm text-slate-600 mt-1">Tevreden klanten</div>
+                <div>
+                  <h3 className="font-bold text-slate-900 mb-2">Betrouwbare partners</h3>
+                  <p className="text-sm text-slate-600">
+                    Alleen deals van gerenommeerde retailers zoals Coolblue, Amazon & meer
+                  </p>
+                </div>
               </div>
-              <div>
-                <div className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                  4.8/5
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
+                  <TagIcon className="h-6 w-6 text-purple-600" />
                 </div>
-                <div className="text-sm text-slate-600 mt-1">Gemiddelde beoordeling</div>
+                <div>
+                  <h3 className="font-bold text-slate-900 mb-2">Dagelijks vernieuwd</h3>
+                  <p className="text-sm text-slate-600">
+                    Verse deals en nieuwe producten elke dag in onze collecties
+                  </p>
+                </div>
               </div>
-              <div>
-                <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                  98%
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-rose-100 flex items-center justify-center">
+                  <GiftIcon className="h-6 w-6 text-rose-600" />
                 </div>
-                <div className="text-sm text-slate-600 mt-1">Raadt ons aan</div>
+                <div>
+                  <h3 className="font-bold text-slate-900 mb-2">Cadeauscore systeem</h3>
+                  <p className="text-sm text-slate-600">
+                    Elk product beoordeeld op geschiktheid als cadeau (1-10)
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2879,7 +2923,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
       />
       <JsonLd data={structuredData} />
 
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white overflow-x-hidden">
         {/* Hero Section - Pro two-column spotlight design */}
         <ProDealsHero
           topDeals={state.topDeals}
@@ -2893,7 +2937,7 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           themeCategories={state.categories}
         />
 
-        <Container size="xl" padded className="py-12 space-y-12">
+        <Container size="xl" padded className="py-6 md:py-12 space-y-8 md:space-y-12">
           {error && (
             <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700">
               {error}
@@ -2920,6 +2964,65 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
               <div className="animate-fade-in-up space-y-4" style={{ animationDelay: '80ms' }}>
                 <QuickBudgetFilters />
                 <FilterBar />
+
+                {/* Active Filters Indicator */}
+                {(priceFilter !== 'all' || scoreFilter > 0 || retailerFilter !== 'all') && (
+                  <div className="flex flex-wrap items-center gap-2 px-4 py-3 bg-rose-50 border border-rose-200 rounded-lg">
+                    <span className="text-sm font-semibold text-rose-700">Actieve filters:</span>
+                    {priceFilter !== 'all' && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-rose-300 rounded-full text-sm font-medium text-rose-700">
+                        💰{' '}
+                        {priceFilter === '0-50'
+                          ? '€0-€50'
+                          : priceFilter === '50-100'
+                            ? '€50-€100'
+                            : priceFilter === '100-200'
+                              ? '€100-€200'
+                              : '€200+'}
+                        <button
+                          onClick={() => setPriceFilter('all')}
+                          className="hover:bg-rose-100 rounded-full p-0.5 transition-colors"
+                          aria-label="Verwijder prijs filter"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    )}
+                    {scoreFilter > 0 && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-rose-300 rounded-full text-sm font-medium text-rose-700">
+                        ⭐ Score {scoreFilter}+
+                        <button
+                          onClick={() => setScoreFilter(0)}
+                          className="hover:bg-rose-100 rounded-full p-0.5 transition-colors"
+                          aria-label="Verwijder score filter"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    )}
+                    {retailerFilter !== 'all' && (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-rose-300 rounded-full text-sm font-medium text-rose-700">
+                        🏪 {retailerFilter.charAt(0).toUpperCase() + retailerFilter.slice(1)}
+                        <button
+                          onClick={() => setRetailerFilter('all')}
+                          className="hover:bg-rose-100 rounded-full p-0.5 transition-colors"
+                          aria-label="Verwijder retailer filter"
+                        >
+                          ✕
+                        </button>
+                      </span>
+                    )}
+                    <span className="text-xs text-rose-600 ml-auto">
+                      {
+                        filterDeals([
+                          ...state.topDeals,
+                          ...state.categories.flatMap((c) => c.items),
+                        ]).length
+                      }{' '}
+                      resultaten
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Top 20 Deals Carousel */}
@@ -3139,22 +3242,12 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
                       </div>
                     </form>
 
-                    {/* Stats */}
-                    <div className="mt-8 pt-6 border-t border-gray-200">
-                      <div className="grid grid-cols-3 gap-4 text-center">
-                        <div>
-                          <div className="text-2xl font-bold text-purple-600">127</div>
-                          <div className="text-xs text-gray-600">Wensen ingediend</div>
-                        </div>
-                        <div>
-                          <div className="text-2xl font-bold text-pink-600">23</div>
-                          <div className="text-xs text-gray-600">Deze week toegevoegd</div>
-                        </div>
-                        <div>
-                          <div className="text-2xl font-bold text-rose-600">89%</div>
-                          <div className="text-xs text-gray-600">Wensen vervuld</div>
-                        </div>
-                      </div>
+                    {/* Info text - No fake stats */}
+                    <div className="mt-6 text-center">
+                      <p className="text-sm text-gray-500">
+                        💡 <strong>Tip:</strong> We gebruiken jullie feedback actief om onze
+                        deal-selectie te verbeteren
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -3191,6 +3284,29 @@ const DealsPage: React.FC<DealsPageProps> = ({ navigateTo }) => {
           )}
         </Container>
       </div>
+
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-full shadow-2xl hover:shadow-rose-500/50 hover:scale-110 transition-all duration-300 group"
+          aria-label="Scroll naar boven"
+        >
+          <svg
+            className="w-6 h-6 transition-transform group-hover:-translate-y-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={3}
+              d="M5 10l7-7m0 0l7 7m-7-7v18"
+            />
+          </svg>
+        </button>
+      )}
 
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {

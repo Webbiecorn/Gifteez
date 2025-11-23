@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { PROGRAMMATIC_INDEX } from '../data/programmatic'
 import { buildGuidePath, GUIDE_BASE_PATH } from '../guidePaths'
+import GuideCard from './GuideCard'
 import JsonLd from './JsonLd'
 import Container from './layout/Container'
 import type { ProgrammaticConfig } from '../data/programmatic'
@@ -20,6 +21,14 @@ type BudgetSegment = {
   description: string
   min: number
   max: number | null
+}
+
+type OccasionFilter = {
+  id: string
+  label: string
+  description: string
+  emoji: string
+  predicate: (config: ProgrammaticConfig) => boolean
 }
 
 const PERSONA_FILTERS: PersonaFilter[] = [
@@ -67,6 +76,23 @@ const PERSONA_FILTERS: PersonaFilter[] = [
   },
 ]
 
+const OCCASION_FILTERS: OccasionFilter[] = [
+  {
+    id: 'sinterklaas',
+    label: 'Sinterklaas',
+    description: '5 december',
+    emoji: '🎁',
+    predicate: (config) => config.occasion === 'sinterklaas' || config.slug.includes('sinterklaas'),
+  },
+  {
+    id: 'kerst',
+    label: 'Kerst',
+    description: '25 & 26 december',
+    emoji: '🎄',
+    predicate: (config) => config.occasion === 'kerst' || config.slug.includes('kerst'),
+  },
+]
+
 const BUDGET_SEGMENTS: BudgetSegment[] = [
   { id: '0-25', label: '€0 - €25', description: 'Lootjes & collega’s', min: 0, max: 25 },
   { id: '25-50', label: '€25 - €50', description: 'Populaire cadeaus', min: 25, max: 50 },
@@ -75,29 +101,6 @@ const BUDGET_SEGMENTS: BudgetSegment[] = [
   { id: '150+', label: '€150+', description: 'Statement gifts', min: 150, max: null },
 ]
 
-const RECIPIENT_LABELS: Record<string, string> = {
-  hem: 'Voor hem',
-  haar: 'Voor haar',
-  collegas: 'Collega’s',
-  kids: 'Voor kids',
-}
-
-const INTEREST_LABELS: Record<string, string> = {
-  duurzaam: 'Duurzaam',
-  tech: 'Tech',
-  gamer: 'Gamer',
-}
-
-const formatRecipientLabel = (recipient?: string | null) => {
-  if (!recipient) return null
-  return RECIPIENT_LABELS[recipient] ?? recipient.charAt(0).toUpperCase() + recipient.slice(1)
-}
-
-const formatInterestLabel = (interest?: string | null) => {
-  if (!interest) return null
-  return INTEREST_LABELS[interest] ?? interest.charAt(0).toUpperCase() + interest.slice(1)
-}
-
 const getBudgetValue = (config: ProgrammaticConfig) =>
   config.budgetMax ?? config.filters?.maxPrice ?? null
 
@@ -105,6 +108,11 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
   const variants = useMemo(() => Object.values(PROGRAMMATIC_INDEX), [])
   const [activePersona, setActivePersona] = useState<string | null>(null)
   const [activeBudget, setActiveBudget] = useState<string | null>(null)
+  const [activeOccasion, setActiveOccasion] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortOption, setSortOption] = useState<'default' | 'price-asc' | 'price-desc' | 'a-z'>(
+    'default'
+  )
 
   const personaDefinition = activePersona
     ? (PERSONA_FILTERS.find((filter) => filter.id === activePersona) ?? null)
@@ -112,13 +120,36 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
   const budgetDefinition = activeBudget
     ? (BUDGET_SEGMENTS.find((segment) => segment.id === activeBudget) ?? null)
     : null
+  const occasionDefinition = activeOccasion
+    ? (OCCASION_FILTERS.find((filter) => filter.id === activeOccasion) ?? null)
+    : null
 
   const filteredCollections = useMemo(() => {
-    if (!personaDefinition && !budgetDefinition) {
-      return variants
+    let result = variants
+
+    // 1. Search Filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(
+        (v) =>
+          v.title.toLowerCase().includes(query) ||
+          v.intro.toLowerCase().includes(query) ||
+          v.recipient?.toLowerCase().includes(query) ||
+          v.interest?.toLowerCase().includes(query) ||
+          v.occasion?.toLowerCase().includes(query)
+      )
     }
-    return variants.filter((variant) => {
+
+    // 2. Facet Filters
+    if (!personaDefinition && !budgetDefinition && !occasionDefinition) {
+      return result
+    }
+
+    return result.filter((variant) => {
       if (personaDefinition && !personaDefinition.predicate(variant)) {
+        return false
+      }
+      if (occasionDefinition && !occasionDefinition.predicate(variant)) {
         return false
       }
       if (budgetDefinition) {
@@ -129,21 +160,43 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
       }
       return true
     })
-  }, [variants, personaDefinition, budgetDefinition])
+  }, [variants, personaDefinition, budgetDefinition, occasionDefinition, searchQuery])
 
-  const hasActiveFilters = Boolean(personaDefinition || budgetDefinition)
+  const hasActiveFilters = Boolean(
+    personaDefinition || budgetDefinition || occasionDefinition || searchQuery
+  )
   const noFilterHits = hasActiveFilters && filteredCollections.length === 0
 
-  const prioritizedVariants = useMemo(
-    () => (noFilterHits ? variants : filteredCollections),
-    [filteredCollections, noFilterHits, variants]
-  )
+  const prioritizedVariants = useMemo(() => {
+    const result = noFilterHits ? variants : filteredCollections
+
+    // Sorting
+    switch (sortOption) {
+      case 'price-asc':
+        return [...result].sort((a, b) => (getBudgetValue(a) || 0) - (getBudgetValue(b) || 0))
+      case 'price-desc':
+        return [...result].sort((a, b) => (getBudgetValue(b) || 0) - (getBudgetValue(a) || 0))
+      case 'a-z':
+        return [...result].sort((a, b) => a.title.localeCompare(b.title))
+      default:
+        return result
+    }
+  }, [filteredCollections, noFilterHits, variants, sortOption])
 
   const featuredCollections = useMemo(() => prioritizedVariants.slice(0, 4), [prioritizedVariants])
 
   const personaOptions = useMemo(
     () =>
       PERSONA_FILTERS.map((filter) => ({
+        ...filter,
+        count: variants.filter((variant) => filter.predicate(variant)).length,
+      })),
+    [variants]
+  )
+
+  const occasionOptions = useMemo(
+    () =>
+      OCCASION_FILTERS.map((filter) => ({
         ...filter,
         count: variants.filter((variant) => filter.predicate(variant)).length,
       })),
@@ -167,10 +220,12 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
   const filterSummary = useMemo(() => {
     if (!hasActiveFilters) return 'Top selectie op basis van performance en vraag.'
     const parts = []
+    if (searchQuery) parts.push(`"${searchQuery}"`)
     if (personaDefinition) parts.push(personaDefinition.label)
+    if (occasionDefinition) parts.push(occasionDefinition.label)
     if (budgetDefinition) parts.push(budgetDefinition.label)
     return `Gefilterd op ${parts.join(' + ')}`
-  }, [hasActiveFilters, personaDefinition, budgetDefinition])
+  }, [hasActiveFilters, personaDefinition, budgetDefinition, occasionDefinition, searchQuery])
 
   const quickLinks = useMemo(
     () =>
@@ -194,6 +249,9 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
   const handleResetFilters = () => {
     setActivePersona(null)
     setActiveBudget(null)
+    setActiveOccasion(null)
+    setSearchQuery('')
+    setSortOption('default')
   }
 
   const holidayCollections = useMemo(
@@ -247,6 +305,14 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
     <Container>
       <div className="py-8 md:py-12">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-100 via-white to-blue-50 border border-rose-100 shadow-[0_25px_70px_-40px_rgba(219,39,119,0.6)]">
+          {/* Subtle Mascot Background */}
+          <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+            <img
+              src="/images/mascotte-hero-new-v4.png"
+              alt=""
+              className="w-64 h-64 object-contain translate-y-10 translate-x-10"
+            />
+          </div>
           <div
             className="absolute -top-16 -right-16 h-48 w-48 rounded-full bg-rose-200/40 blur-3xl"
             aria-hidden
@@ -284,7 +350,47 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
         </div>
 
         <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          {/* Search & Sort Header */}
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="relative flex-1 max-w-md">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                className="block w-full rounded-xl border-gray-200 pl-10 text-sm focus:border-primary focus:ring-primary"
+                placeholder="Zoek op trefwoord (bijv. 'Harry Potter', 'Koffie')..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center gap-3">
+              <select
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value as any)}
+                className="rounded-xl border-gray-200 text-sm focus:border-primary focus:ring-primary"
+              >
+                <option value="default">Aanbevolen</option>
+                <option value="price-asc">Prijs: Laag → Hoog</option>
+                <option value="price-desc">Prijs: Hoog → Laag</option>
+                <option value="a-z">Alfabetisch</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-t border-gray-100 pt-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                 Filter je cadeaugidsen
@@ -314,6 +420,41 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
               Geen gids gevonden voor deze combinatie. We tonen tijdelijk alle cadeaugidsen.
             </div>
           )}
+
+          <div className="mt-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Gelegenheid
+            </p>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              {occasionOptions.map((option) => {
+                const isActive = activeOccasion === option.id
+                const isDisabled = option.count === 0
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setActiveOccasion(isActive ? null : option.id)}
+                    aria-pressed={isActive}
+                    disabled={isDisabled}
+                    className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${
+                      isActive
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-gray-200 bg-gray-50 text-gray-800'
+                    } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <span className="text-2xl" aria-hidden>
+                      {option.emoji}
+                    </span>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold">{option.label}</p>
+                      <p className="text-xs text-gray-500">{option.description}</p>
+                    </div>
+                    <span className="text-xs font-semibold text-gray-500">{option.count}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
           <div className="mt-6">
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -397,63 +538,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {featuredCollections.map((v) => (
-              <a
-                key={v.slug}
-                href={buildGuidePath(v.slug)}
-                className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-[0_10px_35px_-25px_rgba(15,23,42,0.35)] transition hover:-translate-y-1 hover:shadow-[0_22px_55px_-30px_rgba(219,39,119,0.45)]"
-                aria-label={`Open ${v.title}`}
-              >
-                <span className="inline-flex w-fit items-center rounded-full bg-rose-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-rose-600">
-                  {v.occasion || v.recipient || v.interest || 'Cadeaugids'}
-                </span>
-                <h3 className="mt-3 text-lg font-semibold text-gray-900 group-hover:text-primary transition line-clamp-2 min-h-[3.4rem]">
-                  {v.title}
-                </h3>
-                <div className="mt-3 flex flex-wrap gap-2 text-[11px] font-semibold text-gray-600">
-                  {formatRecipientLabel(v.recipient) && (
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
-                      {formatRecipientLabel(v.recipient)}
-                    </span>
-                  )}
-                  {formatInterestLabel(v.interest) && (
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
-                      #{formatInterestLabel(v.interest)}
-                    </span>
-                  )}
-                  {getBudgetValue(v) && (
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
-                      Tot €{getBudgetValue(v)}
-                    </span>
-                  )}
-                  {v.filters?.fastDelivery && (
-                    <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1">
-                      ⚡ Snelle levering
-                    </span>
-                  )}
-                </div>
-                {v.intro && <p className="mt-3 text-sm text-gray-600 line-clamp-3">{v.intro}</p>}
-                {v.highlights && v.highlights.length > 0 && (
-                  <div className="mt-4 rounded-2xl bg-gray-50 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Mini-preview
-                    </p>
-                    <ul className="mt-2 space-y-1.5 text-xs text-gray-700">
-                      {v.highlights.slice(0, 3).map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="mt-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-[10px] font-bold text-primary">
-                            {idx + 1}
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-primary">
-                  Bekijk pagina
-                  <span aria-hidden>→</span>
-                </div>
-              </a>
+              <GuideCard key={v.slug} config={v} />
             ))}
           </div>
         </section>
@@ -471,23 +556,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
           </header>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {holidayCollections.map((v) => (
-              <a
-                key={v.slug}
-                href={buildGuidePath(v.slug)}
-                className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
-              >
-                <span className="inline-flex w-fit items-center rounded-full bg-blue-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-blue-600">
-                  {v.occasion?.toUpperCase() ?? 'Seizoen'}
-                </span>
-                <h3 className="mt-3 text-lg font-semibold text-gray-900 group-hover:text-primary transition line-clamp-2 min-h-[3.4rem]">
-                  {v.title}
-                </h3>
-                {v.intro && <p className="mt-3 text-sm text-gray-600 line-clamp-3">{v.intro}</p>}
-                <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-primary">
-                  Naar gids
-                  <span aria-hidden>→</span>
-                </div>
-              </a>
+              <GuideCard key={v.slug} config={v} />
             ))}
           </div>
         </section>
@@ -507,23 +576,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
             </header>
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {interestCollections.map((v) => (
-                <a
-                  key={v.slug}
-                  href={buildGuidePath(v.slug)}
-                  className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
-                >
-                  <span className="inline-flex w-fit items-center rounded-full bg-indigo-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-indigo-600">
-                    {v.interest?.toUpperCase() ?? 'Interesse'}
-                  </span>
-                  <h3 className="mt-3 text-lg font-semibold text-gray-900 group-hover:text-primary transition line-clamp-2 min-h-[3.4rem]">
-                    {v.title}
-                  </h3>
-                  {v.intro && <p className="mt-3 text-sm text-gray-600 line-clamp-3">{v.intro}</p>}
-                  <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-primary">
-                    Naar gids
-                    <span aria-hidden>→</span>
-                  </div>
-                </a>
+                <GuideCard key={v.slug} config={v} />
               ))}
             </div>
           </section>
@@ -542,23 +595,7 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
             </header>
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {sustainableCollections.map((v) => (
-                <a
-                  key={v.slug}
-                  href={buildGuidePath(v.slug)}
-                  className="group relative flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
-                >
-                  <span className="inline-flex w-fit items-center rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-600">
-                    Duurzaam
-                  </span>
-                  <h3 className="mt-3 text-lg font-semibold text-gray-900 group-hover:text-primary transition line-clamp-2 min-h-[3.4rem]">
-                    {v.title}
-                  </h3>
-                  {v.intro && <p className="mt-3 text-sm text-gray-600 line-clamp-3">{v.intro}</p>}
-                  <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-primary">
-                    Naar gids
-                    <span aria-hidden>→</span>
-                  </div>
-                </a>
+                <GuideCard key={v.slug} config={v} displayMode="sustainable" />
               ))}
             </div>
           </section>

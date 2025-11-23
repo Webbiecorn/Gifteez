@@ -375,6 +375,30 @@ from-orange-400 to-red-500
    - Voeg toe aan ProductCard component
    - Voor producten met score ≥9
 
+## 🌿 Nieuwe Partneractivatie: Holland & Barrett (AWIN feed 20669)
+
+### Wat is live
+
+- ✅ Feed 20669 toegevoegd aan `npm run feeds:chain:slim` (met `--whitelistFids=F951,F1655,20669,50381`).
+- ✅ Wellness taxonomie aangevuld (`wellness`, `selfcare`, `vegan-fitness`, `mindful-evening`).
+- ✅ Partnerblog gepubliceerd: [`/blog/holland-barrett-partner-spotlight`](https://gifteez.nl/blog/holland-barrett-partner-spotlight).
+- ✅ Nieuwe giftcards (Sambucol Kids, Ultrasun SPF50, Purasana Vegan Protein, Shoti Maa, Dr. Hauschka, Engelen Orakelkaarten).
+
+### Affiliate best practices
+
+1. **Clickrefs** – Gebruik `theme=wellness` of `giftfinder-selfcare` + `placement=blog-widget|sticky-bar` zodat AWIN rapportages segmenteren.
+2. **Placements** – Push H&B producten op drie plekken: hero CTA in blog, sticky affiliate bar (mobiel) en `GiftFinder` highlight card.
+3. **Story-first copy** – Combineer altijd immuniteit + beauty + mindful ritual voor hogere basketwaarde.
+4. **Creative assets** – Nieuwe hero/pinterest visuals staan in `public/images/blog-holland-barrett-partner.svg` en `public/images/pinterest/holland-barrett-partner-spotlight.svg`.
+5. **Refresh cadence** – Draai `npm run feeds:chain:slim` minimaal 1x per dag in Q4 zodat voorraad/prijs badges actueel blijven.
+
+### Checklist voor nieuwe content
+
+- [ ] Voeg H&B producten toe aan relevante cadeaugidsen (`wellness`, `duurzame selfcare`).
+- [ ] Activeer `withAffiliate()` context in GiftFinder cards (`{ retailer: 'holland-barrett', pageType: 'giftfinder', theme: 'wellness' }`).
+- [ ] Test sticky affiliate bar met een Holland & Barrett product (mobile scroll + footer detection).
+- [ ] Meet CTA-prestaties via GA4 explorations met filter `retailer = holland-barrett`.
+
 ---
 
 ## 📝 Volgende Stappen

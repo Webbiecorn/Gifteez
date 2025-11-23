@@ -86,6 +86,12 @@
     <priority>0.74</priority>
   </url>
   <url>
+    <loc>https://gifteez.nl/cadeaugidsen/holland-barrett-wellness-cadeaus</loc>
+    
+    <changefreq>daily</changefreq>
+    <priority>0.74</priority>
+  </url>
+  <url>
     <loc>https://gifteez.nl/cadeaugidsen/test-dames-mode</loc>
     
     <changefreq>daily</changefreq>
@@ -150,6 +156,12 @@
     
     <changefreq>daily</changefreq>
     <priority>0.74</priority>
+  </url>
+  <url>
+    <loc>https://gifteez.nl/blog/holland-barrett-partner-spotlight</loc>
+    <lastmod>2025-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gifteez.nl/blog/cadeaugidsen-snel-starten</loc>

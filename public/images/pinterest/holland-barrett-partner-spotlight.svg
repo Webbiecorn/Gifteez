@@ -1,0 +1,40 @@
+<svg width="1000" height="1500" viewBox="0 0 1000 1500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ptitle pdesc">
+  <title id="ptitle">Holland &amp; Barrett Partner Spotlight - Pinterest visual</title>
+  <desc id="pdesc">Portretvisual voor de Pinterest pin van de Holland &amp; Barrett partnerblog</desc>
+  <defs>
+    <linearGradient id="pbg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0b4d3c" />
+      <stop offset="50%" stop-color="#0f7c4d" />
+      <stop offset="100%" stop-color="#a4e88a" />
+    </linearGradient>
+    <linearGradient id="pcard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98" />
+      <stop offset="100%" stop-color="#fefdf6" stop-opacity="0.92" />
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="1500" fill="url(#pbg)" rx="80" />
+  <g opacity="0.2">
+    <circle cx="820" cy="220" r="220" fill="#ffffff" />
+    <circle cx="180" cy="1260" r="260" fill="#ffffff" />
+  </g>
+  <g transform="translate(90,160)">
+    <rect width="820" height="1180" rx="60" fill="url(#pcard)" stroke="#e4f8eb" stroke-width="3" />
+    <text x="60" y="140" fill="#0b4d3c" font-family="'Inter','Segoe UI',sans-serif" font-size="32" font-weight="600" letter-spacing="0.3em" text-transform="uppercase">Partner Spotlight</text>
+    <text x="60" y="240" fill="#0f172a" font-family="'Inter','Segoe UI',sans-serif" font-size="72" font-weight="700">Holland &amp; Barrett</text>
+    <text x="60" y="320" fill="#0f172a" font-family="'Inter','Segoe UI',sans-serif" font-size="40" font-weight="500">Wellness cadeaus via AWIN feed 20669</text>
+    <text x="60" y="390" fill="#475569" font-family="'Inter','Segoe UI',sans-serif" font-size="30">• Immunity &amp; kids care</text>
+    <text x="60" y="440" fill="#475569" font-family="'Inter','Segoe UI',sans-serif" font-size="30">• Clean beauty &amp; SPF</text>
+    <text x="60" y="490" fill="#475569" font-family="'Inter','Segoe UI',sans-serif" font-size="30">• Mindful avondrituelen</text>
+    <g transform="translate(60,560)">
+      <rect width="700" height="440" rx="36" fill="#e6f9ed" />
+      <text x="40" y="80" fill="#0f7c4d" font-family="'Inter','Segoe UI',sans-serif" font-size="34" font-weight="600">Affiliate stack in deze blog:</text>
+      <text x="40" y="140" fill="#0b4d3c" font-family="'Inter','Segoe UI',sans-serif" font-size="28">• Sambucol Kids (weerstand)</text>
+      <text x="40" y="190" fill="#0b4d3c" font-family="'Inter','Segoe UI',sans-serif" font-size="28">• Ultrasun SPF50 + Dr. Hauschka Lip to Cheek</text>
+      <text x="40" y="240" fill="#0b4d3c" font-family="'Inter','Segoe UI',sans-serif" font-size="28">• Purasana Vegan Protein</text>
+      <text x="40" y="290" fill="#0b4d3c" font-family="'Inter','Segoe UI',sans-serif" font-size="28">• Shoti Maa Unwind + Engelen orakelkaarten</text>
+      <text x="40" y="360" fill="#0b4d3c" font-family="'Inter','Segoe UI',sans-serif" font-size="24">Dagelijkse feed sync | Clickref tagging | Mobile sticky CTA</text>
+    </g>
+    <rect x="60" y="1070" width="700" height="120" rx="60" fill="#0f7c4d" />
+    <text x="110" y="1150" fill="#ffffff" font-family="'Inter','Segoe UI',sans-serif" font-size="44" font-weight="600">Bekijk alle wellness cadeaus op Gifteez.nl</text>
+  </g>
+</svg>
