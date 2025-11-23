@@ -1820,66 +1820,100 @@ const RAW_VARIANTS = [
     internalLinks: [
       { href: '/cadeaugidsen/kerst/voor-haar/onder-50', label: 'Cadeaus voor haar onder €50' },
       { href: '/cadeaugidsen/dames-mode-onder-150', label: 'Dames mode cadeaus' },
-
-      {
-    slug: 'cadeaus-voor-nachtlezers',
-    title: 'Cadeaus voor nachtlezers (2025 editie)',
-    intro: 'Nachtlezers zijn een speciaal soort mensen: ze lezen wanneer de wereld slaapt. Daarom verzamelden we de 15 slimste cadeaus die hun nachtelijke leesmoment perfect maken.',
-    highlights: [
-      'Warm licht & slaapvriendelijk',
-      'Compact en stil',
-      'Perfect voor in bed',
     ],
-    audience: {
-      recipient: 'volwassenen',
-      occasion: null,
-      interest: 'lezen',
-      budget: 80,
+  },
+  {
+    slug: 'cadeaus-voor-nachtlezers',
+    title: 'De beste cadeaus voor nachtlezers (2025)',
+    intro:
+      'Nachtlezers zijn een speciaal soort mensen: ze lezen wanneer de wereld slaapt. Daarom verzamelden we de slimste cadeaus die hun nachtelijke leesmoment perfect maken — van stille leeslampjes tot cozy essentials. Ontdek amberkleurige lampjes, zachte klemmen en accessoires voor urenlang leesplezier zonder anderen te storen.',
+    quickScan: {
+      personas: [
+        {
+          id: 'gezellige-lezer',
+          label: 'De Gezellige Lezer',
+          summary:
+            'Leest met een warme plaid, thee en amberkleurig licht. Zoekt zachte, warme verlichting zonder harde contrasten.',
+          action: {
+            type: 'filters',
+            label: 'Bekijk zachte lampjes',
+            sortOption: 'price-asc',
+          },
+        },
+        {
+          id: 'bed-lezer',
+          label: 'De Bed-lezer',
+          summary:
+            'Leest vaak laat en wil niemand wakker maken. Zo stil mogelijk, weinig lichtlek en lichtgewicht.',
+          action: {
+            type: 'filters',
+            label: 'Bekijk stille lampjes',
+            fastDeliveryOnly: true,
+            sortOption: 'price-asc',
+          },
+        },
+        {
+          id: 'focus-lezer',
+          label: 'De Focus-lezer',
+          summary:
+            'Wil geen blauw licht en leest vaak non-fictie. Lichtkleur, batterijduur en stabiliteit zijn cruciaal.',
+          action: {
+            type: 'filters',
+            label: 'Bekijk premium lampjes',
+            sortOption: 'price-desc',
+          },
+        },
+      ],
     },
     filters: {
+      keywords: [
+        'read',
+        'reading',
+        'bed lamp',
+        'book light',
+        'nachtlezer',
+        'leeslampje',
+        'warm light',
+        'amber light',
+        'cozy',
+        'leeslamp',
+        'boekenlegger',
+        'boek',
+        'lamp',
+        'led',
+      ],
       maxPrice: 80,
-      keywords: ['reading light', 'book light', 'night reading', 'amber light', 'warm light'],
-      excludedKeywords: ['gaming', 'bureau', 'office', 'projector', 'work lamp'],
-      maxPerBrand: 3,
-      sortOption: 'featured',
-      preferredMerchants: ['amazon', 'coolblue', 'slygad'],
     },
-    quickScan: {
-      budget: 'mini-reading-light-budget',
-      bestChoice: 'clip-on-led-reading-light',
-      premium: 'amber-sleep-friendly-lamp',
-    },
+    editorPicks: [],
+    highlights: [
+      "Amber licht bevat minder blauwlicht en verstoort de slaap minder dan witte LED's",
+      'Stil clipsysteem met rubberen klem - niemand wordt wakker',
+      'Lampjes met 20–70 uur batterijduur - ideaal voor lange leessessies',
+      'Lichtgewicht ontwerp - hoe lichter, hoe minder vermoeiend',
+    ],
     faq: [
       {
-        question: 'Wat is het beste cadeau voor nachtlezers?',
-        answer: 'Een clip-on leeslamp met warm, dimbaar licht is vaak de beste keuze. Zo kan iemand in bed lezen zonder partner of huisgenoten wakker te maken.',
+        q: 'Welk cadeau is het beste voor nachtlezers?',
+        a: 'Amberkleurige leeslampjes met zachte klemmen zijn het meest geliefd.',
       },
       {
-        question: 'Is blauw licht slecht voor lezen in bed?',
-        answer: 'Fel, koel licht met veel blauw kan de melatonine-aanmaak verstoren. Amber of warm licht onder 3000K is veel slaapvriendelijker.',
+        q: "Welke gadgets houden mijn partner 's nachts niet wakker?",
+        a: 'Licht met ambermodus en lampjes met stille knoppen.',
       },
       {
-        question: 'Welk cadeau werkt goed onder \u20ac20?',
-        answer: 'Mini-clip-lampen, leuke bladwijzer-sets en cozy plaids zijn perfecte budgetcadeaus voor nachtlezers.',
+        q: 'Is blauw licht slecht voor lezen in bed?',
+        a: 'Ja, blauw licht kan je melatonine verstoren. Amber licht is beter.',
       },
       {
-        question: 'Wat geef je iemand die altijd in bed leest?',
-        answer: 'Een goed rugkussen, een clip-on lamp en een zachte plaid vormen samen de ultieme set voor comfortabele leesavonden.',
-      },
-      {
-        question: 'Wat is amber light precies?',
-        answer: 'Amber light is warm, oranjeachtig licht met weinig blauw. Het is speciaal ontworpen om minder invloed te hebben op je slaapritme.',
+        q: 'Wat is een betaalbaar cadeau voor nachtlezers?',
+        a: 'Een oplaadbare clip-on leeslamp onder €20 werkt fantastisch.',
       },
     ],
     internalLinks: [
-      { href: '/cadeaus/cadeaus-tot-20-euro', label: 'Cadeaus tot 20 euro' },
-      { href: '/cadeaus/beste-leeslampen-2025', label: 'Beste leeslampen 2025' },
-      { href: '/cadeaus/cadeaus-voor-boekenliefhebbers', label: 'Cadeaus voor boekenliefhebbers' },
-      { href: '/cadeaus/zelfzorg-cadeaus', label: 'Cadeaus voor zelfzorg-liefhebbers' },
+      { href: '/cadeaugidsen', label: 'Alle cadeaugidsen' },
+      { href: '/cadeaugidsen/kerst/voor-haar/onder-50', label: 'Cadeaus voor haar onder €50' },
     ],
   },
-],
- },
 ] satisfies ProgrammaticConfig[]
 
 const VARIANTS: ProgrammaticConfig[] = deepReplaceLegacyGuidePaths(RAW_VARIANTS)
