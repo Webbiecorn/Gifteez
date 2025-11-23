@@ -1820,8 +1820,66 @@ const RAW_VARIANTS = [
     internalLinks: [
       { href: '/cadeaugidsen/kerst/voor-haar/onder-50', label: 'Cadeaus voor haar onder €50' },
       { href: '/cadeaugidsen/dames-mode-onder-150', label: 'Dames mode cadeaus' },
+
+      {
+    slug: 'cadeaus-voor-nachtlezers',
+    title: 'Cadeaus voor nachtlezers (2025 editie)',
+    intro: 'Nachtlezers zijn een speciaal soort mensen: ze lezen wanneer de wereld slaapt. Daarom verzamelden we de 15 slimste cadeaus die hun nachtelijke leesmoment perfect maken.',
+    highlights: [
+      'Warm licht & slaapvriendelijk',
+      'Compact en stil',
+      'Perfect voor in bed',
+    ],
+    audience: {
+      recipient: 'volwassenen',
+      occasion: null,
+      interest: 'lezen',
+      budget: 80,
+    },
+    filters: {
+      maxPrice: 80,
+      keywords: ['reading light', 'book light', 'night reading', 'amber light', 'warm light'],
+      excludedKeywords: ['gaming', 'bureau', 'office', 'projector', 'work lamp'],
+      maxPerBrand: 3,
+      sortOption: 'featured',
+      preferredMerchants: ['amazon', 'coolblue', 'slygad'],
+    },
+    quickScan: {
+      budget: 'mini-reading-light-budget',
+      bestChoice: 'clip-on-led-reading-light',
+      premium: 'amber-sleep-friendly-lamp',
+    },
+    faq: [
+      {
+        question: 'Wat is het beste cadeau voor nachtlezers?',
+        answer: 'Een clip-on leeslamp met warm, dimbaar licht is vaak de beste keuze. Zo kan iemand in bed lezen zonder partner of huisgenoten wakker te maken.',
+      },
+      {
+        question: 'Is blauw licht slecht voor lezen in bed?',
+        answer: 'Fel, koel licht met veel blauw kan de melatonine-aanmaak verstoren. Amber of warm licht onder 3000K is veel slaapvriendelijker.',
+      },
+      {
+        question: 'Welk cadeau werkt goed onder \u20ac20?',
+        answer: 'Mini-clip-lampen, leuke bladwijzer-sets en cozy plaids zijn perfecte budgetcadeaus voor nachtlezers.',
+      },
+      {
+        question: 'Wat geef je iemand die altijd in bed leest?',
+        answer: 'Een goed rugkussen, een clip-on lamp en een zachte plaid vormen samen de ultieme set voor comfortabele leesavonden.',
+      },
+      {
+        question: 'Wat is amber light precies?',
+        answer: 'Amber light is warm, oranjeachtig licht met weinig blauw. Het is speciaal ontworpen om minder invloed te hebben op je slaapritme.',
+      },
+    ],
+    internalLinks: [
+      { href: '/cadeaus/cadeaus-tot-20-euro', label: 'Cadeaus tot 20 euro' },
+      { href: '/cadeaus/beste-leeslampen-2025', label: 'Beste leeslampen 2025' },
+      { href: '/cadeaus/cadeaus-voor-boekenliefhebbers', label: 'Cadeaus voor boekenliefhebbers' },
+      { href: '/cadeaus/zelfzorg-cadeaus', label: 'Cadeaus voor zelfzorg-liefhebbers' },
     ],
   },
+],
+ },
 ] satisfies ProgrammaticConfig[]
 
 const VARIANTS: ProgrammaticConfig[] = deepReplaceLegacyGuidePaths(RAW_VARIANTS)
