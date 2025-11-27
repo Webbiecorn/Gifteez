@@ -55,10 +55,10 @@ const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
 
           {/* Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight text-slate-900 drop-shadow-sm">
-            Nooit meer <br />
+            Het perfecte cadeau <br />
             <span className="relative inline-block">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-600 to-orange-500 animate-gradient-x">
-                cadeau-stress.
+                vind je hier.
               </span>
               {/* Decorative underline */}
               <svg
@@ -81,28 +81,28 @@ const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
           {/* Subhead */}
           <div className="space-y-5 max-w-xl mx-auto lg:mx-0">
             <p className="text-lg sm:text-xl text-slate-700 font-medium leading-relaxed">
-              Laat onze{' '}
+              Ontdek onze handmatig samengestelde{' '}
               <strong className="font-extrabold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
-                AI Cadeaucoach
+                cadeaugidsen
               </strong>{' '}
-              je in minder dan een minuut helpen aan een shortlist met verrassende cadeau-ideeën –
-              speciaal voor jouw relatie, budget en gelegenheid.
+              – vol met originele ideeën voor elke gelegenheid, persoonlijkheid en budget. Van
+              Sinterklaas tot kerst, van tech-lovers tot wellness-fans.
             </p>
 
             {/* How it works bullets */}
             <ul className="text-sm md:text-base text-slate-700 space-y-2.5 text-left lg:text-left bg-gradient-to-br from-white/95 to-rose-50/50 backdrop-blur-xl border border-rose-100/50 rounded-3xl px-5 py-4 inline-block shadow-xl shadow-rose-500/5 hover:shadow-rose-500/10 transition-shadow duration-300">
               <li className="flex items-start gap-3 group">
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 shadow-sm group-hover:scale-125 transition-transform duration-300" />
-                <span className="flex-1">Beantwoord 5 korte vragen over de ontvanger.</span>
+                <span className="flex-1">20+ gespecialiseerde cadeaugidsen per thema.</span>
               </li>
               <li className="flex items-start gap-3 group">
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-sm group-hover:scale-125 transition-transform duration-300" />
-                <span className="flex-1">Krijg direct 10–20 cadeausuggesties op maat.</span>
+                <span className="flex-1">Cadeaus voor elk budget – van €10 tot €150+.</span>
               </li>
               <li className="flex items-start gap-3 group">
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-orange-500 to-rose-500 shadow-sm group-hover:scale-125 transition-transform duration-300" />
                 <span className="flex-1">
-                  Vergelijk prijzen, bewaar favorieten en klik door naar veilige webshops.
+                  Vergelijk prijzen en koop direct bij betrouwbare webshops.
                 </span>
               </li>
             </ul>
@@ -112,22 +112,22 @@ const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 justify-center lg:justify-start pt-6">
             <button
               type="button"
-              onClick={onStartQuiz}
-              onKeyDown={handleQuizKeyDown}
+              onClick={onViewGuides}
+              onKeyDown={handleGuidesKeyDown}
               className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-extrabold rounded-2xl shadow-2xl shadow-rose-500/30 hover:shadow-rose-500/50 hover:-translate-y-1 hover:scale-105 transition-all duration-300 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white border-none group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-rose-500/50 focus:ring-offset-2"
-              aria-label="Start de AI Cadeaucoach voor persoonlijk advies"
+              aria-label="Scroll naar beneden om cadeau-gidsen te bekijken"
             >
               <span className="relative z-10 flex items-center justify-center gap-2.5">
-                🎁 Start Cadeaucoach
+                📚 Bekijk Cadeaugidsen
                 <svg
-                  className="w-5 h-5 transition-transform group-hover:rotate-12 group-hover:scale-110"
+                  className="w-5 h-5 transition-transform group-hover:translate-y-1 group-hover:scale-110"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2.5}
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </span>
               {/* Shine effect */}
@@ -138,21 +138,25 @@ const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
 
             <button
               type="button"
-              onClick={onViewGuides}
-              onKeyDown={handleGuidesKeyDown}
+              onClick={onStartQuiz}
+              onKeyDown={handleQuizKeyDown}
               className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold text-slate-700 bg-white/90 hover:bg-white border-2 border-slate-200 hover:border-purple-300 rounded-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-1 flex items-center justify-center gap-2.5 backdrop-blur-xl group focus:outline-none focus:ring-4 focus:ring-purple-500/50 focus:ring-offset-2"
-              aria-label="Scroll naar beneden om cadeau-gidsen te bekijken"
+              aria-label="Start de AI Cadeaucoach voor persoonlijk advies"
             >
-              <span>Bekijk Cadeau-gidsen</span>
+              <span>Of probeer Cadeaucoach (AI)</span>
               <svg
-                className="w-5 h-5 text-purple-500 group-hover:animate-bounce transition-colors"
+                className="w-5 h-5 text-purple-500 transition-transform group-hover:rotate-12 group-hover:scale-110"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth={2.5}
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+                />
               </svg>
             </button>
           </div>
@@ -167,11 +171,11 @@ const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
                   viewBox="0 0 20 20"
                   aria-hidden="true"
                 >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                 </svg>
               </div>
               <span className="text-center sm:text-left text-slate-700">
-                Gratis & persoonlijk advies in 60 sec
+                20+ gespecialiseerde gidsen
               </span>
             </div>
             <div
@@ -194,7 +198,7 @@ const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
                 </svg>
               </div>
               <span className="text-center sm:text-left text-slate-700">
-                Vergelijk prijzen bij betrouwbare shops
+                Bij betrouwbare webshops
               </span>
             </div>
           </div>
