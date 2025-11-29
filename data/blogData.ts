@@ -1431,18 +1431,18 @@ const gift_holland_barrett_omega3: Gift = {
 // ==========================================
 
 const gift_holland_barrett_manuka_honing: Gift = {
-  productName: 'Manuka Honing MGO 250+ (250g)',
+  productName: 'Manuka Doctor Manuka Honing MGO 40 (250g)',
   description:
-    'Premium Nieuw-Zeelandse Manuka honing met MGO 250+ certificering. Bekend om zijn unieke antibacteriële eigenschappen en rijke, romige smaak.',
-  priceRange: '€32,99',
+    'Pure Manuka honing uit Nieuw-Zeeland met MGO 40 certificering. Gecertificeerd en erkend door onafhankelijk laboratorium voor gewaarborgde kwaliteit.',
+  priceRange: '€24,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fmanuka-honing',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23924062263&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-manuka.svg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F034161_A.png&feedId=20669&k=61ed608575709778e05f1b4fa42d9752c8ac2277',
   tags: ['manuka', 'honing', 'premium', 'wellness'],
   giftType: 'physical',
   matchReason:
@@ -1450,111 +1450,111 @@ const gift_holland_barrett_manuka_honing: Gift = {
 }
 
 const gift_holland_barrett_collageen: Gift = {
-  productName: 'Marine Collageen Poeder (300g)',
+  productName: 'Herbolist Collageen Beauty Blend (200g)',
   description:
-    'Hoogwaardig gehydrolyseerd marien collageen voor huid, haar en nagels. Lost makkelijk op in smoothies of koffie.',
-  priceRange: '€27,99',
+    'Beauty blend met 100% puur gehydrolyseerd rundercollageen (Solugel®), verrijkt met vitamine C en hyaluronzuur. Lost direct op in koffie of thee.',
+  priceRange: '€29,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fcollageen',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=42565050815&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-collageen.svg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F019894_A.png&feedId=20669&k=21b9f4fe2b7a40e58fe90c27b5b833edf0d91cc3',
   tags: ['collageen', 'beauty', 'anti-aging', 'supplement'],
   giftType: 'physical',
   matchReason: 'Trending beauty supplement - perfect voor huidverzorging van binnenuit.',
 }
 
 const gift_holland_barrett_kurkuma: Gift = {
-  productName: 'Kurkuma Complex met Zwarte Peper (120 capsules)',
+  productName: 'Purasana Kurkuma Bio, 325mg (120 capsules)',
   description:
-    'Hooggedoseerde kurkuma verrijkt met zwarte peper voor optimale opname. Ondersteunt gewrichten en heeft antioxidante werking.',
-  priceRange: '€24,99',
+    'Biologische kurkuma capsules die gewrichten soepel helpen houden. Met antioxidatieve werking, ideaal voor actieve mensen.',
+  priceRange: '€16,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fkurkuma',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822577843&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-kurkuma.svg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F001108_A.png&feedId=20669&k=16eebd96bae63e6d84a159bbb1f033a4e072f024',
   tags: ['kurkuma', 'gewrichten', 'antioxidant', 'supplement'],
   giftType: 'physical',
   matchReason: 'Populair supplement voor gewrichten - ideaal voor actieve mensen.',
 }
 
 const gift_holland_barrett_magnesium: Gift = {
-  productName: 'Magnesium Citraat 200mg (90 tabletten)',
+  productName: 'Lucovitaal Magnesium Citraat 400mg (60 tabletten)',
   description:
-    'Goed opneembare magnesium citraat voor ontspanning, slaapkwaliteit en energiemetabolisme.',
-  priceRange: '€14,99',
+    'Goed opneembare magnesium citraat voor ontspanning, slaapkwaliteit en energiemetabolisme. 400mg per twee tabletten.',
+  priceRange: '€15,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fmagnesium',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822579411&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-magnesium.svg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F008479_A.png&feedId=20669&k=0a324170be9d9eed7bd68ddde459ef4da43ed13d',
   tags: ['magnesium', 'slaap', 'stress', 'energie'],
   giftType: 'physical',
   matchReason: 'Perfect voor drukke mensen - magnesium helpt bij ontspanning en nachtrust.',
 }
 
 const gift_holland_barrett_ashwagandha: Gift = {
-  productName: 'Ashwagandha KSM-66 (60 capsules)',
+  productName: 'Physalis Ashwagandha 600mg Forte KSM-66 (30 tabletten)',
   description:
-    'Premium ashwagandha extract (KSM-66) voor stressverlichting en mentale balans. Adaptogeen kruid voor dagelijkse stress.',
-  priceRange: '€21,99',
+    'Premium ashwagandha extract KSM-66® met hoge standaardisatie op withanolides. Ondersteunt lichamelijke en geestelijke prestaties.',
+  priceRange: '€16,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fashwagandha',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=24323061221&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-ashwagandha.svg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F036882_A.png&feedId=20669&k=9e49bd3b44ff57aa15bca7c4cfeb3a81bd3cf440',
   tags: ['ashwagandha', 'stress', 'adaptogeen', 'mentaal'],
   giftType: 'physical',
   matchReason: 'Trending adaptogeen voor stressverlichting - perfect voor drukke levens.',
 }
 
 const gift_holland_barrett_bath_salts: Gift = {
-  productName: 'Westlab Himalaya Badzout (1kg)',
+  productName: 'Sea Magik Himalayan Spa Salts (1kg)',
   description:
-    'Puur roze Himalaya badzout voor een ontspannend bad. Bevat 84 mineralen. Perfect voor selfcare rituelen.',
-  priceRange: '€9,99',
+    'Krachtig detox badzout voor ontspanning en hydratatie van de huid. Perfect voor een heerlijk thuis spa momentje.',
+  priceRange: '€7,49',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fbadzout',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822582115&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-badzout.svg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F018154_A.png&feedId=20669&k=38780bcad999c65809cd341ea8bb26335147d187',
   tags: ['badzout', 'selfcare', 'ontspanning', 'spa'],
   giftType: 'physical',
   matchReason: 'Selfcare essential - perfect voor verwenmomenten in bad.',
 }
 
 const gift_holland_barrett_essential_oil: Gift = {
-  productName: 'Tisserand Lavendel Essentiële Olie (9ml)',
+  productName: 'Weleda Zuiverende Roomspray Relax (50ml)',
   description:
-    'Pure, organische lavendel olie voor aromatherapie. Bekend om zijn kalmerende werking. Perfect voor diffuser of bad.',
-  priceRange: '€11,99',
+    '100% natuurlijke aromatherapie spray met sinaasappel, lavendel, bergamot en marjolein. Ontspannend en rustgevend voor betere slaap.',
+  priceRange: '€10,71',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fessentiele-olie',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822580117&a=2566111&m=8108',
     },
   ],
-  imageUrl: '/images/products/holland-barrett-lavendel.svg',
-  tags: ['aromatherapie', 'lavendel', 'ontspanning', 'olie'],
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F010337_A.png&feedId=20669&k=03b39f9e6998b6cf94d63b67afa69cbe377d0c62',
+  tags: ['aromatherapie', 'lavendel', 'ontspanning', 'spray'],
   giftType: 'physical',
-  matchReason: 'Aromatherapie favoriet - lavendelolie is perfect voor ontspanning en slaap.',
+  matchReason: 'Aromatherapie favoriet - ontspannende spray voor betere nachtrust.',
 }
 
 const RAW_BLOG_POSTS: BlogPost[] = [
