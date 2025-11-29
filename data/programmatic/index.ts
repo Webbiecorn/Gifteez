@@ -1877,74 +1877,249 @@ const RAW_VARIANTS = [
       ],
     },
     filters: {
-      keywords: [
-        'read',
-        'reading',
-        'bed lamp',
-        'book light',
-        'nachtlezer',
-        'leeslampje',
-        'warm light',
-        'amber light',
-        'cozy',
-        'leeslamp',
-        'boekenlegger',
-        'boek',
-        'lamp',
-        'led',
-      ],
-      maxPrice: 80,
+      // No filters - we only show curated Amazon products (no Bol.com/Coolblue)
+      maxResults: 0, // Don't load any feed products
     },
     curatedProducts: [
       {
-        title: 'DEWENWILS Boekenklem Leeslampje - Oplaadbaar met 3 Kleuren',
-        price: 10.79,
-        currency: 'EUR',
-        image: 'https://m.media-amazon.com/images/I/71ZaE+ogx0L._AC_SL1500_.jpg',
-        affiliateLink:
-          'https://www.amazon.nl/DEWENWILS-Boekenklem-Oplaadbaar-Helderheidsniveaus-Boekenwurmen/dp/B0B74X6669?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-54&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f3c57dfcfda75561c4f97e5e9adcf46b&language=nl_NL&ref_=as_li_ss_tl',
-        merchant: 'Amazon',
-        reason: 'Compacte klemclip voor €10,79 - budgetvriendelijk en stil',
-      },
-      {
-        title: 'Gritin Leeslampje met Flexibele Zwanenhals - Oogbescherming',
+        title: 'Leeslampje B08GG42WXY',
         price: 11.95,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/81n7M-T19NL._AC_SL1500_.jpg',
         affiliateLink:
           'https://www.amazon.nl/Gritin-Eye-Protecting-Flexibele-Oplaadbaar-Batterijlevensduur/dp/B08GG42WXY?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-5&th=1&linkCode=ll1&tag=gifteez77-21&linkId=ccdcccc8940f5092fb3f3108a948e1b5&language=nl_NL&ref_=as_li_ss_tl',
         merchant: 'Amazon',
-        reason: 'Flexibele zwanenhals met oogbescherming voor €11,95',
+        reason: 'Budget optie voor €11,95 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Barnsteenkleurig Leeslampje met USB-C Opladen - Warm Licht',
+        title: 'Leeslampje B0CJ4YL8MV',
+        price: 19.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61eWcg03d5L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/iZELL-Helderheidsniveaus%E3%80%91-Oogbescherming-Flexibele-Zwanenhals/dp/B0CJ4YL8MV?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-2-spons&aref=Ip5OZLNAVA&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=d00f8b17f64d89f968efa61c129bd521&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €19,99 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B0CD8NC67S',
         price: 16.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/51W4bQGufeL._AC_SL1250_.jpg',
         affiliateLink:
           'https://www.amazon.nl/Barnsteenkleurige-boekenverlichting-USB-C-opladen-oplaadbare-flexibele/dp/B0CD8NC67S?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-3-spons&aref=17EkmImNwa&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=48c483375c209c77558fc3e04daf474b&language=nl_NL&ref_=as_li_ss_tl',
         merchant: 'Amazon',
-        reason: 'Barnsteenkleurig licht met USB-C opladen - perfect voor slaap',
+        reason: 'Populaire keuze voor €16,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Gritin Nekleeslampje - Ergonomisch & Oplaadbaar',
+        title: 'Leeslampje B0C13JTZ4W',
+        price: 30.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61iu0naBVxL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/ERWEY-schakelaar-draaibare-zwanenhals-slaapkamer/dp/B0C13JTZ4W?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-23-spons&aref=cR4CyuAQT6&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f0fe66cb50908e0f7dc52d972b57c5d9&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Premium leeslamp voor €30,99 - topkwaliteit',
+      },
+      {
+        title: 'Leeslampje B0CGM5TLZX',
         price: 19.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SL1500_.jpg',
         affiliateLink:
           'https://www.amazon.nl/Gritin-Oplaadbaar-Oogbescherming-Kleurtemperaturen-Ergonomisch/dp/B0CGM5TLZX?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-28&linkCode=ll1&tag=gifteez77-21&linkId=cef6510deb0154cd57f147ffb3e6bf63&language=nl_NL&ref_=as_li_ss_tl',
         merchant: 'Amazon',
-        reason: 'Nekketting met ergonomisch ontwerp - handsfree lezen',
+        reason: 'Populaire keuze voor €19,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Glocusent Premium Hals-Leeslamp - 80 Uur Batterijduur',
+        title: 'Leeslampje B0C6XT1JFF',
         price: 25.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71rwR8CwdDL._AC_SL1500_.jpg',
         affiliateLink:
           'https://www.amazon.nl/Glocusent-oplaadbare-batterijduur-leeslampjes-helderheid/dp/B0C6XT1JFF?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-55&th=1&linkCode=ll1&tag=gifteez77-21&linkId=c0846bf4c859d582fee1369af20e274e&language=nl_NL&ref_=as_li_ss_tl',
         merchant: 'Amazon',
-        reason: 'Premium hals-leeslamp met 80 uur batterij en amberkleur',
+        reason: 'Mid-range voor €25,99 - uitstekende features',
+      },
+      {
+        title: 'Leeslampje B0B74X6669',
+        price: 10.79,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71ZaE+ogx0L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/DEWENWILS-Boekenklem-Oplaadbaar-Helderheidsniveaus-Boekenwurmen/dp/B0B74X6669?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-54&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f3c57dfcfda75561c4f97e5e9adcf46b&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Budget optie voor €10,79 - perfect voor kleine cadeaus',
+      },
+      {
+        title: 'Leeslampje B0DG617KBZ',
+        price: 44.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/613UlAv1I5L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/BRILONER-aansluiting-schakelaar-draaibaar-leeslampje/dp/B0DG617KBZ?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-59-spons&aref=G52hb2sqIC&sp_csd=d2lkZ2V0TmFtZT1zcF9idGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=af4e57acd30f5840427e5472b87b97d9&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Premium leeslamp voor €44,95 - topkwaliteit',
+      },
+      {
+        title: 'Leeslampje B0BRB24M5Z',
+        price: 41.8,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/41NXUMGJzBL._AC_SL1001_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Obeaming-nachtkastje-bestelwagen-vrachtwagen-USB-oplader/dp/B0BRB24M5Z?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-60-spons&aref=YzabNhWJkj&sp_csd=d2lkZ2V0TmFtZT1zcF9idGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=40744eae912c49ae25f94f48e7dc06d1&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Premium leeslamp voor €41,8 - topkwaliteit',
+      },
+      {
+        title: 'Leeslampje B09MHFSSFB',
+        price: 14.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61Psf4CwnML._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Glocusent-Lichtgewicht-Oplaadbare-Oogverzorging-Boekenwurmen/dp/B09MHFSSFB?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.GgUgfiYzLQ7B9tIALkcPyLOXyrZ-lrXOLf6b_LKhnntb2QuOR9sEWf4vTkhJz4U4JUhzS0uVbv5s7OMtilTj-_s4kLlhRvAHxlhiVW06cokLdqkPRjSXfOBS4fqth6CEWea08vFS93GTQ6ya_nsDL7-_-O59YQXaNK3Ay6cr-sErFUFq3oggFDytACEvmIqGGbywCF0r-FVR3HlolC8Y-XDt4POB4tIGvyzm0XccAHtSPdS3xLIrgxhQBdGSHqYrJpDnmkkLLYQgBvQMz_M-DCDjyTwnrUMaNiLZ0imnmVw.hHH92JwYWSosq_h4mKrvei2ozlYY4f7GaiKGae9unfI&dib_tag=se&keywords=leeslampje&qid=1764428871&sprefix=leesl%2Caps%2C111&sr=8-51&xpid=sXnX727IRQPqO&linkCode=ll1&tag=gifteez77-21&linkId=cef2790fb52f3101dc6a53d586e6c4fe&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €14,99 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B0CYT4J92R',
+        price: 11.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71Xq73RLApL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/oplaadbare-leescliplamp-oogbescherming-kleurtemperaturen-boekenliefhebbers/dp/B0CYT4J92R?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.sd737w8H4-BSYQjeU8ZHmArKUBugwjcVtrL6kiehkxaqvRhG8ea0os3euTavobTCRgD4MZZ4m97e6Fw9x45XxnhPEzqVchsUvgFmpI3tgh70JQdfS4JWrAJYkyAqhtzAbIPT1XnL2bbUcPPYe-8VCKXtcqcBK6WUkRQ09u-l3ytyi24fNrMEKIUq1RgmX0uei8nApchhjl0dQKHwsVj70RcnZmOk6c_be_1Iw4Hd7gsnW3RmnRTy-8MPgrUEc5gtoyyZ2_k7tAJz756TOzUuX7nl7W_U5EzwehMYBQ7ACAg.MnkZGSTLsoCcpKWL3FqzaFFjuY4YhKNtkEvHqn8Td9g&dib_tag=se&keywords=leeslampje&qid=1764431429&refinements=p_36%3A1000-1500&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-2-spons&aref=U4pcJGEMl3&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=b18ad7744ce153798b7b3ab5c1d4299a&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Budget optie voor €11,99 - perfect voor kleine cadeaus',
+      },
+      {
+        title: 'Leeslampje B09W62FR1K',
+        price: 12.6,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71zlqqwba8L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Glocusent-oogvriendelijke-boekenleeslamp-helderheden-boekenliefhebbers/dp/B09W62FR1K?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.sd737w8H4-BSYQjeU8ZHmArKUBugwjcVtrL6kiehkxaqvRhG8ea0os3euTavobTCRgD4MZZ4m97e6Fw9x45XxnhPEzqVchsUvgFmpI3tgh70JQdfS4JWrAJYkyAqhtzAbIPT1XnL2bbUcPPYe-8VCKXtcqcBK6WUkRQ09u-l3ytyi24fNrMEKIUq1RgmX0uei8nApchhjl0dQKHwsVj70RcnZmOk6c_be_1Iw4Hd7gsnW3RmnRTy-8MPgrUEc5gtoyyZ2_k7tAJz756TOzUuX7nl7W_U5EzwehMYBQ7ACAg.MnkZGSTLsoCcpKWL3FqzaFFjuY4YhKNtkEvHqn8Td9g&dib_tag=se&keywords=leeslampje&qid=1764431429&refinements=p_36%3A1000-1500&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-7&th=1&linkCode=ll1&tag=gifteez77-21&linkId=3f1551bade8cb4d625bc6667052d5617&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Budget optie voor €12,6 - perfect voor kleine cadeaus',
+      },
+      {
+        title: 'Leeslampje B0D79G47MQ',
+        price: 14.48,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/51-8jc6qFnL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Bladwijzerlamp-USB-leeslamp-Bladwijzerboeklicht-Kleurenmodus-Dimhelderheid/dp/B0D79G47MQ?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.sd737w8H4-BSYQjeU8ZHmArKUBugwjcVtrL6kiehkxaqvRhG8ea0os3euTavobTCRgD4MZZ4m97e6Fw9x45XxnhPEzqVchsUvgFmpI3tgh70JQdfS4JWrAJYkyAqhtzAbIPT1XnL2bbUcPPYe-8VCKXtcqcBK6WUkRQ09u-l3ytyi24fNrMEKIUq1RgmX0uei8nApchhjl0dQKHwsVj70RcnZmOk6c_be_1Iw4Hd7gsnW3RmnRTy-8MPgrUEc5gtoyyZ2_k7tAJz756TOzUuX7nl7W_U5EzwehMYBQ7ACAg.MnkZGSTLsoCcpKWL3FqzaFFjuY4YhKNtkEvHqn8Td9g&dib_tag=se&keywords=leeslampje&qid=1764431429&refinements=p_36%3A1000-1500&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-21-spons&aref=2WE3WdY6DJ&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=14906a80f88cfa9d910cd55914bb37eb&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €14,48 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B0CJY563ZX',
+        price: 11.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/41eJALHxZJL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Runesol-leeslampje-oplaadbare-boeklampjes-oogbeschermende/dp/B0CJY563ZX?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.sd737w8H4-BSYQjeU8ZHmArKUBugwjcVtrL6kiehkxaqvRhG8ea0os3euTavobTCRgD4MZZ4m97e6Fw9x45XxnhPEzqVchsUvgFmpI3tgh70JQdfS4JWrAJYkyAqhtzAbIPT1XnL2bbUcPPYe-8VCKXtcqcBK6WUkRQ09u-l3ytyi24fNrMEKIUq1RgmX0uei8nApchhjl0dQKHwsVj70RcnZmOk6c_be_1Iw4Hd7gsnW3RmnRTy-8MPgrUEc5gtoyyZ2_k7tAJz756TOzUuX7nl7W_U5EzwehMYBQ7ACAg.MnkZGSTLsoCcpKWL3FqzaFFjuY4YhKNtkEvHqn8Td9g&dib_tag=se&keywords=leeslampje&qid=1764431429&refinements=p_36%3A1000-1500&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-23-spons&aref=VEuGrA7Ryd&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=48de1facd884b9db78ce443f5402b395&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Budget optie voor €11,99 - perfect voor kleine cadeaus',
+      },
+      {
+        title: 'Leeslampje B0BMXWLZ9W',
+        price: 12.23,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/51Xpn7-dTiL._AC_SL1001_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Led-Klemlamp-Zwanenhals-Klemlamp-Nachtkastje-Oogbescherming-Boekklemlamp/dp/B0BMXWLZ9W?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.sd737w8H4-BSYQjeU8ZHmArKUBugwjcVtrL6kiehkxaqvRhG8ea0os3euTavobTCRgD4MZZ4m97e6Fw9x45XxnhPEzqVchsUvgFmpI3tgh70JQdfS4JWrAJYkyAqhtzAbIPT1XnL2bbUcPPYe-8VCKXtcqcBK6WUkRQ09u-l3ytyi24fNrMEKIUq1RgmX0uei8nApchhjl0dQKHwsVj70RcnZmOk6c_be_1Iw4Hd7gsnW3RmnRTy-8MPgrUEc5gtoyyZ2_k7tAJz756TOzUuX7nl7W_U5EzwehMYBQ7ACAg.MnkZGSTLsoCcpKWL3FqzaFFjuY4YhKNtkEvHqn8Td9g&dib_tag=se&keywords=leeslampje&qid=1764431429&refinements=p_36%3A1000-1500&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-22-spons&aref=SCmlIhRbps&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=2df6a795323f1d30795d997064f32cb7&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Budget optie voor €12,23 - perfect voor kleine cadeaus',
+      },
+      {
+        title: 'Leeslampje B0F24G4R9L',
+        price: 13.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/712uaJrAa8L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Boncy%C2%AE-Draadloos-Leeslampje-voor-Boek/dp/B0F24G4R9L?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.sd737w8H4-BSYQjeU8ZHmArKUBugwjcVtrL6kiehkxaqvRhG8ea0os3euTavobTCRgD4MZZ4m97e6Fw9x45XxnhPEzqVchsUvgFmpI3tgh70JQdfS4JWrAJYkyAqhtzAbIPT1XnL2bbUcPPYe-8VCKXtcqcBK6WUkRQ09u-l3ytyi24fNrMEKIUq1RgmX0uei8nApchhjl0dQKHwsVj70RcnZmOk6c_be_1Iw4Hd7gsnW3RmnRTy-8MPgrUEc5gtoyyZ2_k7tAJz756TOzUuX7nl7W_U5EzwehMYBQ7ACAg.MnkZGSTLsoCcpKWL3FqzaFFjuY4YhKNtkEvHqn8Td9g&dib_tag=se&keywords=leeslampje&qid=1764431429&refinements=p_36%3A1000-1500&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-33&th=1&linkCode=ll1&tag=gifteez77-21&linkId=d76419a12125a174871e552ef5644a14&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €13,95 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B07P6XKH6M',
+        price: 15.14,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/41VsPuaMmcL._AC_SL1024_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Libri_x-Leeslamp-klemlamp-traploze-led-leeslamp/dp/B07P6XKH6M?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.8ZAoaNQPBAybkZpwFbh3AOLYXGddyR-piFbXISFC9eXYZaR9-p9pro4Oc_7zYocvtGvhDQoU4WT5vy76VnDzMd03hQbmPJBytQXnHHATaPYDbClUVSCUSv7V-IilZpuBToCzGY_-R6KRNdl0Fp6rHhkHRPEggCd5krSjMhL7xDocJvN2Rd2d02Wi1-9o9OzYlD9dGNvUAV8mAaF2ghXQskwHsMVYTK9KTsQzfV3aQKbWg8y6D2j-kpzg-opb_IiEFV8aI2ltSy15C5wAZOzhNQ4I86YRhfVmVeE2OaPOadw.x6kbtN5EAwyXQY2UvtEN_Csd44FFGR-Was_pwcL_wCw&dib_tag=se&keywords=leeslampje&qid=1764431955&refinements=p_36%3A1400-3100&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-20&th=1&linkCode=ll1&tag=gifteez77-21&linkId=4a2043a4e619f1db87ba95c562ea40be&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €15,14 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B0CGM5TLZX',
+        price: 19.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Gritin-Oplaadbaar-Oogbescherming-Kleurtemperaturen-Ergonomisch/dp/B0CGM5TLZX?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.8ZAoaNQPBAybkZpwFbh3AOLYXGddyR-piFbXISFC9eXYZaR9-p9pro4Oc_7zYocvtGvhDQoU4WT5vy76VnDzMd03hQbmPJBytQXnHHATaPYDbClUVSCUSv7V-IilZpuBToCzGY_-R6KRNdl0Fp6rHhkHRPEggCd5krSjMhL7xDocJvN2Rd2d02Wi1-9o9OzYlD9dGNvUAV8mAaF2ghXQskwHsMVYTK9KTsQzfV3aQKbWg8y6D2j-kpzg-opb_IiEFV8aI2ltSy15C5wAZOzhNQ4I86YRhfVmVeE2OaPOadw.x6kbtN5EAwyXQY2UvtEN_Csd44FFGR-Was_pwcL_wCw&dib_tag=se&keywords=leeslampje&qid=1764431955&refinements=p_36%3A1400-3100&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-16&linkCode=ll1&tag=gifteez77-21&linkId=b97c59dceb5f21652c1c3deaf1d0b186&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €19,99 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B0DLHBYP3N',
+        price: 20.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61d-XCintsL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/BRILONER-bureaulamp-oplaadbare-magnetisch-afneembaar/dp/B0DLHBYP3N?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.8ZAoaNQPBAybkZpwFbh3AOLYXGddyR-piFbXISFC9eXYZaR9-p9pro4Oc_7zYocvtGvhDQoU4WT5vy76VnDzMd03hQbmPJBytQXnHHATaPYDbClUVSCUSv7V-IilZpuBToCzGY_-R6KRNdl0Fp6rHhkHRPEggCd5krSjMhL7xDocJvN2Rd2d02Wi1-9o9OzYlD9dGNvUAV8mAaF2ghXQskwHsMVYTK9KTsQzfV3aQKbWg8y6D2j-kpzg-opb_IiEFV8aI2ltSy15C5wAZOzhNQ4I86YRhfVmVeE2OaPOadw.x6kbtN5EAwyXQY2UvtEN_Csd44FFGR-Was_pwcL_wCw&dib_tag=se&keywords=leeslampje&qid=1764431955&refinements=p_36%3A1400-3100&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-24-spons&aref=JfadoGByjE&sp_csd=d2lkZ2V0TmFtZT1zcF9tdGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=b72db847fd24f5a33cfc9319df47ff07&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Mid-range voor €20,95 - uitstekende features',
+      },
+      {
+        title: 'Leeslampje B0BBKYBN1B',
+        price: 20.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71zHniqrxlL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/86lux-ultralichte-led-klemlamp-barnsteenkleuren-boekenliefhebbers/dp/B0BBKYBN1B?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.8ZAoaNQPBAybkZpwFbh3AOLYXGddyR-piFbXISFC9eXYZaR9-p9pro4Oc_7zYocvtGvhDQoU4WT5vy76VnDzMd03hQbmPJBytQXnHHATaPYDbClUVSCUSv7V-IilZpuBToCzGY_-R6KRNdl0Fp6rHhkHRPEggCd5krSjMhL7xDocJvN2Rd2d02Wi1-9o9OzYlD9dGNvUAV8mAaF2ghXQskwHsMVYTK9KTsQzfV3aQKbWg8y6D2j-kpzg-opb_IiEFV8aI2ltSy15C5wAZOzhNQ4I86YRhfVmVeE2OaPOadw.x6kbtN5EAwyXQY2UvtEN_Csd44FFGR-Was_pwcL_wCw&dib_tag=se&keywords=leeslampje&qid=1764431955&refinements=p_36%3A1400-3100&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-26&th=1&linkCode=ll1&tag=gifteez77-21&linkId=723f3622efe6f3d469d3356f0d4d65c7&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Mid-range voor €20,99 - uitstekende features',
+      },
+      {
+        title: 'Leeslampje B0C71DY2LG',
+        price: 19.45,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/516-o1vdsLL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Alyvisun-LED-Halsleeslampje-Oplaadbaar-Oogbescherming/dp/B0C71DY2LG?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.8ZAoaNQPBAybkZpwFbh3AOLYXGddyR-piFbXISFC9eXYZaR9-p9pro4Oc_7zYocvtGvhDQoU4WT5vy76VnDzMd03hQbmPJBytQXnHHATaPYDbClUVSCUSv7V-IilZpuBToCzGY_-R6KRNdl0Fp6rHhkHRPEggCd5krSjMhL7xDocJvN2Rd2d02Wi1-9o9OzYlD9dGNvUAV8mAaF2ghXQskwHsMVYTK9KTsQzfV3aQKbWg8y6D2j-kpzg-opb_IiEFV8aI2ltSy15C5wAZOzhNQ4I86YRhfVmVeE2OaPOadw.x6kbtN5EAwyXQY2UvtEN_Csd44FFGR-Was_pwcL_wCw&dib_tag=se&keywords=leeslampje&qid=1764431955&refinements=p_36%3A1400-3100&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-32&linkCode=ll1&tag=gifteez77-21&linkId=717e9e1c10d18815e51e2097366af0a9&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Populaire keuze voor €19,45 - goede prijs-kwaliteit',
+      },
+      {
+        title: 'Leeslampje B0CHVVNLY6',
+        price: 24.09,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71hUx2A-SHL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Glocusent-uitschuifbare-USB-oplaadbare-leeslampjes-boekenliefhebbers/dp/B0CHVVNLY6?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.8ZAoaNQPBAybkZpwFbh3AOLYXGddyR-piFbXISFC9eXYZaR9-p9pro4Oc_7zYocvtGvhDQoU4WT5vy76VnDzMd03hQbmPJBytQXnHHATaPYDbClUVSCUSv7V-IilZpuBToCzGY_-R6KRNdl0Fp6rHhkHRPEggCd5krSjMhL7xDocJvN2Rd2d02Wi1-9o9OzYlD9dGNvUAV8mAaF2ghXQskwHsMVYTK9KTsQzfV3aQKbWg8y6D2j-kpzg-opb_IiEFV8aI2ltSy15C5wAZOzhNQ4I86YRhfVmVeE2OaPOadw.x6kbtN5EAwyXQY2UvtEN_Csd44FFGR-Was_pwcL_wCw&dib_tag=se&keywords=leeslampje&qid=1764431955&refinements=p_36%3A1400-3100&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-34&th=1&linkCode=ll1&tag=gifteez77-21&linkId=af029cb547cba659d4560e625a2e4592&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Mid-range voor €24,09 - uitstekende features',
+      },
+      {
+        title: 'Leeslampje B0BZ41MK7G',
+        price: 41.41,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61WowD3tY9L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Laadpoort-Schakelaar-Verstelbare-Spotlight-Aluminium/dp/B0BZ41MK7G?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.RI9gEbYGETkEZBJTopFjFrUg029UL9QVlcPoHYAIelRFxk3XLRROMQ7Ac8DmJNNjPKpYyGntKVlwVD-J4fIqK95o1uDmsWi54Mll7RHvxPsX13rEcVrrRi-czXLdsHA0wwWfRQLPnv-OogA-Xg5Fre9Rqu9WHqFX_WnSaHR2SOMysQ10Xk30l9WYdhu-bTJXGfOCQjsoLlWdjq6veoAoXzwC30nsyxVu3O48Ted6HcVOxjdJpeYy2Typ2Vb0NuugskkvKo0gpyLwtxI2rhRvInE2btDqqYhHfNDiKidtQg0.643WoceFASSqv4CpFQy1037gm892XA8aCwqL2orwvOc&dib_tag=se&keywords=leeslampje&qid=1764432388&refinements=p_36%3A3100-10000&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-3-spons&aref=5f9YFzlNY0&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&th=1&linkCode=ll1&tag=gifteez77-21&linkId=0c7e0111f7d9f5b279fe794ead673230&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Premium leeslamp voor €41,41 - topkwaliteit',
+      },
+      {
+        title: 'Leeslampje B0D8TTTKJY',
+        price: 37.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61GTtc0rBtL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Obeaming-leeslampje-zwanenhals-bestelwagen-drukdimmer/dp/B0D8TTTKJY?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.RI9gEbYGETkEZBJTopFjFrUg029UL9QVlcPoHYAIelRFxk3XLRROMQ7Ac8DmJNNjPKpYyGntKVlwVD-J4fIqK95o1uDmsWi54Mll7RHvxPsX13rEcVrrRi-czXLdsHA0wwWfRQLPnv-OogA-Xg5Fre9Rqu9WHqFX_WnSaHR2SOMysQ10Xk30l9WYdhu-bTJXGfOCQjsoLlWdjq6veoAoXzwC30nsyxVu3O48Ted6HcVOxjdJpeYy2Typ2Vb0NuugskkvKo0gpyLwtxI2rhRvInE2btDqqYhHfNDiKidtQg0.643WoceFASSqv4CpFQy1037gm892XA8aCwqL2orwvOc&dib_tag=se&keywords=leeslampje&qid=1764432388&refinements=p_36%3A3100-10000&rnid=16332312031&sprefix=leesl%2Caps%2C111&sr=8-13&th=1&linkCode=ll1&tag=gifteez77-21&linkId=999fcd37e6bbf01c14d9e5be138ba8fe&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Premium leeslamp voor €37,99 - topkwaliteit',
       },
     ],
     highlights: [
