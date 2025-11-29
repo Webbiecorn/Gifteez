@@ -1,4 +1,5 @@
 export { default as GuideShowcase } from './GuideShowcase'
 export { default as DealsSection } from './DealsSection'
+export { default as BlogSection } from './BlogSection'
 export { default as NewsletterSection } from './NewsletterSection'
 export { default as TestimonialsSection } from './TestimonialsSection'

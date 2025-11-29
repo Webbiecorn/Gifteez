@@ -1,6 +1,12 @@
 import React, { useEffect } from 'react'
 import HeroHome from './HeroHome'
-import { GuideShowcase, DealsSection, NewsletterSection, TestimonialsSection } from './home'
+import {
+  GuideShowcase,
+  DealsSection,
+  BlogSection,
+  NewsletterSection,
+  TestimonialsSection,
+} from './home'
 import HowItWorks from './HowItWorks'
 import type { NavigateTo } from '../types'
 
@@ -85,6 +91,9 @@ const HomePage: React.FC<HomePageProps> = ({ navigateTo }) => {
 
       {/* Deals Section - Light section */}
       <DealsSection onViewDeals={() => navigateTo('deals')} />
+
+      {/* Blog Section - Light gradient section */}
+      <BlogSection onViewBlog={() => navigateTo('blog')} />
 
       {/* Newsletter Section - Dark section */}
       <NewsletterSection onSubmit={handleNewsletterSubmit} />
