@@ -142,6 +142,52 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) =
         return response.json()
       })
       .then((data: ProgrammaticIndex) => {
+        // If config has curatedProducts, replace index.products with them
+        if (config?.curatedProducts?.length) {
+          const curatedAsClassified: ClassifiedProduct[] = config.curatedProducts.map(
+            (product) => ({
+              id: product.affiliateLink,
+              sku: product.affiliateLink,
+              title: product.title,
+              price: product.price,
+              currency: product.currency || 'EUR',
+              image: product.image,
+              images: [product.image],
+              url: product.affiliateLink,
+              merchant: product.merchant,
+              inStock: true,
+              source: 'amazon' as const,
+              facets: {
+                audience: ['unisex'],
+                category: 'gadgets',
+                priceBucket:
+                  product.price < 25
+                    ? 'under-25'
+                    : product.price < 50
+                      ? '25-50'
+                      : product.price < 100
+                        ? '50-100'
+                        : product.price < 250
+                          ? '100-250'
+                          : 'over-250',
+                confidence: 1,
+                reasons: ['Handmatig toegevoegd'],
+                needsReview: false,
+                isGiftable: true,
+              },
+              searchText: `${product.title} ${product.merchant}`.toLowerCase(),
+              canonicalKey: product.affiliateLink,
+            })
+          )
+          data = {
+            ...data,
+            products: curatedAsClassified,
+            metadata: {
+              ...data.metadata,
+              totalProducts: curatedAsClassified.length,
+            },
+          }
+        }
         setIndex(data)
         setLoading(false)
       })
