@@ -2,239 +2,194 @@ import React, { useState } from 'react'
 import { useCookieConsent } from '../hooks/useCookieConsent'
 import { socialLinks } from '../socialLinks'
 import CookiePreferencesManager from './CookiePreferencesManager'
-import { InstagramIcon, PinterestIcon, TargetIcon } from './IconComponents'
 import Logo from './Logo'
-import { NewsletterSignup } from './NewsletterSignup'
 import OrganizationSchema from './OrganizationSchema'
-import type { NavigateTo, ShowToast, Page } from '../types'
+import type { NavigateTo, Page } from '../types'
 
 interface FooterProps {
   navigateTo: NavigateTo
-  showToast: ShowToast
 }
 
-const Footer: React.FC<FooterProps> = ({ navigateTo, showToast }) => {
+const Footer: React.FC<FooterProps> = ({ navigateTo }) => {
   const [showPreferences, setShowPreferences] = useState(false)
   const { preferences, updatePreferences } = useCookieConsent()
 
+  const handleNavClick = (page: Page) => {
+    navigateTo(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
-    <footer
-      className="relative mt-24 overflow-hidden border-t border-muted-rose/70 bg-gradient-to-b from-secondary via-light-bg/60 to-white"
-      role="contentinfo"
-      aria-label="Site footer"
-    >
-      {/* Organization Schema for SEO */}
+    <footer className="bg-slate-900 text-white" role="contentinfo" aria-label="Site footer">
       <OrganizationSchema />
 
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
-      <div className="absolute inset-0 pointer-events-none opacity-60 bg-[radial-gradient(circle_at_top_left,#f43f5e22,transparent_60%)]"></div>
-      <div className="absolute inset-y-0 right-[-20%] w-2/3 pointer-events-none opacity-70 bg-[radial-gradient(circle_at_top_right,#fb923c1c,transparent_65%)]"></div>
-      <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(140deg,transparent_55%,rgba(148,27,40,0.1)_85%,transparent)]"></div>
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
-        {/* Newsletter Section - Full Width */}
-        <div className="mb-16 p-8 bg-gradient-to-br from-accent/10 via-primary/5 to-highlight/10 rounded-3xl border border-accent/20 shadow-lg">
-          <div className="max-w-4xl mx-auto">
-            <NewsletterSignup
-              showToast={showToast}
-              variant="inline"
-              title="📬 Blijf op de hoogte"
-              description="Ontvang exclusieve deals, nieuwe gidsen en cadeau-tips direct in je inbox!"
-              defaultFrequency="weekly"
-            />
-          </div>
-        </div>
-
-        {/* Cadeau-Coach CTA Section */}
-        <div className="mb-16 mt-12 p-10 bg-gradient-to-br from-accent/15 via-primary/10 to-highlight/15 rounded-3xl border-2 border-accent/30 shadow-xl relative overflow-hidden">
-          {/* Background decorative elements */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
-
-          <div className="relative z-10 max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-br from-accent to-primary rounded-2xl shadow-lg">
-              <span className="text-3xl" aria-hidden="true">
-                ✨
-              </span>
-            </div>
-
-            <h3 className="text-3xl md:text-4xl font-bold text-primary mb-4 bg-gradient-to-r from-accent via-primary to-highlight bg-clip-text text-transparent">
-              Hulp nodig bij het kiezen?
-            </h3>
-
-            <p className="text-lg text-primary/80 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Onze slimme Cadeau-Coach helpt je binnen een paar klikken het perfecte cadeau te
-              vinden. Beantwoord een paar vragen en ontvang gepersonaliseerde cadeau-aanbevelingen!
-            </p>
-
-            <button
-              onClick={() => navigateTo('giftFinder')}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-accent via-primary to-accent bg-size-200 bg-pos-0 hover:bg-pos-100 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              aria-label="Start de Cadeau-Coach"
-            >
-              <span className="text-2xl" aria-hidden="true">
-                🎁
-              </span>
-              <span>Start Cadeau-Coach</span>
-              <svg
-                className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
-          <div className="col-span-1 lg:col-span-2">
-            <div className="inline-flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3 shadow-sm ring-1 ring-white/60 backdrop-blur">
-              <Logo
-                alt="Gifteez.nl - AI Gift Finder voor het perfecte cadeau"
-                className="h-12 w-auto"
-                priority
-              />
-            </div>
-            <p className="mt-6 text-primary/75 leading-relaxed mb-6 max-w-md">
-              Vind binnen seconden een persoonlijk cadeau-idee met AI. Minder zoeken, meer geven.
+          <div className="col-span-2 md:col-span-1">
+            <Logo className="h-8 w-auto brightness-0 invert" />
+            <p className="mt-4 text-sm text-slate-400 leading-relaxed max-w-xs">
+              Vind het perfecte cadeau met onze expert gidsen. Meer dan 70.000 producten van
+              betrouwbare partners.
             </p>
 
-            <div className="flex gap-3 mt-6" role="list" aria-label="Social media links">
+            {/* Social links */}
+            <div className="flex gap-3 mt-6">
               <a
                 href={socialLinks.instagram}
-                aria-label="Volg ons op Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-3 rounded-xl bg-white/90 shadow-sm ring-1 ring-muted-rose hover:ring-accent/60 hover:bg-white transition-all duration-300"
+                className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Volg ons op Instagram"
               >
-                <InstagramIcon className="w-5 h-5 text-accent group-hover:scale-110 transition-transform" />
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
               </a>
               <a
                 href={socialLinks.pinterest}
-                aria-label="Volg ons op Pinterest"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group p-3 rounded-xl bg-white/90 shadow-sm ring-1 ring-muted-rose hover:ring-accent/60 hover:bg-white transition-all duration-300"
+                className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Volg ons op Pinterest"
               >
-                <PinterestIcon className="w-5 h-5 text-accent group-hover:scale-110 transition-transform" />
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z" />
+                </svg>
               </a>
             </div>
           </div>
 
-          {/* Navigate */}
+          {/* Gidsen */}
           <div>
-            <h4 className="font-semibold text-primary mb-5 text-sm tracking-[0.2em] uppercase">
-              Ontdek
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
+              Gidsen
             </h4>
-            <nav aria-label="Footer navigatie">
-              <ul className="space-y-3 text-sm text-primary/75">
-                {[
-                  ['quiz', '❓', 'Cadeau Quiz'],
-                  ['deals', '🔥', 'Deals'],
-                  ['blog', '📝', 'Blog'],
-                  ['about', 'ℹ️', 'Over Ons'],
-                  ['contact', '✉️', 'Contact'],
-                ].map(([page, icon, label]) => (
-                  <li key={page}>
-                    <button
-                      onClick={() => navigateTo(page as Page)}
-                      aria-label={`Ga naar ${label}`}
-                      className="group flex items-center gap-2 hover:text-accent transition-colors"
-                    >
-                      <span className="text-xs" aria-hidden="true">
-                        {icon}
-                      </span>
-                      <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-accent group-hover:after:w-full after:transition-all">
-                        {label}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <a
+                  href="/cadeaugids/kerst-voor-haar-onder-50"
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Kerst voor haar
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/cadeaugids/kerst-voor-hem-onder-150"
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Kerst voor hem
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/cadeaugids/duurzamere-cadeaus-onder-50"
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Duurzame cadeaus
+                </a>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick('cadeausHub')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Alle gidsen →
+                </button>
+              </li>
+            </ul>
           </div>
 
-          {/* Service */}
+          {/* Over */}
           <div>
-            <h4 className="font-semibold text-primary mb-5 text-sm tracking-[0.2em] uppercase">
-              Service
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">Over</h4>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <button
+                  onClick={() => handleNavClick('about')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Over Gifteez
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick('contact')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Contact
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick('blog')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Blog
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
+              Legal
             </h4>
-            <nav aria-label="Service links">
-              <ul className="space-y-3 text-sm text-primary/75">
-                <li>
-                  <button
-                    onClick={() => navigateTo('disclaimer')}
-                    aria-label="Lees onze disclaimer"
-                    className="hover:text-accent transition-colors flex items-center gap-2"
-                  >
-                    <span className="text-xs" aria-hidden="true">
-                      📄
-                    </span>{' '}
-                    Disclaimer
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => navigateTo('privacy')}
-                    aria-label="Lees ons privacybeleid"
-                    className="hover:text-accent transition-colors flex items-center gap-2"
-                  >
-                    <span className="text-xs" aria-hidden="true">
-                      🔒
-                    </span>{' '}
-                    Privacybeleid
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => navigateTo('affiliateDisclosure')}
-                    aria-label="Lees over onze affiliate partnerships"
-                    className="hover:text-accent transition-colors flex items-center gap-2"
-                  >
-                    <span className="text-xs" aria-hidden="true">
-                      🤝
-                    </span>{' '}
-                    Affiliate Disclosure
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => setShowPreferences(true)}
-                    aria-label="Beheer cookie instellingen"
-                    className="hover:text-accent transition-colors flex items-center gap-2"
-                  >
-                    <TargetIcon className="w-4 h-4" /> Cookie Instellingen
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <button
+                  onClick={() => handleNavClick('privacy')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Privacy
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNavClick('affiliateDisclosure')}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Affiliate info
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setShowPreferences(true)}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  Cookies
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-muted-rose/60 grid gap-6 text-sm text-primary/70 md:grid-cols-[auto,1fr,auto] md:items-center">
-          <p className="order-1">
-            &copy; {new Date().getFullYear()} Gifteez.nl — Alle rechten voorbehouden.
-          </p>
-          <p className="order-3 md:order-2 max-w-2xl leading-relaxed md:justify-self-center text-primary/65">
-            Als Amazon-partner en partner van andere webshops verdienen wij aan in aanmerking
-            komende aankopen. Prijzen & beschikbaarheid kunnen wijzigen.
-          </p>
-          <div className="order-2 md:order-3 flex items-center gap-3 justify-start md:justify-end text-accent font-medium">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent/70 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
-            </span>
-            <span>Powered by AI</span>
+        {/* Bottom bar */}
+        <div className="mt-12 pt-8 border-t border-white/10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <p className="text-sm text-slate-500">
+              © {new Date().getFullYear()} Gifteez.nl — Alle rechten voorbehouden
+            </p>
+
+            {/* Partners */}
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+              <span>Partners:</span>
+              <span className="text-slate-400">Coolblue</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-slate-400">Holland & Barrett</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-slate-400">SLYGAD</span>
+              <span className="text-slate-600">•</span>
+              <span className="text-slate-400">Amazon</span>
+            </div>
           </div>
+
+          <p className="mt-4 text-xs text-slate-600 max-w-2xl">
+            Als affiliate partner verdienen wij aan in aanmerking komende aankopen. Prijzen &
+            beschikbaarheid kunnen wijzigen.
+          </p>
         </div>
       </div>
 

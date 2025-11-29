@@ -654,7 +654,7 @@ const App: React.FC = () => {
               </div>
             }
           >
-            <Footer navigateTo={navigateTo} showToast={showToast} />
+            <Footer navigateTo={navigateTo} />
           </React.Suspense>
 
           {/* FloatingCTA - Show on content pages, hide on giftFinder/checkout/admin */}

@@ -5,29 +5,29 @@ interface HeroHomeProps {
   onViewGuides: () => void
 }
 
-// Budget opties voor snelle navigatie
+// Budget opties voor snelle navigatie - linken naar bestaande gidsen
 const budgetOptions = [
   {
     label: 'Tot €25',
-    slug: 'cadeaus-tot-25-euro',
+    slug: 'kerst-voor-collegas-onder-25',
     emoji: '🎁',
     color: 'from-emerald-500 to-teal-500',
   },
   {
     label: '€25 - €50',
-    slug: 'cadeaus-25-tot-50-euro',
+    slug: 'kerst-voor-haar-onder-50',
     emoji: '✨',
     color: 'from-blue-500 to-indigo-500',
   },
   {
     label: '€50 - €100',
-    slug: 'cadeaus-50-tot-100-euro',
+    slug: 'gamer-cadeaus-onder-100',
     emoji: '🌟',
     color: 'from-purple-500 to-pink-500',
   },
   {
     label: '€100+',
-    slug: 'cadeaus-boven-100-euro',
+    slug: 'kerst-voor-hem-onder-150',
     emoji: '💎',
     color: 'from-amber-500 to-orange-500',
   },
