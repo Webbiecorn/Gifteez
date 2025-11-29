@@ -1235,7 +1235,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                   Het perfecte cadeau nog niet gevonden?
                 </h2>
                 <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-                  Probeer de AI GiftFinder en krijg binnen 30 seconden een gepersonaliseerde lijst
+                  Probeer de AI Cadeaucoach en krijg binnen 30 seconden een gepersonaliseerde lijst
                   met cadeau-ideeën.
                 </p>
                 <button
@@ -1243,7 +1243,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                   className="inline-flex items-center gap-3 bg-white text-primary font-bold px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 group"
                 >
                   <SparklesIcon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                  <span>Start GiftFinder</span>
+                  <span>Start Cadeaucoach</span>
                 </button>
               </div>
             </div>
@@ -1407,7 +1407,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
               <div className="grid md:grid-cols-3 gap-6">
                 <InternalLinkCTA
                   to="/giftfinder"
-                  title="🎁 AI GiftFinder"
+                  title="🎁 AI Cadeaucoach"
                   description="Vind binnen 30 seconden het perfecte cadeau met onze slimme AI tool. Vul je budget, gelegenheid en interesses in voor gepersonaliseerde suggesties."
                   icon="🤖"
                   variant="primary"
