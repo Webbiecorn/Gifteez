@@ -1884,7 +1884,16 @@ const RAW_VARIANTS = [
       ],
       maxPrice: 80,
     },
-    editorPicks: [],
+    editorPicks: [
+      { sku: 'B0B74X6669', reason: 'Compacte klemclip voor €10,79 - budgetvriendelijk en stil' },
+      { sku: 'B08GG42WXY', reason: 'Flexibele zwanenhals met oogbescherming voor €11,95' },
+      {
+        sku: 'B0CD8NC67S',
+        reason: 'Barnsteenkleurig licht met USB-C opladen - perfect voor slaap',
+      },
+      { sku: 'B0CGM5TLZX', reason: 'Nekketting met ergonomisch ontwerp - handsfree lezen' },
+      { sku: 'B0C6XT1JFF', reason: 'Premium hals-leeslamp met 80 uur batterij en amberkleur' },
+    ],
     highlights: [
       "Amber licht bevat minder blauwlicht en verstoort de slaap minder dan witte LED's",
       'Stil clipsysteem met rubberen klem - niemand wordt wakker',
