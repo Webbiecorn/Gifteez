@@ -1,1030 +1,512 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { useBlogContext } from '../contexts/BlogContext'
-import { blogSpotlightConfig } from '../data/blogSpotlightConfig'
-import Breadcrumbs from './Breadcrumbs'
-import Card from './Card'
-import {
-  SearchIcon,
-  BookOpenIcon,
-  CalendarIcon,
-  UserIcon,
-  SparklesIcon,
-  MenuIcon,
-  TargetIcon,
-  TagIcon,
-} from './IconComponents'
 import ImageWithFallback from './ImageWithFallback'
 import JsonLd from './JsonLd'
-import { Container } from './layout/Container'
+import Container from './layout/Container'
 import Meta from './Meta'
-import { NewsletterSignup } from './NewsletterSignup'
 import type { BlogPost, NavigateTo } from '../types'
 
-// Cache-bust version: 2025-10-26-v3-fixed-author-join
+/* ─────────────────────────────────────────────────────────────
+   HELPER FUNCTIONS
+   ───────────────────────────────────────────────────────────── */
+
 const getReadingTime = (text: string) => {
   if (!text) return 1
   const wordCount = text.split(/\s+/).filter(Boolean).length
-  const wordsPerMinute = 200 // Average reading speed
-  return Math.max(1, Math.ceil(wordCount / wordsPerMinute))
+  return Math.max(1, Math.ceil(wordCount / 200))
 }
 
-const SpotlightHeroCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
-  post,
-  navigateTo,
-}) => {
-  const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('nl-NL', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   })
-
-  const readingTime = getReadingTime(post.excerpt)
-
-  return (
-    <article className="relative h-full">
-      <div className="group relative flex h-full flex-col overflow-hidden rounded-[36px] border border-white/10 bg-slate-900 text-white shadow-[0_50px_110px_-70px_rgba(15,23,42,0.75)] transition-transform duration-500 hover:-translate-y-1">
-        <ImageWithFallback
-          src={post.imageUrl}
-          alt={post.title}
-          className="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/80 to-slate-900/20" />
-
-        <div className="relative flex h-full flex-col justify-end gap-6 p-8 md:p-12">
-          <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-white/70 backdrop-blur">
-            Spotlight
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-white/80">
-            <span className="category-chip inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
-              <TagIcon className="h-4 w-4" />
-              <span className="sr-only">Categorie:</span>
-              {post.category}
-            </span>
-            <time
-              dateTime={post.publishedDate}
-              className="post-date inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm"
-            >
-              <CalendarIcon className="h-4 w-4" />
-              {formattedDate}
-            </time>
-            <span className="reading-time inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur-sm">
-              <BookOpenIcon className="h-4 w-4" />
-              {readingTime} min leestijd
-            </span>
-          </div>
-
-          <div>
-            <h2 className="font-display text-[2rem] font-bold leading-tight text-white md:text-[2.5rem]">
-              {post.title}
-            </h2>
-            <p className="mt-4 text-base text-white/80 md:text-lg md:leading-relaxed line-clamp-5">
-              {post.excerpt}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4 text-sm">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white text-slate-900 px-6 py-2 font-semibold shadow-lg">
-              <SparklesIcon className="h-4 w-4" />
-              Uitgelicht door Gifteez
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-2 font-semibold text-white/90 backdrop-blur-sm">
-              <TargetIcon className="h-4 w-4" />
-              Ontdek de gids
-            </div>
-          </div>
-        </div>
-
-        <a
-          href={`/blog/${post.slug}`}
-          onClick={(event) => {
-            event.preventDefault()
-            navigateTo('blogDetail', { slug: post.slug })
-          }}
-          className="absolute inset-0"
-          aria-label={`Lees ${post.title}`}
-        >
-          <span className="sr-only">Lees {post.title}</span>
-        </a>
-      </div>
-    </article>
-  )
 }
 
-const SpotlightSupportCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; index: number }> = ({
-  post,
-  navigateTo,
-  index,
-}) => {
-  const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+/* ─────────────────────────────────────────────────────────────
+   CATEGORY TABS
+   ───────────────────────────────────────────────────────────── */
+
+type CategoryTab = {
+  id: string
+  label: string
+  emoji: string
+}
+
+const DEFAULT_CATEGORIES: CategoryTab[] = [
+  { id: 'all', label: 'Alle Artikelen', emoji: '✨' },
+  { id: 'Cadeaugids', label: 'Cadeaugidsen', emoji: '🎁' },
+  { id: 'Tech', label: 'Tech', emoji: '🎧' },
+  { id: 'Wellness', label: 'Wellness', emoji: '🧘' },
+  { id: 'Duurzaam', label: 'Duurzaam', emoji: '🌱' },
+  { id: 'Nieuws', label: 'Nieuws', emoji: '📰' },
+]
+
+/* ─────────────────────────────────────────────────────────────
+   BLOG CARD COMPONENT
+   ───────────────────────────────────────────────────────────── */
+
+interface BlogCardProps {
+  post: BlogPost
+  navigateTo: NavigateTo
+  featured?: boolean
+}
+
+const BlogCard: React.FC<BlogCardProps> = ({ post, navigateTo, featured = false }) => {
   const readingTime = getReadingTime(post.excerpt)
 
   return (
-    <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-100/80 bg-white/90 shadow-[0_40px_90px_-70px_rgba(15,23,42,0.55)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_50px_110px_-70px_rgba(244,63,94,0.35)]">
-      <div className="relative h-48 overflow-hidden">
+    <article
+      className={`group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-rose-200 ${
+        featured ? 'md:col-span-2 lg:flex-row' : ''
+      }`}
+    >
+      {/* Image */}
+      <div className={`relative overflow-hidden ${featured ? 'lg:w-1/2' : 'h-48'}`}>
         <ImageWithFallback
           src={post.imageUrl}
           alt={post.title}
-          className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+          className={`w-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+            featured ? 'h-64 lg:h-full' : 'h-48'
+          }`}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/35 to-transparent" />
-        <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[0.65rem] font-semibold uppercase tracking-wide text-white/90">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 backdrop-blur-sm">
-            <SparklesIcon className="h-3 w-3" />
-            {index === 0 ? 'Nieuw' : 'Aanrader'}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+        {/* Category badge on image */}
+        <div className="absolute top-4 left-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-gray-700">
+            {post.category}
           </span>
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 backdrop-blur-sm">
-            <BookOpenIcon className="h-3 w-3" />
-            {readingTime} min
+        </div>
+
+        {/* Reading time on image */}
+        <div className="absolute bottom-4 right-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1 text-xs font-medium text-white">
+            📖 {readingTime} min
           </span>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
-        <div className="flex flex-col space-y-4 flex-grow">
-          <span className="category-chip inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
-            <TagIcon className="h-3 w-3" /> {post.category}
-          </span>
-          <h3 className="font-display text-xl font-bold text-primary leading-tight">
+      {/* Content */}
+      <div className={`flex flex-1 flex-col p-5 ${featured ? 'lg:p-8' : ''}`}>
+        <div className="flex-1">
+          <h3
+            className={`font-bold text-gray-900 leading-tight group-hover:text-rose-600 transition-colors ${
+              featured ? 'text-xl md:text-2xl' : 'text-lg'
+            }`}
+          >
             {post.title}
           </h3>
-          <p className="text-sm leading-relaxed text-gray-600 line-clamp-3">{post.excerpt}</p>
+          <p className={`mt-2 text-gray-600 line-clamp-3 ${featured ? 'text-base' : 'text-sm'}`}>
+            {post.excerpt}
+          </p>
         </div>
 
-        <div className="flex items-center gap-3 pt-4 mt-auto">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
-            ✍️
+        {/* Footer */}
+        <div className="mt-4 flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 flex items-center justify-center text-white text-xs font-bold">
+              {post.author.name.charAt(0)}
+            </div>
+            <div className="text-sm">
+              <p className="font-medium text-gray-900">{post.author.name}</p>
+              <p className="text-xs text-gray-500">{formatDate(post.publishedDate)}</p>
+            </div>
           </div>
-          <div className="text-sm text-gray-600">
-            <p className="font-semibold text-gray-900">{post.author.name}</p>
-            <time
-              dateTime={post.publishedDate}
-              className="post-date flex items-center gap-2 text-xs text-gray-500"
-            >
-              <CalendarIcon className="h-3 w-3" />
-              <span>{formattedDate}</span>
-            </time>
-          </div>
+          <span className="text-rose-600 font-semibold text-sm group-hover:translate-x-1 transition-transform">
+            Lees meer →
+          </span>
         </div>
       </div>
 
+      {/* Clickable overlay */}
       <a
         href={`/blog/${post.slug}`}
-        onClick={(event) => {
-          event.preventDefault()
+        onClick={(e) => {
+          e.preventDefault()
           navigateTo('blogDetail', { slug: post.slug })
         }}
         className="absolute inset-0"
         aria-label={`Lees ${post.title}`}
-      >
-        <span className="sr-only">Lees {post.title}</span>
-      </a>
+      />
     </article>
   )
 }
 
-const ArchiveListItem: React.FC<{ post: BlogPost; navigateTo: NavigateTo }> = ({
-  post,
-  navigateTo,
-}) => {
-  const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+/* ─────────────────────────────────────────────────────────────
+   FEATURED POST HERO
+   ───────────────────────────────────────────────────────────── */
 
-  return (
-    <li className="relative pl-10">
-      <div className="absolute left-0 top-2 h-2 w-2 -translate-x-1/2 rounded-full bg-accent" />
-      <button
-        type="button"
-        onClick={() => navigateTo('blogDetail', { slug: post.slug })}
-        className="text-left"
-      >
-        <span className="text-sm font-semibold uppercase tracking-wide text-accent/80">
-          {post.category}
-        </span>
-        <p className="mt-2 font-display text-lg font-semibold text-primary transition-colors duration-200 hover:text-accent">
-          {post.title}
-        </p>
-      </button>
-      <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-        <time dateTime={post.publishedDate} className="post-date inline-flex items-center gap-2">
-          <CalendarIcon className="h-4 w-4" />
-          {formattedDate}
-        </time>
-        <span className="inline-flex items-center gap-2">
-          <BookOpenIcon className="h-4 w-4" />
-          {getReadingTime(post.excerpt)} min leestijd
-        </span>
-      </div>
-      <p className="mt-3 text-sm text-gray-600 line-clamp-2">{post.excerpt}</p>
-    </li>
-  )
+interface FeaturedHeroProps {
+  post: BlogPost
+  navigateTo: NavigateTo
 }
 
-const {
-  prioritySlugs,
-  duplicateFeaturedPostSlugs = [],
-  duplicatePlacement = 'supporting',
-} = blogSpotlightConfig
-
-const BlogCard: React.FC<{ post: BlogPost; navigateTo: NavigateTo; isFeatured?: boolean }> = ({
-  post,
-  navigateTo,
-  isFeatured = false,
-}) => {
-  const formattedDate = new Date(post.publishedDate).toLocaleDateString('nl-NL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-
+const FeaturedHero: React.FC<FeaturedHeroProps> = ({ post, navigateTo }) => {
   const readingTime = getReadingTime(post.excerpt)
 
-  const detailHref = `/blog/${post.slug}`
-
   return (
-    <Card
-      as="article"
-      variant={isFeatured ? 'highlight' : 'interactive'}
-      padded={false}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-100/80 bg-white/90 shadow-[0_40px_100px_-70px_rgba(15,23,42,0.65)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_55px_140px_-80px_rgba(244,63,94,0.35)] ${isFeatured ? 'md:col-span-2 lg:col-span-2' : ''}`}
-    >
-      <a
-        href={detailHref}
-        onClick={(event) => {
-          event.preventDefault()
-          navigateTo('blogDetail', { slug: post.slug })
-        }}
-        className="relative block shrink-0 overflow-hidden"
-        aria-label={`Lees ${post.title}`}
-      >
+    <article className="group relative overflow-hidden rounded-3xl bg-gray-900 shadow-2xl">
+      {/* Background image */}
+      <div className="absolute inset-0">
         <ImageWithFallback
           src={post.imageUrl}
           alt={post.title}
-          className={`w-full object-cover transition-transform duration-700 group-hover:scale-110 ${isFeatured ? 'h-64 md:h-80' : 'h-48'}`}
+          className="h-full w-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-gray-900/40" />
+      </div>
 
-        <div className="absolute top-4 left-4 flex flex-wrap gap-2 text-xs font-semibold text-white">
-          <span className="category-chip inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur">
-            <TagIcon className="h-3 w-3" />
+      {/* Content */}
+      <div className="relative p-8 md:p-12 lg:p-16 flex flex-col justify-end min-h-[400px] md:min-h-[500px]">
+        {/* Badges */}
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <span className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-1.5 text-sm font-semibold text-white">
+            ⭐ Uitgelicht
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-white">
             {post.category}
           </span>
-          <span className="reading-time inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 backdrop-blur">
-            <BookOpenIcon className="h-3 w-3" />
-            {readingTime} min
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-white">
+            📖 {readingTime} min leestijd
           </span>
         </div>
 
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="rounded-full bg-white/90 p-4 shadow-lg">
-            <TargetIcon className="h-6 w-6 text-primary" />
-          </div>
-        </div>
-      </a>
+        {/* Title & excerpt */}
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+          {post.title}
+        </h2>
+        <p className="text-lg text-white/80 max-w-2xl line-clamp-3 mb-6">{post.excerpt}</p>
 
-      <div className={`flex flex-1 flex-col p-6 md:p-7 ${isFeatured ? 'md:p-9' : ''}`}>
-        <h3
-          className={`font-display font-bold text-primary leading-tight transition-colors duration-300 group-hover:text-accent ${isFeatured ? 'text-xl md:text-2xl' : 'text-lg'}`}
-        >
-          <a
-            href={detailHref}
-            onClick={(event) => {
-              event.preventDefault()
-              navigateTo('blogDetail', { slug: post.slug })
-            }}
-            className="text-left"
+        {/* Author & CTA */}
+        <div className="flex flex-wrap items-center gap-4">
+          <button
+            onClick={() => navigateTo('blogDetail', { slug: post.slug })}
+            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-lg transition hover:bg-rose-50 hover:scale-105"
           >
-            {post.title}
-          </a>
-        </h3>
-
-        <p
-          className={`mt-3 text-gray-600 leading-relaxed ${isFeatured ? 'text-base' : 'text-sm line-clamp-4'} mb-6`}
-        >
-          {post.excerpt}
-        </p>
-
-        <div className="mt-auto flex items-center justify-between border-t border-slate-100/70 pt-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white font-bold text-sm shadow-sm">
-              ✍️
+            Lees het artikel
+            <span>→</span>
+          </button>
+          <div className="flex items-center gap-3 text-white/80">
+            <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
+              {post.author.name.charAt(0)}
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-900">{post.author.name}</p>
-              <time
-                dateTime={post.publishedDate}
-                className="post-date flex items-center gap-2 text-xs text-gray-500"
-              >
-                <CalendarIcon className="h-3 w-3" />
-                <span>{formattedDate}</span>
-              </time>
+              <p className="font-medium text-white">{post.author.name}</p>
+              <p className="text-sm text-white/60">{formatDate(post.publishedDate)}</p>
             </div>
           </div>
-
-          <a
-            href={detailHref}
-            onClick={(event) => {
-              event.preventDefault()
-              navigateTo('blogDetail', { slug: post.slug })
-            }}
-            className="inline-flex items-center gap-2 rounded-full border border-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors duration-300 hover:border-accent/30 hover:text-accent"
-          >
-            <span>Lees meer</span>
-            <BookOpenIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </a>
         </div>
       </div>
-    </Card>
+
+      {/* Clickable overlay */}
+      <a
+        href={`/blog/${post.slug}`}
+        onClick={(e) => {
+          e.preventDefault()
+          navigateTo('blogDetail', { slug: post.slug })
+        }}
+        className="absolute inset-0"
+        aria-label={`Lees ${post.title}`}
+      />
+    </article>
   )
 }
 
+/* ─────────────────────────────────────────────────────────────
+   MAIN BLOG PAGE COMPONENT
+   ───────────────────────────────────────────────────────────── */
+
 const BlogPage: React.FC<{ navigateTo: NavigateTo }> = ({ navigateTo }) => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [selectedAuthor, setSelectedAuthor] = useState('All')
-  const [selectedYear, setSelectedYear] = useState('All')
   const { posts, loading } = useBlogContext()
+  const [activeCategory, setActiveCategory] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const publishedPosts = posts
+  // SEO meta tags
+  useEffect(() => {
+    document.title = 'Blog & Cadeaugidsen | Gifteez.nl'
+  }, [])
 
+  // Get unique categories from posts
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(posts.map((p) => p.category))
+    return DEFAULT_CATEGORIES.filter(
+      (cat) => cat.id === 'all' || uniqueCategories.has(cat.id) || uniqueCategories.has(cat.label)
+    )
+  }, [posts])
+
+  // Filter posts
+  const filteredPosts = useMemo(() => {
+    let result = posts
+
+    // Category filter
+    if (activeCategory !== 'all') {
+      result = result.filter(
+        (post) => post.category === activeCategory || post.category === activeCategory
+      )
+    }
+
+    // Search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.excerpt.toLowerCase().includes(query) ||
+          post.category.toLowerCase().includes(query)
+      )
+    }
+
+    return result
+  }, [posts, activeCategory, searchQuery])
+
+  // Featured post (first post when no filters)
+  const featuredPost = useMemo(() => {
+    if (activeCategory === 'all' && !searchQuery && posts.length > 0) {
+      return posts[0]
+    }
+    return null
+  }, [posts, activeCategory, searchQuery])
+
+  // Grid posts (exclude featured when showing)
+  const gridPosts = useMemo(() => {
+    if (featuredPost) {
+      return filteredPosts.filter((p) => p.slug !== featuredPost.slug)
+    }
+    return filteredPosts
+  }, [filteredPosts, featuredPost])
+
+  // JSON-LD Schema
   const canonicalHost =
-    typeof window !== 'undefined' && window.location.origin
-      ? window.location.origin
-      : 'https://gifteez.nl'
+    typeof window !== 'undefined' ? window.location.origin : 'https://gifteez.nl'
 
   const itemListSchema = useMemo(
     () => ({
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      name: 'Cadeaugidsen',
-      itemListElement: publishedPosts.map((p, i) => ({
+      name: 'Gifteez Blog & Cadeaugidsen',
+      itemListElement: posts.slice(0, 20).map((p, i) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `${typeof window !== 'undefined' ? window.location.origin : ''}/blog/${p.slug}`,
+        url: `${canonicalHost}/blog/${p.slug}`,
         name: p.title,
-        datePublished: p.publishedDate,
       })),
     }),
-    [publishedPosts]
+    [posts, canonicalHost]
   )
 
-  const blogPostsSchema = useMemo(() => {
-    if (!publishedPosts.length) {
-      return null
-    }
-
-    return publishedPosts.slice(0, 10).map((post) => {
-      const postUrl = `${canonicalHost}/blog/${post.slug}`
-      const safeImage = post.imageUrl?.startsWith('http')
-        ? post.imageUrl
-        : `${canonicalHost}${post.imageUrl?.startsWith('/') ? '' : '/'}${post.imageUrl ?? ''}`
-
-      return {
-        '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
-        headline: post.title,
-        description: post.excerpt,
-        image: safeImage || 'https://gifteez.nl/images/og-tech-gifts-2025.png',
-        datePublished: post.publishedDate,
-        dateModified: post.publishedDate,
-        articleSection: post.category,
-        keywords: post.tags?.join(', '),
-        author: {
-          '@type': 'Person',
-          name: post.author?.name ?? 'Gifteez Redactie',
-        },
-        publisher: {
-          '@type': 'Organization',
-          name: 'Gifteez',
-          url: 'https://gifteez.nl',
-          logo: 'https://gifteez.nl/android-chrome-512x512.png',
-        },
-        mainEntityOfPage: postUrl,
-        url: postUrl,
-      }
-    })
-  }, [publishedPosts, canonicalHost])
-
-  const categories = useMemo(
-    () => ['All', ...new Set(publishedPosts.map((p) => p.category))],
-    [publishedPosts]
-  )
-  const authors = useMemo(
-    () => ['All', ...new Set(publishedPosts.map((p) => p.author.name))],
-    [publishedPosts]
-  )
-  const years = useMemo(() => {
-    const allYears = new Set(
-      publishedPosts.map((p) => new Date(p.publishedDate).getFullYear().toString())
-    )
-    const sortedYears = Array.from(allYears).sort((a, b) => Number(b) - Number(a))
-    return ['All', ...sortedYears]
-  }, [publishedPosts])
-
-  const categoryHighlights = useMemo(() => {
-    const counts = new Map<string, number>()
-    publishedPosts.forEach((post) => {
-      counts.set(post.category, (counts.get(post.category) ?? 0) + 1)
-    })
-    return Array.from(counts.entries())
-      .map(([name, count]) => ({ name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 6)
-  }, [publishedPosts])
-
-  const featuredPost = publishedPosts[0]
-  const otherPosts = featuredPost ? publishedPosts.slice(1) : publishedPosts
-
-  const filteredPosts = useMemo(() => {
-    return otherPosts
-      .filter((post) => selectedCategory === 'All' || post.category === selectedCategory)
-      .filter((post) => selectedAuthor === 'All' || post.author.name === selectedAuthor)
-      .filter(
-        (post) =>
-          selectedYear === 'All' ||
-          new Date(post.publishedDate).getFullYear().toString() === selectedYear
-      )
-      .filter(
-        (post) =>
-          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-  }, [otherPosts, searchQuery, selectedCategory, selectedAuthor, selectedYear])
-
-  const isFilteringActive =
-    selectedCategory !== 'All' ||
-    selectedAuthor !== 'All' ||
-    selectedYear !== 'All' ||
-    searchQuery.trim() !== ''
-
-  const allowFeaturedDuplication =
-    !isFilteringActive &&
-    Boolean(featuredPost && duplicateFeaturedPostSlugs.includes(featuredPost.slug))
-
-  const orderedFilteredPosts = useMemo(() => {
-    if (isFilteringActive) {
-      return filteredPosts
-    }
-
-    const prioritized: BlogPost[] = []
-    const seen = new Set<string>()
-
-    prioritySlugs.forEach((slug) => {
-      const match = filteredPosts.find((post) => post.slug === slug)
-      if (match) {
-        prioritized.push(match)
-        seen.add(match.slug)
-      }
-    })
-
-    filteredPosts.forEach((post) => {
-      if (!seen.has(post.slug)) {
-        prioritized.push(post)
-        seen.add(post.slug)
-      }
-    })
-
-    return prioritized
-  }, [filteredPosts, isFilteringActive])
-
-  const spotlightPrimaryPost = useMemo(() => {
-    if (isFilteringActive || orderedFilteredPosts.length === 0) {
-      return undefined
-    }
-    return orderedFilteredPosts[0]
-  }, [orderedFilteredPosts, isFilteringActive])
-
-  const supportingSpotlightPosts = useMemo(() => {
-    if (isFilteringActive) {
-      return []
-    }
-    const startIndex = spotlightPrimaryPost ? 1 : 0
-    const basePosts = orderedFilteredPosts.slice(startIndex, startIndex + 2)
-
-    if (allowFeaturedDuplication && duplicatePlacement === 'supporting' && featuredPost) {
-      const deduped = [featuredPost, ...basePosts.filter((post) => post.slug !== featuredPost.slug)]
-      return deduped.slice(0, 2)
-    }
-
-    return basePosts
-  }, [
-    orderedFilteredPosts,
-    isFilteringActive,
-    spotlightPrimaryPost,
-    allowFeaturedDuplication,
-    featuredPost,
-  ])
-
-  const remainingPostsForGrid = useMemo(() => {
-    if (isFilteringActive) {
-      if (
-        allowFeaturedDuplication &&
-        duplicatePlacement === 'grid' &&
-        featuredPost &&
-        !orderedFilteredPosts.some((post) => post.slug === featuredPost.slug)
-      ) {
-        return [featuredPost, ...orderedFilteredPosts]
-      }
-      return orderedFilteredPosts
-    }
-    const offset = (spotlightPrimaryPost ? 1 : 0) + supportingSpotlightPosts.length
-    let basePosts = orderedFilteredPosts.slice(offset)
-
-    if (
-      allowFeaturedDuplication &&
-      duplicatePlacement === 'grid' &&
-      featuredPost &&
-      !basePosts.some((post) => post.slug === featuredPost.slug)
-    ) {
-      basePosts = [featuredPost, ...basePosts]
-    }
-
-    return basePosts
-  }, [
-    orderedFilteredPosts,
-    isFilteringActive,
-    spotlightPrimaryPost,
-    supportingSpotlightPosts,
-    allowFeaturedDuplication,
-    featuredPost,
-  ])
-
-  const curatedGridPosts = useMemo(() => {
-    if (isFilteringActive) {
-      return remainingPostsForGrid
-    }
-    return remainingPostsForGrid.slice(0, 6)
-  }, [remainingPostsForGrid, isFilteringActive])
-
-  const archivePosts = useMemo(() => {
-    if (isFilteringActive) {
-      return []
-    }
-    return remainingPostsForGrid.slice(6)
-  }, [remainingPostsForGrid, isFilteringActive])
-
-  const handleCategoryQuickSelect = (category: string) => {
-    setSelectedCategory(category)
-    if (typeof window !== 'undefined') {
-      // Small delay to ensure state update and re-render
-      setTimeout(() => {
-        const resultsEl = document.getElementById('blog-results')
-        resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }, 100)
-    }
-  }
-
-  const handleCategoryFilterClick = (category: string) => {
-    setSelectedCategory(category)
-    if (typeof window !== 'undefined') {
-      setTimeout(() => {
-        const resultsEl = document.getElementById('blog-results')
-        resultsEl?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }, 100)
-    }
-  }
-
-  const resultsHeadline = isFilteringActive ? 'Gefilterde cadeaugidsen' : 'Nieuwste cadeaugidsen'
-  const resultsDescription = isFilteringActive
-    ? 'Pas je filters aan of wis ze om alle cadeaugidsen weer te geven.'
-    : 'Vers van de pers — dit zijn de meest recente cadeaugidsen van het Gifteez-team.'
-  const resultsCountLabel = `${isFilteringActive ? filteredPosts.length : curatedGridPosts.length} ${isFilteringActive ? (filteredPosts.length === 1 ? 'gids' : 'gidsen') : curatedGridPosts.length === 1 ? 'gids' : 'gidsen'}`
-
-  const clearFilters = () => {
-    setSearchQuery('')
-    setSelectedCategory('All')
-    setSelectedAuthor('All')
-    setSelectedYear('All')
-  }
-
-  if (loading && publishedPosts.length === 0) {
+  // Loading state
+  if (loading && posts.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white via-muted-rose/40 to-white">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-3">
-          <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-gray-600">Blogposts laden...</p>
+          <div className="w-12 h-12 border-2 border-rose-500 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-gray-600">Artikelen laden...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-muted-rose/40 to-white">
+    <>
       <Meta
-        title="Cadeaugidsen & Blog — Gifteez.nl"
-        description="Inspiratie, tips en de beste cadeau-ideeën voor elke gelegenheid. Ontdek onze nieuwste cadeaugidsen op Gifteez."
+        title="Blog & Cadeaugidsen | Gifteez.nl"
+        description="Ontdek de beste cadeautips, reviews en inspiratie. Van tech gadgets tot wellness producten — vind het perfecte cadeau."
         canonical="https://gifteez.nl/blog"
         ogImage="https://gifteez.nl/images/og-tech-gifts-2025.png"
       />
       <JsonLd data={itemListSchema} id="jsonld-blog-itemlist" />
-      {blogPostsSchema && <JsonLd data={blogPostsSchema} id="jsonld-blog-posts" />}
 
-      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
-
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#f43f5e1f,transparent_55%),radial-gradient(circle_at_bottom_right,#0f172a22,transparent_45%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-muted-rose/40" />
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-24 top-24 h-56 w-56 rounded-full bg-white/50 blur-3xl" />
-          <div className="absolute right-10 bottom-16 h-40 w-40 rounded-full bg-accent/10 blur-2xl" />
+      {/* ─────────────────────────────────────────────────────────
+          HERO SECTION
+         ───────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-white to-amber-50">
+        {/* Background decorations */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-rose-200/30 rounded-full blur-3xl" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-200/30 rounded-full blur-3xl" />
         </div>
 
-        <Container size="xl" className="relative z-10 py-20 md:py-24">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_minmax(0,0.9fr)]">
-            <div className="space-y-8 text-center lg:text-left">
-              <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-accent text-white shadow-lg shadow-accent/20 ring-4 ring-accent/20 lg:h-24 lg:w-24">
-                <BookOpenIcon className="h-10 w-10 lg:h-12 lg:w-12" />
+        <Container>
+          <div className="relative py-16 md:py-20">
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-rose-600 shadow-sm ring-1 ring-rose-100 mb-6">
+                <span className="text-lg">📝</span>
+                <span>{posts.length} artikelen beschikbaar</span>
               </div>
-              <div className="space-y-4">
-                <h1 className="typo-h1 leading-[1.05] text-slate-900">
-                  Blog & Cadeau <span className="text-accent">Inspiratie</span> voor elke
-                  gelegenheid
-                </h1>
-                <p className="typo-lead mx-auto max-w-2xl text-slate-600 lg:mx-0">
-                  Jouw bron voor inspiratie, tips en de beste cadeau-ideeën voor elke gelegenheid.
-                  Ontdek onze nieuwste cadeaugidsen en tover een glimlach op elk gezicht.
-                </p>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3 text-sm font-medium text-accent/90 lg:justify-start">
-                <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2">
-                  <SparklesIcon className="h-4 w-4" />
-                  Expert tips
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2">
-                  <UserIcon className="h-4 w-4" />
-                  Voor ieder budget
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2">
-                  <BookOpenIcon className="h-4 w-4" />
-                  Gratis cadeaugidsen
-                </div>
-              </div>
-            </div>
-            {featuredPost ? (
-              <article className="group relative h-full overflow-hidden rounded-[40px] border border-white/10 bg-slate-900/80 shadow-[0_50px_100px_-60px_rgba(15,23,42,0.7)] backdrop-blur">
-                <div className="absolute inset-0">
-                  <ImageWithFallback
-                    src={featuredPost.imageUrl}
-                    alt={featuredPost.title}
-                    className="h-full w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/85 to-slate-900/20" />
-                </div>
-                <div className="relative flex h-full flex-col justify-end gap-6 p-8 md:p-10">
-                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-white/80">
-                    <span className="category-chip inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
-                      <TagIcon className="h-3 w-3" />
-                      {featuredPost.category}
-                    </span>
-                    <time
-                      dateTime={featuredPost.publishedDate}
-                      className="post-date inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur"
-                    >
-                      <CalendarIcon className="h-3 w-3" />
-                      {new Date(featuredPost.publishedDate).toLocaleDateString('nl-NL', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </time>
-                    <span className="reading-time inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 backdrop-blur">
-                      <BookOpenIcon className="h-3 w-3" />
-                      {getReadingTime(featuredPost.excerpt)} min leestijd
-                    </span>
-                  </div>
-                  <div className="space-y-3">
-                    <p className="text-sm font-semibold uppercase tracking-[0.3em] text-white/50">
-                      Uitgelicht
-                    </p>
-                    <h2 className="font-display text-2xl font-bold leading-snug text-white md:text-3xl">
-                      {featuredPost.title}
-                    </h2>
-                    <p className="text-sm text-white/80 line-clamp-4 md:text-base">
-                      {featuredPost.excerpt}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => navigateTo('blogDetail', { slug: featuredPost.slug })}
-                      className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2 text-sm font-semibold text-slate-900 shadow-lg shadow-white/40 transition-transform duration-300 hover:-translate-y-0.5"
-                    >
-                      <TargetIcon className="h-4 w-4" />
-                      Lees de gids
-                    </button>
-                    <div className="inline-flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white/70">
-                      <UserIcon className="h-4 w-4" />
-                      <span className="author-name">{featuredPost.author.name}</span>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => navigateTo('blogDetail', { slug: featuredPost.slug })}
-                  className="absolute inset-0"
-                  aria-label={`Lees ${featuredPost.title}`}
-                />
-              </article>
-            ) : (
-              <div className="relative rounded-[36px] border border-white/30 bg-white/60 p-8 shadow-xl shadow-white/30 backdrop-blur">
-                <div className="space-y-4 text-center lg:text-left">
-                  <h2 className="font-display text-2xl font-bold text-primary">
-                    Publiceer je eerste gids
-                  </h2>
-                  <p className="text-sm text-gray-600">
-                    Zodra de eerste blog live staat, verschijnt hier een uitgelichte cadeaugids met
-                    tips en highlights.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
 
-          <div className="mt-12 grid grid-cols-2 gap-4 text-left sm:grid-cols-4">
-            {[
-              { label: 'Cadeaugidsen', value: publishedPosts.length },
-              { label: 'Categorieën', value: categories.length - 1 },
-              { label: 'Experts', value: authors.length - 1 },
-              { label: 'Inspiratie', value: '24/7' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl border border-white/60 bg-white/80 p-5 text-slate-700 shadow-[0_20px_60px_-50px_rgba(15,23,42,0.75)] backdrop-blur"
-              >
-                <div className="text-2xl font-bold text-accent md:text-3xl">{stat.value}</div>
-                <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
+              {/* Title */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900">
+                Blog &{' '}
+                <span className="bg-gradient-to-r from-rose-500 to-amber-500 bg-clip-text text-transparent">
+                  Cadeaugidsen
+                </span>
+              </h1>
+
+              {/* Subtitle */}
+              <p className="mt-6 text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+                Tips, reviews en inspiratie voor het perfecte cadeau. Van tech gadgets tot wellness
+                — ontdek wat anderen blij maakt.
+              </p>
+            </div>
+
+            {/* Featured post */}
+            {featuredPost && <FeaturedHero post={featuredPost} navigateTo={navigateTo} />}
           </div>
         </Container>
       </section>
 
-      <Container size="xl" className="py-16 space-y-16">
-        {!isFilteringActive && (
-          <section className="rounded-[40px] bg-white/80 p-8 md:p-10 shadow-[0_45px_120px_-80px_rgba(15,23,42,0.35)] ring-1 ring-white/60 backdrop-blur">
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">
-                  Uitgelichte cadeaugidsen
-                </h2>
-                <p className="max-w-2xl text-gray-600">
-                  Een handpicked selectie van gidsen die vandaag in de schijnwerpers staan.
-                </p>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm font-semibold text-accent">
-                <SparklesIcon className="h-4 w-4" />
-                Curated door Gifteez
-              </div>
-            </div>
+      {/* ─────────────────────────────────────────────────────────
+          FILTER & ARTICLES SECTION
+         ───────────────────────────────────────────────────────── */}
+      <section className="py-16 bg-gray-50">
+        <Container>
+          {/* Section header */}
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Alle artikelen</h2>
+            <p className="mt-2 text-gray-600">Filter op categorie of zoek op trefwoord</p>
+          </div>
 
-            {spotlightPrimaryPost ? (
-              <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-                <SpotlightHeroCard post={spotlightPrimaryPost} navigateTo={navigateTo} />
-                <div className="flex flex-col gap-6">
-                  {supportingSpotlightPosts.length > 0 ? (
-                    supportingSpotlightPosts.map((post, index) => (
-                      <SpotlightSupportCard
-                        key={post.slug}
-                        post={post}
-                        index={index}
-                        navigateTo={navigateTo}
-                      />
-                    ))
-                  ) : (
-                    <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-muted-rose/70 bg-white/80 p-10 text-center shadow-inner backdrop-blur">
-                      <div className="space-y-3">
-                        <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-muted-rose text-accent">
-                          <BookOpenIcon className="h-7 w-7" />
-                        </div>
-                        <h3 className="font-display text-lg font-semibold text-primary">
-                          Nog meer inspiratie volgt
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          Publiceer extra artikelen om dit overzicht te vullen.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ) : (
-              <div className="mt-10 rounded-[32px] border border-dashed border-muted-rose/80 bg-white/70 p-10 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] backdrop-blur">
-                <div className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted-rose text-accent">
-                  <BookOpenIcon className="h-8 w-8" />
-                </div>
-                <h2 className="font-display text-2xl font-bold text-primary">
-                  Nog geen extra gidsen
-                </h2>
-                <p className="mt-2 text-gray-600">
-                  Zodra er meer artikelen live staan, vind je ze hier terug.
-                </p>
-              </div>
-            )}
-          </section>
-        )}
+          {/* Category tabs */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat.id
+              const count =
+                cat.id === 'all'
+                  ? posts.length
+                  : posts.filter((p) => p.category === cat.id || p.category === cat.label).length
 
-        {!isFilteringActive && categoryHighlights.length > 0 && (
-          <section className="rounded-[32px] bg-white/80 p-8 md:p-10 shadow-[0_40px_120px_-80px_rgba(15,23,42,0.35)] ring-1 ring-slate-100 backdrop-blur">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">
-                  Categorieën om te ontdekken
-                </h2>
-                <p className="max-w-2xl text-gray-600">
-                  Kies snel een thema en wij tonen direct alle bijpassende cadeaugidsen.
-                </p>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm font-semibold text-accent">
-                <SparklesIcon className="h-4 w-4" />
-                Trending thema's
-              </div>
-            </div>
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {categoryHighlights.map(({ name, count }) => (
+              if (count === 0 && cat.id !== 'all') return null
+
+              return (
                 <button
-                  key={name}
-                  type="button"
-                  onClick={() => handleCategoryQuickSelect(name)}
-                  className={`group flex flex-col justify-between rounded-2xl border border-slate-100 bg-white p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${selectedCategory === name ? 'ring-2 ring-accent shadow-lg' : ''}`}
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
+                    isActive
+                      ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/25'
+                      : 'bg-white text-gray-700 ring-1 ring-gray-200 hover:ring-rose-300 hover:text-rose-600'
+                  }`}
                 >
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-accent/80">
-                      Categorie
-                    </span>
-                    <h3 className="mt-2 font-display text-lg font-bold text-primary">{name}</h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {count} {count === 1 ? 'gids' : 'gidsen'}
-                    </p>
-                  </div>
-                  <div className="mt-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent transition-colors duration-300 group-hover:bg-accent group-hover:text-white">
-                    <TagIcon className="h-5 w-5" />
-                  </div>
+                  <span>{cat.emoji}</span>
+                  <span>{cat.label}</span>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full ${
+                      isActive ? 'bg-white/20' : 'bg-gray-100'
+                    }`}
+                  >
+                    {count}
+                  </span>
                 </button>
+              )
+            })}
+          </div>
+
+          {/* Search bar */}
+          <div className="max-w-md mx-auto mb-8">
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path
+                    fillRule="evenodd"
+                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                className="w-full rounded-xl border-0 bg-white py-3 pl-11 pr-4 text-gray-900 ring-1 ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-rose-500"
+                placeholder="Zoek artikelen..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Results count */}
+          <div className="text-center mb-8">
+            <span className="text-sm text-gray-500">
+              {gridPosts.length} artikel{gridPosts.length !== 1 ? 'en' : ''} gevonden
+              {(activeCategory !== 'all' || searchQuery) && (
+                <button
+                  onClick={() => {
+                    setActiveCategory('all')
+                    setSearchQuery('')
+                  }}
+                  className="ml-2 text-rose-600 hover:text-rose-700 font-medium"
+                >
+                  Reset filters
+                </button>
+              )}
+            </span>
+          </div>
+
+          {/* Articles grid */}
+          {gridPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {gridPosts.map((post, index) => (
+                <BlogCard
+                  key={post.slug}
+                  post={post}
+                  navigateTo={navigateTo}
+                  featured={index === 0 && activeCategory === 'all' && !searchQuery}
+                />
               ))}
             </div>
-          </section>
-        )}
-
-        <section
-          id="blog-filters"
-          className="rounded-[32px] bg-white p-6 md:p-8 shadow-[0_24px_80px_-60px_rgba(15,23,42,0.45)] ring-1 ring-slate-100"
-        >
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="font-semibold text-primary">Categorieën:</span>
-              <div className="flex flex-wrap gap-3">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    type="button"
-                    onClick={() => handleCategoryFilterClick(category)}
-                    aria-pressed={selectedCategory === category}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${selectedCategory === category ? 'bg-accent text-white shadow-lg shadow-accent/20' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-                  >
-                    {category === 'All' ? 'Alle' : category}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div className="flex flex-wrap items-center gap-4">
-                <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <UserIcon className="h-4 w-4 text-gray-500" />
-                  <span className="sr-only lg:not-sr-only">Auteur</span>
-                  <select
-                    aria-label="Filter op auteur"
-                    value={selectedAuthor}
-                    onChange={(e) => setSelectedAuthor(e.target.value)}
-                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
-                  >
-                    {authors.map((author) => (
-                      <option key={author} value={author}>
-                        {author === 'All' ? 'Alle auteurs' : author}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <CalendarIcon className="h-4 w-4 text-gray-500" />
-                  <span className="sr-only lg:not-sr-only">Jaar</span>
-                  <select
-                    aria-label="Filter op publicatiejaar"
-                    value={selectedYear}
-                    onChange={(e) => setSelectedYear(e.target.value)}
-                    className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
-                  >
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year === 'All' ? 'Alle jaren' : year}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-3">
-                <div className="relative flex-1">
-                  <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="search"
-                    placeholder="Zoek in gidsen..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-full border border-slate-200 bg-white py-2 pl-12 pr-4 text-sm shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
-                    aria-label="Zoek in gidsen"
-                  />
-                </div>
-
-                {(searchQuery ||
-                  selectedCategory !== 'All' ||
-                  selectedAuthor !== 'All' ||
-                  selectedYear !== 'All') && (
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 transition-colors duration-300 hover:bg-slate-200"
-                  >
-                    <span>Wis filters</span>
-                    <MenuIcon className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="blog-results" className="space-y-8">
-          <header className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">
-                {resultsHeadline}
-              </h2>
-              <p className="max-w-2xl text-gray-600">{resultsDescription}</p>
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
-              <SparklesIcon className="h-4 w-4" />
-              {resultsCountLabel}
-            </div>
-          </header>
-
-          <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 xl:grid-cols-3">
-            {curatedGridPosts.map((post) => (
-              <BlogCard key={post.slug} post={post} navigateTo={navigateTo} />
-            ))}
-          </div>
-
-          {curatedGridPosts.length === 0 && (
-            <div className="rounded-3xl border border-dashed border-muted-rose/60 bg-white/60 p-12 text-center backdrop-blur">
-              <div className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-muted-rose text-accent">
-                <SearchIcon className="h-8 w-8" />
-              </div>
-              <p className="text-lg font-semibold text-gray-700">Geen gidsen gevonden.</p>
-              <p className="mt-1 text-sm text-gray-500">
-                Pas je filters aan of wis ze om opnieuw te beginnen.
-              </p>
+          ) : (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Geen artikelen gevonden</h3>
+              <p className="text-gray-600 mb-6">Probeer andere filters of zoektermen</p>
+              <button
+                onClick={() => {
+                  setActiveCategory('all')
+                  setSearchQuery('')
+                }}
+                className="inline-flex items-center gap-2 rounded-full bg-rose-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-rose-500/25 transition hover:bg-rose-600"
+              >
+                Bekijk alle artikelen
+              </button>
             </div>
           )}
-        </section>
+        </Container>
+      </section>
 
-        {!isFilteringActive && archivePosts.length > 0 && (
-          <section className="rounded-[32px] bg-gradient-to-br from-white via-white to-muted-rose/30 p-8 md:p-10 shadow-[0_40px_120px_-90px_rgba(244,63,94,0.35)] ring-1 ring-muted-rose/40">
-            <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <h2 className="font-display text-2xl md:text-3xl font-bold text-primary">
-                  Uit het archief
-                </h2>
-                <p className="max-w-2xl text-gray-600">
-                  Blijf ontdekken met eerdere cadeaugidsen vol inspiratie.
-                </p>
-              </div>
-              <div className="hidden md:inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-semibold text-accent backdrop-blur">
-                <CalendarIcon className="h-4 w-4" />
-                Historie
-              </div>
+      {/* ─────────────────────────────────────────────────────────
+          CTA SECTION
+         ───────────────────────────────────────────────────────── */}
+      <section className="py-16 bg-gradient-to-br from-slate-900 to-slate-800">
+        <Container>
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ontdek onze cadeaugidsen 🎁
+            </h2>
+            <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
+              Meer dan 30 handgeselecteerde cadeaugidsen voor elke gelegenheid en elk budget
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigateTo('cadeausHub')}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-rose-500 px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-rose-500/25 transition hover:bg-rose-600 hover:scale-105"
+              >
+                <span>📚</span>
+                Bekijk alle gidsen
+              </button>
+              <button
+                onClick={() => navigateTo('giftFinder')}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-8 py-4 text-lg font-semibold text-white ring-1 ring-white/20 transition hover:bg-white/20"
+              >
+                <span>🤖</span>
+                AI Gift Finder
+              </button>
             </div>
-            <ul className="relative space-y-8 before:absolute before:left-[5px] before:top-0 before:h-full before:w-px before:bg-muted-rose/40">
-              {archivePosts.map((post) => (
-                <ArchiveListItem key={post.slug} post={post} navigateTo={navigateTo} />
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <section className="pt-4">
-          <NewsletterSignup variant="inline" className="mx-auto max-w-2xl" />
-        </section>
-      </Container>
-    </div>
+          </div>
+        </Container>
+      </section>
+    </>
   )
 }
 

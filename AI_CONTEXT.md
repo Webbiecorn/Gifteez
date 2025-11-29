@@ -458,6 +458,17 @@ npm run deploy
 
 ## 12. Changelog
 
+### 29 november 2025 (Sessie 5)
+
+- ✅ BlogPage.tsx compleet herontworpen (1032 → ~450 regels)
+- ✅ Nieuwe moderne hero sectie met gradient achtergrond (consistent met CadeausHubPage)
+- ✅ Uitgelicht artikel met grote hero card
+- ✅ Emoji category tabs met aantallen
+- ✅ Verbeterde zoek- en filter UI
+- ✅ CTA sectie naar cadeaugidsen en Gift Finder
+- ✅ URL `/blog` behouden voor SEO
+- ✅ Bundle size: 404.59 kB → 368.50 kB
+
 ### 29 november 2025 (Sessie 4)
 
 - ✅ CadeausHubPage.tsx compleet herontworpen (669 → ~470 regels)
