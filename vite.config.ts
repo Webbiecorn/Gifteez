@@ -28,11 +28,7 @@ export default defineConfig({
             './components/QuizIllustration',
           ],
           'pages-blog': ['./components/BlogPage', './components/BlogDetailPage'],
-          'pages-shop': [
-            './components/ShopPage',
-            './components/CartPage',
-            './components/CheckoutSuccessPage',
-          ],
+          'pages-cart': ['./components/CartPage', './components/CheckoutSuccessPage'],
           'pages-auth': [
             './components/LoginPage',
             './components/SignUpPage',

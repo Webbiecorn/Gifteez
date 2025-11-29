@@ -16,7 +16,6 @@ const SignUpPage = ReactLazy(() => import('./components/SignUpPage'))
 const AccountPage = ReactLazy(() => import('./components/AccountPage'))
 const QuizPage = ReactLazy(() => import('./components/QuizPage'))
 const DownloadPage = ReactLazy(() => import('./components/DownloadPage'))
-// const ShopPage = ReactLazy(() => import('./components/ShopPage')); // Temporarily disabled
 const CartPage = ReactLazy(() => import('./components/CartPage'))
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'))
 const DealsPage = ReactLazy(() => import('./components/DealsPage'))
@@ -119,7 +118,6 @@ const App: React.FC = () => {
         return '/quiz'
       case 'download':
         return '/download'
-      // case 'shop': return '/shop'; // Temporarily disabled
       case 'cart':
         return '/cart'
       case 'checkoutSuccess':
@@ -367,7 +365,6 @@ const App: React.FC = () => {
         account: 'Mijn account',
         quiz: 'Cadeau Quiz',
         download: 'Download — Gratis cadeaugids',
-        shop: 'Shop — Producten & Cadeaus',
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
         deals: 'Handgepickte Collecties',
@@ -400,7 +397,6 @@ const App: React.FC = () => {
           'Lees hoe Gifteez.nl werkt via affiliate partnerships. Volledige transparantie over commissies en hoe we producten selecteren.',
         quiz: 'Doe de cadeau quiz en ontdek welk type cadeau het beste past.',
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
-        shop: 'Ontdek geselecteerde cadeaus en producten in de Gifteez shop.',
         deals: 'Zorgvuldig samengestelde cadeau collecties voor elke gelegenheid.',
         cadeausHub: 'Ontdek alle cadeaugidsen met slimme filters op budget, thema en interesses.',
         categoryDetail: data?.categoryDescription || 'Bekijk alle producten in deze collectie.',
@@ -497,8 +493,6 @@ const App: React.FC = () => {
         return <QuizPage navigateTo={navigateTo} />
       case 'download':
         return <DownloadPage navigateTo={navigateTo} />
-      // case 'shop':
-      //   return <ShopPage navigateTo={navigateTo} showToast={showToast} />; // Temporarily disabled
       case 'cart':
         return <CartPage navigateTo={navigateTo} showToast={showToast} />
       case 'admin':

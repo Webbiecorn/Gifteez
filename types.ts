@@ -14,7 +14,7 @@ export type Page =
   | 'account'
   | 'quiz'
   | 'download'
-  | /* 'shop' | */ 'cart'
+  | 'cart'
   | 'checkoutSuccess'
   | 'deals'
   | 'categoryDetail'
