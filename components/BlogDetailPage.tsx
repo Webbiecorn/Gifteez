@@ -1242,28 +1242,86 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
               </div>
             </div>
 
-            {/* Enhanced Bottom CTA */}
-            <div className="mt-16 relative overflow-hidden bg-purple-800">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-900 via-purple-700 to-purple-600 opacity-95"></div>
-              <div className="absolute inset-0 bg-black/20"></div>
-              <div className="relative p-8 md:p-12 text-center text-white">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-                  <TargetIcon className="w-8 h-8 text-white" />
+            {/* Enhanced Bottom CTA - Modern Design */}
+            <div className="mt-16 relative overflow-hidden rounded-3xl">
+              {/* Animated gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-accent via-purple-600 to-indigo-700"></div>
+
+              {/* Decorative elements */}
+              <div className="absolute top-0 left-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+              <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+              <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-pink-400/20 rounded-full blur-2xl"></div>
+
+              {/* Floating gift icons */}
+              <div
+                className="absolute top-8 left-8 text-4xl opacity-20 animate-bounce"
+                style={{ animationDelay: '0s', animationDuration: '3s' }}
+              >
+                🎁
+              </div>
+              <div
+                className="absolute top-12 right-12 text-3xl opacity-20 animate-bounce"
+                style={{ animationDelay: '0.5s', animationDuration: '2.5s' }}
+              >
+                ✨
+              </div>
+              <div
+                className="absolute bottom-8 left-16 text-3xl opacity-20 animate-bounce"
+                style={{ animationDelay: '1s', animationDuration: '3.5s' }}
+              >
+                🎀
+              </div>
+              <div
+                className="absolute bottom-12 right-20 text-4xl opacity-20 animate-bounce"
+                style={{ animationDelay: '1.5s', animationDuration: '2.8s' }}
+              >
+                💝
+              </div>
+
+              <div className="relative p-10 md:p-16 text-center text-white">
+                {/* Icon with glow effect */}
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-md rounded-2xl mb-8 shadow-lg shadow-purple-500/30 border border-white/30">
+                  <span className="text-4xl">🤖</span>
                 </div>
-                <h2 className="font-display text-2xl md:text-4xl font-bold mb-4">
+
+                <h2 className="font-display text-3xl md:text-5xl font-bold mb-5 leading-tight">
                   Het perfecte cadeau nog niet gevonden?
                 </h2>
-                <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-                  Probeer de AI Cadeaucoach en krijg binnen 30 seconden een gepersonaliseerde lijst
-                  met cadeau-ideeën.
+
+                <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-10">
+                  Probeer de AI Cadeaucoach en krijg binnen{' '}
+                  <span className="font-bold text-yellow-300">30 seconden</span> een
+                  gepersonaliseerde lijst met cadeau-ideeën.
                 </p>
+
+                {/* CTA Button with enhanced styling */}
                 <button
                   onClick={() => navigateTo('giftFinder')}
-                  className="inline-flex items-center gap-3 bg-white text-primary font-bold px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 group"
+                  className="group relative inline-flex items-center gap-3 bg-white text-accent font-bold px-10 py-5 rounded-full shadow-2xl hover:shadow-white/25 transform hover:scale-105 transition-all duration-300"
                 >
-                  <SparklesIcon className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                  <span>Start Cadeaucoach</span>
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <SparklesIcon className="relative w-6 h-6 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+                  <span className="relative text-lg group-hover:text-white transition-colors duration-300">
+                    Start Cadeaucoach
+                  </span>
+                  <ChevronRightIcon className="relative w-5 h-5 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
                 </button>
+
+                {/* Trust indicators */}
+                <div className="mt-10 flex flex-wrap justify-center gap-6 text-sm text-white/70">
+                  <span className="flex items-center gap-2">
+                    <CheckIcon className="w-4 h-4 text-green-400" />
+                    100% Gratis
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckIcon className="w-4 h-4 text-green-400" />
+                    Geen account nodig
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <CheckIcon className="w-4 h-4 text-green-400" />
+                    Direct resultaat
+                  </span>
+                </div>
               </div>
             </div>
 
