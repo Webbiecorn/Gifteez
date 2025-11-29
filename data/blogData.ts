@@ -14,7 +14,7 @@ const gift_amazon_chipolo: Gift = {
         'https://www.amazon.nl/Chipolo-ONE-Spot-Sleutelvinder-Bluetooth/dp/B09C89S7WG?linkCode=ll1&tag=gifteez77-21&linkId=aa1e7d28ec47784726d50a1720cd19a3&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/61aJXqvlSEL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/712y0Outc3L._AC_SY450_.jpg',
 }
 
 const gift_amazon_ledlamp: Gift = {
@@ -29,7 +29,7 @@ const gift_amazon_ledlamp: Gift = {
         'https://www.amazon.nl/Gritin-Eye-Protecting-Flexibele-Oplaadbaar-Batterijlevensduur/dp/B08GG42WXY?linkCode=ll1&tag=gifteez77-21&linkId=cd6e9041ceb3565c18acf17617214f90&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/61hYVvjQHpL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/81n7M-T19NL._AC_SX522_.jpg',
 }
 
 const gift_amazon_diffuser: Gift = {
@@ -44,7 +44,7 @@ const gift_amazon_diffuser: Gift = {
         'https://www.amazon.nl/Aromadiffuser-etherische-aromatherapie-diffuser-automatische-uitschakelfunctie/dp/B0DFGY2535?linkCode=ll1&tag=gifteez77-21&linkId=4fbcce986136a038a767f2cbd50e81ae&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/61JzVXqQL3L._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/518JHvXIc-L._AC_SX450_.jpg',
 }
 
 // ==================== KERST VOOR HAAR 2025 ====================
