@@ -1836,6 +1836,8 @@ const RAW_VARIANTS = [
     title: 'De beste cadeaus voor nachtlezers (2025)',
     intro:
       'Nachtlezers zijn een speciaal soort mensen: ze lezen wanneer de wereld slaapt. Daarom verzamelden we de slimste cadeaus die hun nachtelijke leesmoment perfect maken — van stille leeslampjes tot cozy essentials. Ontdek amberkleurige lampjes, zachte klemmen en accessoires voor urenlang leesplezier zonder anderen te storen.',
+    interest: 'boeken',
+    budgetMax: 80,
     quickScan: {
       personas: [
         {
