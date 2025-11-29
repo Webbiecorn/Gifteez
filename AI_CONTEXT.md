@@ -458,6 +458,17 @@ npm run deploy
 
 ## 12. Changelog
 
+### 29 november 2025 (Sessie 4)
+
+- ✅ CadeausHubPage.tsx compleet herontworpen (669 → ~470 regels)
+- ✅ Nieuwe moderne hero sectie met gradient achtergrond
+- ✅ Populaire gidsen sectie toegevoegd ("🔥 Populair deze week")
+- ✅ Verbeterde filter UI met emoji tabs en budget dropdown
+- ✅ CTA sectie met Gift Finder en Quiz knoppen
+- ✅ Partner logo's sectie onderaan
+- ✅ URL `/cadeaugidsen` behouden voor SEO
+- ✅ Alle programmatic gidsen blijven werken
+
 ### 29 november 2025 (Sessie 3)
 
 - ✅ DealsPage.tsx (3327 regels) → PartnersPage.tsx (~300 regels)
