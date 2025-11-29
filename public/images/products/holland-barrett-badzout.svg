@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#FFF1F2"/>
+  <ellipse cx="200" cy="200" rx="100" ry="60" fill="#FDA4AF"/>
+  <ellipse cx="200" cy="180" rx="90" ry="50" fill="#FB7185"/>
+  <circle cx="170" cy="170" r="15" fill="#FECDD3" opacity="0.8"/>
+  <circle cx="220" cy="160" r="20" fill="#FFE4E6" opacity="0.6"/>
+  <circle cx="190" cy="195" r="12" fill="#FFF1F2" opacity="0.5"/>
+  <rect x="130" y="240" width="140" height="40" rx="8" fill="#E11D48"/>
+  <text x="200" y="266" text-anchor="middle" font-family="system-ui" font-size="14" font-weight="bold" fill="white">HIMALAYA</text>
+  <text x="200" y="350" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="bold" fill="#9F1239">Himalaya Badzout</text>
+</svg>

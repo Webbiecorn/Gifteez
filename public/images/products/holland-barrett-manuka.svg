@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#FEF3C7"/>
+  <circle cx="200" cy="160" r="80" fill="#F59E0B"/>
+  <path d="M160 160 L200 120 L240 160 L200 200 Z" fill="#FBBF24"/>
+  <ellipse cx="200" cy="280" rx="100" ry="40" fill="#92400E"/>
+  <ellipse cx="200" cy="270" rx="90" ry="35" fill="#D97706"/>
+  <text x="200" y="350" text-anchor="middle" font-family="system-ui" font-size="18" font-weight="bold" fill="#78350F">Manuka Honing MGO 250+</text>
+</svg>

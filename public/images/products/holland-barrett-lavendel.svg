@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#EDE9FE"/>
+  <ellipse cx="200" cy="280" rx="60" ry="20" fill="#7C3AED" opacity="0.3"/>
+  <rect x="175" y="120" width="50" height="140" rx="8" fill="#6D28D9"/>
+  <rect x="180" y="125" width="40" height="130" rx="6" fill="#8B5CF6"/>
+  <circle cx="200" cy="170" r="25" fill="#C4B5FD" opacity="0.5"/>
+  <path d="M190 100 L200 80 L210 100 Z" fill="#A78BFA"/>
+  <ellipse cx="200" cy="115" rx="15" ry="5" fill="#6D28D9"/>
+  <circle cx="140" cy="150" r="8" fill="#A78BFA"/>
+  <circle cx="150" cy="180" r="5" fill="#C4B5FD"/>
+  <circle cx="250" cy="140" r="6" fill="#DDD6FE"/>
+  <circle cx="260" cy="170" r="4" fill="#A78BFA"/>
+  <text x="200" y="350" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="bold" fill="#5B21B6">Lavendel Essentiële Olie</text>
+</svg>

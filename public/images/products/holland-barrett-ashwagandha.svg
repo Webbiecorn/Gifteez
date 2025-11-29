@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#F5F3FF"/>
+  <rect x="150" y="100" width="100" height="170" rx="15" fill="#7C3AED"/>
+  <rect x="155" y="105" width="90" height="160" rx="12" fill="#8B5CF6"/>
+  <circle cx="200" cy="160" r="35" fill="white" opacity="0.3"/>
+  <path d="M180 150 C180 130, 220 130, 220 150 L210 180 L190 180 Z" fill="#DDD6FE"/>
+  <circle cx="200" cy="200" r="15" fill="#A78BFA"/>
+  <rect x="175" y="270" width="50" height="20" rx="3" fill="#6D28D9"/>
+  <text x="200" y="350" text-anchor="middle" font-family="system-ui" font-size="16" font-weight="bold" fill="#5B21B6">Ashwagandha KSM-66</text>
+</svg>

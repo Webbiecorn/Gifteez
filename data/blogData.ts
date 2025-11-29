@@ -1442,7 +1442,7 @@ const gift_holland_barrett_manuka_honing: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fmanuka-honing',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/048508_A.jpg',
+  imageUrl: '/images/products/holland-barrett-manuka.svg',
   tags: ['manuka', 'honing', 'premium', 'wellness'],
   giftType: 'physical',
   matchReason:
@@ -1461,7 +1461,7 @@ const gift_holland_barrett_collageen: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fcollageen',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/083291_A.jpg',
+  imageUrl: '/images/products/holland-barrett-collageen.svg',
   tags: ['collageen', 'beauty', 'anti-aging', 'supplement'],
   giftType: 'physical',
   matchReason: 'Trending beauty supplement - perfect voor huidverzorging van binnenuit.',
@@ -1479,7 +1479,7 @@ const gift_holland_barrett_kurkuma: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fkurkuma',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/048756_A.jpg',
+  imageUrl: '/images/products/holland-barrett-kurkuma.svg',
   tags: ['kurkuma', 'gewrichten', 'antioxidant', 'supplement'],
   giftType: 'physical',
   matchReason: 'Populair supplement voor gewrichten - ideaal voor actieve mensen.',
@@ -1497,7 +1497,7 @@ const gift_holland_barrett_magnesium: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fmagnesium',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/048495_A.jpg',
+  imageUrl: '/images/products/holland-barrett-magnesium.svg',
   tags: ['magnesium', 'slaap', 'stress', 'energie'],
   giftType: 'physical',
   matchReason: 'Perfect voor drukke mensen - magnesium helpt bij ontspanning en nachtrust.',
@@ -1515,7 +1515,7 @@ const gift_holland_barrett_ashwagandha: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fashwagandha',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/083284_A.jpg',
+  imageUrl: '/images/products/holland-barrett-ashwagandha.svg',
   tags: ['ashwagandha', 'stress', 'adaptogeen', 'mentaal'],
   giftType: 'physical',
   matchReason: 'Trending adaptogeen voor stressverlichting - perfect voor drukke levens.',
@@ -1533,7 +1533,7 @@ const gift_holland_barrett_bath_salts: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fbadzout',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/083145_A.jpg',
+  imageUrl: '/images/products/holland-barrett-badzout.svg',
   tags: ['badzout', 'selfcare', 'ontspanning', 'spa'],
   giftType: 'physical',
   matchReason: 'Selfcare essential - perfect voor verwenmomenten in bad.',
@@ -1551,7 +1551,7 @@ const gift_holland_barrett_essential_oil: Gift = {
         'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fessentiele-olie',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/048631_A.jpg',
+  imageUrl: '/images/products/holland-barrett-lavendel.svg',
   tags: ['aromatherapie', 'lavendel', 'ontspanning', 'olie'],
   giftType: 'physical',
   matchReason: 'Aromatherapie favoriet - lavendelolie is perfect voor ontspanning en slaap.',
@@ -1576,11 +1576,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
         content:
           'Op zoek naar een cadeau voor iemand die graag gezond bezig is? Holland & Barrett heeft een prachtig assortiment aan wellnessproducten die perfect zijn om cadeau te geven. Van voedingssupplementen en natuurlijke verzorgingsproducten tot mindfulness accessoires – er is voor ieder budget en elke interesse wel iets leuks te vinden.',
       },
-      {
-        type: 'paragraph',
-        content:
-          '<div class="my-6 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 p-6 border border-emerald-200"><p class="font-bold text-emerald-900 mb-3 text-lg">📑 In deze gids:</p><ul class="space-y-2 text-sm text-emerald-800"><li>• <a href="#waarom" class="underline hover:text-emerald-600">Waarom Holland & Barrett</a></li><li>• <a href="#trending" class="underline hover:text-emerald-600">🔥 Trending: Collageen, Ashwagandha & Manuka</a></li><li>• <a href="#gezin" class="underline hover:text-emerald-600">👨‍👩‍👧 Wellness voor het hele gezin</a></li><li>• <a href="#beauty" class="underline hover:text-emerald-600">✨ Clean Beauty & Skincare</a></li><li>• <a href="#selfcare" class="underline hover:text-emerald-600">🛁 Selfcare & Aromatherapie</a></li><li>• <a href="#sport" class="underline hover:text-emerald-600">💪 Sport & Vitaliteit</a></li><li>• <a href="#winter" class="underline hover:text-emerald-600">❄️ Winter Wellness Pakket</a></li><li>• <a href="#budget" class="underline hover:text-emerald-600">💰 Cadeaus per budget</a></li><li>• <a href="#pakketten" class="underline hover:text-emerald-600">🎁 Samengestelde cadeaupakketten</a></li><li>• <a href="#reviews" class="underline hover:text-emerald-600">⭐ Klantreviews</a></li><li>• <a href="#faq" class="underline hover:text-emerald-600">❓ Veelgestelde vragen</a></li></ul></div>',
-      },
+
       {
         type: 'image',
         src: '/images/blog-holland-barrett-partner.jpg',
@@ -1589,7 +1585,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       },
       {
         type: 'heading',
-        content: '<span id="waarom"></span>Waarom Holland & Barrett geweldige cadeaus heeft',
+        content: 'Waarom Holland & Barrett geweldige cadeaus heeft',
       },
       {
         type: 'paragraph',
@@ -1603,7 +1599,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       },
       {
         type: 'heading',
-        content: '<span id="trending"></span>🔥 Trending: De populairste wellness cadeaus',
+        content: '🔥 Trending: De populairste wellness cadeaus',
       },
       {
         type: 'paragraph',
@@ -1613,7 +1609,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       { type: 'gift', content: gift_holland_barrett_manuka_honing },
       { type: 'gift', content: gift_holland_barrett_collageen },
       { type: 'gift', content: gift_holland_barrett_ashwagandha },
-      { type: 'heading', content: '<span id="gezin"></span>👨‍👩‍👧 Wellness voor het hele gezin' },
+      { type: 'heading', content: '👨‍👩‍👧 Wellness voor het hele gezin' },
       {
         type: 'paragraph',
         content:
@@ -1621,7 +1617,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       },
       { type: 'gift', content: gift_holland_barrett_sambucol_kids },
       { type: 'gift', content: gift_holland_barrett_vitamine_d },
-      { type: 'heading', content: '<span id="beauty"></span>✨ Clean Beauty & Skincare' },
+      { type: 'heading', content: '✨ Clean Beauty & Skincare' },
       {
         type: 'paragraph',
         content:
@@ -1629,7 +1625,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       },
       { type: 'gift', content: gift_holland_barrett_ultrasun_face },
       { type: 'gift', content: gift_holland_barrett_dr_hauschka },
-      { type: 'heading', content: '<span id="selfcare"></span>🛁 Selfcare & Aromatherapie' },
+      { type: 'heading', content: '🛁 Selfcare & Aromatherapie' },
       {
         type: 'paragraph',
         content:
@@ -1639,7 +1635,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       { type: 'gift', content: gift_holland_barrett_essential_oil },
       { type: 'gift', content: gift_holland_barrett_shoti_unwind },
       { type: 'gift', content: gift_holland_barrett_orakelkaarten },
-      { type: 'heading', content: '<span id="sport"></span>💪 Sport & Vitaliteit' },
+      { type: 'heading', content: '💪 Sport & Vitaliteit' },
       {
         type: 'paragraph',
         content:
@@ -1649,7 +1645,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       { type: 'gift', content: gift_holland_barrett_kurkuma },
       { type: 'gift', content: gift_holland_barrett_magnesium },
       { type: 'gift', content: gift_holland_barrett_omega3 },
-      { type: 'heading', content: '<span id="winter"></span>❄️ Winter Wellness Pakket' },
+      { type: 'heading', content: '❄️ Winter Wellness Pakket' },
       {
         type: 'paragraph',
         content:
@@ -1661,13 +1657,13 @@ const RAW_BLOG_POSTS: BlogPost[] = [
         content:
           '<div class="my-6 rounded-xl border-l-4 border-emerald-500 bg-emerald-50 p-5"><p class="text-sm font-semibold text-emerald-900 mb-2">💡 Cadeau Tip: Winter Survival Box</p><p class="text-sm text-emerald-800">Combineer Vitamine D3 (€12,99) + Gember Thee (€3,49) + Omega-3 (€16,99) + Magnesium (€14,99) = <strong>€48,46</strong> voor het ultieme winter wellness pakket dat echt helpt!</p></div>',
       },
-      { type: 'heading', content: '<span id="budget"></span>💰 Snelle Budget Vergelijking' },
+      { type: 'heading', content: '💰 Snelle Budget Vergelijking' },
       {
         type: 'paragraph',
         content:
           '<div class="my-6 overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-emerald-100"><th class="border border-emerald-200 p-3 text-left font-bold text-emerald-900">Budget</th><th class="border border-emerald-200 p-3 text-left font-bold text-emerald-900">Top Keuzes</th><th class="border border-emerald-200 p-3 text-left font-bold text-emerald-900">Perfect voor</th></tr></thead><tbody><tr class="bg-white"><td class="border border-gray-200 p-3 font-semibold text-emerald-700">Onder €15</td><td class="border border-gray-200 p-3">Gember Thee (€3,49), Badzout (€9,99), Lavendelolie (€11,99), Zink (€8,99), Vitamine D3 (€12,99)</td><td class="border border-gray-200 p-3">Kleine attenties, stocking fillers, Secret Santa</td></tr><tr class="bg-gray-50"><td class="border border-gray-200 p-3 font-semibold text-emerald-700">€15 - €30</td><td class="border border-gray-200 p-3">Magnesium (€14,99), Omega-3 (€16,99), Ashwagandha (€21,99), Kurkuma (€24,99), Collageen (€27,99)</td><td class="border border-gray-200 p-3">Verjaardagen, bedankjes, collega\'s</td></tr><tr class="bg-white"><td class="border border-gray-200 p-3 font-semibold text-emerald-700">€30+</td><td class="border border-gray-200 p-3">Manuka Honing (€32,99), Dr. Hauschka (€28,49), Ultrasun SPF50 (€31,49)</td><td class="border border-gray-200 p-3">Kerst, speciale gelegenheden, luxe verwennerij</td></tr></tbody></table></div>',
       },
-      { type: 'heading', content: '<span id="pakketten"></span>🎁 Samengestelde Cadeaupakketten' },
+      { type: 'heading', content: '🎁 Samengestelde Cadeaupakketten' },
       {
         type: 'paragraph',
         content:
@@ -1678,7 +1674,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
         content:
           '<div class="my-6 space-y-4"><div class="rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-6 border border-purple-100"><p class="font-bold text-purple-900 mb-3">✨ Beauty & Glow Box (€89)</p><ul class="space-y-2 text-sm text-purple-800"><li>• Manuka Honing MGO 250+ (€32,99)</li><li>• Marine Collageen Poeder (€27,99)</li><li>• Dr. Hauschka Lip to Cheek (€28,49)</li></ul><p class="mt-3 text-xs text-purple-700 italic">Perfect voor beauty lovers en skincare enthousiastelingen</p></div><div class="rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 p-6 border border-blue-100"><p class="font-bold text-blue-900 mb-3">💪 Sport & Energie Pakket (€82)</p><ul class="space-y-2 text-sm text-blue-800"><li>• Purasana Vegan Protein (€19,49)</li><li>• Kurkuma Complex (€24,99)</li><li>• Omega-3 Visolie (€16,99)</li><li>• Ashwagandha KSM-66 (€21,99)</li></ul><p class="mt-3 text-xs text-blue-700 italic">Ideaal voor sporters, fitness fans en actieve mensen</p></div><div class="rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 p-6 border border-amber-100"><p class="font-bold text-amber-900 mb-3">🧘 Zen & Relax Set (€58)</p><ul class="space-y-2 text-sm text-amber-800"><li>• Himalaya Badzout (€9,99)</li><li>• Lavendel Essentiële Olie (€11,99)</li><li>• Magnesium Citraat (€14,99)</li><li>• Ashwagandha (€21,99)</li></ul><p class="mt-3 text-xs text-amber-700 italic">Voor rust, betere slaap en stressverlichting</p></div><div class="rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 p-6 border border-rose-100"><p class="font-bold text-rose-900 mb-3">🎄 Kerst Wellness Box (€45)</p><ul class="space-y-2 text-sm text-rose-800"><li>• Vitamine D3 (€12,99)</li><li>• Magnesium (€14,99)</li><li>• Omega-3 (€16,99)</li></ul><p class="mt-3 text-xs text-rose-700 italic">Betaalbaar én doordacht kerstcadeau voor gezondheid</p></div></div>',
       },
-      { type: 'heading', content: '<span id="reviews"></span>⭐ Wat klanten zeggen' },
+      { type: 'heading', content: '⭐ Wat klanten zeggen' },
       {
         type: 'paragraph',
         content:
@@ -1686,7 +1682,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       },
       {
         type: 'heading',
-        content: '<span id="faq"></span>❓ Veelgestelde vragen over Holland & Barrett',
+        content: '❓ Veelgestelde vragen over Holland & Barrett',
       },
       {
         type: 'paragraph',
