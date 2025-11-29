@@ -1,205 +1,272 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 interface HeroHomeProps {
   onStartQuiz: () => void
   onViewGuides: () => void
 }
 
-const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
-  // Keyboard event handlers voor accessibility
-  const handleQuizKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      onStartQuiz()
-    }
-  }
+// Budget opties voor snelle navigatie
+const budgetOptions = [
+  {
+    label: 'Tot €25',
+    slug: 'cadeaus-tot-25-euro',
+    emoji: '🎁',
+    color: 'from-emerald-500 to-teal-500',
+  },
+  {
+    label: '€25 - €50',
+    slug: 'cadeaus-25-tot-50-euro',
+    emoji: '✨',
+    color: 'from-blue-500 to-indigo-500',
+  },
+  {
+    label: '€50 - €100',
+    slug: 'cadeaus-50-tot-100-euro',
+    emoji: '🌟',
+    color: 'from-purple-500 to-pink-500',
+  },
+  {
+    label: '€100+',
+    slug: 'cadeaus-boven-100-euro',
+    emoji: '💎',
+    color: 'from-amber-500 to-orange-500',
+  },
+]
 
-  const handleGuidesKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      onViewGuides()
+// Partners
+const partners = [
+  { name: 'Coolblue', highlight: true },
+  { name: 'Holland & Barrett', highlight: false },
+  { name: 'SLYGAD', highlight: false },
+  { name: 'PartyPro', highlight: false },
+  { name: 'Amazon', highlight: false },
+]
+
+const HeroHome: React.FC<HeroHomeProps> = ({ onStartQuiz, onViewGuides }) => {
+  // Countdown naar Sinterklaas (5 december)
+  const [daysToSint, setDaysToSint] = useState<number | null>(null)
+
+  useEffect(() => {
+    const now = new Date()
+    const sinterklaas = new Date(now.getFullYear(), 11, 5) // 5 december
+    if (now > sinterklaas) {
+      sinterklaas.setFullYear(sinterklaas.getFullYear() + 1)
     }
-  }
+    const diff = Math.ceil((sinterklaas.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    setDaysToSint(diff)
+  }, [])
 
   return (
-    <section className="relative flex items-center overflow-hidden bg-gradient-to-br from-rose-50 via-purple-50/30 to-orange-50/20 sm:min-h-[85vh]">
-      {/* Animated background elements */}
+    <section className="relative min-h-[100svh] flex items-center overflow-hidden">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
+
+      {/* Animated mesh gradient overlay */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-0 -left-40 w-[600px] h-[600px] bg-rose-500 rounded-full mix-blend-screen filter blur-[120px] animate-blob" />
+        <div className="absolute top-1/3 -right-20 w-[500px] h-[500px] bg-purple-500 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-40 left-1/3 w-[600px] h-[600px] bg-orange-500 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000" />
+      </div>
+
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Floating gift icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-rose-300/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob" />
-        <div className="absolute top-40 right-10 w-72 h-72 bg-purple-300/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-orange-300/20 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000" />
+        {['🎁', '✨', '🎄', '💝', '🎅', '⭐'].map((emoji, i) => (
+          <span
+            key={i}
+            className="absolute text-3xl md:text-5xl opacity-10 animate-float"
+            style={{
+              left: `${10 + i * 15}%`,
+              top: `${20 + (i % 3) * 25}%`,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: `${4 + i * 0.5}s`,
+            }}
+          >
+            {emoji}
+          </span>
+        ))}
       </div>
 
-      {/* Optional background illustration alleen op grotere schermen */}
-      <div className="hidden md:block absolute inset-y-0 right-0 w-1/2 pointer-events-none select-none">
-        <img
-          src="/images/mascotte-hero-new-v4.png"
-          alt="Gifteez mascotte illustratie"
-          className="h-full w-full object-contain object-center opacity-95 drop-shadow-2xl animate-float"
-          loading="lazy"
-        />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-16 sm:py-20 lg:py-28">
-        <div className="max-w-2xl lg:ml-0 text-center lg:text-left space-y-6 sm:space-y-8 animate-fade-in-up">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-gradient-to-r from-white/90 to-rose-50/90 backdrop-blur-xl border border-rose-200/50 shadow-lg shadow-rose-500/10 mx-auto lg:mx-0 hover:scale-105 transition-transform duration-300">
-            <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-gradient-to-r from-rose-500 to-pink-500 shadow-sm"></span>
-            </span>
-            <span className="text-xs sm:text-sm font-extrabold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent tracking-wide uppercase">
-              Perfect voor Sinterklaas & Kerst
-            </span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black leading-[1.05] tracking-tight text-slate-900 drop-shadow-sm">
-            Het perfecte cadeau <br />
-            <span className="relative inline-block">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-600 to-orange-500 animate-gradient-x">
-                vind je hier.
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12 sm:py-16 lg:py-20">
+        <div className="max-w-5xl mx-auto text-center space-y-8 sm:space-y-10">
+          {/* Urgency Badge */}
+          {daysToSint !== null && daysToSint <= 30 && daysToSint > 0 && (
+            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-gradient-to-r from-rose-500/20 to-orange-500/20 backdrop-blur-xl border border-rose-400/30 shadow-lg shadow-rose-500/20 animate-pulse">
+              <span className="text-2xl">🎅</span>
+              <span className="text-sm sm:text-base font-bold text-white">
+                Nog <span className="text-rose-400 font-black">{daysToSint}</span> dagen tot
+                Sinterklaas!
               </span>
-              {/* Decorative underline */}
-              <svg
-                className="absolute -bottom-2 left-0 w-full h-3 text-rose-500/30"
-                viewBox="0 0 200 12"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M0,7 Q50,1 100,7 T200,7"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-          </h1>
+            </div>
+          )}
 
-          {/* Subhead */}
-          <div className="space-y-5 max-w-xl mx-auto lg:mx-0">
-            <p className="text-lg sm:text-xl text-slate-700 font-medium leading-relaxed">
-              Ontdek onze handmatig samengestelde{' '}
-              <strong className="font-extrabold bg-gradient-to-r from-rose-600 to-purple-600 bg-clip-text text-transparent">
-                cadeaugidsen
-              </strong>{' '}
-              – vol met originele ideeën voor elke gelegenheid, persoonlijkheid en budget. Van
-              Sinterklaas tot kerst, van tech-lovers tot wellness-fans.
-            </p>
-
-            {/* How it works bullets */}
-            <ul className="text-sm md:text-base text-slate-700 space-y-2.5 text-left lg:text-left bg-gradient-to-br from-white/95 to-rose-50/50 backdrop-blur-xl border border-rose-100/50 rounded-3xl px-5 py-4 inline-block shadow-xl shadow-rose-500/5 hover:shadow-rose-500/10 transition-shadow duration-300">
-              <li className="flex items-start gap-3 group">
-                <span className="mt-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 shadow-sm group-hover:scale-125 transition-transform duration-300" />
-                <span className="flex-1">20+ gespecialiseerde cadeaugidsen per thema.</span>
-              </li>
-              <li className="flex items-start gap-3 group">
-                <span className="mt-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-sm group-hover:scale-125 transition-transform duration-300" />
-                <span className="flex-1">Cadeaus voor elk budget – van €10 tot €150+.</span>
-              </li>
-              <li className="flex items-start gap-3 group">
-                <span className="mt-1.5 h-2 w-2 rounded-full bg-gradient-to-br from-orange-500 to-rose-500 shadow-sm group-hover:scale-125 transition-transform duration-300" />
-                <span className="flex-1">
-                  Vergelijk prijzen en koop direct bij betrouwbare webshops.
+          {/* Main Headline */}
+          <div className="space-y-4">
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black leading-[0.95] tracking-tight">
+              <span className="text-white drop-shadow-2xl">Vind het</span>
+              <br />
+              <span className="relative inline-block mt-2">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-pink-400 to-orange-400 animate-gradient-x">
+                  perfecte cadeau
                 </span>
-              </li>
-            </ul>
+                {/* Sparkle decorations */}
+                <svg
+                  className="absolute -top-4 -right-8 w-8 h-8 text-yellow-400 animate-pulse"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2Z" />
+                </svg>
+              </span>
+            </h1>
+            <p className="text-lg sm:text-xl lg:text-2xl text-white/70 font-medium max-w-3xl mx-auto leading-relaxed">
+              Ontdek <span className="text-white font-bold">20+ cadeaugidsen</span> met meer dan{' '}
+              <span className="text-rose-400 font-bold">70.000 producten</span> — voor elk budget,
+              elke persoon, elke gelegenheid.
+            </p>
           </div>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 justify-center lg:justify-start pt-6">
+          {/* Budget Quick Select */}
+          <div className="space-y-4">
+            <p className="text-white/50 text-sm font-semibold uppercase tracking-widest">
+              Kies je budget & start direct
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
+              {budgetOptions.map((option) => (
+                <a
+                  key={option.slug}
+                  href={`/cadeaugids/${option.slug}`}
+                  className="group relative flex flex-col items-center gap-2 p-4 sm:p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/30 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-white/10"
+                >
+                  <div
+                    className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${option.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
+                  />
+                  <span className="text-3xl sm:text-4xl group-hover:scale-125 transition-transform duration-300">
+                    {option.emoji}
+                  </span>
+                  <span className="text-white font-bold text-sm sm:text-base relative z-10">
+                    {option.label}
+                  </span>
+                  <span className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-white/60 text-xs">
+                    →
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="flex flex-col items-center gap-4 pt-4">
             <button
               type="button"
               onClick={onViewGuides}
-              onKeyDown={handleGuidesKeyDown}
-              className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-extrabold rounded-2xl shadow-2xl shadow-rose-500/30 hover:shadow-rose-500/50 hover:-translate-y-1 hover:scale-105 transition-all duration-300 bg-gradient-to-r from-rose-500 via-pink-500 to-rose-600 text-white border-none group relative overflow-hidden focus:outline-none focus:ring-4 focus:ring-rose-500/50 focus:ring-offset-2"
-              aria-label="Scroll naar beneden om cadeau-gidsen te bekijken"
+              className="group relative px-10 sm:px-14 py-5 sm:py-6 text-lg sm:text-xl font-black rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 text-white shadow-2xl shadow-rose-500/40 hover:shadow-rose-500/60 hover:-translate-y-1 hover:scale-105 transition-all duration-300 overflow-hidden"
             >
-              <span className="relative z-10 flex items-center justify-center gap-2.5">
-                📚 Bekijk Cadeaugidsen
+              <span className="relative z-10 flex items-center gap-3">
+                Bekijk alle cadeaugidsen
                 <svg
-                  className="w-5 h-5 transition-transform group-hover:translate-y-1 group-hover:scale-110"
+                  className="w-6 h-6 group-hover:translate-x-1 transition-transform"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2.5}
-                  aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>
               {/* Shine effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent z-0" />
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-rose-400 to-pink-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300" />
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
             </button>
 
+            {/* AI Coach als subtiele link */}
             <button
               type="button"
               onClick={onStartQuiz}
-              onKeyDown={handleQuizKeyDown}
-              className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold text-slate-700 bg-white/90 hover:bg-white border-2 border-slate-200 hover:border-purple-300 rounded-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-1 flex items-center justify-center gap-2.5 backdrop-blur-xl group focus:outline-none focus:ring-4 focus:ring-purple-500/50 focus:ring-offset-2"
-              aria-label="Start de AI Cadeaucoach voor persoonlijk advies"
+              className="group flex items-center gap-2 text-white/50 hover:text-white/80 text-sm font-medium transition-colors"
             >
-              <span>Of probeer Cadeaucoach (AI)</span>
               <svg
-                className="w-5 h-5 text-purple-500 transition-transform group-hover:rotate-12 group-hover:scale-110"
+                className="w-4 h-4 text-purple-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                strokeWidth={2.5}
-                aria-hidden="true"
+                strokeWidth={2}
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"
+                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
                 />
               </svg>
+              <span>Of probeer de AI Cadeaucoach</span>
+              <span className="text-purple-400 group-hover:translate-x-0.5 transition-transform">
+                →
+              </span>
             </button>
           </div>
 
-          {/* Trust Indicators - Enhanced styling */}
-          <div className="pt-6 sm:pt-8 pb-2 sm:pb-4 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-5 text-xs sm:text-sm font-semibold text-slate-600">
-            <div className="flex items-center gap-2 sm:gap-2.5 group hover:scale-105 transition-transform duration-200">
-              <div className="p-1.5 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 shadow-lg shadow-rose-500/30">
-                <svg
-                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
-                >
-                  <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-                </svg>
-              </div>
-              <span className="text-center sm:text-left text-slate-700">
-                20+ gespecialiseerde gidsen
-              </span>
+          {/* Stats Row */}
+          <div className="grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto pt-8 border-t border-white/10">
+            <div className="text-center">
+              <p className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400">
+                70K+
+              </p>
+              <p className="text-white/50 text-xs sm:text-sm font-medium mt-1">Producten</p>
             </div>
-            <div
-              className="hidden sm:block h-5 w-px bg-gradient-to-b from-transparent via-slate-300 to-transparent"
-              aria-hidden="true"
-            />
-            <div className="flex items-center gap-2 sm:gap-2.5 group hover:scale-105 transition-transform duration-200">
-              <div className="p-1.5 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30">
-                <svg
-                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  aria-hidden="true"
+            <div className="text-center">
+              <p className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
+                20+
+              </p>
+              <p className="text-white/50 text-xs sm:text-sm font-medium mt-1">Cadeaugidsen</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
+                5
+              </p>
+              <p className="text-white/50 text-xs sm:text-sm font-medium mt-1">Partners</p>
+            </div>
+          </div>
+
+          {/* Partner Strip */}
+          <div className="pt-6">
+            <p className="text-white/30 text-xs font-semibold uppercase tracking-widest mb-4">
+              Producten van betrouwbare webshops
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              {partners.map((partner) => (
+                <span
+                  key={partner.name}
+                  className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                    partner.highlight
+                      ? 'bg-gradient-to-r from-blue-500/20 to-blue-400/20 text-blue-300 border border-blue-400/30'
+                      : 'bg-white/5 text-white/50 border border-white/10 hover:text-white/70 hover:border-white/20'
+                  }`}
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <span className="text-center sm:text-left text-slate-700">
-                Bij betrouwbare webshops
-              </span>
+                  {partner.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce hidden sm:block">
+            <div className="flex flex-col items-center gap-2 text-white/30">
+              <span className="text-xs font-medium">Scroll voor meer</span>
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
             </div>
           </div>
         </div>
