@@ -14,11 +14,11 @@ const gift_amazon_chipolo: Gift = {
         'https://www.amazon.nl/Chipolo-ONE-Spot-Sleutelvinder-Bluetooth/dp/B09C89S7WG?linkCode=ll1&tag=gifteez77-21&linkId=aa1e7d28ec47784726d50a1720cd19a3&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: '/images/products/chipolo-one-spot.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/61aJXqvlSEL._AC_SL1500_.jpg',
 }
 
 const gift_amazon_ledlamp: Gift = {
-  productName: 'LED Leeslamp Dimbaar',
+  productName: 'Gritin LED Leeslamp Dimbaar',
   description:
     'Flexibele LED leeslamp met 3 kleurtemperaturen en dimfunctie. Perfect voor avondlezen zonder je partner te storen. USB oplaadbaar met touch bediening.',
   priceRange: '€11,95',
@@ -29,11 +29,11 @@ const gift_amazon_ledlamp: Gift = {
         'https://www.amazon.nl/Gritin-Eye-Protecting-Flexibele-Oplaadbaar-Batterijlevensduur/dp/B08GG42WXY?linkCode=ll1&tag=gifteez77-21&linkId=cd6e9041ceb3565c18acf17617214f90&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: '/images/products/led-leeslamp.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/61hYVvjQHpL._AC_SL1500_.jpg',
 }
 
 const gift_amazon_diffuser: Gift = {
-  productName: 'Aromadiffuser met LED',
+  productName: 'Aromadiffuser met LED Verlichting',
   description:
     'Aromadiffuser met 300ml capaciteit en 7 LED kleuren. Creëert rust en ontspanning in huis. Fluisterstil met auto-uit functie. Perfect voor voor het slapengaan.',
   priceRange: '€20,96',
@@ -44,7 +44,7 @@ const gift_amazon_diffuser: Gift = {
         'https://www.amazon.nl/Aromadiffuser-etherische-aromatherapie-diffuser-automatische-uitschakelfunctie/dp/B0DFGY2535?linkCode=ll1&tag=gifteez77-21&linkId=4fbcce986136a038a767f2cbd50e81ae&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: '/images/products/aromadiffuser.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/61JzVXqQL3L._AC_SL1500_.jpg',
 }
 
 // ==================== KERST VOOR HAAR 2025 ====================
@@ -4031,6 +4031,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     category: 'Amazon Deals',
     author: { name: 'Gifteez Team', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-team' },
     publishedDate: '2025-11-14',
+    updatedAt: '2025-11-30',
     readTime: '5 min',
     featured: true,
     content: [
