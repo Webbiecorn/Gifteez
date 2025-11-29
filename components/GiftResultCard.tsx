@@ -30,6 +30,7 @@ interface GiftResultCardProps {
   candidateVariant?: boolean // special compact alignment variant for comparison sections
   onCompareToggle?: (gift: Gift) => void // Callback for compare toggle
   isInCompareList?: boolean // Whether this gift is in compare list
+  isTopChoice?: boolean // Show "Onze Top Keuze" badge for first/best product
 }
 
 // Helper to extract min/max price from price range string
@@ -59,6 +60,7 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
   candidateVariant = false,
   onCompareToggle,
   isInCompareList = false,
+  isTopChoice = false,
 }) => {
   const auth = useContext(AuthContext)
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
@@ -211,8 +213,18 @@ const GiftResultCard: React.FC<GiftResultCardProps> = ({
             />
           )}
 
+          {/* Top Choice Badge - Shown for first/best product */}
+          {isTopChoice && (
+            <div className="absolute -top-1 -left-1 z-10">
+              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold px-4 py-2 rounded-br-2xl rounded-tl-lg shadow-lg flex items-center gap-1.5">
+                <span className="text-sm">🏆</span>
+                <span>ONZE TOP KEUZE</span>
+              </div>
+            </div>
+          )}
+
           {/* Trending Badge */}
-          {gift.trendingBadge && (
+          {gift.trendingBadge && !isTopChoice && (
             <span
               className={`absolute top-3 left-3 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1 ${
                 gift.trendingBadge === 'trending'

@@ -20,7 +20,6 @@ import {
   SparklesIcon,
   TargetIcon,
   ShareIcon,
-  MailIcon,
   UserIcon,
   TagIcon,
 } from './IconComponents'
@@ -38,6 +37,7 @@ import type {
   VerdictBlock,
   FAQBlock,
   ImageBlock,
+  Gift,
 } from '../types'
 
 // Helper function to get author icon based on name
@@ -557,6 +557,19 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
       .replace(/\s+/g, '-')
       .replace(/[^\w-]+/g, '')
 
+  // Find the first gift block index for "Top Choice" badge
+  const firstGiftBlockIndex = contentBlocks.findIndex((block) => block.type === 'gift')
+
+  // Extract all gift blocks for sidebar quick navigation
+  const giftBlocks = contentBlocks
+    .map((block, idx) => ({ block, index: idx }))
+    .filter(({ block }) => block.type === 'gift')
+    .map(({ block, index }) => ({
+      gift: (block as { type: 'gift'; content: Gift }).content,
+      index,
+      isTopChoice: index === firstGiftBlockIndex,
+    }))
+
   // Removed special-case preprocessing for legacy post 'vergelijking-draadloze-oordopjes'
   // (Content pruning September 2025)
 
@@ -630,7 +643,12 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
         return (
           <div
             key={index}
-            className="my-12 bg-gradient-to-br from-rose-50 via-white to-pink-50 rounded-3xl p-6 sm:p-8 border-2 border-rose-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01]"
+            data-gift-card
+            className={`my-12 rounded-3xl p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.01] ${
+              index === firstGiftBlockIndex
+                ? 'bg-gradient-to-br from-emerald-50 via-white to-teal-50 border-2 border-emerald-200 ring-2 ring-emerald-100'
+                : 'bg-gradient-to-br from-rose-50 via-white to-pink-50 border-2 border-rose-100'
+            }`}
           >
             <GiftResultCard
               gift={block.content}
@@ -639,6 +657,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
               isEmbedded={true}
               imageHeightClass="h-80 sm:h-96 lg:h-[28rem]"
               imageFit="contain"
+              isTopChoice={index === firstGiftBlockIndex}
             />
           </div>
         )
@@ -1336,78 +1355,6 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                 />
               </div>
             </div>
-
-            {/* Newsletter Signup Section */}
-            <div
-              className="mt-16 relative overflow-hidden rounded-3xl shadow-2xl bg-purple-800"
-              data-newsletter-section
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-900 via-purple-700 to-purple-600 opacity-95"></div>
-              <div className="relative p-8 md:p-12 text-center text-white">
-                <div className="absolute inset-0 bg-black/10"></div>
-                <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-                    <MailIcon className="w-8 h-8 text-white" aria-hidden="true" />
-                  </div>
-                  <h2 className="font-display text-2xl md:text-4xl font-bold mb-4">
-                    Blijf op de hoogte van de beste cadeaus
-                  </h2>
-                  <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-                    Ontvang wekelijks de nieuwste cadeau-ideeën, aanbiedingen en tips rechtstreeks
-                    in je inbox.
-                  </p>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      const formData = new FormData(e.target as HTMLFormElement)
-                      const email = formData.get('email') as string
-
-                      if (!email || !email.includes('@')) {
-                        showToast('Voer een geldig e-mailadres in', 'error')
-                        return
-                      }
-
-                      // Simulate newsletter signup
-                      showToast(
-                        'Bedankt voor je aanmelding! Je ontvangt binnenkort onze beste cadeau-tips.',
-                        'success'
-                      )
-                      ;(e.target as HTMLFormElement).reset()
-                    }}
-                    className="max-w-md mx-auto"
-                    aria-labelledby="newsletter-heading"
-                  >
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <label htmlFor="newsletter-email" className="sr-only">
-                        E-mailadres
-                      </label>
-                      <input
-                        id="newsletter-email"
-                        name="email"
-                        type="email"
-                        placeholder="jouw@email.nl"
-                        required
-                        aria-describedby="email-help"
-                        className="flex-1 px-4 py-3 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
-                      />
-                      <button
-                        type="submit"
-                        className="bg-white text-purple-600 font-bold px-6 py-3 rounded-full hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-purple-600"
-                        aria-describedby="submit-help"
-                      >
-                        Aanmelden
-                      </button>
-                    </div>
-                    <div className="flex flex-col sm:flex-row items-center justify-between mt-3 text-white/70 text-sm gap-2">
-                      <span id="email-help">Geen spam, je kunt je altijd eenvoudig afmelden.</span>
-                      <span id="submit-help" className="sr-only">
-                        Klik om je aan te melden voor onze nieuwsbrief
-                      </span>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
           </main>
 
           {/* Sticky Table of Contents Sidebar */}
@@ -1445,6 +1392,44 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                       ))}
                     </ol>
                   </nav>
+
+                  {/* Quick Product Navigation */}
+                  {giftBlocks.length > 0 && (
+                    <div className="mt-6 pt-6 border-t border-gray-100">
+                      <h4 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        🎁 Producten in dit artikel
+                      </h4>
+                      <div className="space-y-2">
+                        {giftBlocks.map(({ gift, index, isTopChoice }) => (
+                          <button
+                            key={index}
+                            onClick={() => {
+                              const giftElements = document.querySelectorAll('[data-gift-card]')
+                              const targetIndex = giftBlocks.findIndex((g) => g.index === index)
+                              if (giftElements[targetIndex]) {
+                                giftElements[targetIndex].scrollIntoView({
+                                  behavior: 'smooth',
+                                  block: 'center',
+                                })
+                              }
+                            }}
+                            className={`w-full text-left px-3 py-2.5 text-sm rounded-lg transition-all duration-200 flex items-start gap-2 ${
+                              isTopChoice
+                                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                                : 'text-gray-600 hover:text-accent hover:bg-muted-rose/70'
+                            }`}
+                          >
+                            {isTopChoice && (
+                              <span className="text-xs font-bold bg-emerald-500 text-white px-1.5 py-0.5 rounded">
+                                TOP
+                              </span>
+                            )}
+                            <span className="line-clamp-2 leading-tight">{gift.productName}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Reading Progress */}
                   <div className="mt-8 pt-6 border-t border-gray-100" aria-label="Leesvoortgang">
@@ -1491,26 +1476,6 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                         className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
                       >
                         👤 Over auteur
-                      </button>
-                      <button
-                        onClick={() =>
-                          document
-                            .querySelector('[data-newsletter-section]')
-                            ?.scrollIntoView({ behavior: 'smooth' })
-                        }
-                        className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
-                      >
-                        📧 Nieuwsbrief
-                      </button>
-                      <button
-                        onClick={() =>
-                          document
-                            .querySelector('[data-comments-section]')
-                            ?.scrollIntoView({ behavior: 'smooth' })
-                        }
-                        className="w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-accent hover:bg-muted-rose/70 rounded-lg transition-colors duration-200"
-                      >
-                        💬 Reacties
                       </button>
                     </div>
                   </div>
