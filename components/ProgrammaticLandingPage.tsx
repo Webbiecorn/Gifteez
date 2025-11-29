@@ -417,10 +417,31 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) =
   }, [config?.faq, index, pageTitle, variantSlug])
 
   const editorPickProducts = useMemo<EditorPick[]>(() => {
+    // Priority 1: Use curatedProducts if available (for Amazon/manual products)
+    if (config?.curatedProducts?.length) {
+      return config.curatedProducts.map((product) => ({
+        product: {
+          id: product.affiliateLink,
+          title: product.title,
+          price: product.price,
+          currency: product.currency || 'EUR',
+          image: product.image,
+          url: product.affiliateLink,
+          merchant: product.merchant,
+          inStock: true,
+          source: product.merchant.toLowerCase(),
+        } as ClassifiedProduct,
+        reason: product.reason || 'Handmatig geselecteerd',
+      }))
+    }
+
+    // Priority 2: Use featured products from index
     if (!index) return []
     if (index.featured?.length) {
       return index.featured.map((product) => ({ product, reason: 'Redactie favoriet' }))
     }
+
+    // Priority 3: Match editorPicks SKUs with index products
     if (!config?.editorPicks?.length) return []
     return config.editorPicks
       .map<EditorPick | null>((pick) => {
@@ -431,7 +452,7 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) =
         return { product: match, reason: pick.reason }
       })
       .filter((item): item is EditorPick => Boolean(item))
-  }, [config?.editorPicks, index])
+  }, [config?.curatedProducts, config?.editorPicks, index])
 
   const lastUpdatedLabel = useMemo(() => {
     if (!index?.metadata.generatedAt) return null

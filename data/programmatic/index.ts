@@ -280,6 +280,15 @@ export type ProgrammaticConfig = {
   intro: string
   disableOccasionFilter?: boolean
   editorPicks?: { sku: string; reason?: string }[]
+  curatedProducts?: {
+    title: string
+    price: number
+    currency?: string
+    image: string
+    affiliateLink: string
+    merchant: string
+    reason?: string
+  }[]
   highlights?: string[]
   filters?: {
     maxPrice?: number
@@ -1884,15 +1893,57 @@ const RAW_VARIANTS = [
       ],
       maxPrice: 80,
     },
-    editorPicks: [
-      { sku: 'B0B74X6669', reason: 'Compacte klemclip voor €10,79 - budgetvriendelijk en stil' },
-      { sku: 'B08GG42WXY', reason: 'Flexibele zwanenhals met oogbescherming voor €11,95' },
+    curatedProducts: [
       {
-        sku: 'B0CD8NC67S',
+        title: 'DEWENWILS Boekenklem Leeslampje - Oplaadbaar met 3 Kleuren',
+        price: 10.79,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71ZaE+ogx0L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/DEWENWILS-Boekenklem-Oplaadbaar-Helderheidsniveaus-Boekenwurmen/dp/B0B74X6669?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-54&th=1&linkCode=ll1&tag=gifteez77-21&linkId=f3c57dfcfda75561c4f97e5e9adcf46b&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Compacte klemclip voor €10,79 - budgetvriendelijk en stil',
+      },
+      {
+        title: 'Gritin Leeslampje met Flexibele Zwanenhals - Oogbescherming',
+        price: 11.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/81n7M-T19NL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Gritin-Eye-Protecting-Flexibele-Oplaadbaar-Batterijlevensduur/dp/B08GG42WXY?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-5&th=1&linkCode=ll1&tag=gifteez77-21&linkId=ccdcccc8940f5092fb3f3108a948e1b5&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Flexibele zwanenhals met oogbescherming voor €11,95',
+      },
+      {
+        title: 'Barnsteenkleurig Leeslampje met USB-C Opladen - Warm Licht',
+        price: 16.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/51W4bQGufeL._AC_SL1250_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Barnsteenkleurige-boekenverlichting-USB-C-opladen-oplaadbare-flexibele/dp/B0CD8NC67S?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-3-spons&aref=17EkmImNwa&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1&linkCode=ll1&tag=gifteez77-21&linkId=48c483375c209c77558fc3e04daf474b&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
         reason: 'Barnsteenkleurig licht met USB-C opladen - perfect voor slaap',
       },
-      { sku: 'B0CGM5TLZX', reason: 'Nekketting met ergonomisch ontwerp - handsfree lezen' },
-      { sku: 'B0C6XT1JFF', reason: 'Premium hals-leeslamp met 80 uur batterij en amberkleur' },
+      {
+        title: 'Gritin Nekleeslampje - Ergonomisch & Oplaadbaar',
+        price: 19.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Gritin-Oplaadbaar-Oogbescherming-Kleurtemperaturen-Ergonomisch/dp/B0CGM5TLZX?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-28&linkCode=ll1&tag=gifteez77-21&linkId=cef6510deb0154cd57f147ffb3e6bf63&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Nekketting met ergonomisch ontwerp - handsfree lezen',
+      },
+      {
+        title: 'Glocusent Premium Hals-Leeslamp - 80 Uur Batterijduur',
+        price: 25.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71rwR8CwdDL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Glocusent-oplaadbare-batterijduur-leeslampjes-helderheid/dp/B0C6XT1JFF?crid=3LDMZ1E2DYWGO&dib=eyJ2IjoiMSJ9.oNrAGYzJ2ytQAsle3p3MCio2zIq4sdS335nL6gCtfSdBpzrZfjXehrcs5kI55j3PInyNKKlO0jLkTHj3RO4_AiDetoFGhri3vtyQ7Nyi4YXAKutxlKNhIaeR0xqepGhg6oXDmdJy3p3oXj12Dh1XPkHd9pBYWY9bJ2hpDznlM6GIVroD3vjL2PErpajU_ew7-w8sLfST-3piaVUVHa9nG4coVtwgRCj86nK5rQ1YMVsknnpw7lZ5uJSJerBvjP1e7RDCRx70yOR4gneodQEBZ-2v2FjgQdobd_Mg4Tp5qyg.LeHhFKNXBebrRyMf03EZ4Iid-L6kyF5xf3qxkzEtmM0&dib_tag=se&keywords=leeslampje&qid=1764423881&sprefix=leesl%2Caps%2C111&sr=8-55&th=1&linkCode=ll1&tag=gifteez77-21&linkId=c0846bf4c859d582fee1369af20e274e&language=nl_NL&ref_=as_li_ss_tl',
+        merchant: 'Amazon',
+        reason: 'Premium hals-leeslamp met 80 uur batterij en amberkleur',
+      },
     ],
     highlights: [
       "Amber licht bevat minder blauwlicht en verstoort de slaap minder dan witte LED's",
