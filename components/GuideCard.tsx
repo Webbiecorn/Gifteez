@@ -19,6 +19,50 @@ const GuideCard: React.FC<GuideCardProps> = ({ config, displayMode = 'default' }
 
     const fetchProducts = async () => {
       try {
+        // If config has curatedProducts, use those directly
+        if (config.curatedProducts?.length) {
+          if (isMounted) {
+            const curatedAsClassified: ClassifiedProduct[] = config.curatedProducts
+              .slice(0, 3)
+              .map((product) => ({
+                id: product.affiliateLink,
+                sku: product.affiliateLink,
+                title: product.title,
+                price: product.price,
+                currency: product.currency || 'EUR',
+                image: product.image,
+                images: [product.image],
+                url: product.affiliateLink,
+                merchant: product.merchant,
+                inStock: true,
+                source: 'amazon' as const,
+                facets: {
+                  audience: ['unisex'],
+                  category: 'gadgets',
+                  priceBucket:
+                    product.price < 25
+                      ? 'under-25'
+                      : product.price < 50
+                        ? '25-50'
+                        : product.price < 100
+                          ? '50-100'
+                          : product.price < 250
+                            ? '100-250'
+                            : 'over-250',
+                  confidence: 1,
+                  reasons: ['Handmatig toegevoegd'],
+                  needsReview: false,
+                  isGiftable: true,
+                },
+                searchText: `${product.title} ${product.merchant}`.toLowerCase(),
+                canonicalKey: product.affiliateLink,
+              }))
+            setProducts(curatedAsClassified)
+            setLoading(false)
+            return
+          }
+        }
+
         const response = await fetch(`/programmatic/${config.slug}.json`)
         if (response.ok) {
           const data: ProgrammaticIndex = await response.json()
