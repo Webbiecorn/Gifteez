@@ -324,14 +324,14 @@ const CadeausHubPage: React.FC<{ navigateTo: NavigateTo }> = () => {
 
           <div className="relative px-6 py-10 sm:px-10 sm:py-12 lg:px-14 lg:py-16">
             <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-1.5 text-xs font-semibold text-rose-600 shadow-sm ring-1 ring-rose-100">
-              Altijd het juiste cadeau gevonden
+              🎁 {variants.length}+ cadeaugidsen beschikbaar
             </div>
             <h1 className="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900">
-              Cadeaugidsen die echt converteren
+              Vind het perfecte cadeau in minuten
             </h1>
             <p className="mt-4 text-base md:text-lg text-gray-700 max-w-2xl">
-              Kies een gids die past bij jouw moment of budget. Elke pagina toont direct shoppable
-              cadeaus met snelle levering, prijsfilters en een mix van betrouwbare partners.
+              Kies een gids op budget, persoon of gelegenheid. Elke gids bevat handgeselecteerde
+              producten van betrouwbare partners met snelle levering en scherpe prijzen.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-2">

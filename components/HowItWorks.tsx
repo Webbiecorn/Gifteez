@@ -5,7 +5,7 @@ const steps = [
     id: 1,
     title: 'Kies je gids',
     description: 'Selecteer een cadeaugids op basis van persoon, budget of gelegenheid.',
-    icon: '�',
+    icon: '📚',
     gradient: 'from-rose-500 to-pink-600',
   },
   {

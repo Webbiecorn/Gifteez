@@ -254,18 +254,18 @@ const AboutPage: React.FC<AboutPageProps> = ({ navigateTo }) => {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 variant="accent"
-                onClick={() => navigateTo('categories')}
+                onClick={() => navigateTo('cadeausHub')}
                 className="px-10 py-4 text-lg font-semibold shadow-lg transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-xl"
               >
                 <SparklesIcon className="h-5 w-5" />
-                Bekijk cadeaucollecties
+                Bekijk cadeaugidsen
               </Button>
               <button
                 onClick={() => navigateTo('contact')}
                 className="inline-flex items-center gap-2 rounded-full border border-primary/30 px-8 py-3 text-primary transition-colors hover:bg-primary/10"
               >
                 <CheckCircleIcon className="h-5 w-5" />
-                Plan een demo
+                Neem contact op
               </button>
             </div>
 
