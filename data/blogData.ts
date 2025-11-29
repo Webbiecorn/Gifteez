@@ -1371,18 +1371,18 @@ const gift_holland_barrett_orakelkaarten: Gift = {
 
 // Winter wellness producten
 const gift_holland_barrett_vitamine_d: Gift = {
-  productName: 'Vitamine D3 75mcg (3000IU) - 240 Capsules',
+  productName: 'Lucovitaal Vitamine D3 75mcg (70 Capsules)',
   description:
-    'Extra sterke vitamine D3 voor ondersteuning van het immuunsysteem en gezonde botten. Vooral belangrijk in de wintermaanden met minder zonlicht.',
-  priceRange: '€12,99',
+    'Hooggedoseerd vitamine D supplement voor mensen die weinig in de zon zijn. Van belang voor sterke botten, tanden en spieren. Slechts 1 capsule per dag!',
+  priceRange: '€15,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fvitamine-d3',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=23822579409&a=2566111&m=8108',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/000635_A.jpg',
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F008478_A.png&feedId=20669&k=5408633db5b4d77d74d390432dc76bdcb9b36486',
   tags: ['vitamine', 'winter', 'immuniteit'],
   giftType: 'physical',
   matchReason:
@@ -1390,40 +1390,40 @@ const gift_holland_barrett_vitamine_d: Gift = {
 }
 
 const gift_holland_barrett_gember_thee: Gift = {
-  productName: 'Jacob Hooy Gember Citroen Thee',
+  productName: 'Lucovitaal Magnesium Groene Thee (20 Theezakjes)',
   description:
-    'Verwarmende kruidenthee met gember en citroen. Perfect voor koude winterdagen. 20 theezakjes voor weken van geniet.',
-  priceRange: '€3,49',
+    'Groene thee blend met citroenmelisse, gember, salie en magnesium. Magnesium is belangrijk voor spieren en sterke botten. De gember zorgt voor een verwarmend effect.',
+  priceRange: '€5,49',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fthee',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=27230422009&a=2566111&m=8108',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/058312_A.jpg',
-  tags: ['thee', 'winter', 'wellness'],
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F001880_A.png&feedId=20669&k=e41639cac84fe7e68a048eae3aa2489b8f2a4888',
+  tags: ['thee', 'winter', 'wellness', 'magnesium'],
   giftType: 'physical',
   matchReason:
-    'Betaalbaar en praktisch - ideaal als toevoeging aan een groter cadeau of als klein attentje.',
+    'Betaalbaar en praktisch - ideaal als toevoeging aan een groter cadeau of als klein attentie.',
 }
 
 const gift_holland_barrett_omega3: Gift = {
-  productName: 'Omega-3 Visolie 1000mg - 100 Capsules',
+  productName: 'Together Health Omega 3 uit Veganistische Algenbron (30 Capsules)',
   description:
-    'Hoogwaardige omega-3 visolie capsules voor hart, hersenen en zicht. Zuiver en duurzaam geproduceerd.',
+    'Plantaardige softgels met DHA en EPA uit algen. Veganistisch, vrij van kunstmatige hulpstoffen en zware metalen. Goed voor hart en hersenfunctie.',
   priceRange: '€16,99',
   retailers: [
     {
       name: 'Holland & Barrett',
-      affiliateLink:
-        'https://www.awin1.com/cread.php?awinmid=8108&awinaffid=2566111&ued=https%3A%2F%2Fwww.hollandandbarrett.nl%2Fomega-3',
+      affiliateLink: 'https://www.awin1.com/pclick.php?p=34893198227&a=2566111&m=8108',
     },
   ],
-  imageUrl: 'https://images.hollandandbarrettimages.co.uk/productimages/HB/370/000107_A.jpg',
-  tags: ['omega-3', 'gezondheid', 'supplement'],
+  imageUrl:
+    'https://images2.productserve.com/?w=200&h=200&bg=white&trim=5&t=letterbox&url=ssl%3Aimages.hollandandbarrettimages.co.uk%2Fproductimages%2FDT%2F724%2F010638_A.png&feedId=20669&k=c067d506b4d8185298a6c79f0a6905cfac0d8f88',
+  tags: ['omega-3', 'gezondheid', 'supplement', 'vegan'],
   giftType: 'physical',
-  matchReason: 'Populair supplement voor gezondheid - geschikt voor actieve mensen en gezinnen.',
+  matchReason: 'Populair supplement voor gezondheid - geschikt voor actieve mensen en veganisten.',
 }
 
 // ==========================================
