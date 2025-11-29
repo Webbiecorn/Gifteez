@@ -1570,6 +1570,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-holland-barrett',
     },
     publishedDate: '2025-11-05',
+    updatedAt: '2025-11-30',
     content: [
       {
         type: 'paragraph',

@@ -1088,6 +1088,31 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                       Gepubliceerd: {formattedDate}
                     </time>
                   </div>
+                  {post.updatedAt && (
+                    <div className="flex items-center gap-2">
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                      <time dateTime={post.updatedAt}>
+                        Bijgewerkt:{' '}
+                        {new Date(post.updatedAt).toLocaleDateString('nl-NL', {
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </time>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     <UserIcon className="w-4 h-4" aria-hidden="true" />
                     <span>Auteur: {post.author.name}</span>
@@ -1223,9 +1248,68 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
               </div>
             </div>
 
+            {/* Social Share Section */}
+            <div className="mt-12 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+              <div className="text-center mb-4">
+                <h3 className="font-display text-lg font-bold text-primary flex items-center justify-center gap-2">
+                  <ShareIcon className="w-5 h-5 text-accent" />
+                  Deel dit artikel
+                </h3>
+              </div>
+              <div className="flex flex-wrap justify-center gap-3">
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(post.title + ' ' + window.location.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-full font-medium text-sm transition-all duration-300 transform hover:scale-105"
+                  aria-label="Deel via WhatsApp"
+                >
+                  <WhatsAppIcon className="w-4 h-4" />
+                  WhatsApp
+                </a>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1877F2] hover:bg-[#166FE5] text-white rounded-full font-medium text-sm transition-all duration-300 transform hover:scale-105"
+                  aria-label="Deel op Facebook"
+                >
+                  <FacebookIcon className="w-4 h-4" />
+                  Facebook
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-black hover:bg-gray-800 text-white rounded-full font-medium text-sm transition-all duration-300 transform hover:scale-105"
+                  aria-label="Deel op X"
+                >
+                  <TwitterIcon className="w-4 h-4" />X
+                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href)
+                    showToast('Link gekopieerd naar klembord! 📋', 'success')
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full font-medium text-sm transition-all duration-300 transform hover:scale-105"
+                  aria-label="Kopieer link"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Kopieer link
+                </button>
+              </div>
+            </div>
+
             {/* Article Engagement Section */}
             <div
-              className="mt-16 bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 border border-muted-rose"
+              className="mt-12 bg-gradient-to-r from-secondary to-muted-rose rounded-3xl p-8 border border-muted-rose"
               data-comments-section
             >
               <div className="text-center mb-8">
@@ -1313,13 +1397,6 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                   <span className="font-medium text-primary">Reageer</span>
                 </button>
               </div>
-
-              <div className="text-center">
-                <p className="text-sm text-accent mb-4">
-                  💡 <strong>Pro tip:</strong> Gebruik de snelle navigatie in de zijbalk om direct
-                  naar interessante secties te springen!
-                </p>
-              </div>
             </div>
 
             {/* Internal Links - Related Content */}
@@ -1327,7 +1404,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
               <h3 className="font-display text-2xl font-bold text-primary mb-6 text-center">
                 📌 Ontdek meer op Gifteez
               </h3>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-3 gap-6">
                 <InternalLinkCTA
                   to="/giftfinder"
                   title="🎁 AI GiftFinder"
@@ -1341,6 +1418,13 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                   description="Bekijk dagelijks de beste cadeau deals van Coolblue en Amazon. Van tech gadgets tot lifestyle producten met de hoogste korting."
                   icon="💰"
                   variant="accent"
+                />
+                <InternalLinkCTA
+                  to="/cadeaus"
+                  title="📚 Alle Gidsen"
+                  description="Ontdek al onze cadeau gidsen: van tech tot wellness, van Sinterklaas tot Kerst. Vind de perfecte inspiratie voor elke gelegenheid."
+                  icon="📖"
+                  variant="primary"
                 />
               </div>
             </div>
@@ -1550,7 +1634,7 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {posts
                 .filter((p) => p.slug !== post.slug)
-                .slice(0, 2)
+                .slice(0, 3)
                 .map((rel) => (
                   <div
                     key={rel.slug}
@@ -1578,19 +1662,6 @@ const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ slug, navigateTo, showT
                     </div>
                   </div>
                 ))}
-              <div className="bg-gradient-to-br from-accent to-accent-hover rounded-2xl p-6 flex flex-col justify-center text-white shadow-lg">
-                <h4 className="font-display text-xl font-bold mb-3">Meer Cadeau Inspiratie?</h4>
-                <p className="text-sm text-secondary mb-4 leading-relaxed">
-                  Gebruik onze AI GiftFinder voor een persoonlijke lijst cadeau ideeën – sneller
-                  kiezen, beter geven.
-                </p>
-                <button
-                  onClick={() => navigateTo('giftFinder', {})}
-                  className="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold transition-colors"
-                >
-                  Start GiftFinder <TargetIcon className="w-4 h-4" />
-                </button>
-              </div>
             </div>
           </div>
         </section>
