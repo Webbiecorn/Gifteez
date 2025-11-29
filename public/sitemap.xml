@@ -16,8 +16,8 @@
   <url>
     <loc>https://gifteez.nl/deals</loc>
     
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gifteez.nl/cadeaugidsen</loc>
@@ -36,18 +36,6 @@
     
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://gifteez.nl/deals/category/feest-party-partypro</loc>
-    
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://gifteez.nl/deals/category/duurzame-cadeaus-slygad</loc>
-    
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://gifteez.nl/cadeaugidsen/dames-mode-duurzaam</loc>

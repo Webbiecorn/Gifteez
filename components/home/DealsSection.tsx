@@ -12,9 +12,9 @@ const features = [
     gradient: 'from-purple-500 to-indigo-600',
   },
   {
-    title: 'Beste Prijzen',
-    description: 'We vergelijken prijzen bij 5+ webshops voor de beste deal.',
-    icon: '💰',
+    title: 'Betrouwbare Partners',
+    description: 'We werken met Coolblue, Holland & Barrett, Amazon en meer.',
+    icon: '🤝',
     gradient: 'from-emerald-500 to-teal-600',
   },
   {
@@ -50,7 +50,7 @@ const DealsSection: React.FC<DealsSectionProps> = ({ onViewDeals }) => {
         {/* Header */}
         <div className="text-center mb-16">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-100 text-rose-600 text-sm font-semibold mb-4">
-            🔥 Topdeals
+            🤝 Betrouwbaar shoppen
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 mb-4">
             Waarom kiezen voor
@@ -60,7 +60,7 @@ const DealsSection: React.FC<DealsSectionProps> = ({ onViewDeals }) => {
             </span>
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Wij doen het zoekwerk, jij plukt de vruchten. Vergelijk, kies en bestel direct.
+            Wij doen het zoekwerk, jij plukt de vruchten. Shop bij betrouwbare partners.
           </p>
         </div>
 
@@ -108,7 +108,7 @@ const DealsSection: React.FC<DealsSectionProps> = ({ onViewDeals }) => {
             className="group relative px-10 py-5 text-lg font-bold rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-orange-500 text-white shadow-2xl shadow-rose-500/30 hover:shadow-rose-500/50 hover:-translate-y-1 hover:scale-105 transition-all duration-300 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-3">
-              🏷️ Bekijk alle Topdeals
+              🤝 Bekijk onze Partners
               <svg
                 className="w-5 h-5 group-hover:translate-x-1 transition-transform"
                 fill="none"

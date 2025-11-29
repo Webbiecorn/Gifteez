@@ -41,11 +41,7 @@ vi.mock('../dealCategoryConfigService', () => ({
   },
 }))
 
-vi.mock('../../data/dealsData', () => ({
-  dealOfTheWeek: undefined,
-  top10Deals: [],
-  dealCategories: [],
-}))
+// dealsData is no longer used - empty mocks for backwards compatibility
 
 describe('dynamicProductService', () => {
   // Sample test data

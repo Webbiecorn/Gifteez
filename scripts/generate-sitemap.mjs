@@ -21,13 +21,10 @@ const OUT_FILE = path.resolve("public/sitemap.xml");
 const staticRoutes = [
   { loc: `${SITE}/`, changefreq: "daily", priority: "0.9" },
   { loc: `${SITE}/giftfinder`, changefreq: "daily", priority: "0.8" },
-  { loc: `${SITE}/deals`, changefreq: "daily", priority: "0.8" },
+  { loc: `${SITE}/deals`, changefreq: "weekly", priority: "0.7" },
   { loc: `${SITE}${GUIDE_BASE_PATH}`, changefreq: "daily", priority: "0.8" },
   { loc: `${SITE}/blog`, changefreq: "daily", priority: "0.7" },
   { loc: `${SITE}/categories`, changefreq: "weekly", priority: "0.6" },
-  // Category pages
-  { loc: `${SITE}/deals/category/feest-party-partypro`, changefreq: "weekly", priority: "0.7" },
-  { loc: `${SITE}/deals/category/duurzame-cadeaus-slygad`, changefreq: "weekly", priority: "0.7" },
 ];
 
 // Als je later blogposts als Markdown toevoegt, zet ze in src/content/posts/*.md

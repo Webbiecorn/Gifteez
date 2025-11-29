@@ -24,7 +24,6 @@ export type Page =
   | 'privacy'
   | 'affiliateDisclosure'
   | 'admin'
-  | 'adminDealsPreview'
   | 'programmatic'
   | 'cadeausHub'
   | 'notFound'

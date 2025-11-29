@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
   // Simplified navigation - only 3 main items
   const navItems: { page: Page; label: string }[] = [
     { page: 'cadeausHub', label: 'Cadeaugidsen' },
-    { page: 'deals', label: 'Deals' },
+    { page: 'deals', label: 'Partners' },
     { page: 'blog', label: 'Blog' },
   ]
 

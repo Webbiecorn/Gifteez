@@ -1,8 +1,3 @@
-import {
-  dealOfTheWeek as curatedDealOfTheWeek,
-  top10Deals as curatedTop10Deals,
-  dealCategories as curatedDealCategories,
-} from '../data/dealsData'
 import { isAutomationEnvironment } from '../lib/automationEnvironment'
 import { AmazonProductLibrary, type AmazonProduct } from './amazonProductLibrary'
 import CoolblueFeedService from './coolblueFeedService'
@@ -11,6 +6,21 @@ import { PinnedDealsService } from './pinnedDealsService'
 import { ShopLikeYouGiveADamnService, type SLYGADProduct } from './shopLikeYouGiveADamnService'
 import type { CoolblueProduct } from './coolblueFeedService'
 import type { DealItem, DealCategory } from '../types'
+
+// Empty fallback data since we no longer use curated deals
+const curatedDealOfTheWeek: DealItem = {
+  id: 'placeholder-deal',
+  name: 'Bekijk onze partners voor de beste deals',
+  description: 'Ontdek aanbiedingen bij onze partner webshops',
+  price: '€0',
+  image: '/images/amazon-placeholder.png',
+  imageUrl: '/images/amazon-placeholder.png',
+  affiliateLink: '/deals',
+  giftScore: 8,
+  isOnSale: false,
+}
+const curatedTop10Deals: DealItem[] = []
+const curatedDealCategories: DealCategory[] = []
 
 const DEFAULT_PRODUCT_PLACEHOLDER = '/images/amazon-placeholder.png'
 

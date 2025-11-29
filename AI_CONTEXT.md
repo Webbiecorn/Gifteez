@@ -213,7 +213,7 @@ gifteez/
 | `/`                   | `HomePage.tsx`                | Landingspagina, guide showcase |
 | `/cadeaugidsen`       | `CadeausHubPage.tsx`          | Overzicht alle gidsen          |
 | `/cadeaugidsen/:slug` | `ProgrammaticLandingPage.tsx` | Individuele gids               |
-| `/deals`              | `DealsPage.tsx`               | Actuele aanbiedingen           |
+| `/deals`              | `PartnersPage.tsx`            | Partner webshops overzicht     |
 | `/blog`               | `BlogPage.tsx`                | Blog overzicht                 |
 | `/blog/:slug`         | `BlogDetailPage.tsx`          | Blog artikel                   |
 | `/gift-finder`        | `GiftFinderPage.tsx`          | AI Cadeaucoach                 |
@@ -225,7 +225,7 @@ gifteez/
 ```
 Header (3 items):
 ├── Cadeaugidsen → /cadeaugidsen
-├── Deals → /deals
+├── Partners → /deals
 └── Blog → /blog
 
 Footer (3 kolommen):
@@ -457,6 +457,15 @@ npm run deploy
 ---
 
 ## 12. Changelog
+
+### 29 november 2025 (Sessie 3)
+
+- ✅ DealsPage.tsx (3327 regels) → PartnersPage.tsx (~300 regels)
+- ✅ Nieuwe Partner Spotlight pagina met 5 affiliate partners
+- ✅ Header: "Deals" → "Partners"
+- ✅ HomePage DealsSection: "Topdeals" → "Betrouwbare Partners"
+- ✅ Sitemap: Oude deals subcategories verwijderd
+- ✅ URL `/deals` behouden voor SEO continuïteit
 
 ### 29 november 2025 (Sessie 2)
 

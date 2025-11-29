@@ -18,7 +18,7 @@ const QuizPage = ReactLazy(() => import('./components/QuizPage'))
 const DownloadPage = ReactLazy(() => import('./components/DownloadPage'))
 const CartPage = ReactLazy(() => import('./components/CartPage'))
 const CheckoutSuccessPage = ReactLazy(() => import('./components/CheckoutSuccessPage'))
-const DealsPage = ReactLazy(() => import('./components/DealsPage'))
+const PartnersPage = ReactLazy(() => import('./components/PartnersPage'))
 const CategoryDetailPage = ReactLazy(() => import('./components/CategoryDetailPage'))
 const ProductLandingPage = ReactLazy(() => import('./components/ProductLandingPage'))
 const ComparisonPage = ReactLazy(() => import('./components/ComparisonPage'))
@@ -28,7 +28,6 @@ const AffiliateDisclosurePage = ReactLazy(() => import('./components/AffiliateDi
 const NotFoundPage = ReactLazy(() => import('./components/NotFoundPage'))
 const ErrorPage = ReactLazy(() => import('./components/ErrorPage'))
 const AdminPage = ReactLazy(() => import('./components/AdminPage'))
-const AdminDealsPreviewPage = ReactLazy(() => import('./components/AdminDealsPreviewPage'))
 const CookieBanner = ReactLazy(() => import('./components/CookieBanner'))
 const FloatingCTA = ReactLazy(() => import('./components/FloatingCTA'))
 const FloatingCadeauCoachButton = ReactLazy(() => import('./components/FloatingCadeauCoachButton'))
@@ -146,8 +145,6 @@ const App: React.FC = () => {
         return '/500'
       case 'admin':
         return '/admin'
-      case 'adminDealsPreview':
-        return '/admin/deals-preview'
       default:
         return '/'
     }
@@ -225,14 +222,7 @@ const App: React.FC = () => {
         setCurrentPage('top3')
         break
       case 'admin':
-        if (second === 'deals-preview') {
-          setCurrentPage('adminDealsPreview')
-        } else {
-          setCurrentPage('admin')
-        }
-        break
-      case 'admin-deals-preview':
-        setCurrentPage('adminDealsPreview')
+        setCurrentPage('admin')
         break
       case 'login':
         setCurrentPage('login')
@@ -367,7 +357,7 @@ const App: React.FC = () => {
         download: 'Download — Gratis cadeaugids',
         cart: 'Winkelwagen',
         checkoutSuccess: 'Bestelling geslaagd',
-        deals: 'Handgepickte Collecties',
+        deals: 'Onze Partners — Waar te Kopen',
         cadeausHub: 'Cadeaugidsen voor elk moment',
         categoryDetail: data?.categoryTitle
           ? `${data.categoryTitle} — Collectie`
@@ -378,7 +368,6 @@ const App: React.FC = () => {
         comparison: data?.categoryTitle
           ? `Top 5 ${data.categoryTitle} — Vergelijking`
           : 'Vergelijking — Top 5',
-        adminDealsPreview: 'Admin deals preview',
         disclaimer: 'Disclaimer — Gifteez.nl',
         privacy: 'Privacybeleid — Gifteez.nl',
         affiliateDisclosure: 'Affiliate Disclosure — Transparantie over partnerships',
@@ -397,10 +386,10 @@ const App: React.FC = () => {
           'Lees hoe Gifteez.nl werkt via affiliate partnerships. Volledige transparantie over commissies en hoe we producten selecteren.',
         quiz: 'Doe de cadeau quiz en ontdek welk type cadeau het beste past.',
         download: 'Download gratis onze jaar rond cadeaugids vol ideeën.',
-        deals: 'Zorgvuldig samengestelde cadeau collecties voor elke gelegenheid.',
+        deals:
+          'Ontdek de betrouwbare webshops waar Gifteez mee samenwerkt. Van Coolblue tot Amazon.',
         cadeausHub: 'Ontdek alle cadeaugidsen met slimme filters op budget, thema en interesses.',
         categoryDetail: data?.categoryDescription || 'Bekijk alle producten in deze collectie.',
-        adminDealsPreview: 'Controleer als admin de live deals-selectie van Gifteez.',
       }
       const metaDesc = ensure('meta[name="description"]', () =>
         Object.assign(document.createElement('meta'), { name: 'description' })
@@ -497,12 +486,10 @@ const App: React.FC = () => {
         return <CartPage navigateTo={navigateTo} showToast={showToast} />
       case 'admin':
         return <AdminPage navigateTo={navigateTo} />
-      case 'adminDealsPreview':
-        return <AdminDealsPreviewPage navigateTo={navigateTo} />
       case 'checkoutSuccess':
         return <CheckoutSuccessPage navigateTo={navigateTo} />
       case 'deals':
-        return <DealsPage navigateTo={navigateTo} />
+        return <PartnersPage navigateTo={navigateTo} />
       case 'cadeausHub':
         return (
           <React.Suspense
@@ -658,30 +645,18 @@ const App: React.FC = () => {
           </React.Suspense>
 
           {/* FloatingCTA - Show on content pages, hide on giftFinder/checkout/admin */}
-          {![
-            'giftFinder',
-            'cart',
-            'checkoutSuccess',
-            'admin',
-            'adminDealsPreview',
-            'login',
-            'signup',
-          ].includes(currentPage) && (
+          {!['giftFinder', 'cart', 'checkoutSuccess', 'admin', 'login', 'signup'].includes(
+            currentPage
+          ) && (
             <React.Suspense fallback={null}>
               <FloatingCTA navigateTo={navigateTo} />
             </React.Suspense>
           )}
 
           {/* FloatingCadeauCoachButton - Cadeau-Coach toegang */}
-          {![
-            'giftFinder',
-            'cart',
-            'checkoutSuccess',
-            'admin',
-            'adminDealsPreview',
-            'login',
-            'signup',
-          ].includes(currentPage) && (
+          {!['giftFinder', 'cart', 'checkoutSuccess', 'admin', 'login', 'signup'].includes(
+            currentPage
+          ) && (
             <React.Suspense fallback={null}>
               <FloatingCadeauCoachButton navigateTo={navigateTo} />
             </React.Suspense>
