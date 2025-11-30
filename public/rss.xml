@@ -7,13 +7,24 @@
     <link>https://gifteez.nl</link>
     <description>Vind het perfecte cadeau met onze AI-powered GiftFinder. Gepersonaliseerde cadeau-ideeën voor elke gelegenheid.</description>
     <language>nl-NL</language>
-    <lastBuildDate>Fri, 14 Nov 2025 10:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 30 Nov 2025 10:00:00 GMT</lastBuildDate>
     <atom:link href="https://gifteez.nl/rss.xml" rel="self" type="application/rss+xml" />
     <image>
       <url>https://gifteez.nl/logo.png</url>
       <title>Gifteez</title>
       <link>https://gifteez.nl</link>
     </image>
+    <item>
+      <title>De Beste Cadeaus voor Thuiswerkers: Van Ergonomie tot Productiviteit</title>
+      <link>https://gifteez.nl/blog/beste-cadeaus-thuiswerkers-home-office-guide</link>
+      <guid isPermaLink="true">https://gifteez.nl/blog/beste-cadeaus-thuiswerkers-home-office-guide</guid>
+      <description>Thuiswerken is het nieuwe normaal, maar niet iedereen heeft een optimale werkplek. Van ergonomische muizen tot slimme verlichting: ontdek de cadeaus die thuiswerkers écht waarderen — geen stofvangers, maar dagelijkse levensverbeteraars.</description>
+      <pubDate>Sun, 30 Nov 2025 10:00:00 GMT</pubDate>
+      <category>Cadeaugidsen</category>
+      <enclosure url="https://gifteez.nl/images/social/og/blog/thuiswerkers-cadeaus-header.png" type="image/jpeg" />
+      <media:content url="https://gifteez.nl/images/social/og/blog/thuiswerkers-cadeaus-header.png" type="image/jpeg" medium="image" />
+      <media:thumbnail url="https://gifteez.nl/images/social/og/blog/thuiswerkers-cadeaus-header.png" />
+    </item>
     <item>
       <title>3 Amazon Producten Onder €25 Die Je Dagelijks Leven Verbeteren</title>
       <link>https://gifteez.nl/blog/amazon-top-3-producten-onder-25-euro</link>

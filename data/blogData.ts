@@ -93,6 +93,52 @@ const gift_nachtlezer_gritin_premium: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SX522_.jpg',
 }
 
+// ==================== THUISWERKERS CADEAUS ====================
+const gift_thuiswerker_logitech_muis: Gift = {
+  productName: 'Logitech MX Master 3S Muis',
+  description:
+    'De ultieme ergonomische muis voor thuiswerkers. Fluisterstil scrollen, 70 dagen batterijduur, werkt op elk oppervlak. Verbindt met 3 apparaten tegelijk via Bluetooth.',
+  priceRange: '€89,99',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Logitech-Master-Draadloze-Bluetooth-Grafieten/dp/B0B17WBTQX?linkCode=ll1&tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61ni3t1ryQL._AC_SL1500_.jpg',
+}
+
+const gift_thuiswerker_benq_screenbar: Gift = {
+  productName: 'BenQ ScreenBar Monitor Lamp',
+  description:
+    'Monitorlamp die direct op je scherm klemt. Geen reflectie, automatische helderheidsaanpassing, bespaart bureauruimte. De gamechanger voor thuiswerkers met oogvermoeidheid.',
+  priceRange: '€99',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/BenQ-ScreenBar-Monitor-Light-Bar/dp/B076VNFZJG?linkCode=ll1&tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/51uB1oUzXQL._AC_SL1000_.jpg',
+}
+
+const gift_thuiswerker_fellowes_polssteun: Gift = {
+  productName: 'Fellowes Memory Foam Polssteun',
+  description:
+    'Ergonomische polssteun met memory foam die zich aanpast aan je pols. Voorkomt RSI en carpaaltunnelsyndroom. Antislip onderkant. De beste investering voor gezonde polsen.',
+  priceRange: '€24,95',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Fellowes-Memory-Foam-Polssteun-Toetsenbord/dp/B002I7LHRQ?linkCode=ll1&tag=gifteez77-21',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71DLB8bYpQL._AC_SL1500_.jpg',
+}
+
 // ==================== KERST VOOR HAAR 2025 ====================
 const gift_kerst_haar_creolen: Gift = {
   productName: 'Amadeus Creolen Venus Goud',
@@ -4417,6 +4463,178 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       'lezen in bed',
       'cadeau',
       'boekenliefhebber',
+      '2025',
+    ],
+  },
+  // ==================== THUISWERKERS BLOG ====================
+  {
+    id: 'beste-cadeaus-thuiswerkers-home-office-guide',
+    slug: 'beste-cadeaus-thuiswerkers-home-office-guide',
+    title: 'De Beste Cadeaus voor Thuiswerkers: Van Ergonomie tot Productiviteit',
+    subtitle: 'Praktische gadgets die elke thuiswerker écht gaat gebruiken (€15-€100)',
+    excerpt:
+      'Thuiswerken is het nieuwe normaal, maar niet iedereen heeft een optimale werkplek. Van ergonomische muizen tot slimme verlichting: ontdek de cadeaus die thuiswerkers écht waarderen — geen stofvangers, maar dagelijkse levensverbeteraars.',
+    imageUrl: '/images/social/og/blog/thuiswerkers-cadeaus-header.png',
+    heroImage: '/images/social/og/blog/thuiswerkers-cadeaus-header.png',
+    category: 'Cadeaugidsen',
+    author: { name: 'Gifteez Team', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-team' },
+    publishedDate: '2025-11-30',
+    updatedAt: '2025-11-30',
+    readTime: '7 min',
+    featured: false,
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Sinds 2020 is thuiswerken voor miljoenen Nederlanders het nieuwe normaal geworden. Maar terwijl de pandemie voorbij is, blijft de thuiswerkplek vaak... ondermaats. Een keukenstoel in plaats van een bureustoel. Een laptop op de eettafel. Oogvermoeidheid door slechte verlichting.<br><br>Als je iemand kent die thuiswerkt, dan is een <strong>doordacht cadeau voor hun werkplek</strong> misschien wel het meest gewaardeerde geschenk dat je kunt geven. Geen parfum dat in een la verdwijnt, maar iets dat ze élke werkdag gebruiken.',
+      },
+      { type: 'heading', content: 'Waarom Thuiswerkers Speciale Cadeaus Verdienen' },
+      {
+        type: 'paragraph',
+        content:
+          'De gemiddelde thuiswerker zit 6-8 uur per dag achter een scherm. Dat is 30-40 uur per week. Meer dan 1500 uur per jaar. En toch investeren weinig mensen in hun thuiswerkplek.<br><br>De gevolgen?<br><br><ul class="list-disc space-y-2 pl-5 text-gray-700 mt-2"><li><strong>Rugpijn</strong> — Door verkeerde zithouding en slechte stoelen</li><li><strong>Oogvermoeidheid</strong> — Door te weinig of verkeerd licht</li><li><strong>Polsklachten (RSI)</strong> — Door slechte muis/toetsenbord ergonomie</li><li><strong>Afleiding</strong> — Door een rommelige, niet-geoptimaliseerde werkplek</li></ul><br>Een goed cadeau lost één van deze problemen op. En dat maakt het zó veel waardevoller dan de zoveelste geurkaars.',
+      },
+      { type: 'heading', content: 'Onze Top 3 Thuiswerker Cadeaus' },
+      {
+        type: 'paragraph',
+        content:
+          'Na het analyseren van honderden reviews en het testen van tientallen producten, hebben we drie cadeaus geselecteerd die elke thuiswerker écht gaat waarderen. Van budget tot premium.',
+      },
+      { type: 'heading', content: '🏆 1. Logitech MX Master 3S — De Ultieme Muis (€89,99)' },
+      {
+        type: 'gift',
+        content: gift_thuiswerker_logitech_muis,
+      },
+      { type: 'subheading', content: 'Waarom deze muis?' },
+      {
+        type: 'paragraph',
+        content:
+          'De Logitech MX Master 3S is niet zomaar een muis — het is een productiviteits-upgrade. Ik gebruik hem zelf al 2 jaar en zou niet meer terug willen naar een standaard muis.<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Fluisterstil scrollen</strong> — 90% stiller dan vorige modellen, perfect voor calls</li><li><strong>70 dagen batterijduur</strong> — Eén keer opladen per 2+ maanden</li><li><strong>Ergonomisch design</strong> — Ondersteunt je hand perfect bij langdurig gebruik</li><li><strong>Multi-device</strong> — Wissel met één klik tussen 3 apparaten</li><li><strong>Werkt overal</strong> — Zelfs op glas en spiegelende oppervlakken</li></ul>',
+      },
+      { type: 'subheading', content: 'Voor wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '✅ Iedereen die meer dan 4 uur per dag met een muis werkt<br>✅ Mensen die wisselen tussen laptop en desktop<br>✅ Thuiswerkers die last hebben van vermoeidheid in hand/pols<br>✅ Professionals die veel in Excel, design of video editing werken',
+      },
+      { type: 'heading', content: '2. BenQ ScreenBar — Verlichting zonder Reflectie (€99)' },
+      {
+        type: 'gift',
+        content: gift_thuiswerker_benq_screenbar,
+      },
+      { type: 'subheading', content: 'Waarom deze lamp?' },
+      {
+        type: 'paragraph',
+        content:
+          'De BenQ ScreenBar is een gamechanger voor iedereen die last heeft van oogvermoeidheid. In plaats van een bureaulamp die ruimte inneemt en reflecties veroorzaakt, klemt deze lamp direct op je monitor.<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Geen reflectie</strong> — Asymmetrisch licht dat alleen je bureau verlicht</li><li><strong>Automatische helderheid</strong> — Sensor past zich aan omgevingslicht aan</li><li><strong>Geen bureauruimte nodig</strong> — Klemt op je monitor</li><li><strong>Touch bediening</strong> — Dimmen en kleurtemperatuur aanpassen</li><li><strong>USB powered</strong> — Geen extra stopcontact nodig</li></ul>',
+      },
+      { type: 'subheading', content: 'Voor wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '✅ Thuiswerkers met hoofdpijn of oogvermoeidheid<br>✅ Mensen die avonduren werken<br>✅ Iedereen met een klein bureau (bespaart ruimte)<br>✅ Perfectionisten die de juiste lichtkleur willen (warm → koel)',
+      },
+      {
+        type: 'heading',
+        content: '3. Fellowes Memory Foam Polssteun — Budget RSI-Preventie (€24,95)',
+      },
+      {
+        type: 'gift',
+        content: gift_thuiswerker_fellowes_polssteun,
+      },
+      { type: 'subheading', content: 'Waarom deze polssteun?' },
+      {
+        type: 'paragraph',
+        content:
+          'RSI (Repetitive Strain Injury) is de stille killer van thuiswerkers. Jarenlang niets aan de hand, en dan ineens chronische pijn. Een polssteun is de meest onderschatte investering in je gezondheid.<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li><strong>Memory foam</strong> — Past zich aan je pols aan, geen drukpunten</li><li><strong>Antislip onderkant</strong> — Blijft op zijn plek tijdens het typen</li><li><strong>Antimicrobiële coating</strong> — Hygiënisch bij dagelijks gebruik</li><li><strong>Voor toetsenbord of muis</strong> — Verschillende modellen beschikbaar</li></ul>',
+      },
+      { type: 'subheading', content: 'Voor wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '✅ Iedereen die veel typt (schrijvers, developers, admins)<br>✅ Mensen met beginnende polsklachten<br>✅ Als budget-vriendelijk cadeau (onder €25)<br>✅ In combinatie met ergonomische muis voor maximaal effect',
+      },
+      { type: 'heading', content: '📊 Vergelijkingstabel' },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="overflow-x-auto my-6"><table class="min-w-full text-sm border-collapse"><thead><tr class="bg-gray-100"><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Product</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Prijs</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Lost op</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Beste voor</th></tr></thead><tbody><tr><td class="border border-gray-300 px-4 py-2 font-medium">Logitech MX Master 3S</td><td class="border border-gray-300 px-4 py-2">€89,99</td><td class="border border-gray-300 px-4 py-2">Hand/pols comfort</td><td class="border border-gray-300 px-4 py-2">Premium cadeau</td></tr><tr class="bg-gray-50"><td class="border border-gray-300 px-4 py-2 font-medium">BenQ ScreenBar</td><td class="border border-gray-300 px-4 py-2">€99</td><td class="border border-gray-300 px-4 py-2">Oogvermoeidheid</td><td class="border border-gray-300 px-4 py-2">Serieuze thuiswerkers</td></tr><tr><td class="border border-gray-300 px-4 py-2 font-medium">Fellowes Polssteun</td><td class="border border-gray-300 px-4 py-2">€24,95</td><td class="border border-gray-300 px-4 py-2">RSI-preventie</td><td class="border border-gray-300 px-4 py-2">Budget cadeau</td></tr></tbody></table></div>',
+      },
+      { type: 'heading', content: 'Meer Thuiswerker Cadeaus' },
+      {
+        type: 'paragraph',
+        content:
+          'Naast onze top 3 zijn er nog veel meer geweldige cadeaus voor thuiswerkers:<br><br><strong>Productiviteit:</strong><br>• USB-C Hub (€35) — Alle poorten die een laptop mist<br>• Logitech K380 Toetsenbord (€40) — Compact, stil, 3 apparaten<br>• Anker Speakerphone (€60) — Kristalheldere videocalls<br><br><strong>Comfort:</strong><br>• Monitorstandaard (€29) — Scherm op ooghoogte<br>• Voetsteun (€33) — Betere zithouding<br>• Bureaulamp met USB (€30) — Extra verlichting + opladen<br><br><strong>Sfeer:</strong><br>• Ember Mok (€100) — Houdt koffie op perfecte temperatuur<br>• Philips Hue Play (€55) — Sfeerverlichting achter monitor<br>• Stanley Quencher (€45) — Genoeg water voor hele dag',
+      },
+      { type: 'heading', content: 'Veelgestelde Vragen' },
+      { type: 'subheading', content: 'Wat is het beste cadeau voor thuiswerkers?' },
+      {
+        type: 'paragraph',
+        content:
+          'Dat hangt af van je budget. Onder €30: Fellowes polssteun. Rond €100: Logitech MX Master 3S of BenQ ScreenBar. Beide worden dagelijks gebruikt en lossen échte problemen op.',
+      },
+      { type: 'subheading', content: 'Welke gadgets verbeteren productiviteit?' },
+      {
+        type: 'paragraph',
+        content:
+          'Een ergonomische muis (minder vermoeidheid), USB-C hub (sneller wisselen), en noise-cancelling oordopjes (betere focus) maken het grootste verschil voor productiviteit.',
+      },
+      { type: 'subheading', content: 'Hoe voorkom ik RSI bij thuiswerken?' },
+      {
+        type: 'paragraph',
+        content:
+          'Combineer een ergonomische muis met een polssteun, zorg dat je scherm op ooghoogte staat (monitorstandaard), en neem regelmatig pauze. Een goede bureaustoel is ook essentieel.',
+      },
+      { type: 'heading', content: 'Conclusie: Welk Cadeau Kies Je?' },
+      {
+        type: 'paragraph',
+        content:
+          '🎁 <strong>Budget (€24,95):</strong> De Fellowes polssteun is een no-brainer. Goedkoop, maar voorkomt echte gezondheidsproblemen.<br><br>🎁 <strong>Mid-range (€89,99):</strong> De Logitech MX Master 3S is het perfecte cadeau voor iedereen die veel met een computer werkt. Premium kwaliteit.<br><br>🎁 <strong>Premium (€99):</strong> De BenQ ScreenBar is ideaal voor thuiswerkers die last hebben van oogvermoeidheid of avonduren werken.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '🏠 <strong><a href="/cadeaugidsen/cadeaus-voor-thuiswerkers?utm_source=blog&utm_medium=post&utm_campaign=thuiswerkers" class="text-rose-600 hover:text-rose-700 underline">Bekijk alle 20+ thuiswerker cadeaus in onze complete cadeaugids →</a></strong><br><br><em class="text-sm text-gray-600">Dit artikel bevat affiliate links. Als je via deze links iets koopt, ontvang ik een kleine commissie zonder extra kosten voor jou. Dit helpt me om Gifteez.nl draaiende te houden en meer handige content te maken!</em>',
+      },
+    ],
+    seo: {
+      metaTitle: 'Beste Cadeaus voor Thuiswerkers (2025) | Ergonomie & Productiviteit',
+      metaDescription:
+        'Ontdek de 3 beste cadeaus voor thuiswerkers. Van €25 polssteun tot €100 premium muis. Praktische gadgets die dagelijks gebruikt worden.',
+      keywords: [
+        'cadeau thuiswerker',
+        'home office cadeau',
+        'ergonomische muis',
+        'benq screenbar',
+        'thuiswerken gadgets',
+        'rsi preventie',
+        'logitech mx master',
+        'bureau accessoires',
+        'cadeau collega',
+        'thuiswerkplek',
+      ],
+      ogTitle: 'De Beste Cadeaus voor Thuiswerkers: Ergonomie & Productiviteit',
+      ogDescription:
+        'Van €25 polssteun tot €100 premium muis: cadeaus die thuiswerkers écht dagelijks gebruiken. Geen stofvangers!',
+      ogImage: 'https://gifteez.nl/images/social/og/blog/thuiswerkers-cadeaus-header.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Beste Cadeaus voor Thuiswerkers (2025)',
+      twitterDescription:
+        'Ergonomische muizen, slimme verlichting en RSI-preventie: de cadeaus die thuiswerkers écht waarderen.',
+      twitterImage: 'https://gifteez.nl/images/social/og/blog/thuiswerkers-cadeaus-header.png',
+      canonicalUrl: 'https://gifteez.nl/blog/beste-cadeaus-thuiswerkers-home-office-guide',
+    },
+    tags: [
+      'thuiswerkers',
+      'home office',
+      'ergonomie',
+      'productiviteit',
+      'logitech',
+      'benq',
+      'gadgets',
+      'cadeau',
+      'rsi',
       '2025',
     ],
   },

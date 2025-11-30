@@ -968,7 +968,7 @@ Elke niche krijgt **twee content types** die elkaar versterken:
 | Niche             | Gids | Blog | Status         |
 | ----------------- | ---- | ---- | -------------- |
 | Nachtlezers       | ✅   | ✅   | Compleet       |
-| Thuiswerkers      | ✅   | ❌   | **Blog nodig** |
+| Thuiswerkers      | ✅   | ✅   | Compleet       |
 | Tech onder €50    | ✅   | ✅   | Compleet       |
 | Wellness          | ✅   | ✅   | Compleet       |
 | Duurzaam          | ✅   | ✅   | Compleet       |
