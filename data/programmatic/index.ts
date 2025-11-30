@@ -2430,7 +2430,7 @@ const RAW_VARIANTS = [
     ],
     internalLinks: [
       { href: '/cadeaugidsen/kerst-tech-onder-100', label: 'Tech cadeaus onder €100' },
-      { href: '/cadeaugidsen/cadeaus-voor-nachtlezers', label: 'Cadeaus voor nachtlezers' },
+      { href: '/cadeaugidsen/kerst-voor-haar-onder-50', label: 'Cadeaus voor haar' },
       { href: '/cadeaugidsen/gamer-cadeaus-onder-100', label: 'Gamer cadeaus onder €100' },
     ],
   },
