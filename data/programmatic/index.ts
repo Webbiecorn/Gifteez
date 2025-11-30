@@ -2429,9 +2429,9 @@ const RAW_VARIANTS = [
       },
     ],
     internalLinks: [
-      { href: '/cadeaugidsen', label: 'Alle cadeaugidsen' },
       { href: '/cadeaugidsen/kerst-tech-onder-100', label: 'Tech cadeaus onder €100' },
       { href: '/cadeaugidsen/cadeaus-voor-nachtlezers', label: 'Cadeaus voor nachtlezers' },
+      { href: '/cadeaugidsen/gamer-cadeaus-onder-100', label: 'Gamer cadeaus onder €100' },
     ],
   },
 ] satisfies ProgrammaticConfig[]
