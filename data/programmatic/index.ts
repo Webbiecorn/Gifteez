@@ -280,6 +280,7 @@ export type ProgrammaticConfig = {
   intro: string
   disableOccasionFilter?: boolean
   editorPicks?: { sku: string; reason?: string }[]
+
   curatedProducts?: {
     title: string
     price: number
