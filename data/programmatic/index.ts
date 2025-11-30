@@ -1883,7 +1883,7 @@ const RAW_VARIANTS = [
     },
     curatedProducts: [
       {
-        title: 'Leeslampje B08GG42WXY',
+        title: 'Gritin LED Leeslampje - Flexibel & Oplaadbaar',
         price: 11.95,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/81n7M-T19NL._AC_SL1500_.jpg',
@@ -1893,7 +1893,7 @@ const RAW_VARIANTS = [
         reason: 'Budget optie voor €11,95 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Leeslampje B0CJ4YL8MV',
+        title: 'iZELL Leeslamp met Zwanenhals - Oogbescherming',
         price: 19.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/61eWcg03d5L._AC_SL1500_.jpg',
@@ -1903,7 +1903,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €19,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0CD8NC67S',
+        title: 'Amber Boeklampje met USB-C - Warm Licht',
         price: 16.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/51W4bQGufeL._AC_SL1250_.jpg',
@@ -1913,7 +1913,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €16,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0C13JTZ4W',
+        title: 'ERWEY Bedlamp met Klem - Draaibare Zwanenhals',
         price: 30.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/61iu0naBVxL._AC_SL1500_.jpg',
@@ -1923,7 +1923,7 @@ const RAW_VARIANTS = [
         reason: 'Premium leeslamp voor €30,99 - topkwaliteit',
       },
       {
-        title: 'Leeslampje B0CGM5TLZX',
+        title: 'Gritin Nekleeslamp - Ergonomisch Ontwerp',
         price: 19.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SL1500_.jpg',
@@ -1933,7 +1933,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €19,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0C6XT1JFF',
+        title: 'Glocusent Premium Leeslamp - 80 Uur Batterij',
         price: 25.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71rwR8CwdDL._AC_SL1500_.jpg',
@@ -1943,7 +1943,7 @@ const RAW_VARIANTS = [
         reason: 'Mid-range voor €25,99 - uitstekende features',
       },
       {
-        title: 'Leeslampje B0B74X6669',
+        title: 'DEWENWILS Boekenklem Leeslamp - Compact',
         price: 10.79,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71ZaE+ogx0L._AC_SL1500_.jpg',
@@ -1953,7 +1953,7 @@ const RAW_VARIANTS = [
         reason: 'Budget optie voor €10,79 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Leeslampje B0DG617KBZ',
+        title: 'BRILONER Wandleeslamp - Moderne Design',
         price: 44.95,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/613UlAv1I5L._AC_SL1500_.jpg',
@@ -1963,7 +1963,7 @@ const RAW_VARIANTS = [
         reason: 'Premium leeslamp voor €44,95 - topkwaliteit',
       },
       {
-        title: 'Leeslampje B0BRB24M5Z',
+        title: 'Obeaming Nachtkastje Leeslamp - USB Oplader',
         price: 41.8,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/41NXUMGJzBL._AC_SL1001_.jpg',
@@ -1973,7 +1973,7 @@ const RAW_VARIANTS = [
         reason: 'Premium leeslamp voor €41,8 - topkwaliteit',
       },
       {
-        title: 'Leeslampje B09MHFSSFB',
+        title: 'Glocusent Neklamp - Lichtgewicht & Oogvriendelijk',
         price: 14.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/61Psf4CwnML._AC_SL1500_.jpg',
@@ -1983,7 +1983,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €14,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0CYT4J92R',
+        title: 'Mini Cliplamp met 3 Kleuren - Oplaadbaar',
         price: 11.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71Xq73RLApL._AC_SL1500_.jpg',
@@ -1993,7 +1993,7 @@ const RAW_VARIANTS = [
         reason: 'Budget optie voor €11,99 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Leeslampje B09W62FR1K',
+        title: 'Glocusent Boeklamp - Oogvriendelijk Design',
         price: 12.6,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71zlqqwba8L._AC_SL1500_.jpg',
@@ -2003,7 +2003,7 @@ const RAW_VARIANTS = [
         reason: 'Budget optie voor €12,6 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Leeslampje B0D79G47MQ',
+        title: 'Bladwijzer Leeslamp USB - Uniek Cadeau',
         price: 14.48,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/51-8jc6qFnL._AC_SL1500_.jpg',
@@ -2013,7 +2013,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €14,48 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0CJY563ZX',
+        title: 'Runesol Boeklampje - Oogbeschermend',
         price: 11.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/41eJALHxZJL._AC_SL1500_.jpg',
@@ -2023,7 +2023,7 @@ const RAW_VARIANTS = [
         reason: 'Budget optie voor €11,99 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Leeslampje B0BMXWLZ9W',
+        title: 'LED Klemlamp met Zwanenhals - Nachtkastje',
         price: 12.23,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/51Xpn7-dTiL._AC_SL1001_.jpg',
@@ -2033,7 +2033,7 @@ const RAW_VARIANTS = [
         reason: 'Budget optie voor €12,23 - perfect voor kleine cadeaus',
       },
       {
-        title: 'Leeslampje B0F24G4R9L',
+        title: 'Boncy Draadloos Leeslampje - Stijlvol',
         price: 13.95,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/712uaJrAa8L._AC_SL1500_.jpg',
@@ -2043,7 +2043,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €13,95 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B07P6XKH6M',
+        title: 'Libri_x Klemlamp - Traploze Dimmer',
         price: 15.14,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/41VsPuaMmcL._AC_SL1024_.jpg',
@@ -2053,7 +2053,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €15,14 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0CGM5TLZX',
+        title: 'Gritin Nekleeslamp - 3 Kleuren',
         price: 19.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SL1500_.jpg',
@@ -2063,7 +2063,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €19,99 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0DLHBYP3N',
+        title: 'BRILONER Bureaulamp - Magnetisch Afneembaar',
         price: 20.95,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/61d-XCintsL._AC_SL1500_.jpg',
@@ -2073,7 +2073,7 @@ const RAW_VARIANTS = [
         reason: 'Mid-range voor €20,95 - uitstekende features',
       },
       {
-        title: 'Leeslampje B0BBKYBN1B',
+        title: '86lux Ultra-lichte Amber Klemlamp',
         price: 20.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71zHniqrxlL._AC_SL1500_.jpg',
@@ -2083,7 +2083,7 @@ const RAW_VARIANTS = [
         reason: 'Mid-range voor €20,99 - uitstekende features',
       },
       {
-        title: 'Leeslampje B0C71DY2LG',
+        title: 'Alyvisun LED Halsleeslampje - Oplaadbaar',
         price: 19.45,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/516-o1vdsLL._AC_SL1500_.jpg',
@@ -2093,7 +2093,7 @@ const RAW_VARIANTS = [
         reason: 'Populaire keuze voor €19,45 - goede prijs-kwaliteit',
       },
       {
-        title: 'Leeslampje B0CHVVNLY6',
+        title: 'Glocusent Uitschuifbare Leeslamp',
         price: 24.09,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/71hUx2A-SHL._AC_SL1500_.jpg',
@@ -2103,7 +2103,7 @@ const RAW_VARIANTS = [
         reason: 'Mid-range voor €24,09 - uitstekende features',
       },
       {
-        title: 'Leeslampje B0BZ41MK7G',
+        title: 'Aluminium Wandleeslamp met USB - Premium',
         price: 41.41,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/61WowD3tY9L._AC_SL1500_.jpg',
@@ -2113,7 +2113,7 @@ const RAW_VARIANTS = [
         reason: 'Premium leeslamp voor €41,41 - topkwaliteit',
       },
       {
-        title: 'Leeslampje B0D8TTTKJY',
+        title: 'Obeaming Zwanenhals Leeslamp - Drukdimmer',
         price: 37.99,
         currency: 'EUR',
         image: 'https://m.media-amazon.com/images/I/61GTtc0rBtL._AC_SL1500_.jpg',
