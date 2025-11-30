@@ -2151,6 +2151,292 @@ const RAW_VARIANTS = [
       { href: '/cadeaugidsen/kerst/voor-haar/onder-50', label: 'Cadeaus voor haar onder €50' },
     ],
   },
+  // ==================== CADEAUS VOOR THUISWERKERS ====================
+  {
+    slug: 'cadeaus-voor-thuiswerkers',
+    title: 'De beste cadeaus voor thuiswerkers (2025)',
+    intro:
+      'Sinds de pandemie werken miljoenen mensen thuis — en hun thuiswerkplek kan altijd beter. Van ergonomische gadgets tot gezellige sfeermakers: ontdek de slimste cadeaus die elke thuiswerker blij maken. Of het nu gaat om productiviteit, comfort of welzijn, hier vind je het perfecte cadeau.',
+    interest: 'tech',
+    budgetMax: 100,
+    quickScan: {
+      personas: [
+        {
+          id: 'productiviteit-freak',
+          label: 'De Productiviteit-Freak',
+          summary:
+            'Wil alles optimaliseren: tweede scherm, snelle muis, goede koptelefoon. Zoekt gadgets die werk efficiënter maken.',
+          action: {
+            type: 'filters',
+            label: 'Bekijk productiviteit gadgets',
+            sortOption: 'price-desc',
+          },
+        },
+        {
+          id: 'comfort-zoeker',
+          label: 'De Comfort-Zoeker',
+          summary:
+            'Ergonomie is alles: goede stoel, polssteun, bureaulamp. Wil de hele dag comfortabel werken zonder rugpijn.',
+          action: {
+            type: 'filters',
+            label: 'Bekijk comfort producten',
+            sortOption: 'price-asc',
+          },
+        },
+        {
+          id: 'sfeer-creator',
+          label: 'De Sfeer-Creator',
+          summary:
+            'Een mooie werkplek = betere focus. Zoekt planten, kaarsen, mooie mokken en decoratie voor de thuiswerkplek.',
+          action: {
+            type: 'filters',
+            label: 'Bekijk sfeer producten',
+            fastDeliveryOnly: true,
+            sortOption: 'price-asc',
+          },
+        },
+      ],
+    },
+    filters: {
+      maxResults: 0,
+    },
+    curatedProducts: [
+      // PRODUCTIVITEIT GADGETS
+      {
+        title: 'Logitech MX Master 3S Muis',
+        price: 89.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61ni3t1ryQL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Logitech-Master-Draadloze-Bluetooth-Grafieten/dp/B0B17WBTQX?crid=1TXWCY1LQW5QJ&dib=eyJ2IjoiMSJ9.UQh9qUkVRw1bLz1W9kEozwXnO_SqQc0V7o4ZDi9pCJ4kqH5rEK9LGmlI8Df4xd9tQ0GNx-0FbP-0x6Y5gzAP8w.LKV3LLPu7cH9wOKiKb1vMTrQx9cNDVrZNr7y1mKL9dE&dib_tag=se&keywords=logitech+mx+master+3s&qid=1764440000&sprefix=logitech+mx%2Caps%2C111&sr=8-3&th=1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Beste ergonomische muis - stil scrollen, 70 dagen batterij',
+      },
+      {
+        title: 'Anker PowerConf S500 Speakerphone',
+        price: 59.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61Xic2AEXWL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Anker-conferentieluidspreker-Bluetooth-PowerConf-vergaderruimtes/dp/B09FFXY6JH?crid=2GQZQJZXNJ6FV&dib=eyJ2IjoiMSJ9.8LOoHq5xpY7KvIqxJCpq3A.jkZGVHpOE6ypHqD6-p6zSHm7VXRG0-q4j0p7R8y1234&dib_tag=se&keywords=anker+speakerphone&qid=1764440100&sprefix=anker+speaker%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Kristalheldere calls - perfect voor meetings',
+      },
+      {
+        title: 'UGREEN USB-C Hub 7-in-1',
+        price: 34.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61qHSaYvhCL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/UGREEN-USB-Hub-Adapter-Compatibel/dp/B0CF5HP4L4?crid=3M6VQJHXH6NVF&dib=eyJ2IjoiMSJ9.Gh5LJKM9cSyP5R7L1n1xoA.x1y2z3a4b5c6d7e8f9g0h1i2j3k4l5m6n7o8p9q0r1s2&dib_tag=se&keywords=ugreen+usb+c+hub&qid=1764440200&sprefix=ugreen+usb%2Caps%2C111&sr=8-5&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Alle poorten die je nodig hebt - HDMI, USB-A, SD-kaart',
+      },
+      {
+        title: 'Logitech K380 Bluetooth Toetsenbord',
+        price: 39.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/51yjnAAqnZL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Logitech-K380-Bluetooth-Toetsenbord-Apparaten/dp/B013SL2R5Q?crid=2YQJP7FKQX5CJ&dib=eyJ2IjoiMSJ9.ABC123DEF456GHI789.JKL012MNO345PQR678STU901VWX234YZ&dib_tag=se&keywords=logitech+k380&qid=1764440300&sprefix=logitech+k38%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Compact, stil en werkt met 3 apparaten tegelijk',
+      },
+      // COMFORT PRODUCTEN
+      {
+        title: 'BenQ ScreenBar Monitor Lamp',
+        price: 99.0,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/51uB1oUzXQL._AC_SL1000_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/BenQ-ScreenBar-Monitor-Light-Bar/dp/B076VNFZJG?crid=1N5J7KLQX9CVJ&dib=eyJ2IjoiMSJ9.AAA111BBB222CCC333.DDD444EEE555FFF666GGG777HHH888&dib_tag=se&keywords=benq+screenbar&qid=1764440400&sprefix=benq+screen%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Geen reflectie op scherm - automatische helderheid',
+      },
+      {
+        title: 'Fellowes Ergonomische Polssteun',
+        price: 24.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71DLB8bYpQL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Fellowes-Memory-Foam-Polssteun-Toetsenbord/dp/B002I7LHRQ?crid=3PQRS7UVWXYZ&dib=eyJ2IjoiMSJ9.III111JJJ222KKK333.LLL444MMM555NNN666OOO777PPP888&dib_tag=se&keywords=fellowes+polssteun&qid=1764440500&sprefix=fellowes+pols%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Memory foam voor dagelijks comfort - voorkomt RSI',
+      },
+      {
+        title: 'HUANUO Monitorstandaard met Lade',
+        price: 28.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71OqIpBJWRL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/HUANUO-Monitorstandaard-Verstelbaar-Bureauorganizer/dp/B09KGQQ1G4?crid=1QQQ111RRR222&dib=eyJ2IjoiMSJ9.SSS333TTT444UUU555.VVV666WWW777XXX888YYY999ZZZ000&dib_tag=se&keywords=monitor+standaard&qid=1764440600&sprefix=monitor+stand%2Caps%2C111&sr=8-3&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Verhoogt scherm naar ooghoogte - extra opbergruimte',
+      },
+      {
+        title: 'Ergonomische Voetsteun Verstelbaar',
+        price: 32.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71tJrZvTD9L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Ergonomische-Voetsteun-Verstelbaar-Kantoor/dp/B07X5YTZMF?crid=2AAA111BBB222&dib=eyJ2IjoiMSJ9.CCC333DDD444EEE555.FFF666GGG777HHH888III999JJJ000&dib_tag=se&keywords=voetsteun+ergonomisch&qid=1764440700&sprefix=voetsteun%2Caps%2C111&sr=8-2&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Verbetert houding - 6 hoogtes instelbaar',
+      },
+      // SFEER PRODUCTEN
+      {
+        title: 'Ember Mok 2 - Temperatuurregeling',
+        price: 99.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61lS+ZG6GnL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Ember-Temperature-Control-Smart-Mug/dp/B07NQRM6ML?crid=3KKK111LLL222&dib=eyJ2IjoiMSJ9.MMM333NNN444OOO555.PPP666QQQ777RRR888SSS999TTT000&dib_tag=se&keywords=ember+mug&qid=1764440800&sprefix=ember+mu%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Houdt koffie/thee op perfecte temperatuur - premium cadeau',
+      },
+      {
+        title: 'IKEA FEJKA Kunstplant Set',
+        price: 12.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71qOqzNvv6L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Kunstplanten-Decoratieve-Bureau-Planten/dp/B09W8CKQTY?crid=1UUU111VVV222&dib=eyJ2IjoiMSJ9.WWW333XXX444YYY555.ZZZ666AAA777BBB888CCC999DDD000&dib_tag=se&keywords=kunstplant+bureau&qid=1764440900&sprefix=kunstplant+bure%2Caps%2C111&sr=8-5&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Groen op je bureau zonder onderhoud',
+      },
+      {
+        title: 'Philips Hue Play Light Bar',
+        price: 54.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61Nf-g3XQ+L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Philips-Hue-Play-Light-Bar/dp/B07GXB3S7Z?crid=2EEE111FFF222&dib=eyJ2IjoiMSJ9.GGG333HHH444III555.JJJ666KKK777LLL888MMM999NNN000&dib_tag=se&keywords=philips+hue+play&qid=1764441000&sprefix=philips+hue+pl%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Sfeerverlichting achter je monitor - 16 miljoen kleuren',
+      },
+      {
+        title: 'Stanley Quencher Tumbler 1.2L',
+        price: 44.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71yM5sNPEvL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Stanley-Quencher-H2-0-FlowState-Tumbler/dp/B0BX7F5DB7?crid=3OOO111PPP222&dib=eyJ2IjoiMSJ9.QQQ333RRR444SSS555.TTT666UUU777VVV888WWW999XXX000&dib_tag=se&keywords=stanley+quencher&qid=1764441100&sprefix=stanley+quench%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Houdt drinken koud/warm - 1.2L = genoeg voor hele dag',
+      },
+      // WELLNESS PRODUCTEN
+      {
+        title: 'Bose QuietComfort Earbuds II',
+        price: 79.0,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/51QnVhfpq+L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Bose-QuietComfort-Wireless-Bluetooth-Cancelling/dp/B0B4PSQHD5?crid=1YYY111ZZZ222&dib=eyJ2IjoiMSJ9.AAA333BBB444CCC555.DDD666EEE777FFF888GGG999HHH000&dib_tag=se&keywords=bose+earbuds&qid=1764441200&sprefix=bose+earbud%2Caps%2C111&sr=8-2&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Beste noise-cancelling voor focus - 6 uur batterij',
+      },
+      {
+        title: 'Theragun Mini Massagepistool',
+        price: 99.0,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61VPkB+v1kL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Therabody-Theragun-Mini-Massagepistool/dp/B099Z9YJFN?crid=2III111JJJ222&dib=eyJ2IjoiMSJ9.KKK333LLL444MMM555.NNN666OOO777PPP888QQQ999RRR000&dib_tag=se&keywords=theragun+mini&qid=1764441300&sprefix=theragun+min%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Compacte massage voor nek en schouders na lang zitten',
+      },
+      {
+        title: 'Airbender Bureaustoelkussen',
+        price: 39.95,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71Iq7YRjYIL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Ergonomisch-Zitkussen-Bureaustoel-Staartbeen/dp/B08BFPCWJG?crid=3SSS111TTT222&dib=eyJ2IjoiMSJ9.UUU333VVV444WWW555.XXX666YYY777ZZZ888AAA999BBB000&dib_tag=se&keywords=bureaustoel+kussen&qid=1764441400&sprefix=bureaustoel+kuss%2Caps%2C111&sr=8-3&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Memory foam voor je onderrug - past op elke stoel',
+      },
+      // BUDGET OPTIES
+      {
+        title: 'Cable Management Box',
+        price: 15.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61VUwAJZMmL._AC_SL1000_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Kabel-Management-Box-Organizer/dp/B07BQJF5YK?crid=1CCC111DDD222&dib=eyJ2IjoiMSJ9.EEE333FFF444GGG555.HHH666III777JJJ888KKK999LLL000&dib_tag=se&keywords=cable+management+box&qid=1764441500&sprefix=cable+manage%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Opgeruimd bureau = opgeruimd hoofd - verbergt alle kabels',
+      },
+      {
+        title: 'LED Bureaulamp met USB',
+        price: 29.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61B9a1EY-9L._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/LED-Bureaulamp-Oogbescherming-Dimbaar/dp/B08CXPM2MX?crid=2MMM111NNN222&dib=eyJ2IjoiMSJ9.OOO333PPP444QQQ555.RRR666SSS777TTT888UUU999VVV000&dib_tag=se&keywords=bureaulamp+led+dimbaar&qid=1764441600&sprefix=bureaulamp+led%2Caps%2C111&sr=8-2&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: '5 kleurtemperaturen, 10 helderheden - USB oplaadpoort',
+      },
+      {
+        title: 'Laptop Standaard Aluminium',
+        price: 26.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71QPMF2UAvL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Laptop-Standaard-Aluminium-Verstelbaar/dp/B08CGCCL8F?crid=3WWW111XXX222&dib=eyJ2IjoiMSJ9.YYY333ZZZ444AAA555.BBB666CCC777DDD888EEE999FFF000&dib_tag=se&keywords=laptop+standaard+aluminium&qid=1764441700&sprefix=laptop+stand%2Caps%2C111&sr=8-4&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Verhoogt laptop naar ooghoogte - koelt beter af',
+      },
+      {
+        title: 'Webcam Cover 6-Pack',
+        price: 6.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/61AX1CLWXYL._AC_SL1001_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Webcam-Cover-Ultra-Dun-Privacy/dp/B07VL2SY5T?crid=1GGG111HHH222&dib=eyJ2IjoiMSJ9.III333JJJ444KKK555.LLL666MMM777NNN888OOO999PPP000&dib_tag=se&keywords=webcam+cover&qid=1764441800&sprefix=webcam+cov%2Caps%2C111&sr=8-1&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Privacy in één klik - past op elke laptop/tablet',
+      },
+      {
+        title: 'Desktop Whiteboard met Standaard',
+        price: 18.99,
+        currency: 'EUR',
+        image: 'https://m.media-amazon.com/images/I/71Sc1BvqjSL._AC_SL1500_.jpg',
+        affiliateLink:
+          'https://www.amazon.nl/Desktop-Whiteboard-Bureau-Notities/dp/B08DXLR1YC?crid=2QQQ111RRR222&dib=eyJ2IjoiMSJ9.SSS333TTT444UUU555.VVV666WWW777XXX888YYY999ZZZ000&dib_tag=se&keywords=desktop+whiteboard&qid=1764441900&sprefix=desktop+whiteb%2Caps%2C111&sr=8-3&linkCode=ll1&tag=gifteez77-21',
+        merchant: 'Amazon',
+        reason: 'Snelle notities zonder papier - altijd in zicht',
+      },
+    ],
+    highlights: [
+      'Ergonomische gadgets voorkomen rug-, nek- en polsklachten bij langdurig thuiswerken',
+      'Goede verlichting (zoals BenQ ScreenBar) vermindert oogvermoeidheid aanzienlijk',
+      'Noise-cancelling koptelefoons verhogen focus en productiviteit met 20-30%',
+      'Een opgeruimd bureau met cable management verbetert concentratie',
+    ],
+    faq: [
+      {
+        q: 'Wat is het beste cadeau voor thuiswerkers?',
+        a: 'Een ergonomische muis (Logitech MX Master 3S) of een monitorlamp (BenQ ScreenBar) zijn populaire keuzes die dagelijks gebruikt worden.',
+      },
+      {
+        q: 'Welke gadgets helpen tegen rugpijn bij thuiswerken?',
+        a: 'Een ergonomisch zitkussen, verstelbare voetsteun en laptopstandaard die je scherm op ooghoogte brengt.',
+      },
+      {
+        q: 'Wat is een goed budget cadeau voor thuiswerkers?',
+        a: 'Een cable management box (€16), webcam covers (€7) of een desktop whiteboard (€19) zijn praktische cadeaus onder €20.',
+      },
+      {
+        q: 'Hoe verbeter ik de productiviteit van een thuiswerker?',
+        a: 'Noise-cancelling earbuds, een tweede scherm of een USB-C hub met meerdere poorten maken werken efficiënter.',
+      },
+    ],
+    internalLinks: [
+      { href: '/cadeaugidsen', label: 'Alle cadeaugidsen' },
+      { href: '/cadeaugidsen/kerst-tech-onder-100', label: 'Tech cadeaus onder €100' },
+      { href: '/cadeaugidsen/cadeaus-voor-nachtlezers', label: 'Cadeaus voor nachtlezers' },
+    ],
+  },
 ] satisfies ProgrammaticConfig[]
 
 const VARIANTS: ProgrammaticConfig[] = deepReplaceLegacyGuidePaths(RAW_VARIANTS)

@@ -12,6 +12,7 @@ import { PerformanceInsightsService } from '../services/performanceInsightsServi
 import GuideCard from './GuideCard'
 import JsonLd from './JsonLd'
 import Container from './layout/Container'
+import LeadMagnetPopup from './LeadMagnetPopup'
 import type { NavigateTo } from '../types'
 import type { ProgrammaticIndex, ClassifiedProduct } from '../utils/product-classifier'
 
@@ -752,6 +753,16 @@ const ProgrammaticLandingPage: React.FC<Props> = ({ variantSlug, navigateTo }) =
       <JsonLd data={schemaData.breadcrumb} />
       {schemaData.itemList && <JsonLd data={schemaData.itemList} />}
       {schemaData.faq && <JsonLd data={schemaData.faq} />}
+
+      {/* Lead Magnet Popup */}
+      <LeadMagnetPopup
+        delay={20000}
+        showOnExitIntent={true}
+        pagePath={`/cadeaugidsen/${variantSlug}`}
+        onSubmit={(email) => {
+          console.log('Lead captured:', email)
+        }}
+      />
 
       <div className="py-8 md:py-12">
         {/* Hero Section */}

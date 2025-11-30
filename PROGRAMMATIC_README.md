@@ -18,6 +18,7 @@
 10. [Troubleshooting](#10-troubleshooting)
 11. [AI-Bot Instructies](#11-ai-bot-instructies)
 12. [Blog + Programmatic Strategie](#12-blog--programmatic-strategie)
+13. [Amazon Affiliate Groei-Strategie (7 Stappen)](#13-amazon-affiliate-groei-strategie-7-stappen)
 
 ---
 
@@ -966,12 +967,171 @@ Elke niche krijgt **twee content types** die elkaar versterken:
 
 | Niche             | Gids | Blog | Status         |
 | ----------------- | ---- | ---- | -------------- |
-| Nachtlezers       | ✅   | ❌   | **Blog nodig** |
+| Nachtlezers       | ✅   | ✅   | Compleet       |
+| Thuiswerkers      | ✅   | ❌   | **Blog nodig** |
 | Tech onder €50    | ✅   | ✅   | Compleet       |
 | Wellness          | ✅   | ✅   | Compleet       |
 | Duurzaam          | ✅   | ✅   | Compleet       |
 | Holland & Barrett | ✅   | ✅   | Compleet       |
 | Amazon Top 3      | ❌   | ✅   | Gids optioneel |
+
+---
+
+## 13. Amazon Affiliate Groei-Strategie (7 Stappen)
+
+Dit is het complete groeiplan voor Gifteez als Amazon affiliate platform.
+
+### Stap 1: Ultra-Specifieke Niches
+
+> **"Microscoop, geen telescoop"** — Mensen kopen sneller als ze denken: dit is precies voor mij bedoeld.
+
+**Actieve niches:**
+
+- ✅ Cadeaus voor nachtlezers
+- ✅ Cadeaus voor thuiswerkers
+- ✅ Cadeaus voor gamers
+- ✅ Cadeaus voor collega's onder €25
+
+**Geplande niches:**
+
+- ❌ Cadeaus voor plantenmoeders
+- ❌ Cadeaus voor koffie-snobs
+- ❌ Cadeaus voor nieuwe huiseigenaren
+- ❌ Cadeaus voor mensen die alles al hebben
+
+### Stap 2: 1 Sterke Landingspagina per Niche
+
+**Opbouw per pagina:**
+
+```
+┌─────────────────────────────────────────────┐
+│ Pakkende titel met jaar (2025)              │
+├─────────────────────────────────────────────┤
+│ QUICKSCAN: 3 personas met snelle keuzes     │
+│ • Beste keuze (value)                       │
+│ • Beste budget (onder €20)                  │
+│ • Beste premium (topkwaliteit)              │
+├─────────────────────────────────────────────┤
+│ 5–20 producten met:                         │
+│ • Wat is het?                               │
+│ • Voor wie?                                 │
+│ • Waarom slim cadeau?                       │
+│ • Persoonlijke toelichting                  │
+│ • Amazon-knop                               │
+├─────────────────────────────────────────────┤
+│ FAQ sectie (SEO + gebruikersvragen)         │
+├─────────────────────────────────────────────┤
+│ Interne links naar gerelateerde gidsen      │
+└─────────────────────────────────────────────┘
+```
+
+### Stap 3: Pinterest & Instagram Traffic Machines
+
+**Pinterest Script:** `scripts/generate-pinterest-pins.ts`
+
+```bash
+# Genereer pins voor alle gidsen
+npx tsx scripts/generate-pinterest-pins.ts
+
+# Of voor één gids
+npx tsx scripts/generate-pinterest-pins.ts --slug=cadeaus-voor-thuiswerkers
+```
+
+**Output:** `public/pinterest/*.json`
+
+Per landingspagina worden 10-20 pins gegenereerd:
+
+- 3x List-style pins ("15 cadeaus voor...")
+- 5x Product pins (top producten)
+- 2x Question pins ("Weet je niet wat...")
+- 3x Persona pins (per QuickScan persona)
+- 2x FAQ pins
+
+**Pinterest strategie:**
+
+- Alle pins → landingspagina (niet direct Amazon)
+- Scheduling via Tailwind/Later
+- 10-20 pins per week per gids
+
+### Stap 4: SEO zonder Saai Gedoe
+
+Elke landingspagina bevat automatisch:
+
+- ✅ Titel met zoekterm + jaar
+- ✅ Alt-teksten op alle afbeeldingen
+- ✅ FAQ sectie (schema markup)
+- ✅ 1200-2000 woorden content
+- ✅ Canonical URL
+- ✅ Open Graph & Twitter cards
+
+**Lage concurrentie niches:**
+"Cadeaus voor nachtlezers" heeft minder dan 100 concurrenten op Google NL.
+
+### Stap 5: E-mail Lijst met Lead Magneet
+
+**Component:** `components/LeadMagnetPopup.tsx`
+
+**Lead magneet:** "Onze 10 slimste Amazon-deals van deze maand"
+
+**Trigger:**
+
+- Na 20 seconden op pagina
+- Bij exit intent (muis verlaat viewport)
+- Eenmalig per 7 dagen
+
+**Integratie:**
+
+- [ ] MailerLite/Brevo API koppelen
+- [ ] Welcome email met deals PDF
+- [ ] Maandelijkse deals newsletter
+
+### Stap 6: 1 Nieuwe Niche per Week
+
+**Workflow:**
+
+```
+Week 1: Thuiswerkers (20 producten)
+Week 2: Plantenmoeders (15 producten)
+Week 3: Koffie-snobs (12 producten)
+Week 4: Nieuwe huiseigenaren (18 producten)
+...
+Week 10: 10 gidsen = 100+ pins = 1000+ bezoekers/maand
+```
+
+**Tijdsinvestering per niche:**
+
+- Config schrijven: 30 min
+- Producten selecteren: 45 min
+- Pinterest pins genereren: 5 min (geautomatiseerd)
+- Totaal: ~1.5 uur per niche
+
+### Stap 7: Data Motor
+
+**Analytics tracking per gids:**
+
+- Pageviews
+- Scroll depth
+- Affiliate clicks
+- Conversie per product
+- RPM per niche
+
+**Optimalisatie cyclus:**
+
+1. Na 1 maand: welke gids converteert best?
+2. Winnende niche uitbreiden:
+   - Meer producten
+   - Sub-pagina's ("beste leeslampen 2025")
+   - Meer Pinterest pins
+3. Verliezers optimaliseren of archiveren
+
+### Snelle Referentie
+
+| Tool/Script                          | Doel                    |
+| ------------------------------------ | ----------------------- |
+| `data/programmatic/index.ts`         | Nieuwe niche toevoegen  |
+| `scripts/generate-pinterest-pins.ts` | Pins genereren          |
+| `components/LeadMagnetPopup.tsx`     | E-mail captures         |
+| `public/pinterest/*.json`            | Pin content voor upload |
 
 ---
 
