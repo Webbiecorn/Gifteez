@@ -17,6 +17,7 @@
 9. [SEO Strategie](#9-seo-strategie)
 10. [Troubleshooting](#10-troubleshooting)
 11. [AI-Bot Instructies](#11-ai-bot-instructies)
+12. [Blog + Programmatic Strategie](#12-blog--programmatic-strategie)
 
 ---
 
@@ -817,6 +818,160 @@ faq: [
   // Voeg meer toe...
 ]
 ```
+
+---
+
+## 12. Blog + Programmatic Strategie
+
+### Het Concept: Twee-Laags Content
+
+Elke niche krijgt **twee content types** die elkaar versterken:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    CONTENT CLUSTER STRATEGIE                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   LAAG 1: PROGRAMMATIC GIDS                                     │
+│   ───────────────────────────                                   │
+│   URL: /cadeaugidsen/cadeaus-voor-nachtlezers                   │
+│   Type: Productoverzicht (24 items)                             │
+│   Doel: Transactie (direct kopen)                               │
+│   Bron: data/programmatic/index.ts                              │
+│                                                                  │
+│                    ↕ INTERNE LINKS ↕                            │
+│                                                                  │
+│   LAAG 2: BEGELEIDENDE BLOG                                     │
+│   ─────────────────────────                                     │
+│   URL: /blog/ultieme-gids-nachtlezers                           │
+│   Type: Diepgaand artikel (reviews, tips, vergelijkingen)       │
+│   Doel: Informatie → Trust → Conversie                          │
+│   Bron: data/blogData.ts                                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Waarom Twee Lagen?
+
+| Aspect             | Programmatic Gids        | Blog Artikel                       |
+| ------------------ | ------------------------ | ---------------------------------- |
+| **Zoekintentie**   | Transactioneel ("kopen") | Informationeel ("beste", "review") |
+| **Google ranking** | Product keywords         | Long-tail keywords                 |
+| **Lengte**         | Kort, scanbaar           | Diepgaand, 1500+ woorden           |
+| **Trust signals**  | Producten, prijzen       | Expert reviews, vergelijkingen     |
+| **Pinterest**      | Product pins             | Artikel pins                       |
+| **Conversie**      | Direct                   | Via vertrouwen                     |
+
+### Workflow: Nieuwe Niche Compleet
+
+```bash
+# STAP 1: Programmatic Gids
+──────────────────────────
+1. Voeg config toe aan data/programmatic/index.ts
+2. Run: npm run build-programmatic-indices
+3. Test: /cadeaugidsen/[slug]
+
+# STAP 2: Begeleidende Blog
+───────────────────────────
+1. Voeg blog toe aan data/blogData.ts
+2. Include:
+   - Top 3 producten met reviews
+   - Vergelijkingstabel
+   - Kooptips sectie
+   - FAQ
+   - Links naar programmatic gids
+3. Test: /blog/[slug]
+
+# STAP 3: Cross-linking
+───────────────────────
+- Blog linkt naar gids: "Bekijk alle 24 producten →"
+- Gids linkt naar blog: "Lees onze uitgebreide review →"
+```
+
+### Blog Structuur Template
+
+```typescript
+// In data/blogData.ts
+{
+  slug: 'ultieme-gids-nachtlezers',
+  title: 'De Ultieme Gids voor Cadeaus aan Nachtlezers (2025)',
+  excerpt: 'Van leeslampjes tot e-readers...',
+  category: 'Cadeaugids',
+  author: { name: 'Gifteez Redactie' },
+  publishedDate: '2025-11-30',
+  updatedAt: '2025-11-30',
+  imageUrl: '/images/blog/nachtlezers-hero.jpg',
+  contentBlocks: [
+    // INTRO
+    { type: 'paragraph', content: 'Waarom nachtlezers speciale behoeften hebben...' },
+
+    // TOP KEUZE (eerste product = "Onze Top Keuze" badge)
+    { type: 'heading', content: 'Onze Top 3 Aanbevelingen' },
+    { type: 'gift', content: gift_nachtlezer_lamp },  // Krijgt automatisch TOP badge
+    { type: 'gift', content: gift_nachtlezer_kindle },
+    { type: 'gift', content: gift_nachtlezer_kussen },
+
+    // VERGELIJKING
+    { type: 'heading', content: 'Leeslampjes Vergeleken' },
+    { type: 'comparisonTable', headers: [...], rows: [...] },
+
+    // KOOPTIPS
+    { type: 'heading', content: 'Waar Let Je Op?' },
+    { type: 'paragraph', content: 'Amber vs wit licht...' },
+
+    // LINK NAAR GIDS
+    { type: 'paragraph', content: '<a href="/cadeaugidsen/cadeaus-voor-nachtlezers">Bekijk alle 24 nachtlezer cadeaus →</a>' },
+
+    // FAQ
+    { type: 'faq', questions: [...] }
+  ]
+}
+```
+
+### SEO Cluster Effect
+
+```
+                    ┌──────────────────┐
+                    │   PILLAR PAGE    │
+                    │  /cadeaugidsen   │
+                    └────────┬─────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         │                   │                   │
+         ▼                   ▼                   ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ NICHE CLUSTER 1 │ │ NICHE CLUSTER 2 │ │ NICHE CLUSTER 3 │
+├─────────────────┤ ├─────────────────┤ ├─────────────────┤
+│                 │ │                 │ │                 │
+│ /cadeaugidsen/  │ │ /cadeaugidsen/  │ │ /cadeaugidsen/  │
+│ nachtlezers     │ │ tech-liefhebber │ │ wellness-fan    │
+│       ↕         │ │       ↕         │ │       ↕         │
+│ /blog/ultieme-  │ │ /blog/beste-    │ │ /blog/ontspan-  │
+│ gids-nachtlezers│ │ tech-cadeaus    │ │ ningscadeaus    │
+│                 │ │                 │ │                 │
+└─────────────────┘ └─────────────────┘ └─────────────────┘
+```
+
+### Checklist: Niche Compleet
+
+- [ ] Programmatic gids live (`/cadeaugidsen/[slug]`)
+- [ ] Begeleidende blog live (`/blog/[slug]`)
+- [ ] Gids → Blog link in `internalLinks`
+- [ ] Blog → Gids link in content
+- [ ] Pinterest pins voor beide
+- [ ] Sitemap bevat beide URLs
+- [ ] Analytics tracking actief
+
+### Huidige Status
+
+| Niche             | Gids | Blog | Status         |
+| ----------------- | ---- | ---- | -------------- |
+| Nachtlezers       | ✅   | ❌   | **Blog nodig** |
+| Tech onder €50    | ✅   | ✅   | Compleet       |
+| Wellness          | ✅   | ✅   | Compleet       |
+| Duurzaam          | ✅   | ✅   | Compleet       |
+| Holland & Barrett | ✅   | ✅   | Compleet       |
+| Amazon Top 3      | ❌   | ✅   | Gids optioneel |
 
 ---
 
