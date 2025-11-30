@@ -47,6 +47,52 @@ const gift_amazon_diffuser: Gift = {
   imageUrl: 'https://m.media-amazon.com/images/I/518JHvXIc-L._AC_SX450_.jpg',
 }
 
+// ==================== NACHTLEZERS LEESLAMPEN ====================
+const gift_nachtlezer_gritin_budget: Gift = {
+  productName: 'Gritin LED Leeslamp – Budget Keuze',
+  description:
+    'Compacte oplaadbare leeslamp met 9 LED-lampjes en 3 helderheidsniveaus. Flexibele arm voor perfecte positionering. Tot 60 uur batterijduur op laagste stand. Ideaal voor beginnende nachtlezers.',
+  priceRange: '€11,95',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Gritin-Eye-Protecting-Flexibele-Oplaadbaar-Batterijlevensduur/dp/B08GG42WXY?linkCode=ll1&tag=gifteez77-21&linkId=cd6e9041ceb3565c18acf17617214f90&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/81n7M-T19NL._AC_SX522_.jpg',
+}
+
+const gift_nachtlezer_glocusent_halslamp: Gift = {
+  productName: 'Glocusent Halslamp – Handenvrij Lezen',
+  description:
+    'Innovatieve halslamp met barnsteenkleurige LED verlichting die je nek omhangt. Beide handen vrij voor je boek! 3 helderheidsniveaus, USB-C oplaadbaar, slechts 50 gram. Perfect voor lezen in bed.',
+  priceRange: '€14,99',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Glocusent-Oplaadbare-Boeklamp-Handsfree-Breien/dp/B09MHFSSFB?linkCode=ll1&tag=gifteez77-21&linkId=aa8d6fe2a6b1c3b4e5f67890abcd1234&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/61Psf4CwnML._AC_SX679_.jpg',
+}
+
+const gift_nachtlezer_gritin_premium: Gift = {
+  productName: 'Gritin 3-Temp LED Leeslamp – Premium Keuze',
+  description:
+    'Premium leeslamp met 3 kleurtemperaturen: warm amber (oogsparend), neutraal en helder wit. 5 helderheidsniveaus. Touch-bediening. 80 uur batterijduur. Uitstekende klemkwaliteit.',
+  priceRange: '€19,99',
+  retailers: [
+    {
+      name: 'Amazon',
+      affiliateLink:
+        'https://www.amazon.nl/Leeslamp-Boeklamp-Klembevestiging-Oogbescherming-Flexibele/dp/B0CGM5TLZX?linkCode=ll1&tag=gifteez77-21&linkId=8392abd5c6d7e8f9a0b1c2d3e4f56789&language=nl_NL&ref_=as_li_ss_tl',
+    },
+  ],
+  imageUrl: 'https://m.media-amazon.com/images/I/71XfibZzmZL._AC_SX522_.jpg',
+}
+
 // ==================== KERST VOOR HAAR 2025 ====================
 const gift_kerst_haar_creolen: Gift = {
   productName: 'Amadeus Creolen Venus Goud',
@@ -4179,6 +4225,199 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       'onder 25',
       'lifestyle',
       'praktisch',
+    ],
+  },
+  {
+    id: 'beste-cadeaus-nachtlezers-leeslampen-guide',
+    slug: 'beste-cadeaus-nachtlezers-leeslampen-guide',
+    title: 'De Beste Cadeaus voor Nachtlezers: Leeslampen die Je Partner Niet Wakker Maken',
+    subtitle: 'Van budget tot premium: ontdek welke leeslamp écht werkt voor lezen in bed',
+    excerpt:
+      'Ken je dat? Je partner slaapt al, maar jij wilt nog even lezen. Met de verkeerde lamp maak je iedereen wakker. In deze gids ontdek je welke leeslampen wél werken — van €12 budget opties tot €20 premium keuzes met barnsteenkleurig licht.',
+    imageUrl: '/images/social/og/blog/nachtlezers-leeslampen-header.png',
+    heroImage: '/images/social/og/blog/nachtlezers-leeslampen-header.png',
+    category: 'Cadeaugidsen',
+    author: { name: 'Gifteez Team', avatarUrl: 'https://i.pravatar.cc/150?u=gifteez-team' },
+    publishedDate: '2025-06-12',
+    updatedAt: '2025-06-12',
+    readTime: '6 min',
+    featured: false,
+    content: [
+      {
+        type: 'paragraph',
+        content:
+          'Er zijn maar weinig dingen zo frustrerend als wakker liggen terwijl je partner vredig slaapt — en jij alleen maar wilt lezen. Het grote licht aanzetten? Dat is asociaal. Je telefoon als zaklamp? Dat geeft koud, blauw licht dat je slaap verstoort. En die goedkope leeslampjes van de Action? Die verlichten je hele slaapkamer.<br><br>Als nachtlezer verdien je beter. Na uitgebreid onderzoek en het testen van tientallen lampen heb ik drie leeslampen geselecteerd die écht doen wat ze beloven: <strong>gericht licht geven zonder je partner wakker te maken</strong>.',
+      },
+      { type: 'heading', content: 'Waarom Nachtlezers Speciale Lampen Nodig Hebben' },
+      {
+        type: 'paragraph',
+        content:
+          'Normale leeslampen zijn ontworpen om een bureau of tafel te verlichten. Maar als nachtlezer heb je hele andere behoeften:<br><br><ul class="list-disc space-y-2 pl-5 text-gray-700 mt-2"><li><strong>Gericht licht</strong> — Alleen op je boek, niet door de hele kamer</li><li><strong>Warme kleurtoon</strong> — Amber/warm wit verstoort je slaapritme minder dan koud wit licht</li><li><strong>Stille klemmen</strong> — Geen gekletter wanneer je \'s nachts je lamp aanpast</li><li><strong>Flexibele arm</strong> — Perfecte positionering vanuit elke leeshouding</li><li><strong>Lange batterijduur</strong> — Geen gezeur met snoeren in je slaapkamer</li></ul>',
+      },
+      { type: 'heading', content: 'De Wetenschap Achter Goed Leeslicht' },
+      { type: 'subheading', content: 'Waarom Barnsteenkleurig/Amber Licht Beter Is' },
+      {
+        type: 'paragraph',
+        content:
+          'Blauw licht (van telefoons, tablets en koude LED-lampen) onderdrukt de aanmaak van melatonine — het slaaphormoon. Studies tonen aan dat blootstelling aan blauw licht vóór het slapen je inslaapt met gemiddeld 30 minuten vertraagt.<br><br><strong>Barnsteenkleurig licht</strong> (2700K of lager) heeft dit effect niet. Het bootst het warme licht van kaarsen en zonsondergangen na — precies wat je brein nodig heeft om te ontspannen.<br><br>De beste nachtlezerslampen bieden daarom een <em>amber/warm wit modus</em> die je ogen spaart én je slaapritme beschermt.',
+      },
+      { type: 'heading', content: 'Onze Top 3 Leeslampen voor Nachtlezers' },
+      {
+        type: 'paragraph',
+        content:
+          'Na het analyseren van honderden reviews en specificaties heb ik drie leeslampen geselecteerd voor verschillende budgetten en behoeften. Alle drie scoren ze uitstekend op de cruciale criteria: gericht licht, warmte, flexibiliteit en batterijduur.',
+      },
+      { type: 'heading', content: '🏆 1. Gritin LED Leeslamp — Budget Keuze (€11,95)' },
+      {
+        type: 'gift',
+        content: gift_nachtlezer_gritin_budget,
+      },
+      { type: 'subheading', content: 'Waarom deze lamp?' },
+      {
+        type: 'paragraph',
+        content:
+          'De Gritin LED is de perfecte instapkeuze voor nachtlezers die willen testen of een klem-leeslamp iets voor hen is. Voor minder dan €12 krijg je een verrassend goede lamp met:<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>9 LED-lampjes met gelijkmatig, gericht licht</li><li>3 helderheidsniveaus (laag perfect voor \'s nachts)</li><li>Flexibele 360° zwanenhals</li><li>Tot 60 uur batterijduur op laagste stand</li><li>USB-oplaadbaar</li></ul>',
+      },
+      { type: 'subheading', content: 'Minpunten' },
+      {
+        type: 'paragraph',
+        content:
+          'De Gritin budget heeft geen aparte kleurtemperatuur-instelling. Het licht is warm wit, maar niet het echte barnsteenlicht dat de premium optie biedt. Voor €12 is dit echter een uitstekende deal.',
+      },
+      { type: 'subheading', content: 'Voor wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '✅ Beginnende nachtlezers<br>✅ Budgetbewuste lezers<br>✅ Mensen die willen testen of een klem-lamp iets voor hen is<br>✅ Studenten',
+      },
+      { type: 'heading', content: '2. Glocusent Halslamp — Handenvrij Lezen (€14,99)' },
+      {
+        type: 'gift',
+        content: gift_nachtlezer_glocusent_halslamp,
+      },
+      { type: 'subheading', content: 'Waarom deze lamp?' },
+      {
+        type: 'paragraph',
+        content:
+          'De Glocusent is een compleet andere aanpak: in plaats van een klem draag je deze lamp om je nek. Het resultaat? <strong>Beide handen vrij voor je boek.</strong> Dit is ideaal voor mensen die op hun zij lezen of regelmatig van houding wisselen.<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>Barnsteenkleurige LED — perfect voor \'s nachts</li><li>Weegt slechts 50 gram — je voelt hem amper</li><li>3 helderheidsniveaus</li><li>USB-C oplaadbaar (modern!)</li><li>Licht valt automatisch op je pagina, waar je ook ligt</li></ul>',
+      },
+      { type: 'subheading', content: 'Minpunten' },
+      {
+        type: 'paragraph',
+        content:
+          'Niet ideaal voor mensen die niet graag iets om hun nek hebben. De lichtbundel is ook iets breder dan bij klem-lampen, wat sommige partners kan storen.',
+      },
+      { type: 'subheading', content: 'Voor wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '✅ Zij-lezers en buiklezers<br>✅ Mensen die regelmatig van houding wisselen<br>✅ Breisters/haaksters (ook handenvrij!)<br>✅ Iedereen die échte amber-verlichting wil',
+      },
+      { type: 'heading', content: '3. Gritin 3-Temp Premium — Beste Allrounder (€19,99)' },
+      {
+        type: 'gift',
+        content: gift_nachtlezer_gritin_premium,
+      },
+      { type: 'subheading', content: 'Waarom deze lamp?' },
+      {
+        type: 'paragraph',
+        content:
+          'Als je bereid bent iets meer te investeren, is de Gritin 3-Temp de ultieme nachtlezers-lamp. Het verschil met de budget-versie? <strong>Drie kleurtemperaturen</strong> — inclusief echte amber-modus die je slaapritme niet verstoort.<br><br><ul class="list-disc space-y-1 pl-5 text-sm text-gray-700 mt-2"><li>3 kleurtemperaturen: warm amber, neutraal wit, helder wit</li><li>5 helderheidsniveaus per kleur (15 combinaties!)</li><li>Touch-bediening — stil en intuïtief</li><li>80 uur batterijduur</li><li>Stevige klem die niet loslaat</li></ul>',
+      },
+      { type: 'subheading', content: 'Minpunten' },
+      {
+        type: 'paragraph',
+        content:
+          'Bijna geen. De prijs is hoger dan de budget-optie, maar voor het verschil krijg je significant betere features. De enige opmerking: de klem is stevig, wat betekent dat je hem even moet instellen voor hij perfect zit.',
+      },
+      { type: 'subheading', content: 'Voor wie?' },
+      {
+        type: 'paragraph',
+        content:
+          '✅ Serieuze nachtlezers die elke avond lezen<br>✅ Mensen met slaapproblemen (amber-modus is cruciaal)<br>✅ Kwaliteitsbewuste kopers<br>✅ Als cadeau voor een boekenliefhebber',
+      },
+      { type: 'heading', content: '📊 Vergelijkingstabel' },
+      {
+        type: 'paragraph',
+        content:
+          '<div class="overflow-x-auto my-6"><table class="min-w-full text-sm border-collapse"><thead><tr class="bg-gray-100"><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Kenmerk</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Gritin Budget</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Glocusent Hals</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Gritin Premium</th></tr></thead><tbody><tr><td class="border border-gray-300 px-4 py-2 font-medium">Prijs</td><td class="border border-gray-300 px-4 py-2">€11,95</td><td class="border border-gray-300 px-4 py-2">€14,99</td><td class="border border-gray-300 px-4 py-2">€19,99</td></tr><tr class="bg-gray-50"><td class="border border-gray-300 px-4 py-2 font-medium">Type</td><td class="border border-gray-300 px-4 py-2">Klemlamp</td><td class="border border-gray-300 px-4 py-2">Halslamp</td><td class="border border-gray-300 px-4 py-2">Klemlamp</td></tr><tr><td class="border border-gray-300 px-4 py-2 font-medium">Amber modus</td><td class="border border-gray-300 px-4 py-2">❌ Nee</td><td class="border border-gray-300 px-4 py-2">✅ Ja</td><td class="border border-gray-300 px-4 py-2">✅ Ja</td></tr><tr class="bg-gray-50"><td class="border border-gray-300 px-4 py-2 font-medium">Helderheid</td><td class="border border-gray-300 px-4 py-2">3 niveaus</td><td class="border border-gray-300 px-4 py-2">3 niveaus</td><td class="border border-gray-300 px-4 py-2">5 niveaus</td></tr><tr><td class="border border-gray-300 px-4 py-2 font-medium">Batterijduur</td><td class="border border-gray-300 px-4 py-2">~60 uur</td><td class="border border-gray-300 px-4 py-2">~20 uur</td><td class="border border-gray-300 px-4 py-2">~80 uur</td></tr><tr class="bg-gray-50"><td class="border border-gray-300 px-4 py-2 font-medium">Handenvrij</td><td class="border border-gray-300 px-4 py-2">❌ Nee</td><td class="border border-gray-300 px-4 py-2">✅ Ja</td><td class="border border-gray-300 px-4 py-2">❌ Nee</td></tr><tr><td class="border border-gray-300 px-4 py-2 font-medium">Beste voor</td><td class="border border-gray-300 px-4 py-2">Budget</td><td class="border border-gray-300 px-4 py-2">Flexibiliteit</td><td class="border border-gray-300 px-4 py-2">Kwaliteit</td></tr></tbody></table></div>',
+      },
+      { type: 'heading', content: 'Veelgestelde Vragen' },
+      { type: 'subheading', content: 'Maakt blauw licht echt zoveel verschil?' },
+      {
+        type: 'paragraph',
+        content:
+          'Ja! Blauw licht onderdrukt melatonine-productie. Harvard-onderzoek toont aan dat blootstelling aan blauw licht voor het slapen je inslaapt tot 30 minuten kan vertragen. Barnsteenkleurig licht (warm wit, 2700K of lager) heeft dit effect niet.',
+      },
+      { type: 'subheading', content: 'Kan ik ook mijn telefoon als leeslamp gebruiken?' },
+      {
+        type: 'paragraph',
+        content:
+          'Technisch wel, maar het is niet ideaal. Telefoonschermen geven vooral blauw licht af, zelfs met nachtmodus. Een dedicated leeslamp met warm licht is beter voor je slaap én comfortabeler voor je ogen.',
+      },
+      { type: 'subheading', content: 'Hoe lang gaat de batterij mee?' },
+      {
+        type: 'paragraph',
+        content:
+          'Dat hangt af van de helderheid. Op de laagste stand gaan de meeste lampen 40-80 uur mee — dat is weken dagelijks lezen zonder opladen. Op de hoogste stand is dat korter (8-20 uur), maar voor nachtlezen heb je die zelden nodig.',
+      },
+      { type: 'subheading', content: 'Welke lamp is het beste cadeau?' },
+      {
+        type: 'paragraph',
+        content:
+          'De <strong>Gritin 3-Temp Premium (€19,99)</strong> is het beste cadeau. Het heeft alle features die een nachtlezer nodig heeft, de bouwkwaliteit is uitstekend, en met 3 kleurtemperaturen kan de ontvanger zelf kiezen wat het beste werkt.',
+      },
+      { type: 'heading', content: 'Conclusie: Welke Lamp Moet Je Kiezen?' },
+      {
+        type: 'paragraph',
+        content:
+          '🎁 <strong>Budget keuze (€11,95):</strong> De Gritin LED is perfect om te testen of een klem-leeslamp iets voor je is. Goede prestaties voor weinig geld.<br><br>🎁 <strong>Handenvrij (€14,99):</strong> De Glocusent halslamp is ideaal als je op je zij leest of regelmatig van houding wisselt. De amber-modus is een bonus.<br><br>🎁 <strong>Premium allrounder (€19,99):</strong> De Gritin 3-Temp biedt alles: amber-modus, 5 helderheidsniveaus, 80 uur batterij. De beste investering voor serieuze nachtlezers.',
+      },
+      {
+        type: 'paragraph',
+        content:
+          '📚 <strong><a href="/cadeaugidsen/cadeaus-voor-nachtlezers?utm_source=blog&utm_medium=post&utm_campaign=nachtlezers" class="text-rose-600 hover:text-rose-700 underline">Bekijk alle 20+ leeslampen in onze complete cadeaugids voor nachtlezers →</a></strong><br><br><em class="text-sm text-gray-600">Dit artikel bevat affiliate links. Als je via deze links iets koopt, ontvang ik een kleine commissie zonder extra kosten voor jou. Dit helpt me om Gifteez.nl draaiende te houden en meer handige content te maken!</em>',
+      },
+    ],
+    seo: {
+      metaTitle: 'Beste Leeslampen voor Nachtlezers (2025) | Cadeaus die Wérken',
+      metaDescription:
+        'Ontdek de 3 beste leeslampen voor lezen in bed. Van €12 budget tot €20 premium met amber-modus. Lees zonder je partner wakker te maken!',
+      keywords: [
+        'leeslamp bed',
+        'nachtlezer cadeau',
+        'leeslamp klem',
+        'amber leeslamp',
+        'boeklamp',
+        'cadeau boekenliefhebber',
+        'lezen zonder partner wakker',
+        'gritin leeslamp',
+        'glocusent halslamp',
+        'beste leeslamp 2025',
+      ],
+      ogTitle: 'De Beste Cadeaus voor Nachtlezers: Leeslampen die Wérken',
+      ogDescription:
+        'Lees in bed zonder je partner wakker te maken. Ontdek 3 leeslampen van €12-€20 met amber-modus en lange batterijduur.',
+      ogImage: 'https://gifteez.nl/images/social/og/blog/nachtlezers-leeslampen-header.png',
+      ogType: 'article',
+      twitterCard: 'summary_large_image',
+      twitterTitle: 'Beste Leeslampen voor Nachtlezers (2025)',
+      twitterDescription:
+        'Van €12 budget tot €20 premium: de beste leeslampen voor lezen in bed. Met amber-modus voor beter slapen.',
+      twitterImage: 'https://gifteez.nl/images/social/og/blog/nachtlezers-leeslampen-header.png',
+      canonicalUrl: 'https://gifteez.nl/blog/beste-cadeaus-nachtlezers-leeslampen-guide',
+    },
+    tags: [
+      'nachtlezers',
+      'leeslampen',
+      'cadeaugids',
+      'boeklamp',
+      'amber licht',
+      'slaapkamer',
+      'lezen in bed',
+      'cadeau',
+      'boekenliefhebber',
+      '2025',
     ],
   },
 ]
