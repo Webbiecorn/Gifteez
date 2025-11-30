@@ -98,45 +98,45 @@ const gift_thuiswerker_logitech_muis: Gift = {
   productName: 'Logitech MX Master 3S Muis',
   description:
     'De ultieme ergonomische muis voor thuiswerkers. Fluisterstil scrollen, 70 dagen batterijduur, werkt op elk oppervlak. Verbindt met 3 apparaten tegelijk via Bluetooth.',
-  priceRange: '€89,99',
+  priceRange: '€74,90',
   retailers: [
     {
       name: 'Amazon',
       affiliateLink:
-        'https://www.amazon.nl/Logitech-Master-Draadloze-Bluetooth-Grafieten/dp/B0B17WBTQX?linkCode=ll1&tag=gifteez77-21',
+        'https://www.amazon.nl/Logitech-draadloze-ondergrond-instelbare-Bluetooth/dp/B07W4DGLY6?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=311QCVQ35Z5YL&dib=eyJ2IjoiMSJ9.Rg5BsRgviCYUpuexOhZ6Mq_UNUo-KfAcotxqU0hlP6BmfMgoD5-EdSyAUGc1nB1kcqZ26yBbgnDgOHujOstx5_6Rh5weOiqsJkRMuW6Cv7flXIy-IoYb32-K3JHyDrcFSDo2ToaphmR28FkElQ6tDreEZt3KlErbRQ3onr0_kbNeOSpkJyeVoxtamS2zdsHkbv_qMuOt8LPglwORxGSO1IheRlaYkQDSPulQMyP3N49Rh649wCa8G8vjKc__LUYdn9oHZrk8CAwmd3uQuRns08uiKvOKml730vrAAlf2RTc.1Uh1ALfHLy0JLdTwg6vlBMAmERhVfDSXsZrM88HKZ8A&dib_tag=se&keywords=Logitech+MX+Master+3S+Muis&qid=1764471353&sprefix=logitech+mx+master+3s+muis+%2Caps%2C137&sr=8-5&linkCode=ll1&tag=gifteez77-21&linkId=1b8932f4325dab8f1c587c60b5eec5a3&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/61ni3t1ryQL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/61dYSaNVRaL._AC_SL1500_.jpg',
 }
 
 const gift_thuiswerker_benq_screenbar: Gift = {
   productName: 'BenQ ScreenBar Monitor Lamp',
   description:
     'Monitorlamp die direct op je scherm klemt. Geen reflectie, automatische helderheidsaanpassing, bespaart bureauruimte. De gamechanger voor thuiswerkers met oogvermoeidheid.',
-  priceRange: '€99',
+  priceRange: '€84,15',
   retailers: [
     {
       name: 'Amazon',
       affiliateLink:
-        'https://www.amazon.nl/BenQ-ScreenBar-Monitor-Light-Bar/dp/B076VNFZJG?linkCode=ll1&tag=gifteez77-21',
+        'https://www.amazon.nl/BenQ-ScreenBar-Auto-Dimmen-Aangedreven-Kantoorlamp/dp/B0785D93KD?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3VBY69PMFKZCK&dib=eyJ2IjoiMSJ9.0n1IyYxfm29Dca3c3X8G33YBxaqKwOflHQtSUmnhYIzSP7_j-Bkqe5DDN-W6sRF-SIsesQV11VhQplrkxFyfJ9lh-rQ5nCk8JSQnos78WeM6idKg_BYUX38cGvuzIoih0nRgVTsZo8oAbLJ1CmXpAqVEr3pxEgU9r1R4-OHQ-J84dAB8D-7u5__1P1Cn53go2_1S5NwdCNTN7ngUGuDNw9KCZdaVLZUvVIznqddiGkVIA6TCnE-T3zGqneQuYZSdYy-BKJalVBkQYMVc66hZ0vcRyNDEQ-6EH5afM2WMHGY.5HUTwTJiinSXDXtyHf3yFHiXy3wxlfgeaDxMAw68YQA&dib_tag=se&keywords=BenQ%2BScreenBar%2BMonitor%2BLamp&qid=1764472119&sprefix=benq%2Bscreenbar%2Bmonitor%2Blamp%2B%2Caps%2C69&sr=8-1&th=1&linkCode=ll1&tag=gifteez77-21&linkId=fc667f0b930f801c4dd26ef796967263&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/51uB1oUzXQL._AC_SL1000_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/41nI6sm+OKS._AC_SL1000_.jpg',
 }
 
 const gift_thuiswerker_fellowes_polssteun: Gift = {
   productName: 'Fellowes Memory Foam Polssteun',
   description:
     'Ergonomische polssteun met memory foam die zich aanpast aan je pols. Voorkomt RSI en carpaaltunnelsyndroom. Antislip onderkant. De beste investering voor gezonde polsen.',
-  priceRange: '€24,95',
+  priceRange: '€18,90',
   retailers: [
     {
       name: 'Amazon',
       affiliateLink:
-        'https://www.amazon.nl/Fellowes-Memory-Foam-Polssteun-Toetsenbord/dp/B002I7LHRQ?linkCode=ll1&tag=gifteez77-21',
+        'https://www.amazon.nl/Fellowes-polssteun-ergonomisch-schuimvulling-bekleding/dp/B001CY0EOU?__mk_nl_NL=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1ZKX3LY2G10GM&dib=eyJ2IjoiMSJ9.prUZ9T_051U20hpD7hWRud9KVWSYIpVMO5uNG28gtRI6nDoHxzooYLLzLj-lZhTkQIwmkz_o70b5-CWn3auoBcvbz9o_5EUynlHInaJodQ_s2GE5l1RhPb5HtXckWjpDxnwveA_iWBSWyEwljBxSPNwYKjlxBfQYtpxgDfZcZDwpeW7guEyZzOXnF7GUXKcLoukKUU6nkD6icj5CdaYaVpIf6id8xY4yBTn6tcB0OLka_HbhS-BWUU6QpEaAlOKk8G1C0sU6pCpRQr4lJxJwOJFvnPXJTD7eLhq4MO2bixQ.U5XOtdkOY_4NDMZpI-tX2tzH5ziOS9MEpVE2IPRvYp8&dib_tag=se&keywords=Fellowes%2BErgonomische%2BPolssteun%2B%28Memory%2BFoam%29&qid=1764472287&sprefix=fellowes%2Bergonomische%2Bpolssteun%2Bmemory%2Bfoam%2B%2Caps%2C132&sr=8-2&th=1&linkCode=ll1&tag=gifteez77-21&linkId=67dd89a0f33571bfdada696365daaaee&language=nl_NL&ref_=as_li_ss_tl',
     },
   ],
-  imageUrl: 'https://m.media-amazon.com/images/I/71DLB8bYpQL._AC_SL1500_.jpg',
+  imageUrl: 'https://m.media-amazon.com/images/I/412GbpkKEPL._AC_SL1098_.jpg',
 }
 
 // ==================== KERST VOOR HAAR 2025 ====================
@@ -4471,7 +4471,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     id: 'beste-cadeaus-thuiswerkers-home-office-guide',
     slug: 'beste-cadeaus-thuiswerkers-home-office-guide',
     title: 'De Beste Cadeaus voor Thuiswerkers: Van Ergonomie tot Productiviteit',
-    subtitle: 'Praktische gadgets die elke thuiswerker écht gaat gebruiken (€15-€100)',
+    subtitle: 'Praktische gadgets die elke thuiswerker écht gaat gebruiken (€19-€170)',
     excerpt:
       'Thuiswerken is het nieuwe normaal, maar niet iedereen heeft een optimale werkplek. Van ergonomische muizen tot slimme verlichting: ontdek de cadeaus die thuiswerkers écht waarderen — geen stofvangers, maar dagelijkse levensverbeteraars.',
     imageUrl: '/images/social/og/blog/thuiswerkers-cadeaus-header.png',
@@ -4558,13 +4558,13 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          '<div class="overflow-x-auto my-6"><table class="min-w-full text-sm border-collapse"><thead><tr class="bg-gray-100"><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Product</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Prijs</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Lost op</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Beste voor</th></tr></thead><tbody><tr><td class="border border-gray-300 px-4 py-2 font-medium">Logitech MX Master 3S</td><td class="border border-gray-300 px-4 py-2">€89,99</td><td class="border border-gray-300 px-4 py-2">Hand/pols comfort</td><td class="border border-gray-300 px-4 py-2">Premium cadeau</td></tr><tr class="bg-gray-50"><td class="border border-gray-300 px-4 py-2 font-medium">BenQ ScreenBar</td><td class="border border-gray-300 px-4 py-2">€99</td><td class="border border-gray-300 px-4 py-2">Oogvermoeidheid</td><td class="border border-gray-300 px-4 py-2">Serieuze thuiswerkers</td></tr><tr><td class="border border-gray-300 px-4 py-2 font-medium">Fellowes Polssteun</td><td class="border border-gray-300 px-4 py-2">€24,95</td><td class="border border-gray-300 px-4 py-2">RSI-preventie</td><td class="border border-gray-300 px-4 py-2">Budget cadeau</td></tr></tbody></table></div>',
+          '<div class="overflow-x-auto my-6"><table class="min-w-full text-sm border-collapse"><thead><tr class="bg-gray-100"><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Product</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Prijs</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Lost op</th><th class="border border-gray-300 px-4 py-2 text-left font-semibold">Beste voor</th></tr></thead><tbody><tr><td class="border border-gray-300 px-4 py-2 font-medium">Logitech MX Master 3S</td><td class="border border-gray-300 px-4 py-2">€74,90</td><td class="border border-gray-300 px-4 py-2">Hand/pols comfort</td><td class="border border-gray-300 px-4 py-2">Premium cadeau</td></tr><tr class="bg-gray-50"><td class="border border-gray-300 px-4 py-2 font-medium">BenQ ScreenBar</td><td class="border border-gray-300 px-4 py-2">€84,15</td><td class="border border-gray-300 px-4 py-2">Oogvermoeidheid</td><td class="border border-gray-300 px-4 py-2">Serieuze thuiswerkers</td></tr><tr><td class="border border-gray-300 px-4 py-2 font-medium">Fellowes Polssteun</td><td class="border border-gray-300 px-4 py-2">€18,90</td><td class="border border-gray-300 px-4 py-2">RSI-preventie</td><td class="border border-gray-300 px-4 py-2">Budget cadeau</td></tr></tbody></table></div>',
       },
       { type: 'heading', content: 'Meer Thuiswerker Cadeaus' },
       {
         type: 'paragraph',
         content:
-          'Naast onze top 3 zijn er nog veel meer geweldige cadeaus voor thuiswerkers:<br><br><strong>Productiviteit:</strong><br>• USB-C Hub (€35) — Alle poorten die een laptop mist<br>• Logitech K380 Toetsenbord (€40) — Compact, stil, 3 apparaten<br>• Anker Speakerphone (€60) — Kristalheldere videocalls<br><br><strong>Comfort:</strong><br>• Monitorstandaard (€29) — Scherm op ooghoogte<br>• Voetsteun (€33) — Betere zithouding<br>• Bureaulamp met USB (€30) — Extra verlichting + opladen<br><br><strong>Sfeer:</strong><br>• Ember Mok (€100) — Houdt koffie op perfecte temperatuur<br>• Philips Hue Play (€55) — Sfeerverlichting achter monitor<br>• Stanley Quencher (€45) — Genoeg water voor hele dag',
+          'Naast onze top 3 zijn er nog veel meer geweldige cadeaus voor thuiswerkers:<br><br><strong>Productiviteit:</strong><br>• USB-C Hub (€40) — Alle poorten die een laptop mist<br>• Logitech K380 Toetsenbord (€43) — Compact, stil, 3 apparaten<br>• Anker Speakerphone (€134) — Kristalheldere videocalls<br><br><strong>Comfort:</strong><br>• Monitorstandaard (€30) — Scherm op ooghoogte<br>• Voetsteun (€32) — Betere zithouding<br>• Bureaulamp met USB (€28) — Extra verlichting + opladen<br><br><strong>Sfeer:</strong><br>• Ember Mok (€170) — Houdt koffie op perfecte temperatuur<br>• Philips Hue Play (€39) — Sfeerverlichting achter monitor<br>• Stanley Quencher (€42) — Genoeg water voor hele dag',
       },
       { type: 'heading', content: 'Veelgestelde Vragen' },
       { type: 'subheading', content: 'Wat is het beste cadeau voor thuiswerkers?' },
@@ -4589,7 +4589,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       {
         type: 'paragraph',
         content:
-          '🎁 <strong>Budget (€24,95):</strong> De Fellowes polssteun is een no-brainer. Goedkoop, maar voorkomt echte gezondheidsproblemen.<br><br>🎁 <strong>Mid-range (€89,99):</strong> De Logitech MX Master 3S is het perfecte cadeau voor iedereen die veel met een computer werkt. Premium kwaliteit.<br><br>🎁 <strong>Premium (€99):</strong> De BenQ ScreenBar is ideaal voor thuiswerkers die last hebben van oogvermoeidheid of avonduren werken.',
+          '🎁 <strong>Budget (€18,90):</strong> De Fellowes polssteun is een no-brainer. Goedkoop, maar voorkomt echte gezondheidsproblemen.<br><br>🎁 <strong>Mid-range (€74,90):</strong> De Logitech MX Master 3S is het perfecte cadeau voor iedereen die veel met een computer werkt. Premium kwaliteit.<br><br>🎁 <strong>Premium (€84,15):</strong> De BenQ ScreenBar is ideaal voor thuiswerkers die last hebben van oogvermoeidheid of avonduren werken.',
       },
       {
         type: 'paragraph',
@@ -4600,7 +4600,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
     seo: {
       metaTitle: 'Beste Cadeaus voor Thuiswerkers (2025) | Ergonomie & Productiviteit',
       metaDescription:
-        'Ontdek de 3 beste cadeaus voor thuiswerkers. Van €25 polssteun tot €100 premium muis. Praktische gadgets die dagelijks gebruikt worden.',
+        'Ontdek de 3 beste cadeaus voor thuiswerkers. Van €19 polssteun tot €85 premium verlichting. Praktische gadgets die dagelijks gebruikt worden.',
       keywords: [
         'cadeau thuiswerker',
         'home office cadeau',
@@ -4615,7 +4615,7 @@ const RAW_BLOG_POSTS: BlogPost[] = [
       ],
       ogTitle: 'De Beste Cadeaus voor Thuiswerkers: Ergonomie & Productiviteit',
       ogDescription:
-        'Van €25 polssteun tot €100 premium muis: cadeaus die thuiswerkers écht dagelijks gebruiken. Geen stofvangers!',
+        'Van €19 polssteun tot €85 premium verlichting: cadeaus die thuiswerkers écht dagelijks gebruiken. Geen stofvangers!',
       ogImage: 'https://gifteez.nl/images/social/og/blog/thuiswerkers-cadeaus-header.png',
       ogType: 'article',
       twitterCard: 'summary_large_image',
