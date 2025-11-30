@@ -2197,9 +2197,6 @@ const RAW_VARIANTS = [
         },
       ],
     },
-    filters: {
-      maxResults: 0,
-    },
     curatedProducts: [
       // PRODUCTIVITEIT GADGETS
       {
