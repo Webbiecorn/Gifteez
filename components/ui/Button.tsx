@@ -9,7 +9,7 @@ import { cn } from '../../lib/utils'
 
 const buttonVariants = cva(
   // Base styles - applied to all buttons
-  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-95',
   {
     variants: {
       variant: {
@@ -18,7 +18,7 @@ const buttonVariants = cva(
         secondary:
           'bg-secondary-100 text-secondary-400 hover:bg-secondary-200 active:bg-secondary-300 focus-visible:ring-secondary-300 shadow-sm',
         accent:
-          'bg-accent text-white hover:bg-accent-hover active:scale-95 focus-visible:ring-accent shadow-glow hover:shadow-glow-lg',
+          'bg-accent text-white hover:bg-accent-hover focus-visible:ring-accent shadow-glow hover:shadow-glow-lg',
         ghost:
           'bg-transparent text-neutral-700 hover:bg-neutral-100 active:bg-neutral-200 focus-visible:ring-neutral-400',
         link: 'bg-transparent text-primary-600 hover:text-primary-700 underline-offset-4 hover:underline focus-visible:ring-primary-500',
