@@ -235,21 +235,27 @@ const Top3CampaignPage = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="text-4xl mb-3">💰</div>
+              <div className="text-4xl mb-3" role="img" aria-hidden="true">
+                💰
+              </div>
               <h3 className="font-bold text-lg mb-2">Budget-friendly</h3>
               <p className="text-gray-600 text-sm">
                 Alle drie onder €25 — klein budget, grote impact
               </p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-3">🎯</div>
+              <div className="text-4xl mb-3" role="img" aria-hidden="true">
+                🎯
+              </div>
               <h3 className="font-bold text-lg mb-2">Universeel leuk</h3>
               <p className="text-gray-600 text-sm">
                 Voor hem, voor haar, voor collega's — altijd raak
               </p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-3">⚡</div>
+              <div className="text-4xl mb-3" role="img" aria-hidden="true">
+                ⚡
+              </div>
               <h3 className="font-bold text-lg mb-2">Direct leverbaar</h3>
               <p className="text-gray-600 text-sm">Via Amazon Prime vaak morgen al in huis</p>
             </div>
