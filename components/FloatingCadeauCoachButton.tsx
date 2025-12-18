@@ -92,7 +92,7 @@ const FloatingCadeauCoachButton: React.FC<FloatingCadeauCoachButtonProps> = ({ n
         </button>
 
         {/* Tooltip hint (shows on first appearance) */}
-        <div className="absolute bottom-full right-0 mb-3 hidden group-hover:block animate-fade-in">
+        <div className="absolute bottom-full right-0 mb-3 hidden group-hover:block group-focus-within:block animate-fade-in">
           <div className="relative rounded-lg bg-slate-900 px-4 py-2 text-xs text-white shadow-xl whitespace-nowrap">
             <div className="font-semibold">Niet zeker welk cadeau?</div>
             <div className="opacity-90">Laat onze coach je helpen! 🎁</div>
