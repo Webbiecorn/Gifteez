@@ -169,7 +169,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
             key={platform.name}
             onClick={() => handleShare(platform.name, platform.url)}
             className={`bg-gray-100 text-gray-700 ${platform.color} hover:text-white ${buttonClasses[variant]}`}
-            title={`Delen op ${platform.name}`}
+            aria-label={`Delen op ${platform.name}`}
           >
             <IconComponent className="w-5 h-5" />
             {variant === 'full' && <span>{platform.name}</span>}
@@ -181,7 +181,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({
       <button
         onClick={copyToClipboard}
         className={`bg-gray-100 text-gray-700 hover:bg-gray-700 hover:text-white ${buttonClasses[variant]} relative`}
-        title="Link kopiëren"
+        aria-label="Link kopiëren"
       >
         {copied ? (
           <CheckIcon className="w-5 h-5 text-green-600" />
