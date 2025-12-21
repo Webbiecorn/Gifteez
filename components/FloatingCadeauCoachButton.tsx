@@ -54,14 +54,14 @@ const FloatingCadeauCoachButton: React.FC<FloatingCadeauCoachButtonProps> = ({ n
       }`}
     >
       {/* Floating Button with pulse animation */}
-      <div className="relative">
+      <div className="relative group">
         {/* Pulsing ring effect */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-rose-500 to-pink-500 animate-ping opacity-20" />
 
         {/* Main button */}
         <button
           onClick={handleClick}
-          className="group relative flex items-center gap-3 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 pl-5 pr-6 py-4 text-white shadow-2xl transition-all duration-300 hover:shadow-rose-500/50 hover:scale-105 hover:from-rose-600 hover:via-pink-600 hover:to-purple-600 focus:outline-none focus:ring-4 focus:ring-rose-300"
+          className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-purple-500 pl-5 pr-6 py-4 text-white shadow-2xl transition-all duration-300 hover:shadow-rose-500/50 hover:scale-105 hover:from-rose-600 hover:via-pink-600 hover:to-purple-600 focus:outline-none focus:ring-4 focus:ring-rose-300"
           aria-label="Open Cadeau-Coach"
         >
           {/* Shimmer effect */}
@@ -92,7 +92,7 @@ const FloatingCadeauCoachButton: React.FC<FloatingCadeauCoachButtonProps> = ({ n
         </button>
 
         {/* Tooltip hint (shows on first appearance) */}
-        <div className="absolute bottom-full right-0 mb-3 hidden group-hover:block animate-fade-in">
+        <div className="absolute bottom-full right-0 mb-3 hidden group-hover:block group-focus-within:block animate-fade-in">
           <div className="relative rounded-lg bg-slate-900 px-4 py-2 text-xs text-white shadow-xl whitespace-nowrap">
             <div className="font-semibold">Niet zeker welk cadeau?</div>
             <div className="opacity-90">Laat onze coach je helpen! 🎁</div>
