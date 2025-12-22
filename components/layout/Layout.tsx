@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import SkipToContent from '../SkipToContent'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -21,9 +22,12 @@ const Layout: React.FC<LayoutProps> = ({ children, title, description }) => {
   }, [title, description])
 
   return (
-    <main id="main-content" className="outline-none focus:outline-none" tabIndex={-1}>
-      {children}
-    </main>
+    <>
+      <SkipToContent />
+      <main id="main-content" className="outline-none focus:outline-none" tabIndex={-1}>
+        {children}
+      </main>
+    </>
   )
 }
 
