@@ -87,6 +87,8 @@ const Header: React.FC<HeaderProps> = ({ navigateTo, currentPage }) => {
             <button
               onClick={() => handleNavClick('giftFinder')}
               className="hidden lg:flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-500 hover:text-purple-600 transition-colors"
+              title="Vind cadeaus met de AI Cadeaucoach"
+              aria-label="Vind cadeaus met de AI Cadeaucoach"
             >
               <svg
                 className="w-4 h-4"
